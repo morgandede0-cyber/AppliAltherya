@@ -27,15 +27,16 @@ if not "%BRANCHE%"=="main" (
  goto :error
 )
 rem Refuser les donnees sensibles deja suivies : les exclusions ne les retirent pas.
-git ls-files | findstr /i /r /c:"\.env" /c:"\.sqlite" /c:"\.db$" /c:"/data/" /c:"\.pem$" /c:"\.key$" >nul
+git ls-files | findstr /i /r /c:"\.env" /c:"\.sqlite" /c:"\.db$" /c:"^data/" /c:"^apps/api/data/" /c:"\.pem$" /c:"\.key$" >nul
 if not errorlevel 1 (
  echo ERREUR : des fichiers de configuration ou donnees sensibles sont suivis.
+ git ls-files | findstr /i /r /c:"\.env" /c:"\.sqlite" /c:"\.db$" /c:"^data/" /c:"^apps/api/data/" /c:"\.pem$" /c:"\.key$"
  echo Faites verifier ces fichiers avant de publier.
  goto :error
 )
 echo.
 echo [2/5] Ajout des fichiers du projet...
-git add -A -- . ":(exclude,glob)**/.env*" ":(exclude,glob)**/node_modules/**" ":(exclude,glob)**/dist/**" ":(exclude,glob)**/data/**" ":(exclude,glob)**/__pycache__/**" ":(exclude,glob)**/.venv/**" ":(exclude,glob)**/venv/**" ":(exclude,glob)**/*.sqlite*" ":(exclude,glob)**/*.db" ":(exclude,glob)**/*.log" ":(exclude,glob)**/*.zip" ":(exclude,glob)**/*.pem" ":(exclude,glob)**/*.key"
+git add -A -- . ":(exclude,glob)**/.env*" ":(exclude,glob)**/node_modules/**" ":(exclude,glob)**/dist/**" ":(exclude,top)data/**" ":(exclude,top)apps/api/data/**" ":(exclude,glob)**/__pycache__/**" ":(exclude,glob)**/.venv/**" ":(exclude,glob)**/venv/**" ":(exclude,glob)**/*.sqlite*" ":(exclude,glob)**/*.db" ":(exclude,glob)**/*.log" ":(exclude,glob)**/*.zip" ":(exclude,glob)**/*.pem" ":(exclude,glob)**/*.key"
 if errorlevel 1 goto :error
 echo.
 echo [3/5] Creation du commit...
