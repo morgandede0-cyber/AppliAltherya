@@ -1,0 +1,4 @@
+import {fresh, type State,items,maxHp} from '../data/rules';
+const KEY='altherya.activity.offline.v1';
+export function load():State|null {try {const s=JSON.parse(localStorage.getItem(KEY)||'null');if(!s||s.version!==1||typeof s.name!=='string'||!Number.isInteger(s.level)||s.level<1||s.level>100||!Number.isFinite(s.x)||!Number.isFinite(s.y))return null;for(const k of ['gold','xp','hp'])if(!Number.isFinite(s[k])||s[k]<0)return null;for(const k of Object.keys(items))if(!Number.isInteger(s.inventory?.[k])||s.inventory[k]<0)return null;const base=fresh();for(const k of Object.keys(base.quests))if(typeof s.quests?.[k]?.active!=='boolean'||typeof s.quests[k].claimed!=='boolean'||!Number.isFinite(s.quests[k].progress))return null;if(!Array.isArray(s.collected))return null;s.hp=Math.min(s.hp,maxHp(s));return s;}catch{return null;}}
+export function save(s:State){try{localStorage.setItem(KEY,JSON.stringify(s));return true;}catch{return false;}}

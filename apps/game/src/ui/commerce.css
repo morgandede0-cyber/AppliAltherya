@@ -1,0 +1,121 @@
+/* Frame supplied by the user. Every control is real HTML over its matching slot. */
+#panel.commerce-panel{width:min(1200px,96vw,calc(94dvh * 1.5));height:auto;aspect-ratio:3/2;max-height:none;overflow:visible;border:0;border-radius:0;padding:0;background:url('/assets/ui/shop-frame.webp') center/100% 100% no-repeat;box-shadow:0 0 0 100vmax #03080dcc;container-type:inline-size;color:#f5dfad;isolation:isolate}
+.commerce-panel .shop-title{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.commerce-panel button{border-radius:5px;touch-action:manipulation;min-height:0;font-weight:600}
+.commerce-panel button:focus-visible{outline:3px solid #82d9ff;outline-offset:3px}
+.commerce-panel .shop-subtitle{position:absolute;left:28%;top:12.5%;width:47%;height:4.1%;padding:0;margin:0;background:#02070a;text-align:center;color:#f2deb8;font-size:1.7cqw;line-height:1.55;white-space:nowrap}
+.commerce-panel .shop-close{position:absolute;left:92.3%;top:4.8%;width:6.3%;height:10%;padding:0;background:transparent;border:0;box-shadow:none}
+.commerce-panel .shop-close:hover{box-shadow:inset 0 0 24px #ffcf5870}
+.commerce-panel .shop-tabs{position:absolute;left:5.5%;top:19%;width:90%;height:8.5%;display:grid;grid-template-columns:repeat(3,1fr);gap:2%}
+.commerce-panel .shop-tab{background:transparent;border:0;box-shadow:none;padding:0;color:#d0b384;font-size:2.1cqw;text-shadow:0 2px 3px #000}
+.commerce-panel .shop-tab.active{color:#ffedb5;background:radial-gradient(ellipse,#d8a54430,transparent 70%);text-decoration:underline;text-decoration-color:#d9b66d;text-underline-offset:8px}
+.commerce-panel .shop-arrow{position:absolute;top:43%;width:5%;height:9%;padding:0;background:transparent;border:0;box-shadow:none;z-index:2}
+.commerce-panel .shop-arrow.previous{left:.8%}.commerce-panel .shop-arrow.next{right:.8%}
+.commerce-panel .shop-arrow:disabled{opacity:1;background:#03080b99;cursor:default}
+.commerce-panel .shop-content{position:absolute;left:8%;top:32%;width:84%;height:35.5%;display:flex;justify-content:center;gap:2%;align-items:stretch}
+.commerce-panel .shop-card{position:relative;flex:1;max-width:23.5%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5%;background:radial-gradient(ellipse at 50% 38%,#224b6550,#050e1766);border:1px solid #8b734948;border-radius:12px 4px;box-shadow:inset 0 0 30px #0005;padding:1.5%;transition:background .15s,border-color .15s}
+.commerce-panel .shop-card.selected{border:2px solid #e9c674;background:radial-gradient(ellipse at 50% 35%,#56665366,#051018a0);box-shadow:0 0 24px #f4bb3120,inset 0 0 20px #e0b96310}
+.commerce-panel .shop-card svg{width:78%;height:54%;filter:drop-shadow(0 5px 5px #0008)}
+.commerce-panel .shop-card-name{font-size:1.5cqw;line-height:1.15;text-align:center;color:#fae5b4}
+.commerce-panel .shop-card-price{font-size:1.5cqw;color:#ebc86d}
+.commerce-panel .shop-card-status{font:1.15cqw system-ui;color:#bfc4b4;letter-spacing:.02em}
+.commerce-panel .shop-empty{align-self:center;font-size:2cqw;text-align:center;max-width:75%;line-height:1.6;color:#c9bea5}
+.commerce-panel .shop-pager{position:absolute;left:20%;width:60%;top:68%;text-align:center;font:1.1cqw system-ui;color:#bca675}
+.commerce-panel .shop-preview{position:absolute;left:6.8%;top:75%;width:11.5%;height:16.5%;display:grid;place-items:center}
+.commerce-panel .shop-preview svg{width:100%;height:100%;filter:drop-shadow(0 4px 4px #0006)}
+.commerce-panel .shop-details{position:absolute;left:21%;top:74.5%;width:50%;height:17%;color:#4b2c12;overflow:auto;scrollbar-width:thin}
+.commerce-panel .shop-details h3{font-size:1.7cqw;margin:0 0 .4em;color:#4b2c12;font-weight:bold;line-height:1.15}
+.commerce-panel .shop-details p{font-size:1.15cqw;margin:0;line-height:1.35;white-space:normal}
+.commerce-panel .shop-total{position:absolute;left:75%;top:75.8%;width:18%;height:5.6%;display:grid;place-items:center;font-size:2cqw;color:#f5d685}
+.commerce-panel .shop-submit{position:absolute;left:74.5%;top:84.7%;width:19%;height:6.8%;padding:0;background:transparent;box-shadow:none;border:0;color:#e8f5ff;font-size:1.8cqw;text-shadow:0 2px 2px #000}
+.commerce-panel .shop-submit:disabled{opacity:1;color:#c1bbac;background:#0005;font-size:1.4cqw}
+.commerce-panel .shop-submit:hover:not(:disabled){background:#80cfff18}
+.commerce-panel .shop-quantity{display:flex;gap:.5cqw;align-items:center;margin-top:.5cqw}
+.commerce-panel .shop-quantity button{padding:.3cqw .7cqw;font-size:1.2cqw;background:#50301be8;color:#fae7bf;border:1px solid #8c662f;box-shadow:none}
+.commerce-panel .shop-quantity input{width:5cqw;padding:.25cqw;text-align:center;font-size:1.3cqw;background:#ffedc688;border:1px solid #8c662f;color:#40260f}
+.commerce-panel .shop-quantity span{font:1.2cqw system-ui}
+.commerce-panel .shop-confirmation{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1cqw;width:100%}
+.commerce-panel .shop-confirmation svg{width:8cqw;height:8cqw}
+.commerce-panel .shop-confirmation h3{margin:0;color:#ecca76;font-size:2.6cqw}
+.commerce-panel .shop-confirmation p{margin:0;font-size:1.6cqw;line-height:1.2}
+.commerce-panel .shop-confirmation strong{font-size:2.3cqw;color:#f5da96}
+.commerce-panel .shop-cancel{font-size:1.2cqw;padding:.5cqw 1cqw}
+.commerce-panel .shop-status{position:absolute;left:21%;top:93%;width:72%;font:1.2cqw system-ui;color:#f3d795;text-align:center;background:#02090bde;border-radius:3px;z-index:3;line-height:1.5}
+.commerce-panel .shop-status:empty{display:none}
+.commerce-panel .shop-back{position:absolute;left:7%;top:95%;padding:.35cqw .9cqw;font-size:1cqw;background:#0b161fe0}
+/* On narrow screens, keep the supplied frame as the skin and reflow real controls. */
+@media(max-width:650px) and (orientation:portrait){
+ #panel.commerce-panel{width:96vw;height:94dvh;aspect-ratio:auto;background-size:100% 100%;container-type:inline-size;max-height:94dvh;overflow:hidden}
+ .commerce-panel .shop-subtitle{top:13%;font-size:2.5cqw;left:25%;width:60%;height:4%}
+ .commerce-panel .shop-tabs{top:19%;height:8%;left:6%;width:88%}
+ .commerce-panel .shop-tab{font-size:3.5cqw}
+ .commerce-panel .shop-content{top:31%;left:10%;width:80%;height:36%;overflow:auto;scroll-snap-type:x mandatory;justify-content:flex-start;gap:5%;scrollbar-width:thin}
+ .commerce-panel .shop-card{flex:0 0 90%;max-width:90%;padding:5%;scroll-snap-align:center;gap:4%}
+ .commerce-panel .shop-card svg{height:56%;width:60%}
+ .commerce-panel .shop-card-name{font-size:4.6cqw}.commerce-panel .shop-card-price{font-size:4cqw}.commerce-panel .shop-card-status{font-size:3cqw}
+ .commerce-panel .shop-pager{font-size:2.5cqw;top:68%}
+ .commerce-panel .shop-empty{font-size:4cqw;max-width:100%}
+ .commerce-panel .shop-details{left:21%;width:49%;top:75%;height:17.5%}
+ .commerce-panel .shop-details h3{font-size:3.6cqw}.commerce-panel .shop-details p{font-size:2.7cqw;line-height:1.25}
+ .commerce-panel .shop-preview{height:12%;top:77%}
+ .commerce-panel .shop-total{font-size:3.6cqw}.commerce-panel .shop-submit{font-size:3.8cqw}.commerce-panel .shop-submit:disabled{font-size:2.8cqw}
+ .commerce-panel .shop-quantity{flex-wrap:wrap;gap:1cqw;margin-top:1cqw}.commerce-panel .shop-quantity button{font-size:3.4cqw;padding:1cqw 2cqw}.commerce-panel .shop-quantity input{width:12cqw;font-size:3.5cqw}.commerce-panel .shop-quantity span{font-size:3cqw}
+ .commerce-panel .shop-confirmation{gap:3cqw}.commerce-panel .shop-confirmation svg{width:18cqw;height:18cqw}.commerce-panel .shop-confirmation h3{font-size:5cqw}.commerce-panel .shop-confirmation p{font-size:3.6cqw}.commerce-panel .shop-confirmation strong{font-size:5cqw}.commerce-panel .shop-cancel{font-size:3.2cqw;padding:2cqw}
+ .commerce-panel .shop-back{font-size:2.5cqw;top:95%;padding:1cqw}.commerce-panel .shop-status{font-size:2.5cqw;left:23%;width:70%;top:94%}
+ .commerce-panel .shop-close{width:7%;height:10%;left:92%}
+}
+@media(max-height:450px) and (orientation:landscape){#panel.commerce-panel{width:min(98vw,calc(98dvh * 1.5))}}
+@media(prefers-reduced-motion:reduce){.commerce-panel .shop-card{transition:none}}
+
+@media(max-width:650px) and (orientation:portrait){
+ .commerce-panel::before{content:'';position:absolute;inset:0 0 auto;height:18%;background:#02070a url('/assets/ui/shop-frame.webp') top center/100% auto no-repeat;pointer-events:none}
+ .commerce-panel .shop-close{top:1.5%;right:2%;left:auto;width:10cqw;height:10cqw;min-width:38px;min-height:38px;background:linear-gradient(#a52113,#601105);border:1px solid #ffd481;border-radius:3px;box-shadow:inset 0 0 0 2px #8c5c21}
+ .commerce-panel .shop-close::after{content:'×';font-size:8cqw;line-height:1;color:#ffd980}
+}
+@media(max-width:650px) and (orientation:portrait){
+ .commerce-panel .shop-details:has(.shop-quantity) p{display:none}
+ .commerce-panel .shop-quantity button,.commerce-panel .shop-quantity input{min-height:34px}
+ .commerce-panel .shop-quantity button{min-width:34px}
+}
+/* V0.5: supplied textures are the buttons themselves, with unchanged proportions. */
+.image-button{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important;line-height:0}
+.image-button>img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
+.image-button:hover:not(:disabled){filter:brightness(1.13)}
+.image-button:active:not(:disabled){transform:translateY(2px)}
+.image-button:disabled{filter:grayscale(.55) brightness(.6);cursor:default}
+.commerce-panel .shop-tabs{top:17.8%;height:12%;left:5%;width:90%;gap:2%}
+.commerce-panel .shop-tab.active{background:transparent;text-decoration:none;filter:brightness(1.18);transform:translateY(-2px)}
+.commerce-panel .shop-tab.active::after{content:'';display:block;position:absolute;bottom:0;left:38%;width:24%;height:2px;background:#ffe3a0}
+.commerce-panel .shop-tab{position:relative}
+.commerce-panel .story-tabs{display:flex;justify-content:center}
+.commerce-panel .story-tabs .shop-tab{width:32%}
+.commerce-panel .shop-submit{left:73.2%;width:22%;top:83.5%;height:10%}
+.commerce-panel .shop-submit:disabled{background:transparent;opacity:.65}
+.commerce-panel .shop-back{left:6%;top:94%;width:12%;height:6%;background:transparent}
+.commerce-panel .shop-cancel{width:16cqw;height:6cqw}
+.commerce-panel .shop-details .shop-trade-hint{margin-top:.5cqw;color:#67400b;font-weight:bold;font-size:1.2cqw;display:block}
+@media(max-width:650px) and (orientation:portrait){
+ .commerce-panel .shop-tabs{top:18%;height:10%}
+ .commerce-panel .shop-back{top:94%;width:18%;height:5%}
+ .commerce-panel .shop-cancel{width:38cqw;height:15cqw}
+ .commerce-panel .shop-details .shop-trade-hint{font-size:2.7cqw}
+}
+
+.frame-control>svg{display:block;width:100%;height:100%;pointer-events:none}
+.commerce-panel .shop-close::after{content:none}
+.commerce-panel .frame-control{border:0;box-shadow:none;background:transparent}
+
+/* Merchant choices live on the scene, with no intermediary panel. */
+.market-toolbar{position:absolute;inset:0;pointer-events:none}
+.market-toolbar>button{pointer-events:auto}
+@media(max-width:650px) and (orientation:portrait){
+ #game:has(#scene-stage[data-scene="market"]){align-items:flex-start;padding-top:100px}
+ #scene-stage[data-scene="market"] .market-toolbar{inset:auto 0 auto;top:103%;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 8px;pointer-events:auto}
+ #scene-stage[data-scene="market"] .market-toolbar>button{position:static;width:100%!important;height:auto!important;aspect-ratio:2.55;min-height:48px}
+}
+/* Original city buttons retain their positions on the city illustration. */
+.hub-toolbar{position:absolute;inset:0;pointer-events:none}
+.hub-toolbar>.hotspot{pointer-events:auto}
+.market-toolbar{position:fixed!important;inset:auto 0 14px!important;display:flex!important;justify-content:center;flex-wrap:wrap;gap:10px;width:min(96vw,1160px);margin:auto;pointer-events:none;z-index:3}
+.market-toolbar>.hotspot{position:relative!important;inset:auto!important;width:228px!important;height:84px!important;pointer-events:auto}
+@media(max-width:700px){.market-toolbar{top:auto!important;bottom:10px!important;width:96vw;display:grid!important;grid-template-columns:1fr 1fr;gap:4px}.market-toolbar>.hotspot{width:100%!important;height:68px!important}}

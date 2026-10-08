@@ -1,0 +1,6 @@
+import {decorateButton} from './compact-menu';
+export const node=(tag:string,cls='',text='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};
+export function ornamentButton(label:string,fn:()=>void,disabled=false){const b=document.createElement('button');b.type='button';decorateButton(b,label);b.disabled=disabled;b.onclick=()=>{if(!b.disabled)fn();};return b;}
+export function menuHeading(label:string){const h=node('h2','menu-heading'),b=ornamentButton(label,()=>{});h.append(...Array.from(b.childNodes));h.querySelector('span')?.style.setProperty('font-family','Georgia,serif','important');return h;}
+export {assetSlice} from './assets';
+export function trapMenu(panel:HTMLElement,busy:()=>boolean,exit:()=>void,scope:()=>HTMLElement=()=>panel){panel.onkeydown=e=>{if(e.key==='Escape'){e.preventDefault();if(!busy())exit();}if(e.key==='Tab'){const items=Array.from(scope().querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled),[tabindex="0"]')),first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}};}

@@ -1,0 +1,47 @@
+{
+  "hub": {
+    "file": "altherya.png",
+    "x": 0,
+    "y": 121,
+    "w": 1983,
+    "h": 527,
+    "sourceW": 1983,
+    "sourceH": 793
+  },
+  "elarwyn": {
+    "file": "elarwyn.png",
+    "x": 0,
+    "y": 119,
+    "w": 1983,
+    "h": 512,
+    "sourceW": 1983,
+    "sourceH": 793
+  },
+  "vorak": {
+    "file": "vorak.png",
+    "x": 0,
+    "y": 134,
+    "w": 1983,
+    "h": 506,
+    "sourceW": 1983,
+    "sourceH": 793
+  },
+  "khaz": {
+    "file": "khaz.png",
+    "x": 1,
+    "y": 76,
+    "w": 2171,
+    "h": 533,
+    "sourceW": 2172,
+    "sourceH": 724
+  },
+  "ashkar": {
+    "file": "ashkar.png",
+    "x": 0,
+    "y": 125,
+    "w": 1983,
+    "h": 512,
+    "sourceW": 1983,
+    "sourceH": 793
+  }
+}

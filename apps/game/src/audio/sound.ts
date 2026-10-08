@@ -1,0 +1,3 @@
+let context:AudioContext|undefined;export let enabled=false;
+export function toggle(){enabled=!enabled;if(enabled){context??=new AudioContext();void context.resume();}return enabled;}
+export function chime(high=false){if(!enabled||!context)return;const now=context.currentTime;[0,1,2].forEach((n)=>{const o=context!.createOscillator(),g=context!.createGain();o.type='triangle';o.frequency.value=(high?440:220)*[1,1.25,1.5][n];g.gain.setValueAtTime(.04,now+n*.08);g.gain.exponentialRampToValueAtTime(.001,now+n*.08+.25);o.connect(g).connect(context!.destination);o.start(now+n*.08);o.stop(now+n*.08+.26);});}

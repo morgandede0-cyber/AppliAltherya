@@ -1,0 +1,198 @@
+{
+  "bank": {
+    "file": "bank.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-a3fe688c-8ea6-4a27-a3db-09645a98d7e3.png"
+  },
+  "forge": {
+    "file": "forge.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-e5bc7e46-7671-4dc4-936c-b911eac13e98.png"
+  },
+  "jobs": {
+    "file": "jobs.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-cb880668-60ce-4cda-bfcc-f3561b5951fe.png"
+  },
+  "tavern": {
+    "file": "tavern.webp",
+    "width": 1984,
+    "height": 793,
+    "approved": true,
+    "source": "exec-595746a2-4200-444b-a8a0-c8a36ea6d986.png"
+  },
+  "drinks": {
+    "file": "drinks.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-27ffa4f9-83f6-4c94-8ef5-f0e4a4d2ccd6.png"
+  },
+  "games": {
+    "file": "games.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-e558b6bc-7904-4b86-9a96-8e0509a90a36.png"
+  },
+  "castle": {
+    "file": "castle.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-4979dc95-ba3a-4885-9484-b545efdb1d7c.png"
+  },
+  "dashboard": {
+    "file": "dashboard.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-b8599fbc-0b05-446a-8eb8-f19b69ca0174.png"
+  },
+  "podium": {
+    "file": "podium.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-bd8eacf5-a743-44cc-88c0-9abf1e9de948.png"
+  },
+  "arena": {
+    "file": "arena.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-12b2ed59-8432-4fab-8f28-16041b00b3de.png"
+  },
+  "combat": {
+    "file": "combat.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-1f4209cc-38cc-4e24-8827-e7f45a2d2d61.png"
+  },
+  "techniques": {
+    "file": "techniques.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-c4b3e23a-95cf-4e9d-9489-24799c0d6fef.png"
+  },
+  "alley": {
+    "file": "alley.webp",
+    "width": 2172,
+    "height": 724,
+    "approved": true,
+    "source": "exec-898fe28c-a1db-41b6-b195-39cf46aed61f.png"
+  },
+  "thief": {
+    "file": "thief.webp",
+    "width": 2172,
+    "height": 724,
+    "approved": true,
+    "source": "exec-0cc6984a-c89b-4162-a035-a02b45abbd6f.png"
+  },
+  "robber": {
+    "file": "robber.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-c61c362b-1c7d-4cd8-b8ce-0e313bbc92cf.png"
+  },
+  "guard": {
+    "file": "guard.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-b1e307e0-0b93-4af4-a539-7dfc17f06029.png"
+  },
+  "casino": {
+    "file": "casino.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-41f7292f-ee48-4bf7-9fee-8c126637fc81.png"
+  },
+  "blackjack": {
+    "file": "blackjack.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-804b1247-1f1b-47b2-a9b3-5a316f04b182.png"
+  },
+  "roulette": {
+    "file": "roulette.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-1abfd2a3-2aca-40fd-b92f-de7ea7c2c174.png"
+  },
+  "russian": {
+    "file": "russian.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-f670e2bc-4c2d-4b27-8b65-d3f5624b9f5c.png"
+  },
+  "slots": {
+    "file": "slots.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-e4bc29e5-fd79-45c9-8196-f01d9bd0dbf0.png"
+  },
+  "horses": {
+    "file": "horses.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-16763dd0-b366-4dd3-a790-934adadcdd2f.png"
+  },
+  "expedition": {
+    "file": "expedition.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-6c49f4eb-22f2-4394-a424-e7374dfec2c2.png"
+  },
+  "tools": {
+    "file": "tools.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-124d7fd5-12ca-4302-ac3c-bb11b0bcc39e.png"
+  },
+  "destinations": {
+    "file": "destinations.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-c48efb98-1843-4a0e-a314-aa358cb84148.png"
+  },
+  "accessories": {
+    "file": "accessories.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-f114be1e-5dd2-4f54-a370-20ae54abdd81.png"
+  },
+  "departure": {
+    "file": "departure.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-a0a8d0e4-ff7b-4872-b45b-063c71818768.png"
+  },
+  "live": {
+    "file": "live.webp",
+    "width": 1536,
+    "height": 1024,
+    "approved": true,
+    "source": "exec-68e4f920-912b-428d-9e1c-b588b12ffc3f.png"
+  }
+}

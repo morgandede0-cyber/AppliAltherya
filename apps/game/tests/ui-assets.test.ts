@@ -1,0 +1,8 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {existsSync,readFileSync} from 'node:fs';
+import {hubAssets,merchantAssets,tabAssets} from '../src/ui/assets';
+import {scenes} from '../src/world/scenes';import {categories} from '../src/ui/commerce-model';
+test('chaque bouton du hub vierge possède son asset et sa destination',()=>{assert.equal(scenes.hub.image,'hub-clean.webp');for(const spot of scenes.hub.spots){assert.equal(spot.asset,hubAssets[spot.action]);assert.ok(spot.asset,spot.label);assert.ok(existsSync('public/assets/ui/'+spot.asset));}});
+test('tous les boutons du marchand et onglets déclarés existent en vrais WebP',()=>{for(const file of new Set([...Object.values(hubAssets),...Object.values(merchantAssets),...Object.values(tabAssets)])){const data=readFileSync('public/assets/ui/'+file);assert.equal(data.subarray(0,4).toString(),'RIFF',file);assert.equal(data.subarray(8,12).toString(),'WEBP',file);}});
+test('Histoire a son propre onglet et ses boutons graphiques, distincts de Divers',()=>{assert.deepEqual(categories('story'),['Histoire']);assert.equal(tabAssets.Histoire,merchantAssets.Histoire);assert.ok(!categories('buy').includes('Histoire'));});
+
+test('les quatre choix du marchand sont directement présents dans la scène du marché',()=>{assert.deepEqual(scenes.market.spots.map(s=>s.label),['Histoire','Acheter','Vendre','Partir']);assert.deepEqual(scenes.market.spots.map(s=>s.action),['market:story','market:buy','market:sell','scene:hub']);for(const spot of scenes.market.spots){assert.equal(spot.asset,merchantAssets[spot.label as keyof typeof merchantAssets]);assert.ok(existsSync('public/assets/ui/'+spot.asset));}});
