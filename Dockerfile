@@ -15,6 +15,6 @@ COPY apps/bot/tourwork /app/apps/bot/tourwork
 ENV TZ=Europe/Paris
 VOLUME /app/data
 COPY --from=game /build/dist /app/apps/game/dist
-ENV PORT=8080
-EXPOSE 8080
+ENV PORT=10080
+EXPOSE 10080
 CMD ["python","apps/api/server.py"]
