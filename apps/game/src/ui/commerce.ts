@@ -3,29 +3,29 @@ import {categories,products,pageItems,clampQuantity,tradeBlock,tradeBody,type Co
 import {itemArt} from './item-art';
 import {equipmentArt,resourceArt} from './catalog-art';
 import {decorateButton} from './compact-menu';
-import {menuHeading} from './menu-kit';
+import {assetSlice,menuHeading} from './menu-kit';
 import './commerce.css';
 import './commerce-live.css';
-import './commerce-clean.css';
-type Host={state:()=>Snapshot;trade:(body:Record<string,unknown>)=>Promise<string>;exit:()=>void;back:()=>void;sound:()=>void};
+
+type Host={state:()=>Snapshot;trade:(body:Record<string,unknown>)=>Promise<string>;exit:()=>void;back:()=>void;sound:()=>void;switchMode:(mode:CommerceMode)=>void};
 export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
  document.body.classList.add("illustrated-open");
  let category=categories(mode)[0],page=0,selected:Product|undefined,quantity=1,busy=false,message='',dead=false;
- root.hidden=false;root.dataset.kind='market-'+mode;root.className='commerce-panel merchant-live merchant-clean';
+ root.hidden=false;root.dataset.kind='market-'+mode;root.className='commerce-panel merchant-live restored-commerce';
  const el=(tag:string,cls='',text='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};
  const art=(p:Product)=>['axe','pickaxe','spear','bag'].includes(p.icon)?equipmentArt(p.icon):resourceArt(p.name)??itemArt(p.icon);
  const button=(label:string,fn:()=>void,disabled=false)=>{const b=document.createElement('button');decorateButton(b,label);b.disabled=busy||disabled;b.onclick=()=>{if(!busy){host.sound();fn();}};return b;};
  async function submit(){if(!selected||busy||tradeBlock(selected,mode,host.state().balance.wallet,quantity))return;busy=true;draw();try{message=await host.trade(tradeBody(selected,mode,quantity));selected=undefined;}catch(e){message=String(e);}finally{busy=false;if(!dead)draw();}}
- function draw(){if(dead)return;const focused=root.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;root.replaceChildren();root.setAttribute('aria-busy',String(busy));root.setAttribute('aria-label',mode==='sell'?'Vendre au marché':mode==='story'?'Objets d’histoire':'Boutique de Legacy');
+ function draw(){if(dead)return;const focused=root.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;root.replaceChildren();const sheet=new Image();sheet.className='merchant-sheet';sheet.src='/assets/catalog/merchant-design.webp';sheet.alt='Marchand de IV';root.append(sheet);root.setAttribute('aria-busy',String(busy));root.setAttribute('aria-label',mode==='sell'?'Vendre au marché':mode==='story'?'Objets d’histoire':'Boutique de Legacy');
  const header=el('div','merchant-header');header.append(menuHeading(mode==='sell'?'Vendre':mode==='story'?'Objets d’histoire':'Acheter'));root.append(header);
- const meta=el('div','merchant-meta');meta.append(el('strong','',mode==='sell'?'Vendre vos ressources':mode==='story'?'Objets d’histoire':'Acheter au marché'),el('span','',`Portefeuille : ${host.state().balance.wallet} Gold`));root.append(meta);
+ const meta=el('div','merchant-meta');meta.append(el('strong','',mode==='sell'?'Vendre vos ressources':mode==='story'?'Objets d’histoire':'Acheter au marché'),el('span','',`${host.state().balance.wallet} Gold`));root.append(meta);
  const tabs=el('div','merchant-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label',mode==='sell'?'Métiers':'Rayons');categories(mode).forEach(c=>{const b=button(c,()=>{category=c;page=0;selected=undefined;message='';draw();});b.setAttribute('role','tab');b.setAttribute('aria-selected',String(c===category));b.classList.toggle('selected',c===category);tabs.append(b);});root.append(tabs);
  const all=products(host.state(),mode).filter(p=>p.category===category),slice=pageItems(all,page);page=slice.page;
  const grid=el('div','merchant-grid');grid.setAttribute('role','tabpanel');if(!slice.items.length)grid.append(el('p','merchant-empty',mode==='sell'?'Aucune ressource à vendre.':category==='Consommables'?'Aucun consommable disponible actuellement.':'Aucun objet disponible.'));
- slice.items.forEach(p=>{const card=el('article','merchant-card');const icon=el('div','merchant-item-icon');icon.append(art(p));const info=el('div','merchant-item-info');info.append(el('h3','',p.name.replace(/^[^\p{L}\p{N}]+/u,'')),el('p','merchant-price',`${p.price} Gold${mode==='sell'?' / unité':''}`));if(p.chapter)info.append(el('span','merchant-chapter',`Chapitre ${p.chapter}`));info.append(el('p','merchant-description',p.description));if(mode==='sell')info.append(el('small','',`Stock : ${p.stock}`));const block=tradeBlock(p,mode,host.state().balance.wallet,1);info.append(button(block||(mode==='sell'?'Vendre':'Acheter'),()=>{selected=p;quantity=1;draw();},!!block));card.append(icon,info);grid.append(card);});root.append(grid);
+ slice.items.forEach(p=>{const card=el('article','merchant-card');const icon=el('div','merchant-item-icon');icon.append(art(p));const info=el('div','merchant-item-info');info.append(el('h3','',p.name.replace(/^[^\p{L}\p{N}]+/u,'')),el('p','merchant-price',`${p.price} Gold${mode==='sell'?' / unité':''}`));if(p.chapter)info.append(el('span','merchant-chapter',`Chapitre ${p.chapter}`));info.append(el('p','merchant-description',p.description));if(mode==='sell')info.append(el('small','',`Stock : ${p.stock}`));const block=tradeBlock(p,mode,host.state().balance.wallet,1);info.append(button(block||(mode==='sell'?'Vendre':'Acheter'),()=>{selected=p;quantity=1;draw();},!!block));card.append(icon,info);grid.append(card);});for(let i=slice.items.length;i<4;i++)grid.append(el('div','merchant-empty-slot','Aucun autre objet'));root.append(grid);
  const pager=el('div','merchant-pager');pager.append(button('◀',()=>{page--;draw();},page===0),el('span','',`Page ${page+1} / ${slice.last+1}`),button('▶',()=>{page++;draw();},page===slice.last));pager.firstElementChild?.setAttribute('aria-label','Objets précédents');pager.lastElementChild?.setAttribute('aria-label','Objets suivants');root.append(pager);
  if(message){const status=el('p','merchant-status',message);status.setAttribute('role','status');root.append(status);}
- const footer=el('div','merchant-footer');footer.append(button('Retour au marché',host.back));root.append(footer);
+ const footer=el('div','merchant-footer');footer.append(button('Retour au marché',host.back));root.append(footer);const switcher=button(mode==='sell'?'Acheter':'Vendre',()=>host.switchMode(mode==='sell'?'buy':'sell'));switcher.classList.add('merchant-switch-mode');root.append(switcher);
  if(selected){const backdrop=el('div','merchant-modal'),dialog=el('section','merchant-confirm');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label',mode==='sell'?'Confirmer la vente':'Confirmer l’achat');dialog.append(el('h2','',mode==='sell'?'Confirmer la vente':'Confirmer l’achat'),art(selected),el('p','',selected.name));
  if(selected.chapter)dialog.append(el('span','merchant-chapter',`Chapitre ${selected.chapter}`));
  if(mode==='sell'){const q=el('label','', 'Quantité : '),i=document.createElement('input');i.type='number';i.min='1';i.max=String(selected.stock);i.step='1';i.value=String(quantity);i.setAttribute('aria-label','Quantité à vendre');i.disabled=busy;i.onchange=()=>{quantity=clampQuantity(Number(i.value),selected!.stock);draw();};q.append(i);dialog.append(q);}
