@@ -8,7 +8,7 @@ import './refined-menus.css';
 type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;close:()=>void;route:(key:string)=>void};
 export const refinedKinds=new Set(['market','forge','drinks','guard','robber','profile','world','story','khaz','ashkar']);
 export function openRefined(panel:HTMLElement,kind:string,host:Host){
- let planning=false,busy=false,dead=false,message='',selected=kind==='forge'?'axe':'beer',profileTab='Résumé',inventoryPage=0,chapter=host.state().chapters.find(c=>c.unlocked)?.chapter??1,guess='';const texts=new Map<number,string>();
+ let busy=false,dead=false,message='',selected=kind==='forge'?'axe':'beer',profileTab='Résumé',inventoryPage=0,chapter=host.state().chapters.find(c=>c.unlocked)?.chapter??1,guess='';const texts=new Map<number,string>();
  const titles:Record<string,string>={market:'Marché de Legacy',forge:'Forge de IV',drinks:'Le tavernier',guard:'Le vigile',robber:'Planifier un braquage',profile:'Mon personnage',world:'Le monde d’Elyndor',khaz:'Forge de Khaz’goram',ashkar:'Tour d’Ashkar',story:'Le livre du troubadour'};
  const btn=(label:string,fn:()=>void,disabled=false)=>ornamentButton(label,fn,disabled||busy);
  const back=()=>host.route(['khaz','ashkar'].includes(kind)?'world':kind==='forge'||kind==='market'?'hub':kind==='guard'||kind==='robber'?'alley':kind==='world'||kind==='profile'?'hub':'tavern');
@@ -16,49 +16,9 @@ export function openRefined(panel:HTMLElement,kind:string,host:Host){
  function stat(parent:HTMLElement,label:string,value:string){const c=el('div','menu-stat');c.append(el('span','',label),el('strong','',value));parent.append(c);}
  function gearName(s:Snapshot,key:string,tier:number){return key==='bag'?s.bags[String(tier)]?.name:s.tools[String(tier)]?.[key];}
  function portrait(file:string,box:[number,number,number,number]){const p=el('figure','npc-portrait');p.append(assetSlice('/assets/menus/'+file+'.webp',...box));return p;}
- function draw(){if(dead)return;if(['market','forge','drinks','guard','robber'].includes(kind)){drawOriginal();return;}const scroll=panel.scrollTop,bookScroll=panel.querySelector<HTMLElement>('.book-prose')?.scrollTop??0,oldChapter=panel.querySelector('.book-page')?.getAttribute('aria-label'),mapViewport=panel.querySelector<HTMLElement>('.map-viewport'),mapScroll=[mapViewport?.scrollLeft??0,mapViewport?.scrollTop??0];const focused=panel.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null,s=host.state();panel.hidden=false;panel.className='refined-menu refined-'+kind;panel.dataset.kind=kind;panel.setAttribute('aria-label',titles[kind]);panel.setAttribute('aria-busy',String(busy));panel.replaceChildren();document.body.classList.add('illustrated-open');const header=el('div','menu-header');if(kind==='forge'){header.append(themedHeader('forge-design'));const h=el('h2','sr-only',titles[kind]);header.append(h);}else header.append(menuHeading(titles[kind]));panel.append(header);const body=el('section','menu-content');panel.append(body);
+ function draw(){if(dead)return;const scroll=panel.scrollTop,bookScroll=panel.querySelector<HTMLElement>('.book-prose')?.scrollTop??0,oldChapter=panel.querySelector('.book-page')?.getAttribute('aria-label'),mapViewport=panel.querySelector<HTMLElement>('.map-viewport'),mapScroll=[mapViewport?.scrollLeft??0,mapViewport?.scrollTop??0];const focused=panel.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null,s=host.state();panel.hidden=false;panel.className='refined-menu refined-'+kind;panel.dataset.kind=kind;panel.setAttribute('aria-label',titles[kind]);panel.setAttribute('aria-busy',String(busy));panel.replaceChildren();document.body.classList.add('illustrated-open');const header=el('div','menu-header');if(kind==='forge'){header.append(themedHeader('forge-design'));const h=el('h2','sr-only',titles[kind]);header.append(h);}else header.append(menuHeading(titles[kind]));panel.append(header);const body=el('section','menu-content');panel.append(body);
  if(kind==='market')marketHome(body,s);else if(kind==='forge')forge(body,s);else if(kind==='drinks')drinks(body,s);else if(kind==='guard'||kind==='robber')alley(body,s);else if(kind==='profile')profile(body,s);else if(kind==='world')world(body,s);else if(kind==='khaz'||kind==='ashkar')worldEntrance(body,s);else story(body,s);
  if(message){const n=el('p','menu-notice',message);n.setAttribute('role','status');body.append(n);}if(busy){const n=el('p','menu-loading','Chargement…');n.setAttribute('role','status');body.append(n);}const footer=el('div','menu-footer');footer.append(btn(['khaz','ashkar'].includes(kind)?'Retour au monde':kind==='market'?'Partir':kind==='guard'||kind==='robber'?'Retour à la ruelle':kind==='drinks'||kind==='story'?'Retour à la taverne':'Retour en ville',back));if(kind!=='world')panel.append(footer);panel.scrollTop=scroll;const prose=panel.querySelector<HTMLElement>('.book-prose');if(prose&&oldChapter==='Chapitre '+chapter)prose.scrollTop=bookScroll;const map=panel.querySelector<HTMLElement>('.map-viewport');if(map){map.scrollLeft=mapScroll[0];map.scrollTop=mapScroll[1];}if(focused)Array.from(panel.querySelectorAll<HTMLElement>('[aria-label]')).find(n=>n.getAttribute('aria-label')===focused)?.focus({preventScroll:true});}
- function drawOriginal(){
-  const s=host.state();panel.hidden=false;panel.className='illustrated restored-art restored-'+kind;panel.dataset.kind=kind;panel.setAttribute('aria-label',titles[kind]);panel.setAttribute('aria-busy',String(busy));panel.replaceChildren();document.body.classList.add('illustrated-open');
-  const stage=el('div','art-stage');panel.append(stage);const image=new Image();image.className='art-image';image.alt=titles[kind];image.src=kind==='market'?'/assets/catalog/merchant-design.webp':'/assets/menus/'+kind+'.webp';stage.append(image);
-  const place=(n:HTMLElement,x:number,y:number,w:number,h:number)=>{Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});stage.append(n);return n;};
-  const value=(text:string,x:number,y:number,w:number,h:number,cls='')=>place(el('div','art-overlay art-mask '+cls,text),x,y,w,h);
-  const hit=(label:string,x:number,y:number,w:number,h:number,fn:()=>void,disabled=false)=>{const b=document.createElement('button');b.type='button';b.className='art-hit';b.setAttribute('aria-label',label);b.title=label;b.disabled=disabled||busy;b.onclick=()=>{if(!b.disabled)fn();};place(b,x,y,w,h);return b;};
-  if(kind==='forge'){
-   const keys=['axe','pickaxe','spear','bag'].filter(k=>s.catalog[k]);if(!keys.includes(selected))selected=keys[0];
-   keys.forEach((key,i)=>{const b=hit(({axe:'Hache',pickaxe:'Pioche',spear:'Lance',bag:'Sac'} as Record<string,string>)[key],9+i*21,25,20,11,()=>{selected=key;message='';draw();});b.classList.toggle('selected',selected===key);});
-   const current=s.gear[selected+'_level'],next=current+1,max=next>5,owned=s.owned[selected];
-   [current,Math.min(5,next)].forEach((tier,i)=>{const art=value('',7+i*58,51,11,16);art.append(equipmentArt(selected,tier));value(i===0&&!owned?'Non possédé':gearName(s,selected,tier)??s.catalog[selected].name,20+i*58,54,17,6);value(max&&i===1?'Palier maximum':`Palier ${tier}`,24+i*58,60,10,5,'art-small');});
-   const recipe=(selected==='bag'?s.bag_recipes:s.recipes)[next]??{},cost=s.forge_gold[selected==='bag'?'bag':'tool'][next]??0,level=s.forge_levels[next]??0;
-   const materials=value('',20,77,48,7,'art-small');Object.entries(recipe).forEach(([name,qty])=>materials.append(el('span','',`${name} : ${s.resources[name]??0} / ${qty}`)));if(max)materials.textContent='Palier maximum atteint';
-   value(`Niveau requis : ${level}`,80,73,12,4,'art-small art-wood');value(`Coût : ${cost} Gold`,80,81,12,4,'art-small art-wood');
-   if(!owned)value('Aller au marché',22,90,25,6);
-   hit(owned?'Améliorer':'Aller au marché',16,87,40,11,()=>owned?void run({action:'upgrade',key:selected}):host.route('market'),owned&&(max||s.level<level||s.balance.wallet<cost||Object.entries(recipe).some(([n,q])=>(s.resources[n]??0)<q)));
-   hit('Retour en ville',60,88,24,10,back);
-  }else if(kind==='drinks'){
-   s.tavern.drinks_catalog.forEach((d,i)=>{const b=hit(d.name,7+(i%3)*29,15+Math.floor(i/3)*34,28,33,()=>{selected=d.key;message='';draw();},!d.available);b.classList.toggle('selected',d.key===selected);});
-   hit('Commander',31,83,39,10,()=>void run({action:'drink',key:selected}),!s.tavern.drinks_catalog.find(d=>d.key===selected)?.available||s.tavern.remaining_today===0||s.tavern.cooldown_seconds>0);hit('Retour à la taverne',39,93,25,6,back);
-   if(s.tavern.cooldown_seconds>0){const timer=value('',31,78,39,5,'art-small drink-timer');timer.dataset.deadline=String(Date.now()+s.tavern.cooldown_seconds*1000);tick();}
-  }else if(kind==='guard'){
-   value(s.alley.access.valid?'Accès accordé':s.alley.vip?'Entrée VIP':`Entrée : ${s.alley.fee} Gold`,55,45,33,12,'art-paper');
-   hit('Utiliser une invitation',7,80,44,11,()=>void run({action:'guard',key:'invite'},()=>{if(host.state().alley.access.valid)host.route('casino');}),s.alley.invitations===0);
-   const enter=s.alley.access.valid?'Entrer dans la salle':s.alley.vip?'Entrer en VIP':`Payer ${s.alley.fee} Gold`;value(enter,57,82,32,6,'art-small');
-   hit(enter,53,80,39,11,()=>s.alley.access.valid?host.route('casino'):void run({action:'guard',key:'pay'},()=>{if(host.state().alley.access.valid)host.route('casino');}),!s.alley.access.valid&&!s.alley.vip&&s.balance.wallet<s.alley.fee);hit('Retour à la ruelle',34,93,33,6,back);
-  }else if(kind==='robber'){
-   value(`Votre réputation : ${s.alley.reputation.label}`,56,58,34,7,'art-paper art-small');
-   hit('Planifier le braquage',6,76,52,14,()=>{planning=true;draw();});hit('Retour à la ruelle',60,76,33,14,back);
-   if(planning){const dialog=el('section','art-extra robber-planning');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','Planifier le braquage');const content=el('div');alley(content,s);content.querySelector('.npc-portrait')?.remove();dialog.append(content,btn('Fermer',()=>{planning=false;draw();}));stage.append(dialog);for(const b of Array.from(stage.querySelectorAll<HTMLButtonElement>('.art-hit')))b.disabled=true;}
-  }else{
-   image.src='/assets/ui/merchant-scene.webp';image.classList.add('market-scene-image');
-   const actions=el('div','market-original-actions');stage.append(actions);
-   for(const [label,file,route] of [['Acheter','merchant-buy.webp','market:buy'],['Vendre','merchant-sell.webp','market:sell'],['Histoire','merchant-story.webp','market:story'],['Partir','merchant-leave.webp','hub']]){
-    const b=document.createElement('button');b.className='market-original-button';b.setAttribute('aria-label',label);b.disabled=busy;b.onclick=()=>host.route(route);const art=new Image();art.src='/assets/ui/'+file;art.alt='';b.append(art);actions.append(b);
-   }
-
-  }
-  if(message){const status=el('p','art-notice',message);status.setAttribute('role','status');panel.append(status);}
- }
  function marketHome(body:HTMLElement,s:Snapshot){
  const wallet=el('div','market-wallet');stat(wallet,'Portefeuille',`${s.balance.wallet} Gold`);body.append(wallet);
  const choices=el('div','market-choices');
