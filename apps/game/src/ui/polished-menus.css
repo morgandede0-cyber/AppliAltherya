@@ -1,0 +1,97 @@
+/* A single final layout layer replaces the accumulated fixed insets and mask styles. */
+#panel.polished-menu{position:fixed!important;inset:var(--menu-top,50px) auto auto 50%!important;transform:translateX(-50%)!important;margin:0!important;width:var(--menu-width,90vw)!important;height:auto!important;max-width:none!important;max-height:calc(100dvh - var(--menu-top,50px) - 12px)!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important;container-type:inline-size;box-sizing:border-box}
+#panel.polished-menu .art-stage{min-width:0!important;width:100%;position:relative;aspect-ratio:auto!important;container-type:inline-size}
+#panel.polished-menu .art-image{width:100%;height:auto;display:block;clip-path:none!important}
+#panel.polished-menu .material-field{isolation:isolate;background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;overflow:hidden!important;color:#f8e9c6;text-shadow:0 1px 2px #201000;font-weight:600;line-height:1.2;font-size:1.7cqw;gap:.08em}
+#panel.polished-menu .material-field>.field-texture{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;mask-image:linear-gradient(to right,transparent,#000 4%,#000 96%,transparent);mask-composite:intersect}
+#panel.polished-menu .material-paper{color:#412b14;text-shadow:none;font-weight:400}
+#panel.polished-menu .material-field.art-small{font-size:1.3cqw}
+#panel.polished-menu .material-field>.field-texture~svg{height:100%;max-width:100%}
+#panel.polished-menu .bank-amount{background:none!important;overflow:hidden;border-radius:0!important}
+#panel.polished-menu .bank-amount input{width:100%;height:100%;max-width:100%;min-width:0;box-sizing:border-box;border:0!important;border-radius:0!important;background:none!important;color:#fff0cc;padding:0!important;appearance:textfield;font:600 2.55cqw Georgia;text-align:center;outline:none}
+#panel.polished-menu .bank-amount input::-webkit-inner-spin-button,#panel.polished-menu .bank-amount input::-webkit-outer-spin-button{appearance:none;margin:0}
+#panel.polished-menu .bank-amount:focus-within{filter:brightness(1.2);outline:1px solid #efca77;outline-offset:2px}
+#panel.polished-menu .art-hit{border-radius:0!important;min-height:0!important;z-index:2;outline-offset:-3px}
+#panel.polished-menu .art-hit:hover:not(:disabled){background:radial-gradient(ellipse,#f8d47125,transparent 72%)!important;box-shadow:none!important}
+#panel.polished-menu .art-hit.selected{background:radial-gradient(ellipse,#f8d47120,transparent 70%)!important;box-shadow:none!important;outline:1px solid #e4b95688;outline-offset:-4px}
+#panel.polished-menu .art-hit:disabled{background:#03101a45!important;cursor:not-allowed}
+#panel.polished-menu .art-notice{position:relative!important;inset:auto!important;width:95%;max-height:40px;margin:4px auto 0;box-sizing:border-box;background:#10151ad9;border:1px solid #a58247;border-radius:3px;font:clamp(11px,1vw,14px)/1.3 Georgia;padding:5px 10px;z-index:6}
+#panel.polished-menu .compact-dock:empty{display:none}
+#panel.polished-menu .compact-dock:not(:empty){position:relative;inset:auto;transform:none;width:100%;padding:4px 0;gap:8px;box-sizing:border-box}
+#panel.polished-menu .art-extra{position:absolute;inset:18% 8% 8%;max-height:80%;box-sizing:border-box;z-index:10}
+#panel.polished-menu .robber-planning{inset:16% 9% 7%;font-size:clamp(12px,1.45cqw,18px)}
+#panel.polished-menu.pending-contract .art-stage{min-height:0}.polished-menu .mission-active{max-height:65dvh;overflow:auto;box-sizing:border-box}
+#panel.polished-menu .contract-backdrop{position:fixed!important;inset:0!important;max-height:calc(100dvh - var(--menu-top) - 20px)}
+#panel.polished-menu .combat-log{overflow:auto!important;font-size:1.35cqw!important}
+#panel.polished-menu .combat-fighter{font-size:1.45cqw!important;gap:.12em!important;padding:0!important}.polished-menu .combat-fighter p{font-size:inherit!important}
+#panel.polished-menu .combat-fighter:first-of-type{left:12%!important}#panel.polished-menu .combat-fighter:nth-of-type(2){left:70%!important}
+#panel.polished-menu .battle-result{position:absolute!important;inset:10% 10% 5%!important;width:auto!important;max-height:85%;overflow:auto}
+@media(max-width:600px){#panel.polished-menu .art-extra{font-size:12px;inset:12% 3% 2%;overflow:auto}#panel.polished-menu .art-extra .compact-button{min-height:32px;height:40px;font-size:12px!important}#panel.polished-menu .art-extra input{max-width:100%;box-sizing:border-box}.polished-menu .mission-parchment{width:95%;padding:14px;font-size:13px}.polished-menu .material-field{font-size:1.9cqw!important}.polished-menu .material-field.art-small{font-size:1.45cqw!important}}
+
+#panel.illustrated.restored-art.polished-menu .art-overlay.material-field{background:none!important;border:0!important;box-shadow:none!important;padding:0!important}
+#panel.polished-menu .material-field .field-texture{max-width:none!important;max-height:none!important;height:100%!important;width:100%!important}
+/* Commerce is composed from blank material and the original ornament edges.
+   Four real cards; no sample stock, prices or item names remain in the background. */
+#panel.polished-menu.polished-commerce{padding:0 1cqw 1cqw!important;font-family:Georgia,serif;color:#fae8bb;overflow:visible!important;aspect-ratio:auto!important}
+.polished-commerce .merchant-header{display:flex;justify-content:center;margin:0;height:14cqw;position:relative;padding:0}.polished-commerce .merchant-header>svg{width:67%;height:100%;display:block}
+.polished-commerce .merchant-meta{display:flex;justify-content:space-between;align-items:center;padding:.6cqw 2cqw;margin:0;background:none;border:0;border-radius:0;font:1.65cqw Georgia;color:#ffe4a5;min-height:2.5cqw;box-sizing:border-box}
+.polished-commerce .merchant-tabs{display:flex;justify-content:center;align-items:center;gap:1cqw;height:5.6cqw;margin:.4cqw 0 .8cqw}
+.polished-commerce .merchant-tabs .compact-button{width:30%;height:5.4cqw;min-height:0;font-size:1.5cqw!important}.polished-commerce .merchant-tabs .selected{outline:0;filter:brightness(1.3)}
+.polished-commerce .merchant-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,15.6cqw);gap:.9cqw;padding:0 1cqw}
+#panel.polished-menu.polished-commerce .merchant-card{position:relative;display:grid;grid-template-columns:32% 68%;align-items:center;min-height:0;padding:3.5cqw 3.2cqw 2.2cqw 3.8cqw;box-sizing:border-box;overflow:visible!important;background:none!important;border:0;isolation:isolate}
+#panel.polished-menu.polished-commerce .merchant-card>.field-texture{inset:17% 7% 10%;width:86%!important;height:73%!important;mask-image:none;border-radius:12%}
+.polished-commerce .merchant-ornament{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.polished-commerce .merchant-item-icon{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:50%;background:radial-gradient(#16486b,#062238 70%);box-shadow:inset 0 0 0 1px #d9b16a,inset 0 0 0 3px #806027,inset 0 0 0 4px #d9b16a}
+.polished-commerce .merchant-item-icon svg{width:85%;height:85%;max-height:8cqw}
+.polished-commerce .merchant-item-info{position:relative;text-align:center;padding-left:1cqw;min-width:0;z-index:1}
+.polished-commerce .merchant-item-info h3{margin:0;font:600 1.75cqw/1.13 Georgia;color:#ffe7b0;max-height:4cqw;overflow:hidden;text-wrap:balance}
+.polished-commerce .merchant-price{margin:.4cqw 0;font:600 1.65cqw Georgia;color:#f2cf83}
+.polished-commerce .merchant-description{display:none}.polished-commerce .merchant-item-info small{display:block;margin:0;font:1.2cqw Georgia}
+.polished-commerce .merchant-chapter{display:block;font:1.15cqw Georgia;color:#e8c899;margin:.2cqw 0}
+.polished-commerce .merchant-item-info .compact-button{height:3.8cqw;width:100%;min-height:0;font-size:1.3cqw!important;margin-top:.2cqw}
+.polished-commerce .merchant-empty-slot{background:none;border:0;pointer-events:none}
+.polished-commerce .merchant-empty{grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;text-align:center;margin:0;padding:3cqw;font:1.8cqw Georgia;background:none}
+.polished-commerce .merchant-pager{display:flex;align-items:center;justify-content:center;gap:1.5cqw;margin:1cqw 0 .5cqw;height:4cqw;font:1.5cqw Georgia}
+.polished-commerce .merchant-pager .compact-button{height:4cqw;width:10cqw;min-height:0;font-size:1.65cqw!important}
+.polished-commerce .merchant-footer{position:static;display:flex;justify-content:center;gap:1cqw;margin:.5cqw 0 0;height:5cqw;flex-wrap:nowrap}
+.polished-commerce .merchant-footer .compact-button{position:relative!important;inset:auto;width:32%;height:5cqw;min-height:0;font-size:1.5cqw!important}
+.polished-commerce .merchant-status{margin:.5cqw auto 0;padding:4px;text-align:center;max-height:30px;overflow:auto;background:#151c20e6;border:1px solid #a58045;font:clamp(10px,1.2cqw,14px) Georgia}
+.polished-commerce .merchant-modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#040b14b8;overflow:auto;padding:12px;box-sizing:border-box}
+.polished-commerce .merchant-confirm{width:min(480px,92%);max-height:95%;box-sizing:border-box;overflow:auto;background:linear-gradient(110deg,#ddd0aa,#eee1ba,#d5be8b);color:#3c2917;border:2px solid #ac8446;border-radius:8px;padding:16px;text-align:center;font:16px Georgia;text-shadow:none;box-shadow:0 12px 40px #0009}
+.polished-commerce .merchant-confirm>svg{width:90px;height:90px}.polished-commerce .merchant-confirm .merchant-footer{height:auto;flex-wrap:wrap}.polished-commerce .merchant-confirm .compact-button{width:160px;height:44px;min-height:44px;font-size:14px!important}.polished-commerce .merchant-confirm .merchant-chapter{font-size:14px;position:static;color:#73522b}
+@media(max-width:600px){.polished-commerce .merchant-meta{font-size:2.1cqw}.polished-commerce .merchant-item-info h3{font-size:2cqw}.polished-commerce .merchant-price{font-size:1.8cqw}.polished-commerce .merchant-item-info .compact-button{font-size:1.65cqw!important}.polished-commerce .merchant-chapter{font-size:1.65cqw}.polished-commerce .merchant-confirm{font-size:14px;padding:12px}}
+#panel.polished-menu{container-type:inline-size!important;font-family:Georgia,'Times New Roman',serif!important}
+#panel.polished-menu :is(input,h3,p,strong,span){font-family:Georgia,'Times New Roman',serif}
+#panel.polished-menu .material-field>.field-texture{mask-image:linear-gradient(to right,transparent,#000 2%,#000 98%,transparent)}
+#panel.illustrated.restored-art.polished-menu .art-overlay.material-field:has(svg){background:none!important}
+.polished-commerce .merchant-item-icon{width:8cqw;height:8cqw;max-width:100%;justify-self:center;flex:none}
+.polished-commerce .merchant-item-icon>svg{max-width:85%;max-height:85%}
+.polished-commerce .merchant-pager>span{background:none;border:0;padding:0 1cqw;font-size:1.5cqw}
+#panel.polished-menu .material-field>.field-texture{mask-image:linear-gradient(to right,transparent,#000 1%,#000 99%,transparent)}
+#panel.polished-menu .guard-status{font-size:2.3cqw;font-weight:600;white-space:pre-line;line-height:1.8}.polished-menu .guard-entry-label{font-size:2.55cqw}
+.polished-commerce .merchant-item-info h3{font-size:1.85cqw;max-height:4cqw}.polished-commerce .merchant-item-icon{width:9cqw;height:9cqw}
+#panel.polished-menu.mobile-bank{overflow-y:auto!important;overflow-x:hidden!important;max-height:calc(100dvh - var(--menu-top) - 12px)!important;scrollbar-width:thin;scrollbar-color:#a88950 transparent;background:linear-gradient(#051421cc,#03101ad9)!important;border-radius:6px;overscroll-behavior:contain}
+.mobile-bank .art-stage{display:flex;flex-direction:column;gap:7px;padding:6px;box-sizing:border-box}.mobile-bank-title{width:95%;height:auto;margin:0 auto}.mobile-bank-balances{position:relative;width:100%}.mobile-bank-balances>svg{width:100%;display:block}
+#panel.polished-menu.mobile-bank .mobile-bank-balances .material-field{font-size:12px!important}
+.mobile-bank-transfer{position:relative;container-type:inline-size;width:100%}.mobile-bank-transfer>svg{width:100%;display:block}
+#panel.polished-menu.mobile-bank .bank-amount input{font:600 21px Georgia!important}
+#panel.polished-menu.mobile-bank .mobile-bank-transfer .material-field.art-small{font-size:12px!important}
+.mobile-bank-return{position:sticky;bottom:0;margin:0 auto;display:block;width:75%;border:0;background:#091522f5;padding:0;cursor:pointer;border-radius:4px}.mobile-bank-return>svg{width:100%;display:block}.mobile-bank-return:focus-visible{outline:2px solid #e9d39a}
+@media(max-width:600px){
+ #panel.polished-menu.polished-commerce{overflow-y:auto!important;overflow-x:hidden!important;scrollbar-width:thin;max-height:calc(100dvh - var(--menu-top) - 12px)!important;background:#07121ad9!important;border-radius:6px;padding:5px 0!important}
+ .polished-commerce .merchant-tabs{height:8cqw}.polished-commerce .merchant-tabs .compact-button{height:8cqw;font-size:2.65cqw!important}
+ .polished-commerce .merchant-grid{grid-template-columns:1fr;grid-template-rows:none;grid-auto-rows:30cqw;gap:2cqw}
+ .polished-commerce .merchant-empty-slot{display:none}.polished-commerce .merchant-item-icon{width:19cqw;height:19cqw;max-width:95%}.polished-commerce .merchant-item-icon svg{max-height:17cqw}
+ .polished-commerce .merchant-item-info h3{font-size:3.6cqw;max-height:8cqw}.polished-commerce .merchant-price{font-size:3.3cqw;margin:.9cqw 0}
+ .polished-commerce .merchant-chapter,.polished-commerce .merchant-item-info small{font-size:2.8cqw}
+ .polished-commerce .merchant-item-info .compact-button{height:7.5cqw;font-size:3cqw!important;margin-top:1cqw}
+ .polished-commerce .merchant-pager{height:8cqw;font-size:3cqw}.polished-commerce .merchant-pager>span{font-size:3cqw}.polished-commerce .merchant-pager .compact-button{width:17cqw;height:8cqw;font-size:3cqw!important}
+ .polished-commerce>.merchant-footer{height:9cqw;position:sticky;bottom:0;background:#06141bea;padding:3px 0;z-index:4}.polished-commerce>.merchant-footer .compact-button{width:45%;height:9cqw;font-size:3cqw!important}
+ .polished-commerce .merchant-empty{grid-row:auto;min-height:130px;font-size:14px}
+}
+#panel.polished-menu.mobile-jobs{overflow-y:auto!important;overflow-x:hidden!important;max-height:calc(100dvh - var(--menu-top) - 12px)!important;background:#08131ce6!important;border-radius:6px;scrollbar-width:thin}
+.mobile-jobs .art-stage{padding:6px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px}.mobile-jobs .art-stage>svg{width:95%;margin:0 auto;height:auto}.mobile-job-card{width:100%;position:relative;container-type:inline-size}.mobile-job-card>svg{width:100%;display:block}
+#panel.polished-menu.mobile-jobs .material-field{font-size:12px!important;font-weight:400;line-height:1.25}.mobile-job-pager{display:flex;justify-content:space-between;align-items:center;gap:5px}.mobile-job-pager .compact-button{width:35%;height:35px;min-height:35px;font-size:12px!important}.mobile-job-pager span{color:#f2d7a0;font:13px Georgia}
+.mobile-jobs .art-stage>.compact-button{position:sticky!important;bottom:0;width:80%;margin:0 auto;background:#081723f0!important;height:42px;min-height:42px;font-size:14px!important;z-index:3}
+
+#panel.mobile-jobs .mobile-job-pager{position:static;inset:auto;transform:none;width:100%;flex:none}
