@@ -12,5 +12,5 @@ export function gestureImage(key:string){const normalized=gestureKey(key),index=
 export function diceFrame(){const s=tavernSprite(2);s.classList.add('tavern-dice-frame');s.setAttribute('preserveAspectRatio','none');return s;}
 export function reelImage(key:string){const index=({cherry:0,bell:1,diamond:2,crown:3,seven:4} as Record<string,number>)[key]??2;return `<svg xmlns="${ns}" viewBox="${index%3*512} ${Math.floor(index/3)*512} 512 512" preserveAspectRatio="xMidYMid slice" style="overflow:hidden" aria-hidden="true"><image href="/assets/catalog/game-symbols.webp" width="1536" height="1024"/></svg>`;}
 export function blankDie(){return '<image href="/assets/catalog/game-symbols.webp" x="-200" y="-100" width="300" height="200"/>';}
-export function hiddenCardImage(){const s=gameCrop('blackjack','778 216 149 175');s.setAttribute('preserveAspectRatio','none');s.style.overflow='hidden';return s.outerHTML;}
+export function hiddenCardImage(){const s=gameCrop('blackjack','778 216 149 175');s.querySelector('image')!.setAttribute('href','/assets/sprites/menus/blackjack.webp');s.setAttribute('preserveAspectRatio','none');s.style.overflow='hidden';return s.outerHTML;}
 export function casinoOpponent(){const s=gameCrop('russian','900 138 570 570');s.style.overflow='hidden';return s;}

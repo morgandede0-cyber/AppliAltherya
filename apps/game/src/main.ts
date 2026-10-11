@@ -46,3 +46,5 @@ window.addEventListener('keydown',e=>{if(e.defaultPrevented||commerce||e.target 
 try{await refresh();await navigate('hub');if(state.name==='Aventurier'){show('Bienvenue à Altherya','Choisissez votre nom. La progression est conservée sur ce serveur de test.');const i=document.createElement('input');i.maxLength=24;i.value='Aventurier';i.setAttribute('aria-label','Nom du personnage');panel.append(i);actions(button('Entrer dans Legacy',()=>void act({action:'name',name:i.value.trim()||'Aventurier'},close)));}connect().then(s=>{if(s){void refresh();notify('Discord connecté : '+s.user.username);}}).catch(e=>notify('Connexion Discord : '+String(e)));window.setInterval(()=>{if(!busy)void refresh().catch(()=>notify('Connexion au serveur interrompue.'));},15000);}catch(e){show('Le jeu n’a pas pu démarrer','Gardez le serveur Python ouvert et rechargez la page. '+String(e));}
 
 import './ui/polished-menus.css';
+
+import "./ui/native-menus.css";

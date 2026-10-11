@@ -1,0 +1,213 @@
+/* Final native-art layout: no texture patches over the blank menu illustrations. */
+#panel.polished-menu:has(.art-mobile-stack){overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#a98b51 transparent}
+#panel .native-live-field{background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;text-wrap:pretty;white-space:pre-line;overflow:hidden!important}
+#panel .native-live-field.material-paper{color:#3a2513!important;text-shadow:none!important}
+#panel .art-overlay:has(>svg):not(.native-job-seal){background:none!important;border:0!important;box-shadow:none!important}
+#panel .art-overlay>svg{width:100%;height:100%;max-width:100%;max-height:100%}
+#panel .art-mobile-stack{display:flex;flex-direction:column;gap:8px;padding:4px 0 12px;width:100%;container-type:inline-size}
+#panel .art-section{position:relative;width:100%;flex:none;container-type:inline-size;isolation:isolate}
+#panel .art-section>svg{display:block;width:100%;height:100%;pointer-events:none}
+#panel .art-mobile-stack .art-overlay{font-size:clamp(11px,3.6cqw,17px)!important;line-height:1.25;gap:2px;padding:0!important}
+#panel .art-mobile-stack .art-overlay.art-small{font-size:clamp(10px,3.2cqw,15px)!important}
+#panel .art-mobile-stack .art-overlay p{font-size:inherit!important;line-height:1.25;margin:0}
+#panel .art-unplaced{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:40px}
+#panel .art-mobile-stack .art-hit{touch-action:manipulation}
+#panel .art-mobile-stack .art-hit:focus-visible{outline:2px solid #ffe0a0!important;outline-offset:-4px}
+#panel .native-destination{clip-path:none!important;overflow:hidden!important;border-radius:3px}
+#panel .native-destination img{height:100%;width:100%;object-fit:cover;display:block}
+#panel .native-equipment{overflow:hidden!important}
+#panel .native-live-field:has(input){overflow:visible!important}
+#panel .art-notice,#panel .menu-notice{font:14px/1.4 Georgia!important;max-height:70px!important}
+#panel .art-extra{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;max-height:none!important;padding:24px!important;justify-content:center!important;background:#020912ed!important;border:0!important;border-radius:0!important;z-index:30}
+#panel .art-extra:not(.contract-backdrop):not(.battle-result)>div{max-width:620px;width:100%;max-height:76dvh;overflow:auto}
+#panel .art-extra p,#panel .art-extra input{font-size:16px!important;line-height:1.4}
+#panel .art-extra .compact-button{min-height:44px!important;font-size:14px!important}
+#panel .battle-result{inset:0!important;max-height:none!important;position:fixed!important;display:flex;flex-direction:column;gap:12px;background:#020912ed!important}
+#panel .battle-result .result-summary{max-width:440px;width:100%}
+#panel .contract-backdrop{background:#020912ce!important}
+#panel.polished-menu[data-modal-open]{inset:0!important;transform:none!important;width:100vw!important;height:100dvh!important;max-height:none!important;overflow:hidden!important}
+#panel .mission-parchment{max-height:90dvh;overflow:auto;width:min(600px,94vw);box-sizing:border-box}
+@media(max-width:600px){
+ #panel.polished-menu:not(.market-entry){width:calc(100vw - 16px)!important;overflow-y:auto!important;overflow-x:hidden!important}
+ #panel.polished-menu .combat-log{font-size:12px!important}
+ #panel .art-mobile-stack .guard-status{font-size:13px!important}
+ #panel .art-mobile-stack .guard-entry-label{font-size:15px!important}
+ #panel .art-section .native-live-field:has(input) input{font-size:20px!important}
+ #panel .art-extra{padding:12px!important}
+ #panel .art-extra .compact-button{width:min(210px,80vw)!important}
+ #panel .art-notice{font-size:12px!important}
+}
+
+/* Casino menus retain their individual original backgrounds and live game objects. */
+#panel.native-commerce{background:none!important;border:0!important;padding:0!important;overflow:visible!important}
+.native-commerce .merchant-tabs,.native-commerce .merchant-pager,.native-commerce .merchant-footer{position:absolute;display:flex;margin:0!important;padding:0!important;background:none!important;border:0!important;inset:auto;transform:none!important;gap:0!important}
+.native-commerce .merchant-tabs{gap:1.5%!important;align-items:center}
+.native-commerce .native-tab{width:32%;height:100%;position:relative;border:0;background:none;box-shadow:none;border-radius:0;padding:0}
+.native-commerce .native-tab>svg,.native-commerce .native-tab>img{display:block;width:100%;height:100%;object-fit:contain}
+.native-commerce .native-tab.selected{filter:brightness(1.17);outline:1px solid #eec47a;outline-offset:-4px}
+.native-commerce .native-product{position:absolute;display:block!important;padding:0!important;border:0!important;background:none!important;overflow:visible!important}
+.native-commerce .merchant-item-icon{position:absolute;left:17%;top:23%;width:28%;height:72%;background:none!important;box-shadow:none!important;border:0!important;padding:0;display:grid;place-items:center}
+.native-commerce .merchant-item-icon>svg{width:88%;height:88%;max-width:100%;max-height:none;display:block}
+.native-commerce .merchant-item-info{position:absolute;left:46%;top:15%;width:46%;height:49%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.25cqw;padding:0;text-align:center;min-width:0}
+.native-commerce .merchant-item-info h3{font:600 1.6cqw/1.15 Georgia;color:#ffe8b1;margin:0;max-height:none;text-wrap:balance;overflow-wrap:anywhere}
+.native-commerce .merchant-price{font:600 1.5cqw Georgia;color:#f7d791;margin:0}.native-commerce .merchant-chapter,.native-commerce .merchant-item-info small{font:1.2cqw Georgia;color:#edd29a;margin:0;position:static}
+.native-commerce .native-trade-button{position:absolute;left:46%;top:69%;width:45%;height:23%;background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0;text-align:center;font:600 1.55cqw Georgia;color:#ffe4a4;text-transform:uppercase}
+.native-commerce .native-trade-button:disabled{opacity:.65;background:#010b1855!important}
+.native-commerce .native-empty{position:absolute;left:47%;top:30%;width:44%;font:1.3cqw/1.4 Georgia;text-align:center;color:#c3a576}
+.native-commerce .merchant-wallet{font:600 1.45cqw Georgia;white-space:nowrap}
+.native-commerce .native-page-hit{position:absolute;top:0;width:23%;height:100%;border:0!important;background:none!important;box-shadow:none!important;padding:0!important}
+.native-commerce .native-page-hit:nth-child(1){left:0}.native-commerce .native-page-hit:nth-child(2){right:0}
+.native-commerce .native-page-label{position:absolute;left:25%;top:18%;width:50%;height:60%;display:grid;place-items:center;font:600 1.65cqw Georgia;color:#ffe7ab;background:none!important;border:0!important;padding:0!important}
+.native-commerce .merchant-footer>button{width:48%;height:100%;background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;font:600 2.4cqw Georgia;color:#ffe5ae;text-transform:uppercase}
+.native-commerce .merchant-footer>button:last-child{margin-left:4%}
+.native-commerce .merchant-modal{position:fixed!important;inset:0!important;width:100vw;height:100dvh;display:grid;place-items:center;background:#010913ce;z-index:30;padding:12px}
+.native-commerce .merchant-confirm{background:linear-gradient(100deg,#dac99e,#f3e3b9,#d7c393);color:#3a2514;text-align:center;text-shadow:none;border:3px double #927043;border-radius:3px;padding:24px;width:min(500px,94vw);max-height:90dvh;overflow:auto;box-shadow:0 10px 50px #0008}
+.native-commerce .merchant-confirm>svg{width:100px;height:100px}.native-commerce .merchant-confirm h2{color:#593a1d;font-size:24px}
+.native-commerce .trade-confirm-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:15px}
+.native-commerce .trade-confirm-actions>.compact-button{width:190px;height:48px;min-height:44px;font-size:14px!important}
+.native-commerce .trade-total{display:block;font:600 22px Georgia;margin:12px}.native-commerce .trade-quantity input{width:100px;margin-left:12px;background:#f1dfb9;color:#382817;border:1px solid #987449;padding:8px}
+.native-commerce .merchant-status{text-align:center;background:#06131af0;border:1px solid #a48046;padding:8px;margin:4px 0;color:#f8e4b1;font:14px/1.4 Georgia}
+@media(max-width:600px){
+ #panel.native-commerce:has(.art-mobile-stack){overflow-y:auto!important;overflow-x:hidden!important}
+ .native-commerce .art-section .merchant-item-info h3{font-size:16px!important}.native-commerce .art-section .merchant-price{font-size:15px!important}
+ .native-commerce .art-section .merchant-item-info small,.native-commerce .art-section .merchant-chapter{font-size:12px!important}
+ .native-commerce .art-section .native-trade-button{font-size:15px!important}.native-commerce .art-section .native-empty{font-size:13px!important}
+ .native-commerce .art-section .native-page-label{font-size:15px!important}.native-commerce .art-section .merchant-footer>button{font-size:18px!important}
+ .native-commerce .art-section .merchant-wallet{font-size:18px!important}.native-commerce .merchant-confirm{padding:18px}
+}
+
+#panel.live-game.native-game{inset:54px auto auto 50%!important;transform:translateX(-50%)!important;width:min(1120px,calc((100dvh - 135px)*1.5),96vw)!important;max-height:calc(100dvh - 60px)!important;padding:0;border:0;background:transparent;overflow-y:auto;overflow-x:hidden;container-type:inline-size;box-shadow:none}
+.native-game-table{position:relative!important;width:100%;aspect-ratio:1.5;border:0!important;border-image:none!important;padding:0!important;background:none!important;box-shadow:none!important;border-radius:0!important;container-type:inline-size}
+.native-game-background{display:block;width:100%;height:100%;object-fit:contain}
+.native-game-table>.game-header,.native-game-table>.game-controls,.native-game-table>.game-playfield{position:static!important;display:contents!important;padding:0!important;border:0!important}
+.native-game-table .native-game-part{position:absolute!important;margin:0!important;padding:0!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;border:0!important;background:none!important;box-shadow:none!important;box-sizing:border-box;z-index:1}
+.native-game-table .game-wallet{font:600 1.65cqw/1.2 Georgia;text-align:center;display:grid;place-items:center;white-space:nowrap;color:#ffe6b0}
+.native-game-table .game-stake input{width:100%!important;height:100%;padding:0!important;border:0!important;border-radius:0;background:none!important;box-shadow:none!important;color:#ffe9bb;appearance:textfield;text-align:center;font:600 1.8cqw Georgia}
+.native-game-table .game-stake input::-webkit-inner-spin-button{appearance:none}
+.native-game-table .game-controls>.compact-button{border:0!important;background:none!important;box-shadow:none!important;border-radius:0!important;font-size:2cqw!important;z-index:3}
+.native-game-table .game-hand{display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:visible;border-radius:0!important}
+.native-game-table .game-cards{gap:1cqw;width:100%;justify-content:center;flex-wrap:nowrap}
+.native-game-table .live-card{width:6cqw;height:10cqw;min-width:0;padding:0;border-radius:.4cqw;flex-shrink:1}
+.native-game-table .live-card .card-suit{font-size:3cqw}.native-game-table .card-corner{font-size:1.3cqw;line-height:1}
+.native-game-table .game-hand h3{position:absolute;top:108%;font:600 1.65cqw Georgia!important;margin:0}
+.native-game-table .card-slot{width:6cqw;height:9cqw;padding:4px;border:1px dashed #c7ad6355;background:#020b1540;font-size:1.2cqw}
+.native-game-table .game-result{display:flex;align-items:center;justify-content:center;text-align:center;overflow:auto;color:#ffe5a4!important;font:1.3cqw/1.2 Georgia!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important}
+.native-game-table .outcome-heading{display:none}
+.native-game-table .game-actions{display:flex;gap:1cqw;align-items:center;justify-content:center;z-index:3}
+.native-game-table .game-actions>.compact-button{width:48%;height:100%;min-height:0;font-size:1.5cqw!important;margin:0}
+.native-game-table .game-wheel-area{aspect-ratio:1;overflow:visible;border-radius:50%;max-width:none}
+.native-game-table .game-wheel{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;overflow:hidden}
+.native-game-table .game-wheel svg{width:100%;height:100%}
+.native-game-table .game-wheel-pointer{display:none}.native-game-table .game-ball{inset:0;width:100%;height:100%;position:absolute}
+.native-game-table .roulette-bets{display:flex;flex-direction:column;gap:.5cqw;overflow:hidden}
+.native-game-table .roulette-bets .game-choice-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:.3cqw;width:100%}
+.native-game-table .roulette-bets .compact-button{height:3.6cqw;min-height:0;width:100%;font-size:1.2cqw!important}
+.native-game-table .roulette-numbers{grid-template-columns:repeat(13,minmax(0,1fr));gap:.15cqw}
+.native-game-table .roulette-numbers button{min-height:2.2cqw;font-size:1cqw;padding:0;border-radius:2px}
+.native-game-table .game-slot-machine{display:block!important;overflow:visible;border:0!important;border-radius:0!important;background:none!important;padding:0!important;box-shadow:none!important}
+.native-game-table .live-reels{display:flex;gap:10%;height:100%;width:100%;padding:0;margin:0}
+.native-game-table .live-reel{border:0!important;border-radius:8%!important;box-shadow:none!important;background:none!important;height:100%!important;width:27%;overflow:hidden}
+.native-game-table .reel-symbol{height:100%!important;width:100%;padding:10% 2%;display:grid;place-items:center}
+.native-game-table .reel-symbol>svg{width:100%;height:100%}.native-game-table .live-reel-strip{height:2400%;width:100%}.native-game-table .live-reel-strip .reel-symbol{height:4.166666667%!important}
+.native-game-table .native-slot-lever{opacity:1;transform:none;background:transparent!important;box-shadow:none!important;border:0!important;cursor:pointer}
+.native-game-table .native-slot-lever:before,.native-game-table .native-slot-lever:after{display:none}.native-game-table .native-slot-lever>span{display:none}
+.native-game-table .live-track{width:100%;border:0!important;box-shadow:none;background:none;overflow:hidden}
+.native-game-table .live-lane{height:25%;border:0;background:none!important;padding:0}.native-game-table .lane-label,.native-game-table .finish-line{display:none}
+.native-game-table .live-horse{width:18%;height:100%;top:0;margin:0}.native-game-table .live-horse svg{width:100%;height:100%}
+.native-game-table .horse-bets{display:flex;flex-wrap:nowrap;gap:.7cqw}.native-game-table .horse-bets .compact-button{width:24%;height:100%;min-height:0;font-size:1.2cqw!important}
+.native-game-table .game-cylinder{border:0!important;border-radius:50%;box-shadow:none!important;background:none!important;display:block}
+.native-game-table .game-cylinder svg{width:100%;height:100%}.native-game-table .cylinder-count{font:1.5cqw Georgia;text-align:center;display:grid;place-items:center}
+.native-game-footer{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;background:#06121bde;padding:6px;border-radius:4px}
+.native-game-footer .game-presets{display:flex;gap:8px;margin:0}.native-game-footer .game-chip{height:34px;min-height:34px;width:34px;font-size:11px!important;border-width:2px!important}
+.native-game-footer .game-extras{display:flex;gap:6px;margin:0}.native-game-footer .game-extras .compact-button{width:130px;height:34px;min-height:34px;font-size:11px!important}
+@media(max-width:600px){
+ #panel.live-game.native-game{inset:64px auto auto 50%!important;width:calc(100vw - 16px)!important;max-height:calc(100dvh - 72px)!important;overflow:auto}
+ .native-game-mobile .native-game-table{aspect-ratio:auto;background:#05211eef!important;padding:6px 8px 12px!important;border-radius:8px!important;display:flex;flex-direction:column;gap:12px}
+ .native-game-mobile-title>svg{display:block;width:100%;height:auto}.native-game-mobile .game-title{display:none}
+ .native-game-mobile .mobile-game-wallet{position:static!important;font:14px Georgia!important;display:block;text-align:center;background:none;border:0;padding:0}
+ .native-game-mobile .game-playfield{display:flex!important;position:relative!important;flex-direction:column;align-items:center;gap:12px;padding:0!important;min-height:0;border:0!important;overflow:visible;background:none!important}
+ .native-game-mobile .game-hand{position:relative;min-height:125px;width:100%;padding:6px!important;display:flex;flex-direction:column-reverse;gap:10px}
+ .native-game-mobile .game-hand h3{position:static;top:auto;font:14px Georgia!important}
+ .native-game-mobile .live-card{width:52px;height:78px;min-height:0;flex-shrink:1}.native-game-mobile .card-suit{font-size:26px!important}.native-game-mobile .card-corner{font-size:12px!important}
+ .native-game-mobile .card-slot{width:52px;height:78px;font:11px Georgia}
+ .native-game-mobile .game-result{position:static!important;width:100%;height:auto;min-height:44px;font:13px/1.4 Georgia!important;background:#010a13a8!important;border:1px solid #a78147!important;border-radius:4px!important;padding:8px!important}
+ .native-game-mobile .game-actions{position:static!important;height:46px;width:100%;display:flex;gap:6px}
+ .native-game-mobile .game-actions .compact-button{width:48%;height:46px;font-size:13px!important}
+ .native-mobile-stake{display:flex;align-items:center;justify-content:center;gap:5px;font:13px Georgia}
+ .native-mobile-stake .game-stake{display:block;position:static!important;width:80px;height:40px}.native-mobile-stake .game-stake input{background:#010f1a!important;border:1px solid #b09150!important;font-size:18px!important}
+ .native-mobile-stake>.compact-button{width:35px;height:40px;min-height:40px;font-size:18px!important}
+ .native-game-mobile .game-wheel-area{position:relative!important;width:250px!important;height:250px!important;max-width:90%;border:0;padding:0;margin:4px auto!important}
+ .native-game-mobile .roulette-bets{position:static!important;width:100%;height:auto;overflow:visible;gap:8px}
+ .native-game-mobile .roulette-bets .compact-button{height:40px;min-height:40px;font-size:13px!important}
+ .native-game-mobile .roulette-numbers{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.native-game-mobile .roulette-numbers button{min-height:38px;font-size:13px}
+ .native-game-mobile .game-slot-machine{width:100%!important;height:170px!important;padding:5px!important;border:0!important}
+ .native-game-mobile .live-reels{gap:5%;height:160px}.native-game-mobile .live-reel{width:30%;height:160px!important;background:linear-gradient(#99754a,#fff0c7 25%,#f9e0ad 75%,#99754a)!important}
+ .native-game-mobile .native-slot-lever{position:static!important;display:block;align-self:center;width:190px!important;height:44px!important;min-height:44px;background:none!important}
+ .native-game-mobile .native-slot-lever>span{display:block!important}.native-game-mobile .native-slot-lever>svg{display:block!important}
+ .native-game-mobile .live-track{width:100%;height:245px;background:#ad906a}.native-game-mobile .live-lane{height:25%;border-bottom:1px solid #705539;background:repeating-linear-gradient(0deg,#b2946d 0 3px,#b99d77 3px 6px)!important}
+ .native-game-mobile .live-horse{width:21%;height:100%}.native-game-mobile .horse-bets{position:static!important;display:grid;grid-template-columns:1fr 1fr;width:100%;gap:5px}
+ .native-game-mobile .horse-bets .compact-button{width:100%;height:44px;min-height:44px;font-size:12px!important}
+ .native-game-mobile .game-cylinder{width:125px;height:125px;margin:0!important}.native-game-mobile .cylinder-count{font-size:14px}
+ .native-russian-scene{position:relative;width:100%}.native-russian-scene>svg{display:block;width:100%}
+ .native-mobile-russian .game-cylinder{position:absolute!important;top:27%;left:28%;width:19%;height:auto;aspect-ratio:1}
+ .native-game-footer{padding:8px 4px}.native-game-footer .game-extras .compact-button{width:120px;font-size:11px!important}
+}
+#panel .forge-materials{flex-direction:row!important;gap:1cqw!important;align-items:center!important;justify-content:space-evenly!important;overflow:hidden!important}
+.forge-material{min-width:0;display:grid;grid-template-columns:2.4cqw 1fr;grid-template-rows:auto auto;gap:0 .4cqw;text-align:left;max-width:32%;font:1.1cqw/1.2 Georgia;color:#f9dfad}
+.forge-material>svg{grid-row:1/3;width:2.4cqw;height:3.2cqw}.forge-material>span{font-size:inherit;overflow-wrap:anywhere}.forge-material strong{font-size:1.25cqw}.forge-material strong.enough{color:#c2e8ac}.forge-material strong.missing{color:#f1b09c}
+@media(max-width:600px){#panel .art-section .forge-materials{gap:5px!important}.forge-material{font-size:11px;grid-template-columns:24px 1fr;max-width:32%}.forge-material>svg{width:24px;height:30px}.forge-material strong{font-size:12px}}
+/* Remove legacy minimum sizes before placing objects in exact artwork coordinates. */
+#panel.native-game .game-title,#panel.native-game .slot-marquee,#panel.native-game .casino-opponent{display:none!important}
+#panel .native-game-table:not(:has(.native-game-mobile-title)){height:66.666667cqw!important;min-height:0!important;max-height:none!important}
+#panel .native-game-table .native-game-background{position:absolute;inset:0;width:100%;height:100%}
+#panel.native-commerce .native-product{min-height:0!important;min-width:0!important;margin:0!important;max-height:100%!important}
+#panel.native-commerce .empty-product{pointer-events:none}
+#panel .forge-material{background:none!important;border:0!important;box-shadow:none!important;width:48%;max-width:48%;grid-template-columns:3cqw 1fr;white-space:normal}
+#panel .forge-material>svg{width:3cqw;height:4cqw}
+@media(max-width:600px){
+ #panel .native-game-table:has(.native-game-mobile-title){height:auto!important}
+ #panel.native-game-mobile .native-game-table .game-title{display:none!important}
+ #panel .art-mobile-stack:has(.drink-card),#panel.restored-drinks .art-mobile-stack{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+ #panel.restored-drinks .art-section:first-child,#panel.restored-drinks .art-section:last-child{grid-column:1/-1}
+ #panel .art-section .forge-material{grid-template-columns:26px 1fr;font-size:12px;max-width:48%}
+ #panel .art-section .forge-material>svg{width:26px;height:34px}
+}
+#panel .native-game-table .native-baked-hit{opacity:1!important;background:transparent!important;box-shadow:none!important;border:0!important;padding:0!important}
+#panel .native-baked-hit>svg,#panel .native-baked-hit>span{visibility:hidden!important}
+#panel .native-baked-hit[aria-pressed=true]{outline:2px solid #e5c374!important;outline-offset:-5px}
+.native-number-picker{display:none;position:absolute;left:58%;top:49%;width:40%;padding:12px;background:#061c2af5;border:2px solid #b58a43;border-radius:6px;z-index:15;box-shadow:0 6px 24px #0009}
+.native-number-picker.open{display:block}.native-number-picker .roulette-numbers{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.native-number-picker .roulette-numbers button{min-height:30px;font:14px Georgia}
+#panel .native-game-table .native-art-action{display:block!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;min-height:0!important;padding:0!important;opacity:1;cursor:pointer}
+#panel .native-art-action>svg{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-height:none!important}
+#panel .native-art-action>.native-action-label{position:absolute!important;left:32%!important;top:26%!important;width:59%!important;height:46%!important;display:grid!important;place-items:center;font:600 1.9cqw/1 Georgia!important;background:linear-gradient(#063b72,#032855);color:#ffe1a0;text-shadow:0 1px 2px #000;white-space:nowrap}
+#panel .native-art-action:disabled{opacity:.5!important}.native-game-footer .native-extra-return{height:34px;width:130px;min-height:34px;font-size:12px!important}
+#panel .native-game-table.game-blackjack .native-score{top:103%;font:600 1.5cqw Georgia!important}
+#panel.native-commerce button,#panel.native-commerce .native-trade-button{font-family:Georgia,'Times New Roman',serif!important}
+#panel .native-game-table.game-blackjack .native-score{top:117%}
+#panel .native-stake-value{font:600 1.65cqw Georgia;color:#ffe3a5;text-align:center;display:grid;place-items:center}
+@media(max-width:600px){#panel .native-stake-value{display:none!important}}
+#panel .native-art-action>.native-action-label{background:none!important;text-shadow:0 2px 2px #061325;left:25%!important;top:22%!important;width:65%!important;height:58%!important;font-family:Georgia,'Times New Roman',serif!important}
+#panel .native-game-table.game-blackjack .native-action-label{left:34%!important;width:54%!important}
+#panel .native-game-table.game-slots .native-action-label{left:25%!important;width:57%!important}
+#panel .native-game-table.game-horses .native-art-action:nth-last-child(1) .native-action-label{font-size:1.25cqw!important}
+#panel .native-game-table .game-result{font-family:Georgia,'Times New Roman',serif!important;font-size:1.15cqw!important;line-height:1.15!important}
+#panel .native-game-table .game-hand .native-score{font-family:Georgia,'Times New Roman',serif!important}
+#panel .native-game-table .horse-bets .compact-button{background:none!important;border:0!important;box-shadow:none!important}
+@media(max-width:600px){#panel.native-game-mobile .native-game-table .game-result{font-size:13px!important}}
+.native-wheel-plane{position:absolute;inset:0 0 auto;width:100%;height:129.7131%;transform:scaleY(.770932);transform-origin:50% 0;pointer-events:none}
+#panel .native-game-table .game-wheel{transform-origin:50% 50%;overflow:visible}
+#panel.native-game:not(.native-game-mobile) .native-game-controls>button>span{visibility:hidden!important}
+#panel.native-game .native-game-footer .native-stake-adjust{height:34px;width:40px;min-height:34px;font-size:17px!important}
+#panel.native-game .native-stake-adjust>span{visibility:visible!important}
+#panel.native-game .horse-bets .native-baked-hit{height:100%;width:24%;min-height:0}
+#panel.native-commerce .art-section{overflow:hidden}
+
+#panel .native-art-action>.native-action-label{transform:none!important;margin:0!important}
+#panel .native-race-result{flex-basis:100%;margin:0;text-align:center;font-size:14px;color:#ffe1a0}
+
+@media(max-width:600px){#panel.restored-drinks .art-mobile-stack{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#panel.restored-drinks .art-section{min-width:0;overflow:hidden}}
+
+#panel .native-baked-tab{background:none!important;border:0;box-shadow:none;padding:0}#panel .native-baked-tab.selected{outline:2px solid #ffe1a0;outline-offset:-8px}
+
+#panel .mobile-bank-return{position:relative!important;bottom:auto!important;flex:none;margin:12px auto!important}
