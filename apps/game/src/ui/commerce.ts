@@ -4,8 +4,8 @@ import {categories,products,pageItems,clampQuantity,tradeBlock,tradeBody,type Co
 import {itemArt} from './item-art';
 import {equipmentArt,resourceArt} from './catalog-art';
 import {skinButton,tabAssets} from './assets';
-import {ornamentButton,assetSlice} from './menu-kit';
-import {reflowArtwork} from './artwork-layout';
+import {ornamentButton} from './menu-kit';
+import {reflowArtwork,fitArtworkText} from './artwork-layout';
 import './commerce.css';
 import './commerce-live.css';
 
@@ -24,7 +24,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
  }
  function draw(){
   if(dead)return;
-  const scroll=root.scrollTop,focused=root.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;
+  const scroll=root.dataset.kind==='market-'+mode?root.scrollTop:0,focused=root.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;
   root.hidden=false;root.dataset.kind='market-'+mode;root.className='commerce-panel native-commerce';sizeMenu(root,1.5,1180);
   root.replaceChildren();root.setAttribute('aria-busy',String(busy));root.setAttribute('aria-label',mode==='sell'?'Vendre au marché':mode==='story'?'Objets d’histoire':'Boutique de Legacy');document.body.classList.add('illustrated-open');
   const stage=el('section','art-stage commerce-art');root.append(stage);
@@ -56,7 +56,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
   const footer=place(el('div','merchant-footer'),20,88,60,11);
   const switcher=document.createElement('button');switcher.className='native-market-switch';switcher.textContent=mode==='sell'?'Acheter':'Vendre';switcher.setAttribute('aria-label',switcher.textContent);switcher.disabled=busy;switcher.onclick=()=>host.switchMode(mode==='sell'?'buy':'sell');
   const back=document.createElement('button');back.className='native-market-back';back.setAttribute('aria-label','Retour au marché');back.disabled=busy;back.onclick=host.back;footer.append(switcher,back);
-  reflowArtwork(stage,'merchant');
+  reflowArtwork(stage,'merchant');fitArtworkText(root);
   if(message){const status=el('p','merchant-status',message);status.setAttribute('role','status');root.append(status);}
   if(selected){
    const backdrop=el('div','merchant-modal'),dialog=el('section','merchant-confirm mission-parchment');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label',mode==='sell'?'Confirmer la vente':'Confirmer l’achat');

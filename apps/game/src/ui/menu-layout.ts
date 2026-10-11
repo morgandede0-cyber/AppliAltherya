@@ -2,13 +2,26 @@ import {assetSlice} from './assets';
 
 /** One viewport contract for every illustrated menu, including embedded Discord windows. */
 export function fitMenu(panel:HTMLElement,ratio=1.5,limit=1180,bottom=false){
- const hud=document.getElementById('hud'),top=Math.max(12,(hud?.getBoundingClientRect().bottom??36)+12),height=Math.max(100,innerHeight-top-64),width=innerWidth<600?Math.min(innerWidth-16,limit):Math.min(innerWidth-24,height*ratio,limit);
- panel.style.setProperty('--menu-width',width+'px');panel.style.setProperty('--menu-top',(bottom?Math.max(top,innerHeight-width/ratio-18):top)+'px');panel.classList.add('polished-menu');
+ panel.classList.add('polished-menu');
+ if(panel.hasAttribute('data-modal-open'))return;
+ const viewport=window.visualViewport;
+ const screenWidth=viewport?.width??innerWidth,screenHeight=viewport?.height??innerHeight;
+ const hud=document.getElementById('hud'),safeTop=Math.max(12,(hud?.getBoundingClientRect().bottom??36)+12);
+ const available=Math.max(120,screenHeight-safeTop-16),mobile=innerWidth<=600;
+ const width=mobile?Math.min(screenWidth-16,limit):Math.min(screenWidth-32,limit,ratio>0?Math.max(Math.min(680,screenWidth-32),(available-56)*ratio):limit);
+ const artHeight=ratio>0?width/ratio:panel.scrollHeight;
+ const extras=ratio>0?Array.from(panel.children).filter(n=>n instanceof HTMLElement&&!n.matches('.art-stage,.game-table,.menu-content')).reduce((sum,n)=>sum+(n as HTMLElement).getBoundingClientRect().height,0):0;
+ const contentHeight=Math.min(available,Math.max(artHeight+extras,120));
+ const top=mobile?safeTop:bottom?Math.max(safeTop,screenHeight-contentHeight-16):safeTop+Math.max(0,(available-contentHeight)/2);
+ panel.style.setProperty('--menu-width',width+'px');panel.style.setProperty('--menu-top',top+'px');panel.style.setProperty('--menu-height',available+'px');panel.classList.add('polished-menu');
 }
 export function watchMenuSize(panel:HTMLElement,onBreakpoint?:()=>void){
- let mobile=innerWidth<600;
- const resize=()=>{const next=innerWidth<600;if(next!==mobile){mobile=next;onBreakpoint?.();}if(panel.classList.contains('polished-menu'))fitMenu(panel,Number(panel.dataset.menuRatio)||1.5,Number(panel.dataset.menuLimit)||1180,panel.dataset.menuBottom==='true');};
- addEventListener('resize',resize);const viewport=window.visualViewport;viewport?.addEventListener('resize',resize);return()=>{removeEventListener('resize',resize);viewport?.removeEventListener('resize',resize);};
+ let mobile=innerWidth<=600;
+ const resize=()=>{const next=innerWidth<=600;if(next!==mobile){mobile=next;onBreakpoint?.();}if(panel.classList.contains('polished-menu'))fitMenu(panel,panel.dataset.menuRatio===undefined?1.5:Number(panel.dataset.menuRatio),Number(panel.dataset.menuLimit)||1180,panel.dataset.menuBottom==='true');};
+ let frame=0;const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{if(panel.isConnected&&!panel.hidden)resize();});};
+ const geometry=new ResizeObserver(schedule);geometry.observe(panel);const hud=document.getElementById('hud');if(hud)geometry.observe(hud);
+ const changes=new MutationObserver(schedule);changes.observe(panel,{childList:true,attributes:true,attributeFilter:['data-modal-open']});
+ addEventListener('resize',resize);const viewport=window.visualViewport;viewport?.addEventListener('resize',resize);return()=>{cancelAnimationFrame(frame);geometry.disconnect();changes.disconnect();removeEventListener('resize',resize);viewport?.removeEventListener('resize',resize);};
 }
 export function sizeMenu(panel:HTMLElement,ratio=1.5,limit=1180,bottom=false){panel.dataset.menuRatio=String(ratio);panel.dataset.menuLimit=String(limit);panel.dataset.menuBottom=String(bottom);fitMenu(panel,ratio,limit,bottom);}
 

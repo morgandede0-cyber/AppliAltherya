@@ -211,3 +211,53 @@
 #panel .native-baked-tab{background:none!important;border:0;box-shadow:none;padding:0}#panel .native-baked-tab.selected{outline:2px solid #ffe1a0;outline-offset:-8px}
 
 #panel .mobile-bank-return{position:relative!important;bottom:auto!important;flex:none;margin:12px auto!important}
+
+/* One viewport and one coordinate plane for every menu. */
+#panel.polished-menu,#panel.live-game.polished-menu.native-game{inset:var(--menu-top) auto auto 50%!important;width:var(--menu-width)!important;max-height:var(--menu-height)!important;transform:translateX(-50%)!important;overflow-y:auto!important;overflow-x:hidden!important;scrollbar-width:thin;scrollbar-color:#a98b51 #06121b;overscroll-behavior:contain;scroll-behavior:auto}
+#panel.polished-menu>.art-stage:not(.art-mobile-stack){display:block!important;padding:0!important;margin:0!important;min-height:0!important;max-height:none!important;width:100%!important}
+#panel.polished-menu .art-stage>.art-image{display:block!important;margin:0!important;padding:0!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:fill!important}
+#panel.polished-menu .art-section{box-sizing:border-box;overflow:hidden!important}
+#panel.polished-menu .compact-dock:not(:empty),#panel .native-game-footer{flex-shrink:0;position:relative!important;inset:auto!important;transform:none!important;margin:0 auto!important;box-sizing:border-box}
+#panel.polished-menu .art-notice{position:relative!important;inset:auto!important;transform:none!important;display:block;width:100%!important;box-sizing:border-box;margin:8px 0 0!important;text-align:center}
+#panel.polished-menu .art-overlay{overscroll-behavior:contain;scrollbar-width:none}
+#panel.polished-menu .art-overlay::-webkit-scrollbar{display:none}
+#panel.polished-menu[data-modal-open]{inset:0!important;transform:none!important;width:100vw!important;max-height:none!important;height:100dvh!important;overflow:hidden!important}
+@media(max-width:600px){
+ #panel.polished-menu{scroll-padding-top:12px;scroll-padding-bottom:20px}
+ #panel .art-mobile-stack{gap:12px;padding:0 0 16px!important}
+ #panel .mobile-bank-title{width:100%;flex:none}
+ #panel .mobile-job-pager{position:relative!important;bottom:auto!important}
+ #panel.mobile-jobs .art-stage>.compact-button{position:relative!important;bottom:auto!important;margin:12px auto!important}
+}
+#panel.native-commerce .merchant-status{width:100%;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere;white-space:normal}
+body.menu-open #objective{visibility:hidden;pointer-events:none}
+
+#panel.polished-menu .combat-fighter{background:none!important;justify-content:center!important;gap:0!important}
+#panel.polished-menu .combat-fighter p{margin:0!important;line-height:1.15!important}
+#panel.polished-menu .combat-health{background:none!important;padding:0!important}
+#panel.polished-menu .combat-health .art-progress{width:100%!important;height:65%!important;margin:0!important;max-width:100%;box-sizing:border-box}
+#panel.polished-menu .combat-log{justify-content:flex-start;align-items:stretch;font-size:1.05cqw;line-height:1.25;gap:0!important;padding:0!important}
+#panel.polished-menu .combat-log p{margin:0;line-height:1.25}
+#panel.polished-menu .combat-action-label,#panel.polished-menu .technique-action-label{font-weight:600;font-size:1.7cqw;font-family:Georgia,serif;justify-content:center!important}
+@media(max-width:600px){
+ #panel.polished-menu .art-section .combat-fighter{font-size:17px!important}
+ #panel.polished-menu .art-section .combat-action-label,#panel.polished-menu .art-section .technique-action-label{font-size:19px!important}
+ #panel.polished-menu .art-section .combat-log{font-size:13px!important}
+}
+
+#panel.polished-menu .combat-action-label{white-space:nowrap;text-wrap:nowrap}
+#panel.polished-menu .combat-turn{background:none!important;border:0!important;padding:0!important}
+
+#panel .forge-materials{display:flex!important;grid-template-columns:none!important}
+#panel .forge-material{padding:0!important;margin:0!important;min-height:0!important;box-sizing:border-box}
+#panel.restored-forge .forge-material-panel>svg{position:absolute;width:100%;pointer-events:none}
+#panel.restored-forge .forge-panel-heading{top:0;height:28px}
+#panel.restored-forge .forge-panel-body{top:28px;height:110px}
+#panel.restored-forge .forge-panel-base{bottom:0;height:12px}
+#panel.restored-forge .forge-material-panel .forge-materials{flex-direction:column!important;justify-content:center!important;gap:4px!important}
+#panel.restored-forge .forge-material-panel .forge-material{width:100%!important;max-width:none!important;grid-template-columns:26px minmax(0,1fr) auto;grid-template-rows:auto;gap:8px;align-items:center;min-height:26px!important;font-size:13px!important}
+#panel.restored-forge .art-section .forge-material-panel .forge-material>svg,#panel.restored-forge .forge-material-panel .forge-material>svg{grid-row:1!important;grid-column:1;height:26px!important;width:26px!important}
+#panel.restored-forge .forge-material-panel .forge-material>span{grid-column:2;white-space:nowrap;font-size:13px!important}
+#panel.restored-forge .forge-material-panel .forge-material>strong{grid-column:3;font-size:14px!important;white-space:nowrap}
+
+@media(max-width:600px){#panel.restored-forge .art-mobile-stack>.art-section:last-child{width:80%;margin:0 auto}}

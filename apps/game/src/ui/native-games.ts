@@ -29,9 +29,9 @@ export function composeNativeGame(panel:HTMLElement,kind:string){
   place(result,30,75,42,4.4);place(actions,28,81,45,10);
  }else if(kind==='roulette'){
   place(stake,74,66.2,10.5,4.5);place(minus,67,64.8,6,8);place(plus,85,64.8,6,8);
-  place(stage.querySelector<HTMLElement>('.game-wheel-area')!,9,20.4,42.2,48.8);if(innerWidth>=600){const area=stage.querySelector<HTMLElement>('.game-wheel-area')!,plane=document.createElement('div');plane.className='native-wheel-plane';plane.append(area.querySelector('.game-wheel')!,area.querySelector('.game-ball')!);area.append(plane);}
+  place(stage.querySelector<HTMLElement>('.game-wheel-area')!,9,20.4,42.2,48.8);if(innerWidth>600){const area=stage.querySelector<HTMLElement>('.game-wheel-area')!,plane=document.createElement('div');plane.className='native-wheel-plane';plane.append(area.querySelector('.game-wheel')!,area.querySelector('.game-ball')!);area.append(plane);}
   place(stage.querySelector<HTMLElement>('.roulette-bets')!,60,24,36,43);
-  if(innerWidth>=600){const bets=stage.querySelector<HTMLElement>('.roulette-bets')!;bets.querySelectorAll<HTMLElement>('.game-choice-row button').forEach((button,i)=>{table.append(button);place(button,60+(i%2)*18,20+Math.floor(i/2)*10,17,9);button.classList.add('native-baked-hit');});const toggle=bets.querySelector<HTMLElement>('.number-bets>.compact-button')!;table.append(toggle);place(toggle,60,50,36,8);toggle.classList.add('native-baked-hit');const grid=bets.querySelector<HTMLElement>('.roulette-numbers')!;const modal=document.createElement('div');modal.className='native-number-picker';modal.append(grid);table.append(modal);toggle.onclick=()=>{modal.classList.toggle('open');};grid.addEventListener('click',()=>modal.classList.remove('open'));bets.style.display='none';}
+  if(innerWidth>600){const bets=stage.querySelector<HTMLElement>('.roulette-bets')!;bets.querySelectorAll<HTMLElement>('.game-choice-row button').forEach((button,i)=>{table.append(button);place(button,60+(i%2)*18,20+Math.floor(i/2)*10,17,9);button.classList.add('native-baked-hit');});const toggle=bets.querySelector<HTMLElement>('.number-bets>.compact-button')!;table.append(toggle);place(toggle,60,50,36,8);toggle.classList.add('native-baked-hit');const grid=bets.querySelector<HTMLElement>('.roulette-numbers')!;const modal=document.createElement('div');modal.className='native-number-picker';modal.append(grid);table.append(modal);toggle.onclick=()=>{modal.classList.toggle('open');};grid.addEventListener('click',()=>modal.classList.remove('open'));bets.style.display='none';}
 
   place(result,32,74,36,4.5);place(actions,31,82,48,10);
  }else if(kind==='slots'){
@@ -58,7 +58,7 @@ export function composeNativeGame(panel:HTMLElement,kind:string){
  const extras=table.querySelector<HTMLElement>('.game-extras')!;
  const presets=table.querySelector<HTMLElement>('.game-presets')!;
  const bar=document.createElement('div');bar.className='native-game-footer';bar.append(presets,extras);panel.append(bar);
- if(innerWidth>=600){
+ if(innerWidth>600){
   if(kind==='blackjack'){bar.prepend(minus,plus);for(const button of [minus,plus]){button.classList.remove('native-game-part');button.style.cssText='';button.classList.add('native-stake-adjust');}}
   if(kind==='horses'){result.classList.remove('native-game-part');result.style.cssText='';result.classList.add('native-race-result');bar.prepend(result);}
   if(kind==='horses')stage.querySelectorAll<HTMLElement>('.horse-bets button').forEach(b=>b.classList.add('native-baked-hit'));
@@ -74,7 +74,7 @@ export function composeNativeGame(panel:HTMLElement,kind:string){
   actions.remove();
  }
  // Mobile has large, separately composed sections rather than unreadable scaled overlays.
- if(innerWidth<600){
+ if(innerWidth<=600){
   panel.classList.add('native-game-mobile');
   image.remove();const top=document.createElement('div');top.className='native-game-mobile-title';top.append(assetSlice('/assets/menus/'+kind+'.webp',0,0,1536,190));table.prepend(top);
   wallet.classList.add('mobile-game-wallet');wallet.style.cssText='';
