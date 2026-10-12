@@ -1,5 +1,5 @@
 
-#bank-polished{width:100%;box-sizing:border-box;container-type:inline-size;padding:24px 14px 18px;background:radial-gradient(ellipse at 50% 45%,#24303d,#101721 70%);border-radius:12px;color:#f9df9d;font-family:Georgia,serif}
+#bank-polished{width:100%;box-sizing:border-box;container-type:inline-size;padding:24px 14px 18px;background:transparent;border-radius:12px;color:#f9df9d;font-family:Georgia,serif}
 #bank-polished *{box-sizing:border-box}#bank-polished img{display:block;width:100%;height:auto}
 #bank-polished .heading{width:84%;max-width:640px;margin:0 auto 16px;filter:drop-shadow(0 7px 9px #0006)}
 #bank-polished .ledger{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 3% 18px}
@@ -32,3 +32,9 @@
 /* Keep neighboring ornaments out of each isolated component. */
 #bank-polished .transaction[data-mode=deposit]{clip-path:polygon(0 0,100% 0,100% 33%,95% 35%,95% 87%,100% 90%,100% 100%,0 100%)}
 #bank-polished .transaction[data-mode=withdraw]{clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 90%,5% 87%,5% 35%,0 33%)}
+
+/* Transparent bank surface, without the central chest. */
+#bank-polished .transaction[data-mode=deposit]{grid-column:1}
+#bank-polished .transaction[data-mode=withdraw]{grid-column:3}
+@container(max-width:560px){#bank-polished .transaction[data-mode=withdraw]{grid-column:2}}
+@container(max-width:430px){#bank-polished .transaction[data-mode=withdraw]{grid-column:1}}
