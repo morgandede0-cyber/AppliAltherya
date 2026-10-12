@@ -1,4 +1,5 @@
-import {gameMenuButton,gameCrop} from './game-art';
+import {reflowArtwork,fitArtworkText} from './artwork-layout';
+import {sizeMenu,watchMenuSize,materialField,fieldText,toolBackdrop,raritySeal} from './menu-layout';
 import {openLiveGame,liveGameKinds} from './live-games';
 import {decorateButton} from './compact-menu';
 import type {Snapshot} from '../activity';
@@ -7,20 +8,15 @@ import {timeLabel} from './game-model';
 import './illustrated.css';
 import {itemArt} from './item-art';
 import {equipmentArt} from './catalog-art';
-import {menuHeading,assetSlice} from './menu-kit';
+import {assetSlice} from './menu-kit';
 type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;close:()=>void;route:(key:string)=>void;refresh:()=>Promise<void>};
 export const illustratedKinds=new Set('bank jobs tavern games castle dashboard podium arena combat techniques alley thief casino blackjack roulette russian slots horses expedition tools destinations accessories departure live dice coin rps'.split(' '));
 export function openIllustrated(panel:HTMLElement,initial:string,host:Host,location='elarwyn'){
- let kind=initial,selected='beer',amount=100,withdraw=100,page=0,tool='axe',tier=1,destination='',wager=10,choice:string|number='red',number=0,locked=false,notice='',destroyed=false,animationUntil=0,animationStarted=0,rotation=0,spinRevision=-1,dialog='',acknowledgedResult=-1,offset=host.state().server_now*1000-Date.now();
+ let kind=initial,selected='beer',amount=Math.min(100,host.state().balance.wallet),withdraw=Math.min(100,host.state().balance.bank),page=0,tool='axe',tier=1,destination='',wager=10,choice:string|number='red',number=0,locked=false,notice='',destroyed=false,animationUntil=0,animationStarted=0,rotation=0,spinRevision=-1,dialog='',acknowledgedResult=-1,offset=host.state().server_now*1000-Date.now();
  const el=(tag:string,text='',cls='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};let stage:HTMLElement,dock:HTMLElement;let live:ReturnType<typeof openLiveGame>|undefined,liveKind='';
- const cleanKinds=new Set(['bank','jobs','dashboard','podium','combat','techniques','destinations','accessories','departure','live']);
- const cleanMode=()=>cleanKinds.has(kind)&&!(kind==='jobs'&&host.state().pending);
- const box=(x:number,y:number,w:number,h:number,text='',cls='art-mask')=>{const n=el('div',text,'art-overlay '+cls);if(cleanMode()){n.classList.add('integrated-value');if(kind==='jobs'&&w===7)return n;}Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});stage.append(n);return n;};
+ const box=(x:number,y:number,w:number,h:number,text='',cls='art-mask')=>{const n=el('div',text,'art-overlay '+cls);Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});if(cls.includes('art-mask')||cls==='bank-amount')materialField(n,kind,cls.includes('job-rarity')?'seal':cls==='bank-amount'||cls.includes('art-blue')?'blue':cls.includes('art-paper')?'paper':cls.includes('art-wood')||kind==='bank'||kind==='tools'||kind==='destinations'?'wood':'blue');stage.append(n);return n;};
  const button=(label:string,fn:()=>void,disabled=false)=>{const n=el('button',label,'art-button') as HTMLButtonElement;n.disabled=disabled||locked||Date.now()<animationUntil;n.onclick=fn;decorateButton(n,label);return n;};
  const hit=(label:string,x:number,y:number,w:number,h:number,fn:()=>void,disabled=false,chosen=false)=>{
-  if(cleanMode()){const n=button(label,fn,disabled);if(kind==='jobs'&&label.startsWith('Accepter ')){const labelNode=n.querySelector('span');if(labelNode)labelNode.textContent='Voir le contrat';stage.querySelector('.integrated-value:last-child')?.append(n);}else dock.append(n);return n;}
-  const bottomAction=['slots','horses'].includes(kind)?y>=85:y>=69&&!(['bank','drinks'].includes(kind)&&y<74);
-  if(bottomAction&&kind!=='bank'){const n=button(label,fn,disabled);n.classList.toggle('selected',chosen);dock.append(n);return n;}
 const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n.setAttribute('aria-label',label);n.title=label;n.disabled=disabled||locked||Date.now()<animationUntil;Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});n.onclick=fn;stage.append(n);return n;};
  const route=(key:string)=>{dialog='';host.route(key);};
  function change(next:string){kind=next;dialog='';page=0;notice='';draw();}
@@ -29,11 +25,21 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
  function controls(parent:HTMLElement,...nodes:HTMLElement[]){const n=el('div','','art-buttons');n.append(...nodes);(parent.closest('.art-extra')?parent:dock).append(n);}
  function closeDialog(){if(dialog==='battle-result')acknowledgedResult=host.state().play.revision;dialog='';draw();}
  function refresh(){void host.refresh().catch(e=>{notice=String(e);draw();});}
- function footer(back:string,_x=35,_y=88,_w=30,_h=8){dock.append(button(back==='hub'?'Retour en ville':'Retour',()=>['expedition','tools','destinations','accessories','departure','live'].includes(back)?change(back):route(back)));}
+ function footer(back:string,x=35,y=88,w=30,h=8){const action=()=>['expedition','tools','destinations','accessories','departure','live'].includes(back)?change(back):route(back);if(kind==='jobs'&&host.state().pending)dock.append(button('Retour en ville',action));else hit(back==='hub'?'Retour en ville':'Retour',x,y,w,h,action);}
  function text(parent:HTMLElement,value:string){parent.append(el('p',value));}
  function progress(parent:HTMLElement,value:number,max:number){const n=document.createElement('progress');n.className='art-progress';n.max=Math.max(1,max);n.value=value;n.setAttribute('aria-label',`${value} sur ${max}`);parent.append(n);}
  function draw(){
-  if(destroyed)return;if(liveGameKinds.has(kind)){if(live&&liveKind===kind)live.update();else{live?.destroy();liveKind=kind;live=openLiveGame(panel,kind,{...host,route:(key)=>liveGameKinds.has(key)||['casino','games'].includes(key)?change(key):host.route(key)});}return;}live?.destroy();live=undefined;const s=host.state(),p=s.play;if(s.active&&['expedition','tools','destinations','accessories','departure'].includes(kind))kind='live';let art=kind;if(['dice','coin','rps'].includes(kind))art='games';panel.className='illustrated';panel.hidden=false;panel.style.setProperty('--art-ratio',['tavern','alley','thief','casino'].includes(art)?'2.667':'1.5');panel.replaceChildren();stage=el('div','','art-stage');const img=new Image();img.className='art-image';img.alt='';img.src='/assets/menus/'+art+'.webp';img.onload=()=>{if(!destroyed)panel.style.setProperty('--art-ratio',String(img.naturalWidth/img.naturalHeight));};stage.append(img);panel.append(stage);dock=el('div','','compact-dock');dock.setAttribute('aria-label','Actions du menu');panel.append(dock);panel.dataset.kind=kind;document.body.classList.add('illustrated-open');
+  const previousKind=panel.dataset.kind,scroll=panel.scrollTop;
+  const focused=panel.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;
+  drawContent();fitArtworkText(panel);
+  if(previousKind!==panel.dataset.kind)panel.scrollTop=0;
+  if(previousKind===panel.dataset.kind&&!panel.querySelector('.art-extra')){
+   panel.scrollTop=scroll;
+   if(focused)Array.from(panel.querySelectorAll<HTMLElement>('[aria-label]')).find(n=>n.getAttribute('aria-label')===focused)?.focus({preventScroll:true});
+  }
+ }
+ function drawContent(){
+  if(destroyed)return;if(liveGameKinds.has(kind)){if(live&&liveKind===kind)live.update();else{live?.destroy();liveKind=kind;live=openLiveGame(panel,kind,{...host,route:(key)=>liveGameKinds.has(key)||['casino','games'].includes(key)?change(key):host.route(key)});}return;}live?.destroy();live=undefined;const s=host.state(),p=s.play;if(s.active&&['expedition','tools','destinations','accessories','departure'].includes(kind))kind='live';let art=kind;if(['dice','coin','rps'].includes(kind))art='games';panel.className='illustrated restored-art';panel.hidden=false;panel.style.setProperty('--art-ratio',['tavern','alley','thief','casino'].includes(art)?'2.667':'1.5');panel.replaceChildren();stage=el('div','','art-stage');const img=new Image();img.className='art-image';img.alt='';img.src='/assets/menus/'+art+'.webp';img.onload=()=>{if(!destroyed)panel.style.setProperty('--art-ratio',String(img.naturalWidth/img.naturalHeight));if(img.isConnected)sizeMenu(panel,img.naturalWidth/img.naturalHeight,Number(panel.dataset.menuLimit),panel.dataset.menuBottom==='true');};stage.append(img);panel.append(stage);dock=el('div','','compact-dock');dock.setAttribute('aria-label','Actions du menu');panel.append(dock);panel.dataset.kind=kind;panel.setAttribute('aria-busy',String(locked));sizeMenu(panel,['tavern','alley','thief','casino'].includes(art)?2.5:1.5,['tavern','alley','thief','casino'].includes(art)?1080:1180,['tavern','alley','thief','casino'].includes(art));document.body.classList.add('illustrated-open');
   const navigation:Record<string,{title:string;items:[string,()=>void,boolean?][]}>={
    tavern:{title:'La taverne',items:[['Le tavernier',()=>route('drinks')],['Les jeux',()=>route('games')],['Le troubadour',()=>route('troubadour')],['Retour en ville',()=>route('hub')]]},
    castle:{title:'Château de IV',items:[['Tableau de bord',()=>route('dashboard')],['Podium',()=>route('podium')],[s.daily_available?'Récompense quotidienne':'Déjà récupérée',()=>void run({action:'daily'}),!s.daily_available],['Retour en ville',()=>route('hub')]]},
@@ -44,20 +50,37 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
    expedition:{title:'Préparer une expédition',items:[...(['axe','pickaxe','spear'] as const).map((key):[string,()=>void]=>[key==='axe'?'Bûcheron':key==='pickaxe'?'Mineur':'Chasseur',()=>{tool=key;tier=s.gear[key+'_level']||1;change('tools');}]),['Cueillette',()=>{tool='hands';destination='elarwyn_foraging';change('departure');}],['Retour au monde',()=>route('world')]]},
    casino:{title:'Salle clandestine',items:[...(['blackjack','roulette','russian','slots','horses'] as const).map((k,i):[string,()=>void,boolean]=>[['Black Jack','Roulette','Roulette russe','Machine à sous','Courses'][i],()=>{choice=k==='horses'?0:'red';change(k);},!s.alley.access.valid]),['Quitter la salle',()=>route('guard')]]}
   };
-  if(navigation[kind]){panel.classList.add('compact-navigation');img.hidden=true;const nav=navigation[kind];stage.setAttribute('aria-label',nav.title);if(kind==='games'||kind==='casino'){
-    panel.classList.add('game-selection');const selection=el('section','','game-selection-content');selection.setAttribute('aria-label',nav.title);stage.append(selection);
-    const title=el('h2',nav.title,'game-selection-title');selection.append(title);
-    if(kind==='games')selection.append(gameCrop('games','412 2 714 149'));
-    const cards=el('div','','game-selection-grid '+(kind==='casino'?'casino-selection-grid':''));selection.append(cards);
-    nav.items.forEach(([label,fn,disabled],i)=>{if(kind==='games'&&i===3){dock.append(button(label,fn,disabled));return;}const b=gameMenuButton(kind as 'games'|'casino',i,label);b.disabled=!!disabled||locked;b.onclick=()=>{if(!locked&&!b.disabled)fn();};cards.append(b);});
-   }else nav.items.forEach(([label,fn,disabled])=>dock.append(button(label,fn,disabled)));if(['combat','techniques'].includes(kind)&&p.kind==='combat'&&p.status==='finished'&&acknowledgedResult!==p.revision)dialog='battle-result';if(dialog)drawDialog(s);dock.inert=!!dialog;dock.setAttribute('aria-hidden',String(!!dialog));if(notice&&!dialog){const n=el('div',notice,'art-notice');n.setAttribute('role','status');panel.append(n);}tick();return;}
+  if(navigation[kind]){
+   const nav=navigation[kind];stage.setAttribute('aria-label',nav.title);
+   const areas:Record<string,number[][]>={
+    tavern:[[2,50,33,20],[35,50,30,20],[65,50,33,20],[36,71,28,17]],
+    alley:[[1,47,24,17],[26,47,23,17],[50,47,23,17],[74,47,25,17],[38,70,24,17]],
+    thief:[[1,45,24,19],[26,45,23,19],[50,45,23,19],[74,45,25,19],[38,72,24,17]],
+    castle:[[4,26,30,49],[35,26,30,49],[66,26,30,49],[28,78,45,13]],
+    arena:[[3,28,47,48],[51,28,47,48],[29,80,42,13]],
+    expedition:[[3,23,31,53],[35,23,31,53],[67,23,30,53],[35,78,30,7],[35,88,31,9]],
+    games:[[4,26,30,28],[35,26,30,28],[66,26,30,28],[32,90,37,7]],
+    casino:[[1,28,31,18],[34,28,31,18],[67,28,32,18],[1,57,31,18],[34,57,31,18],[67,57,32,18]]
+   };
+   nav.items.forEach(([label,fn,disabled],i)=>{const [x,y,w,h]=areas[kind][i];hit(label,x,y,w,h,fn,!!disabled);});
+   if(kind==='games')for(let i=0;i<3;i++)hit('Jeu contre un ami indisponible',4+31*i,64,30,25,()=>{},true);
+   reflowArtwork(stage,kind);fitArtworkText(panel);if(dialog)drawDialog(s);if(notice&&!dialog){const n=el('div',notice,'art-notice');n.setAttribute('role','status');panel.append(n);}tick();return;
+  }
   img.classList.add('compact-art');
-  if(cleanMode()){panel.classList.add('clean-information');img.remove();const titles:Record<string,string>={bank:'Banque de IV',jobs:'Petites annonces',dashboard:'Tableau de bord',podium:'Podium',combat:'Combat',techniques:'Techniques',destinations:'Choisir la destination',accessories:'Accessoires',departure:'Départ de l’expédition',live:'Expédition en cours'};stage.append(menuHeading(titles[kind]));if(kind==='bank'){const header=assetSlice('/assets/menus/bank.webp',220,0,1100,250);header.classList.add('bank-original-title');stage.querySelector('.menu-heading')?.replaceWith(header);}}
 
+  if(kind==='jobs'&&innerWidth<=600&&!s.pending){drawMobileJobs(s,img);if(dialog)drawDialog(s);if(notice){const n=el('div',notice,'art-notice');panel.append(n);}return;}
+  if(kind==='bank'&&innerWidth<=600){drawMobileBank(s,img);if(notice){const n=el('div',notice,'art-notice');n.setAttribute('role','status');panel.append(n);}return;}
   if(kind==='bank'){
-   const balances=el('div','','bank-balances');for(const [label,value] of [['Portefeuille',s.balance.wallet],['Banque',s.balance.bank],['Fortune',s.balance.wallet+s.balance.bank]]){const item=el('div','','bank-balance');item.append(el('span',String(label)),el('strong',`${value} Gold`));balances.append(item);}stage.append(balances);
-   const forms=el('div','','bank-forms');stage.append(forms);
-   for(const [mode,value] of [['deposit',amount],['withdraw',withdraw]] as const){const max=mode==='deposit'?s.balance.wallet:s.balance.bank,form=el('section','','bank-form');forms.append(form);form.append(el('h3',mode==='deposit'?'Déposer':'Retirer'));input(form,value,mode==='deposit'?'Montant à déposer':'Montant à retirer',max,v=>{if(mode==='deposit')amount=v;else withdraw=v;});const presets=el('div','','bank-presets');[100,500,max].forEach((v,i)=>presets.append(button(i===2?'Tout':String(v),()=>{if(mode==='deposit')amount=v;else withdraw=v;draw();})));form.append(presets);const q=withdrawalQuote(value,s.balance.free_withdrawal_available);form.append(el('p',mode==='deposit'?`Disponible : ${max} Gold`:`Frais : ${q.fee} · Reçu : ${q.received} Gold`),button(mode==='deposit'?'Confirmer le dépôt':'Confirmer le retrait',()=>void run({action:mode,amount:value}),!validAmount(value,max)));}footer('hub');
+   [s.balance.wallet,s.balance.bank,s.balance.wallet+s.balance.bank].forEach((v,i)=>box(21+i*28,31.6,13,5.4,`${v} Gold`,'art-mask art-wood'));
+   for(const [mode,value] of [['deposit',amount],['withdraw',withdraw]] as const){
+    const max=mode==='deposit'?s.balance.wallet:s.balance.bank,x=mode==='deposit'?8:66;
+    const field=box(x+6.5,55.1,12.7,5.2,'','bank-amount');input(field,value,mode==='deposit'?'Montant à déposer':'Montant à retirer',max,v=>{if(mode==='deposit')amount=v;else withdraw=v;});
+    const set=(v:number)=>{if(mode==='deposit')amount=v;else withdraw=v;draw();};
+    hit('Diminuer '+mode,x,54,5,7,()=>set(Math.max(1,value-100)),value<=1);hit('Augmenter '+mode,x+22,54,5,7,()=>set(Math.min(max,value+100)),value>=max);
+    [100,500,max].forEach((v,i)=>hit((i===2?'Tout':String(v))+' '+mode,x+i*9,63,8,6,()=>set(v),v<1||v>max));
+    const q=withdrawalQuote(value,s.balance.free_withdrawal_available);if(mode==='withdraw')box(x+3,69.7,22,3.2,max===0?'Banque vide':!validAmount(value,max)?'Choisissez un montant valide':s.balance.free_withdrawal_available?'Premier retrait gratuit':`Frais : ${q.fee} · Net : ${q.received} Gold`,'art-mask art-small');
+    hit(mode==='deposit'?'Confirmer le dépôt':'Confirmer le retrait',x-2,75,31,9,()=>void run({action:mode,amount:value}),!validAmount(value,max));
+   }footer('hub',36,90,28,8);
   }else if(kind==='jobs'){
    if(s.pending){
     img.hidden=true;panel.classList.add('pending-contract');const n=el('section','','mission-parchment mission-active');stage.append(n);
@@ -68,39 +91,99 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
     const bar=document.createElement('progress');bar.className='mission-progress';bar.max=3600;bar.value=Math.max(0,3600-s.pending.remaining);bar.setAttribute('aria-label','Progression du contrat');n.append(bar,el('p',s.pending.ready?'Mission terminée · votre récompense vous attend.':'Votre personnage accomplit le contrat.','mission-state'));
     const claim=button('Récupérer la récompense',()=>void run({action:'job_claim'}),!s.pending.ready);claim.dataset.missionClaim='true';dock.append(claim);
    }
-   else{page=Math.min(page,Math.max(0,Math.ceil(s.board.jobs.length/4)-1));const jobs=pageSlice(s.board.jobs,page);for(let i=0;i<4;i++){const j=jobs[i],x=i%2===0?25:69,y=i<2?27:55;box(x,y,21,14,j?`${j.title}\n${({common:'Commun',uncommon:'Peu commun',rare:'Rare',epic:'Épique',legendary:'Légendaire'} as Record<string,string>)[j.rarity]??j.rarity} · ${j.reward} Gold\n1 heure`:'Aucune annonce','art-mask art-paper art-small');hit(j?'Accepter '+j.title:'Aucune annonce',x,y+15,21,7,()=>{if(j){selected=j.job_id;dialog='contract';draw();}},!j);const labels:Record<string,string>={common:'Commun',uncommon:'Peu commun',rare:'Rare',epic:'Épique',legendary:'Légendaire'};box(i%2===0?11:55,i<2?27:55,7,7,j?labels[j.rarity]??j.rarity:'Vide','art-mask art-small');}hit('Page précédente',30,81,10,7,()=>{page--;draw();},page===0);box(41,81,16,7,`${page+1}/${Math.max(1,Math.ceil(s.board.jobs.length/4))}`,'art-mask art-wood');hit('Page suivante',60,81,10,7,()=>{page++;draw();},(page+1)*4>=s.board.jobs.length);}footer('hub',35,90,33,7);
+   else{page=Math.min(page,Math.max(0,Math.ceil(s.board.jobs.length/4)-1));const jobs=pageSlice(s.board.jobs,page);for(let i=0;i<4;i++){const j=jobs[i],x=i%2===0?25:69,y=i<2?27:55;box(x,y,21,14,j?`${j.title}\n${({common:'Commun',uncommon:'Peu commun',rare:'Rare',epic:'Épique',legendary:'Légendaire'} as Record<string,string>)[j.rarity]??j.rarity} · ${j.reward} Gold\n1 heure`:'Aucune annonce','art-mask art-paper art-small');hit(j?'Accepter '+j.title:'Aucune annonce',x,y+15,21,7,()=>{if(j){selected=j.job_id;dialog='contract';draw();}},!j);const labels:Record<string,string>={common:'Commun',uncommon:'Peu commun',rare:'Rare',epic:'Épique',legendary:'Légendaire'};const seal=box(i%2===0?9.8:53.9,i<2?23.6:51.9,7.2,13.2,'','native-job-seal');seal.append(raritySeal(j?.rarity??'common'),el('span',j?labels[j.rarity]??j.rarity:'Vide','native-rarity-label'));}hit('Page précédente',30,81,10,7,()=>{page--;draw();},page===0);box(45.5,82.4,9,4,`${page+1}/${Math.max(1,Math.ceil(s.board.jobs.length/4))}`,'art-mask art-blue');hit('Page suivante',60,81,10,7,()=>{page++;draw();},(page+1)*4>=s.board.jobs.length);}footer('hub',35,90,33,7);
   }else if(kind==='dashboard'){
-   box(23,22,16,8,`Niveau ${s.level}`);const lvl=box(41,24,30,5);progress(lvl,s.xp,s.xp_needed);box(73,22,16,8,`${s.xp}/${s.xp_needed} XP`);box(26,42,18,6,`${s.balance.wallet} Gold`);box(71,42,20,6,`${s.balance.bank} Gold`);const done=s.quests.filter(q=>q.progress>=q.target).length,q=box(24,59,22,8,`${done}/6 terminées`);progress(q,done,6);box(72,59,20,8,s.quests.every(q=>q.claimed)?'Récupérée':done===6?'Disponible':'En cours');hit('Quêtes quotidiennes',7,51,41,17,()=>{dialog='quests';draw();});hit('Réclamer les quêtes',52,51,41,17,()=>void run({action:'quests_claim'}),done<6||s.quests.every(q=>q.claimed));box(22,77,24,6,s.active?s.active.name:'Aucune expédition','art-mask art-small');box(67,77,25,6,`${s.stats.wins} victoires · ${s.stats.losses} défaites`,'art-mask art-small');hit('Actualiser',18,89,29,8,refresh);footer('castle',54,89,29,8);
+   box(35.5,23,4,5,String(s.level));const lvl=box(42,24.8,28,2.7);progress(lvl,s.xp,s.xp_needed);box(73,22,16,8,`${s.xp}/${s.xp_needed} XP`);box(26,42,18,6,`${s.balance.wallet} Gold`);box(71,42,20,6,`${s.balance.bank} Gold`);const done=s.quests.filter(q=>q.progress>=q.target).length,q=box(24,59,22,8,`${done}/6 terminées`);progress(q,done,6);box(72,59,20,8,s.quests.every(q=>q.claimed)?'Récupérée':done===6?'Disponible':'En cours');hit('Quêtes quotidiennes',7,51,41,17,()=>{dialog='quests';draw();});hit('Réclamer les quêtes',52,51,41,17,()=>void run({action:'quests_claim'}),done<6||s.quests.every(q=>q.claimed));box(20,77,28,6,s.active?s.active.name:'Aucune expédition','art-mask art-small');box(67,77,25,6,`${s.stats.wins} victoires · ${s.stats.losses} défaites`,'art-mask art-small');hit('Actualiser',18,89,29,8,refresh);footer('castle',54,89,29,8);
   }else if(kind==='podium'){
-   [1,0,2].forEach((rank,i)=>{const entry=s.podium[rank];box(i===0?13:i===1?41:74,rank===0?63:69,i===1?25:20,15,entry?`${entry.name}\n${entry.total} Gold`:'Place libre');});hit('Actualiser',19,88,31,8,refresh);footer('castle',54,88,35,8);
+   [1,0,2].forEach((rank,i)=>{const entry=s.podium[rank],x=i===0?14:i===1?42:74,y=i===1?62:67,w=i===1?17:15;box(x,y,w,5,entry?.name??'Place libre');box(x,i===1?70:73,w,5,entry?`${entry.total} Gold`:'—');});hit('Actualiser',19,88,31,8,refresh);footer('castle',54,88,35,8);
   }else if(kind==='combat'){
-   const fighters=p.kind==='combat'?p.fighters??[]:[];for(let i=0;i<2;i++){const f=fighters[i],n=box(i===0?12:70,3,23,15,'','art-mask combat-fighter');text(n,f?`${f.name} · ${f.hp}/${f.max_hp} PV`:'Aucun combat');if(f)progress(n,f.hp,f.max_hp);}box(44,13,14,5,`Tour ${p.turn??0}`,'art-mask combat-turn');const logs=box(13,70,74,15,'','art-mask art-log combat-log');(p.logs??[]).slice(-4).forEach(l=>text(logs,l.replaceAll('*','')));hit('Attaque rapide',5,85,23,10,()=>void run({action:'battle_step',key:'light'}),p.status!=='active');hit('Techniques',30,85,23,10,()=>change('techniques'),p.status!=='active');hit('Se protéger',55,85,24,10,()=>void run({action:'battle_step',key:'defend'}),p.status!=='active');hit('Abandonner',80,85,16,10,()=>{dialog='abandon';draw();},p.status!=='active');box(29,95,44,4,p.status==='finished'?`${p.message} · ${p.payout??0} Gold`:'À votre tour','art-mask art-small combat-status');if(p.status==='finished'){dock.replaceChildren(button('Voir le résultat',()=>{dialog='battle-result';draw();}),button('Retour à l’arène',()=>route('arena')));}
+   const fighters=p.kind==='combat'?p.fighters??[]:[];
+   for(let i=0;i<2;i++){
+    const f=fighters[i],x=i===0?12:71,n=box(x,6,17,6,'','art-mask combat-fighter');
+    text(n,f?.name??'Aucun combat');if(f){text(n,`${f.hp}/${f.max_hp} PV`);const health=box(x,14,17,2.5,'','combat-health');progress(health,f.hp,f.max_hp);}
+   }
+   const labels=['Attaque rapide','Techniques','Se protéger','Abandonner'];
+   labels.forEach((label,i)=>box([12,37,60,83][i],84.5,[14,12,12,12][i],5.5,label,'art-small combat-action-label'));
+   box(44,14,13,4,`Tour ${p.turn??0}`,'art-mask combat-turn');
+   const logs=box(29,73,42,7,'','art-mask art-log combat-log');(p.logs??[]).slice(-4).forEach(l=>text(logs,l.replaceAll('*','')));
+   hit('Attaque rapide',2,81,26,12,()=>void run({action:'battle_step',key:'light'}),p.status!=='active');
+   hit('Techniques',28,81,22,12,()=>change('techniques'),p.status!=='active');
+   hit('Se protéger',50,81,24,12,()=>void run({action:'battle_step',key:'defend'}),p.status!=='active');
+   hit('Abandonner',74,81,24,12,()=>{dialog='abandon';draw();},p.status!=='active');
+   box(29,95,44,4,p.status==='finished'?`${p.message} · ${p.payout??0} Gold`:'À votre tour','art-mask art-small combat-status');
+   if(p.status==='finished'){dock.replaceChildren(button('Voir le résultat',()=>{dialog='battle-result';draw();}),button('Retour à l’arène',()=>route('arena')));}
   }else if(kind==='techniques'){
-   ['light','heavy','ultimate'].forEach((key,i)=>{const sk=s.arena.skills[key],x=6+i*32;box(x,20,25,9,sk.name);box(x,58,25,11,`Puissance : ${sk.power}\n${key==='ultimate'?'Recharge : '+(p.fighters?.[0]?.ultimate_cd??0)+' tour(s)':''}`,'art-mask art-small');hit('Utiliser '+sk.name,x,69,26,11,()=>void run({action:'battle_step',key},()=>change('combat')),p.status!=='active'||key==='ultimate'&&(p.fighters?.[0]?.ultimate_cd??0)>0);});box(17,83,67,8,'Les techniques évoluent avec votre niveau.','art-mask art-small');hit('Retour au combat',30,91,39,7,()=>change('combat'));
+   ['light','heavy','ultimate'].forEach((key,i)=>{
+    const sk=s.arena.skills[key],x=6+i*32;
+    box(x+4,54,17,6,`Puissance : ${sk.power}${key==='ultimate'?'\nRecharge : '+(p.fighters?.[0]?.ultimate_cd??0)+' tour(s)':''}`,'art-mask art-small');
+    box(x+1,63,23,5.5,p.status==='active'?'Utiliser':'Hors combat','art-small technique-action-label');
+    hit('Utiliser '+sk.name,x-2,61,29,9,()=>void run({action:'battle_step',key},()=>change('combat')),p.status!=='active'||key==='ultimate'&&(p.fighters?.[0]?.ultimate_cd??0)>0);
+   });
+   hit('Retour au combat',33,90,35,9,()=>change('combat'));
   }
   else if(['expedition','tools','destinations','accessories','departure','live'].includes(kind))expeditions(s);
-  if(['combat','techniques'].includes(kind)&&p.kind==='combat'&&p.status==='finished'&&acknowledgedResult!==p.revision)dialog='battle-result';if(dialog)drawDialog(s);dock.inert=!!dialog;dock.setAttribute('aria-hidden',String(!!dialog));if(notice&&!dialog){const n=el('div',Date.now()<animationUntil?'Animation en cours…':notice,'art-notice');n.setAttribute('role','status');panel.append(n);}tick();
+  if(['combat','techniques'].includes(kind)&&p.kind==='combat'&&p.status==='finished'&&acknowledgedResult!==p.revision)dialog='battle-result';reflowArtwork(stage,kind);fitArtworkText(panel);if(dialog)drawDialog(s);dock.inert=!!dialog;dock.setAttribute('aria-hidden',String(!!dialog));if(notice&&!dialog){const n=el('div',Date.now()<animationUntil?'Animation en cours…':notice,'art-notice');n.setAttribute('role','status');panel.append(n);}tick();
+ }
+ function drawMobileJobs(s:Snapshot,img:HTMLImageElement){
+  panel.classList.add('mobile-jobs');img.remove();const root=stage;root.append(assetSlice('/assets/menus/jobs.webp',255,0,1035,245));
+  page=Math.min(page,Math.max(0,Math.ceil(s.board.jobs.length/4)-1));const jobs=pageSlice(s.board.jobs,page);
+  jobs.forEach(j=>{const pane=el('article','','mobile-job-card');pane.append(assetSlice('/assets/menus/jobs.webp',78,242,667,280));root.append(pane);stage=pane;
+   box(46,12,47,48,`${j.title}\n${j.reward} Gold · 1 heure`,'art-mask art-paper');
+   const rarity=({common:'Commun',uncommon:'Peu commun',rare:'Rare',epic:'Épique',legendary:'Légendaire'} as Record<string,string>)[j.rarity]??j.rarity;const seal=box(11,0,16.5,48.2,'','native-job-seal');seal.append(raritySeal(j.rarity),el('span',rarity,'native-rarity-label'));
+   hit('Accepter '+j.title,46,67,48,25,()=>{selected=j.job_id;dialog='contract';draw();});
+  });stage=root;
+  const pager=el('nav','','mobile-job-pager');pager.setAttribute('aria-label','Pages des annonces');pager.append(button('Précédent',()=>{page--;draw();},page===0),el('span',`${page+1} / ${Math.max(1,Math.ceil(s.board.jobs.length/4))}`),button('Suivant',()=>{page++;draw();},(page+1)*4>=s.board.jobs.length));root.append(pager,button('Retour en ville',()=>route('hub')));
+ }
+ function drawMobileBank(s:Snapshot,img:HTMLImageElement){
+  panel.classList.add('mobile-bank');img.remove();
+  const title=assetSlice('/assets/menus/bank.webp',220,0,1100,245);title.classList.add('mobile-bank-title');stage.append(title);
+  const balances=el('div','','mobile-bank-balances');balances.append(assetSlice('/assets/menus/bank.webp',130,245,1270,155));stage.append(balances);
+  [s.balance.wallet,s.balance.bank,s.balance.wallet+s.balance.bank].forEach((value,i)=>{const n=materialField(el('div',`${value} Gold`,'art-overlay'),'bank','wood');Object.assign(n.style,{left:15+i*33.8+'%',top:'51%',width:'16%',height:'35%'});n.style.setProperty('--balance-font',Math.min(12,(innerWidth-36)*.16/((String(value).length+5)*.68))+'px');balances.append(n);});
+  const root=stage;
+  for(const mode of ['deposit','withdraw'] as const){
+   const pane=el('section','','mobile-bank-transfer');pane.setAttribute('aria-label',mode==='deposit'?'Déposer':'Retirer');pane.append(assetSlice('/assets/menus/bank.webp',mode==='deposit'?60:960,392,522,495));root.append(pane);stage=pane;
+   const value=mode==='deposit'?amount:withdraw,max=mode==='deposit'?s.balance.wallet:s.balance.bank;
+   const field=box(30,34.8,40,11,'','bank-amount');input(field,value,mode==='deposit'?'Montant à déposer':'Montant à retirer',max,v=>{if(mode==='deposit')amount=v;else withdraw=v;});
+   const set=(v:number)=>{if(mode==='deposit')amount=v;else withdraw=v;draw();};
+   hit('Diminuer '+mode,13,33,15,15,()=>set(Math.max(1,value-100)),value<=1);hit('Augmenter '+mode,75,33,15,15,()=>set(Math.min(max,value+100)),value>=max);
+   [100,500,max].forEach((v,i)=>hit((i===2?'Tout':String(v))+' '+mode,12+i*27,51,24,13,()=>set(v),v<1||v>max));
+   if(mode==='withdraw'){const q=withdrawalQuote(value,s.balance.free_withdrawal_available);box(17,65,67,7,max===0?'Banque vide':s.balance.free_withdrawal_available?'Premier retrait gratuit':`Frais : ${q.fee} · Net : ${q.received} Gold`,'art-mask art-small');}
+   hit(mode==='deposit'?'Confirmer le dépôt':'Confirmer le retrait',8,76,84,19,()=>void run({action:mode,amount:value}),!validAmount(value,max));
+  }
+  stage=root;const back=el('button','','mobile-bank-return');back.setAttribute('aria-label','Retour en ville');back.append(assetSlice('/assets/menus/bank.webp',536,893,470,110));back.onclick=()=>route('hub');root.append(back);
  }
  function expeditions(s:Snapshot){
   if(s.active&&kind!=='live'){kind='live';draw();return;}
   if(kind==='expedition'){['axe','pickaxe','spear'].forEach((key,i)=>hit(s.catalog[key]?.name??key,3+i*32,28,30,50,()=>{tool=key;tier=s.gear[key+'_level']||1;change('tools');}));const n=box(22,79,58,7);controls(n,button('Cueillette à mains nues',()=>{tool='hands';destination='elarwyn_foraging';change('departure');}));footer('world',36,89,34,8);}
   else if(kind==='tools'){
-   const max=s.gear[tool+'_level']||0;stage.classList.add('tool-selection');stage.querySelector('.art-image')?.remove();
-   const title=menuHeading('Choix de l’outil');stage.append(title);
-   stage.append(el('h3',tool==='axe'?'Bûcheron':tool==='pickaxe'?'Mineur':'Chasseur','tool-profession'));
-   const art=el('div','','tool-selection-art');art.append(equipmentArt(tool,tier));stage.append(art);
-   stage.append(el('h3',s.tools[String(tier)]?.[tool]??s.catalog[tool]?.name,'tool-name'),el('p',`Palier ${tier}${tier>max?' · Non possédé':''}`,'tool-tier'));
-   const rack=el('div','','tool-tiers');[1,2,3,4,5].forEach(t=>{const b=button(`Palier ${t}`,()=>{tier=t;draw();},t>max);b.setAttribute('aria-pressed',String(tier===t));rack.append(b);});stage.append(rack);
-   if(!s.owned[tool]||!s.owned.bag)stage.append(el('p',!s.owned[tool]?'Achetez cet outil au marché.':'Un sac est nécessaire pour partir.','tool-requirement'));
-   dock.append(button('Choisir cet outil',()=>change('destinations'),!s.owned[tool]||!s.owned.bag||tier>max),button('Retour',()=>change('expedition')));
+   const max=s.gear[tool+'_level']||0;stage.querySelector('.art-image')?.replaceWith(toolBackdrop());
+   box(44,21.7,14,3.8,tool==='axe'?'Bûcheron':tool==='pickaxe'?'Mineur':'Chasseur','art-mask art-blue art-small');
+   const art=box(29,26,43,21,'','native-equipment');art.append(equipmentArt(tool,tier));
+   box(40.7,47.8,18.5,4.1,s.tools[String(tier)]?.[tool]??s.catalog[tool]?.name,'art-mask art-blue art-small');
+   box(40,52.9,22,5.8,`Niveau requis : ${s.forge_levels[String(tier)]??1}\n${s.owned[tool]&&tier<=max?'Équipement possédé':'Non possédé'}`,'art-mask art-wood art-small');
+   box(47.5,59.4,5,2.8,`${tier} / 5`,'art-mask art-wood art-small');
+   hit('Palier précédent',8,28,12,27,()=>{tier--;draw();},tier<=1);hit('Palier suivant',81,28,12,27,()=>{tier++;draw();},tier>=5);
+   [1,2,3,4,5].forEach(t=>hit(`Palier ${t}`,17+(t-1)*10.8,63,11,11,()=>{tier=t;draw();},false,tier===t));hit('Palier non disponible',72,63,11,11,()=>{},true);
+   box(38,78,25,8,!s.owned[tool]?'Outil non possédé':!s.owned.bag?'Un sac est nécessaire':'Préparation disponible','art-mask art-wood art-small');
+   hit('Choisir cet outil',24,88,36,9,()=>change('destinations'),!s.owned[tool]||!s.owned.bag||tier>max);footer('expedition',61,90,20,6);
   }else if(kind==='destinations'){
-   const ds=Object.entries(s.destinations).filter(([,d])=>d.location_key===location&&d.tools.includes(tool));page=Math.max(0,Math.min(page,ds.length-1));const d=ds[page];if(d){destination=d[0];box(26,21,49,10,s.tools[String(tier)]?.[tool]??tool);box(25,48,52,20,`${d[1].name}\nNiveau ${d[1].level} · ${d[1].duration_label}`);box(23,74,59,13,`Destination ${page+1}/${ds.length} · ${location==='vorak'?'Vorak':'Elarwyn'}`,'art-mask art-wood');hit('Destination précédente',3,31,14,31,()=>{page--;draw();},page===0);hit('Destination suivante',84,31,13,31,()=>{page++;draw();},page>=ds.length-1);hit('Choisir cette destination',24,89,51,8,()=>change('accessories'),s.level<d[1].level);}else box(17,36,68,35,'Aucune destination disponible.');footer('tools',77,91,20,6);
+   const ds=Object.entries(s.destinations).filter(([,d])=>d.location_key===location&&d.tools.includes(tool));page=Math.max(0,Math.min(page,ds.length-1));const d=ds[page];
+   if(d){destination=d[0];const preview=box(23,27,54,23,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=d[1].name;preview.append(picture);box(37,21,28,3.7,s.tools[String(tier)]?.[tool]??tool,'art-mask art-blue art-small');box(39,52.6,23,4.6,d[1].name,'art-mask art-blue art-small');
+    
+    box(23,61,14,3.2,`Niveau requis : ${d[1].level}`,'art-mask art-wood art-small');box(43,61,15,3.2,d[1].duration_label,'art-mask art-wood art-small');box(65,61,13,3.2,s.level>=d[1].level?'Accès disponible':'Accès verrouillé','art-mask art-wood art-small');box(47,66,6,3.1,`${page+1} / ${ds.length}`,'art-mask art-wood art-small');
+    box(37,75,27,8,'Découvertes durant le voyage','art-mask art-wood art-small');hit('Destination précédente',5,28,12,27,()=>{page--;draw();},page===0);hit('Destination suivante',82,28,12,27,()=>{page++;draw();},page>=ds.length-1);hit('Choisir cette destination',17,87,43,10,()=>change('accessories'),s.level<d[1].level);
+   }else box(38,53,25,4,'Aucune destination','art-mask art-small');footer('tools',62,88,22,9);
   }else if(kind==='accessories'){
-   box(25,23,52,10,s.destinations[destination]?.name??'');box(10,37,80,43,'Les accessoires ne sont pas disponibles pour le moment.\nEmplacement 1 : Aucun objet\nEmplacement 2 : Aucun objet');box(23,80,54,7,'Aucun effet supplémentaire','art-mask art-small');hit('Continuer',23,88,49,10,()=>change('departure'));footer('destinations',77,91,20,6);
+   box(35,22,30,4,s.destinations[destination]?.name??'Destination','art-small');
+   box(32,34,15,7,'Aucun objet','art-small');box(67,34,15,7,'Aucun objet','art-small');
+   box(33,78,34,5,'Aucun accessoire disponible','art-small');
+   hit('Continuer',16,86,42,12,()=>change('departure'));footer('destinations',60,87,26,9);
   }else if(kind==='departure'){
-   const d=s.destinations[destination],bare=tool==='hands';box(27,49,28,5,d?.name??'Destination indisponible','art-mask art-wood art-small');box(57,28,25,35,`Métier : ${bare?'Cueillette':tool==='axe'?'Bûcheron':tool==='pickaxe'?'Mineur':'Chasseur'}\nOutil : ${bare?'Mains nues':s.tools[String(tier)]?.[tool]}\n${bare?'Sans sac':s.bags[String(s.gear.bag_level)]?.name}\nDurée : ${d?.duration_label??''}`,'art-mask art-paper');box(29,79,43,8,'Les découvertes seront révélées durant le voyage.','art-mask art-wood art-small');hit('Lancer l’expédition',17,88,55,10,()=>void run({action:'start',key:destination,tool,...(!bare?{tool_level:tier,bag_level:s.gear.bag_level}:{}),object1:'none',object2:'none'},()=>{if(host.state().active)change('live');}),!d||s.level<d.level);footer('expedition',75,90,21,7);
+   const d=s.destinations[destination],bare=tool==='hands';const preview=box(14,28,35,19,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=d?.name??'';preview.append(picture);box(24.4,49.3,24,4,d?.name??'Destination indisponible','art-mask art-blue art-small');
+   box(65,28.1,15,3.7,bare?'Cueillette':tool==='axe'?'Bûcheron':tool==='pickaxe'?'Mineur':'Chasseur','art-mask art-paper art-small');box(65,36.8,15,3.7,bare?'Mains nues':s.tools[String(tier)]?.[tool]??tool,'art-mask art-paper art-small');box(65,45.2,15,3.7,d?.duration_label??'—','art-mask art-paper art-small');
+   box(38,75.5,25,8.5,'Découvertes en route','art-mask art-wood art-small');hit('Lancer l’expédition',16,87,45,11,()=>void run({action:'start',key:destination,tool,...(!bare?{tool_level:tier,bag_level:s.gear.bag_level}:{}),object1:'none',object2:'none'},()=>{if(host.state().active)change('live');}),!d||s.level<d.level);footer('expedition',62,89,24,7);
   }else if(kind==='live'){
-   const a=s.active;if(!a){box(13,28,75,57,'Expédition terminée. Les ressources et l’XP ont été ajoutées à votre personnage.');footer('world',48,89,41,8);return;}box(21,14,59,8,a.name);const t=box(21,43,60,8);t.dataset.deadline=String(a.ends_at*1000-offset);const prog=box(20,51,61,7);progress(prog,Math.max(0,s.server_now-a.started_at),a.ends_at-a.started_at);box(20,63,28,17,Object.entries(a.revealed_loot).map(([k,v])=>`${k} ×${v}`).join('\n')||'Aucune ressource découverte','art-mask art-paper art-small');box(54,63,27,17,a.log.slice(-3).map(l=>`${l.resource_name} +${l.quantity}`).join('\n')||'Le voyage commence…','art-mask art-paper art-small');hit('Actualiser',14,86,35,10,refresh);footer('world',51,86,37,10);
+   const a=s.active;if(!a){box(13,28,75,57,'Expédition terminée. Les ressources et l’XP ont été ajoutées à votre personnage.');footer('world',48,89,41,8);return;}box(25,20,50,3,a.name,'art-small');const scenery=box(13,25,74,16,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=a.name;scenery.append(picture);const t=box(21,43,60,8);t.dataset.deadline=String(a.ends_at*1000-offset);const prog=box(20,51,61,7);progress(prog,Math.max(0,s.server_now-a.started_at),a.ends_at-a.started_at);box(20,63,28,17,Object.entries(a.revealed_loot).map(([k,v])=>`${k} ×${v}`).join('\n')||'Aucune ressource découverte','art-mask art-paper art-small');box(54,63,27,17,a.log.slice(-3).map(l=>`${l.resource_name} +${l.quantity}`).join('\n')||'Le voyage commence…','art-mask art-paper art-small');hit('Actualiser',14,86,35,10,refresh);footer('world',51,86,37,10);
   }
  }
  function drawDialog(s:Snapshot){const n=el('div','','art-extra');n.setAttribute('role','dialog');n.setAttribute('aria-modal','true');stage.append(n);
@@ -135,6 +218,6 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
   else if(dialog==='record'){text(n,`Réputation : ${s.alley.reputation.label}`);Object.entries(s.alley.record).filter(([k])=>k!=='user_id').forEach(([k,v])=>text(n,`${({theft_success:'Vols réussis',theft_fail:'Vols ratés',crimes_success:'Crimes réussis',heists_success:'Braquages réussis',gold_stolen:'Gold volé',loot:'Butin',caught:'Arrestations'} as Record<string,string>)[k]??k} : ${v}`));}
   else if(dialog==='quests'){text(n,'Quêtes quotidiennes');s.quests.forEach(q=>text(n,`${q.label} · ${q.progress}/${q.target}`));text(n,`Récompense : ${s.quest_reward.gold} Gold + ${s.quest_reward.xp} XP`);}if(!['contract','battle-result'].includes(dialog))controls(n,button('Retour',closeDialog));
  }
- function tick(){panel.querySelectorAll<HTMLElement>('[data-deadline]').forEach(n=>{const seconds=Math.max(0,Math.ceil((Number(n.dataset.deadline)-Date.now())/1000));if(n.dataset.missionTimer){n.textContent=seconds>0?`${String(Math.floor(seconds/3600)).padStart(2,'0')} : ${String(Math.floor(seconds%3600/60)).padStart(2,'0')} : ${String(seconds%60).padStart(2,'0')}`:'Terminée';const bar=panel.querySelector<HTMLProgressElement>('.mission-progress');if(bar)bar.value=3600-seconds;if(seconds===0){const claim=panel.querySelector<HTMLButtonElement>('[data-mission-claim]');if(claim&&!locked)claim.disabled=false;const message=panel.querySelector('.mission-state');if(message)message.textContent='Mission terminée · votre récompense vous attend.';}}else n.textContent=timeLabel(seconds);});if(animationUntil&&Date.now()>=animationUntil){animationUntil=0;draw();}}
- const clock=window.setInterval(tick,100);panel.onkeydown=e=>{if(e.key==='Escape'&&!locked){e.preventDefault();dialog?closeDialog():host.close();}if(e.key==='Tab'){const root=panel.querySelector('.art-extra')??panel,nodes=Array.from(root.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled)')),first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}};draw();panel.querySelector<HTMLElement>('button')?.focus();return {destroy(){destroyed=true;live?.destroy();document.body.classList.remove('illustrated-open');clearInterval(clock);panel.onkeydown=null;},update(){offset=host.state().server_now*1000-Date.now();if(document.activeElement instanceof HTMLInputElement&&panel.contains(document.activeElement))return;if(!locked&&Date.now()>=animationUntil)draw();}};
+ function tick(){panel.querySelectorAll<HTMLElement>('[data-deadline]').forEach(n=>{const seconds=Math.max(0,Math.ceil((Number(n.dataset.deadline)-Date.now())/1000));if(n.dataset.missionTimer){n.textContent=seconds>0?`${String(Math.floor(seconds/3600)).padStart(2,'0')} : ${String(Math.floor(seconds%3600/60)).padStart(2,'0')} : ${String(seconds%60).padStart(2,'0')}`:'Terminée';const bar=panel.querySelector<HTMLProgressElement>('.mission-progress');if(bar)bar.value=3600-seconds;if(seconds===0){const claim=panel.querySelector<HTMLButtonElement>('[data-mission-claim]');if(claim&&!locked)claim.disabled=false;const message=panel.querySelector('.mission-state');if(message)message.textContent='Mission terminée · votre récompense vous attend.';}}else fieldText(n,timeLabel(seconds));});if(animationUntil&&Date.now()>=animationUntil){animationUntil=0;draw();}}
+ const stopSize=watchMenuSize(panel,draw);const clock=window.setInterval(tick,100);panel.onkeydown=e=>{if(e.key==='Escape'&&!locked){e.preventDefault();dialog?closeDialog():host.close();}if(e.key==='Tab'){const root=panel.querySelector('.art-extra')??panel,nodes=Array.from(root.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled)')),first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}};draw();panel.querySelector<HTMLElement>('button')?.focus({preventScroll:true});return {destroy(){destroyed=true;stopSize();live?.destroy();document.body.classList.remove('illustrated-open');clearInterval(clock);panel.onkeydown=null;},update(){offset=host.state().server_now*1000-Date.now();if(document.activeElement instanceof HTMLInputElement&&panel.contains(document.activeElement))return;if(!locked&&Date.now()>=animationUntil)draw();}};
 }

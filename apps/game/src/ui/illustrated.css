@@ -104,3 +104,38 @@
 @media(max-width:700px){#panel.illustrated.clean-information{top:101px;max-height:calc(100dvh - 185px);padding:10px;border-width:12px;border-image-width:12px}.clean-information .art-stage{gap:12px;padding-top:25px}.clean-information .menu-heading{font-size:19px!important;width:100%;margin:8px auto}.clean-information .integrated-value{font-size:13px;line-height:1.4;min-height:25px}.bank-balances{gap:5px;font-size:12px}.bank-balance strong{font-size:16px}.bank-forms{grid-template-columns:1fr;gap:10px}.bank-form{padding:4px 0 10px;border-bottom:1px solid #97743944}.bank-form h3{font-size:20px;margin:6px 0}.bank-form input{font-size:17px;margin:10px auto;padding:7px}.clean-information .art-extra{inset:101px 3% 80px}.clean-information .integrated-value .compact-button{font-size:10px!important}.clean-information .art-notice{font-size:12px}}
 #panel.clean-information .integrated-value{width:auto!important;height:auto!important;left:auto!important;top:auto!important}
 #panel.clean-information .combat-fighter{font-size:16px!important;padding:8px 0!important}.clean-information .combat-fighter p{font-size:16px!important}.clean-information .combat-turn{grid-column:1/-1}.clean-information .combat-status{grid-column:1/-1}
+
+/* Approved menu sheets stay whole. Only changing values cover their printed samples. */
+#panel.illustrated.restored-art{position:fixed;left:50%;top:90px;bottom:auto;transform:translateX(-50%);width:min(94vw,calc((100dvh - 155px)*1.5));max-width:1200px;max-height:calc(100dvh - 145px);padding:0;border:0;background:transparent;box-shadow:none;overflow:visible}
+.restored-art .art-image,.restored-art .compact-art{clip-path:none!important;opacity:1!important;filter:none!important}
+.restored-art .art-stage{min-width:0;aspect-ratio:auto}
+.restored-art .art-overlay{white-space:pre-line;overflow:hidden;font-size:1.55cqw;border:0;border-radius:3px;box-shadow:none;padding:.1em;line-height:1.1}
+.restored-art .art-overlay>svg{height:100%;max-width:100%}
+.restored-art .art-hit{z-index:2}
+.restored-art .compact-dock:empty{display:none}
+.restored-art .bank-amount input{width:100%;height:100%;padding:0;border:0;background:#10324c;box-sizing:border-box;font-size:2cqw}
+.restored-art .art-notice{bottom:-38px;font-size:clamp(11px,1.1vw,15px)}
+.restored-art .robber-planning{inset:18% 12% 8%;font-size:clamp(12px,1.3vw,18px)}
+.robber-planning .npc-conversation{display:block}.robber-planning .npc-terms{padding:12px}.robber-planning .menu-actions{display:flex;justify-content:center;flex-wrap:wrap}
+.restored-art .combat-log{position:absolute!important;font-size:1.35cqw!important}.restored-art .combat-fighter{font-size:1.6cqw!important}.restored-art .combat-status{position:absolute!important;font-size:1.25cqw!important}
+#panel.restored-art[data-kind="tavern"],#panel.restored-art[data-kind="alley"],#panel.restored-art[data-kind="thief"],#panel.restored-art[data-kind="casino"]{top:auto;bottom:65px;width:min(1100px,96vw)}
+#panel.restored-art.restored-market{width:min(1050px,94vw)}
+.market-original-actions{position:absolute;left:5%;right:5%;bottom:3%;display:flex;gap:1%;justify-content:center}
+.market-original-button{width:24%;border:0;background:transparent;padding:0;cursor:pointer}.market-original-button img{width:100%;display:block}.market-original-button:hover{filter:brightness(1.2)}.market-original-button:focus-visible{outline:2px solid #ffe2a0}
+@media(max-width:700px){#panel.illustrated.restored-art{top:110px;width:98vw;max-height:calc(100dvh - 170px)}.restored-art .art-overlay{font-size:1.6cqw}.restored-art .combat-fighter{left:12%!important;top:3%!important;width:23%!important;height:15%!important;padding:.1em!important;font-size:1.6cqw!important}.restored-art .combat-fighter:nth-of-type(2){left:70%!important}.restored-art .combat-fighter p{font-size:inherit!important}.restored-art .combat-turn{left:44%!important;top:13%!important;width:14%!important;height:5%!important;font-size:1.6cqw!important}.restored-art .combat-log{height:15%!important}.restored-art .combat-status{height:4%!important;margin:0}.restored-art .robber-planning{position:fixed;inset:0;max-height:65dvh;font-size:14px;overflow:auto}}
+
+#panel.illustrated.restored-art .art-overlay.art-mask{background:linear-gradient(105deg,#09283d,#123a54,#082438)!important;padding:.15em!important}
+#panel.illustrated.restored-art .art-overlay.art-mask.art-wood,#panel.restored-forge .art-overlay.art-mask{background:linear-gradient(100deg,#392012,#563019,#382012)!important}
+#panel.illustrated.restored-art .art-overlay.art-mask.art-paper{background:linear-gradient(110deg,#dac48e,#efdaa9,#dec793)!important;color:#38230f;text-shadow:none}
+#panel.restored-forge .art-overlay.art-small{font-size:1.15cqw}
+#panel.illustrated.restored-art[data-kind="bank"] .art-overlay.art-small{background:linear-gradient(100deg,#392012,#563019,#382012)!important;font-size:1.2cqw}
+#panel.illustrated.restored-art[data-kind="tavern"],#panel.illustrated.restored-art[data-kind="alley"],#panel.illustrated.restored-art[data-kind="thief"],#panel.illustrated.restored-art[data-kind="casino"]{top:auto;bottom:40px;height:auto}
+#panel.illustrated.restored-guard,#panel.illustrated.restored-robber{width:min(740px,94vw,calc((100dvh - 170px)*1.5))}
+
+#panel.illustrated.restored-art.restored-forge .art-overlay.art-mask{background:linear-gradient(100deg,#392012,#563019,#382012)!important}
+#panel.illustrated.restored-art.restored-forge .art-overlay.art-mask:has(svg){background:#10304b!important}
+
+/* Override the former inset shorthand, including on narrow screens. */
+#panel.illustrated.restored-art:not(.live-game){inset:90px auto auto 50%;transform:translateX(-50%);margin:0;height:fit-content;max-height:calc(100dvh - 145px)}
+#panel.illustrated.restored-art[data-kind="tavern"],#panel.illustrated.restored-art[data-kind="alley"],#panel.illustrated.restored-art[data-kind="thief"],#panel.illustrated.restored-art[data-kind="casino"]{inset:auto auto 40px 50%;margin:0}
+@media(max-width:700px){#panel.illustrated.restored-art:not(.live-game){inset:110px auto auto 50%;max-height:calc(100dvh - 170px)}#panel.illustrated.restored-art[data-kind="tavern"],#panel.illustrated.restored-art[data-kind="alley"],#panel.illustrated.restored-art[data-kind="thief"],#panel.illustrated.restored-art[data-kind="casino"]{inset:auto auto 45px 50%}}
