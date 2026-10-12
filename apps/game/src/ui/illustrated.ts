@@ -1,3 +1,5 @@
+import {composeBlankMenu} from './blank-compose';
+import {navigationRect} from './art-coordinates';
 import {reflowArtwork,fitArtworkText} from './artwork-layout';
 import {sizeMenu,watchMenuSize,materialField,fieldText,toolBackdrop,raritySeal} from './menu-layout';
 import {openLiveGame,liveGameKinds} from './live-games';
@@ -31,7 +33,7 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
  function draw(){
   const previousKind=panel.dataset.kind,scroll=panel.scrollTop;
   const focused=panel.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;
-  drawContent();fitArtworkText(panel);
+  drawContent();composeBlankMenu(panel,host.state());fitArtworkText(panel);
   if(previousKind!==panel.dataset.kind)panel.scrollTop=0;
   if(previousKind===panel.dataset.kind&&!panel.querySelector('.art-extra')){
    panel.scrollTop=scroll;
@@ -52,17 +54,7 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
   };
   if(navigation[kind]){
    const nav=navigation[kind];stage.setAttribute('aria-label',nav.title);
-   const areas:Record<string,number[][]>={
-    tavern:[[2,50,33,20],[35,50,30,20],[65,50,33,20],[36,71,28,17]],
-    alley:[[1,47,24,17],[26,47,23,17],[50,47,23,17],[74,47,25,17],[38,70,24,17]],
-    thief:[[1,45,24,19],[26,45,23,19],[50,45,23,19],[74,45,25,19],[38,72,24,17]],
-    castle:[[4,26,30,49],[35,26,30,49],[66,26,30,49],[28,78,45,13]],
-    arena:[[3,28,47,48],[51,28,47,48],[29,80,42,13]],
-    expedition:[[3,23,31,53],[35,23,31,53],[67,23,30,53],[35,78,30,7],[35,88,31,9]],
-    games:[[4,26,30,28],[35,26,30,28],[66,26,30,28],[32,90,37,7]],
-    casino:[[1,28,31,18],[34,28,31,18],[67,28,32,18],[1,57,31,18],[34,57,31,18],[67,57,32,18]]
-   };
-   nav.items.forEach(([label,fn,disabled],i)=>{const [x,y,w,h]=areas[kind][i];hit(label,x,y,w,h,fn,!!disabled);});
+   nav.items.forEach(([label,fn,disabled],i)=>{const [x,y,w,h]=navigationRect(kind,i);hit(label,x,y,w,h,fn,!!disabled);});
    if(kind==='games')for(let i=0;i<3;i++)hit('Jeu contre un ami indisponible',4+31*i,64,30,25,()=>{},true);
    reflowArtwork(stage,kind);fitArtworkText(panel);if(dialog)drawDialog(s);if(notice&&!dialog){const n=el('div',notice,'art-notice');n.setAttribute('role','status');panel.append(n);}tick();return;
   }
@@ -164,14 +156,16 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
    box(47.5,59.4,5,2.8,`${tier} / 5`,'art-mask art-wood art-small');
    hit('Palier précédent',8,28,12,27,()=>{tier--;draw();},tier<=1);hit('Palier suivant',81,28,12,27,()=>{tier++;draw();},tier>=5);
    [1,2,3,4,5].forEach(t=>hit(`Palier ${t}`,17+(t-1)*10.8,63,11,11,()=>{tier=t;draw();},false,tier===t));hit('Palier non disponible',72,63,11,11,()=>{},true);
-   box(38,78,25,8,!s.owned[tool]?'Outil non possédé':!s.owned.bag?'Un sac est nécessaire':'Préparation disponible','art-mask art-wood art-small');
+   const available=[...new Set(Object.entries(s.loot_tables??{}).filter(([key])=>s.destinations[key]?.location_key===location).flatMap(([,table])=>(table[tool]??[]).filter(([,minimum])=>tier>=minimum).map(([name])=>name)))];
+   box(8,76,84,10,'Ressources possibles : '+(available.join(' · ')||'Aucune pour ce palier'),'art-mask art-wood art-small');
+
    hit('Choisir cet outil',24,88,36,9,()=>change('destinations'),!s.owned[tool]||!s.owned.bag||tier>max);footer('expedition',61,90,20,6);
   }else if(kind==='destinations'){
    const ds=Object.entries(s.destinations).filter(([,d])=>d.location_key===location&&d.tools.includes(tool));page=Math.max(0,Math.min(page,ds.length-1));const d=ds[page];
    if(d){destination=d[0];const preview=box(23,27,54,23,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=d[1].name;preview.append(picture);box(37,21,28,3.7,s.tools[String(tier)]?.[tool]??tool,'art-mask art-blue art-small');box(39,52.6,23,4.6,d[1].name,'art-mask art-blue art-small');
     
     box(23,61,14,3.2,`Niveau requis : ${d[1].level}`,'art-mask art-wood art-small');box(43,61,15,3.2,d[1].duration_label,'art-mask art-wood art-small');box(65,61,13,3.2,s.level>=d[1].level?'Accès disponible':'Accès verrouillé','art-mask art-wood art-small');box(47,66,6,3.1,`${page+1} / ${ds.length}`,'art-mask art-wood art-small');
-    box(37,75,27,8,'Découvertes durant le voyage','art-mask art-wood art-small');hit('Destination précédente',5,28,12,27,()=>{page--;draw();},page===0);hit('Destination suivante',82,28,12,27,()=>{page++;draw();},page>=ds.length-1);hit('Choisir cette destination',17,87,43,10,()=>change('accessories'),s.level<d[1].level);
+    box(8,73,84,12,'Ressources possibles : '+((s.loot_tables?.[d[0]]?.[tool]??[]).filter(([,minimum])=>tier>=minimum).map(([name])=>name).join(' · ')||'Aucune pour ce palier'),'art-mask art-wood art-small');hit('Destination précédente',5,28,12,27,()=>{page--;draw();},page===0);hit('Destination suivante',82,28,12,27,()=>{page++;draw();},page>=ds.length-1);hit('Choisir cette destination',17,87,43,10,()=>change('accessories'),s.level<d[1].level);
    }else box(38,53,25,4,'Aucune destination','art-mask art-small');footer('tools',62,88,22,9);
   }else if(kind==='accessories'){
    box(35,22,30,4,s.destinations[destination]?.name??'Destination','art-small');

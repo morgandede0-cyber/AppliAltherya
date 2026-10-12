@@ -1,3 +1,4 @@
+import {alignCompactButtons} from './compact-menu';
 import {assetSlice} from './assets';
 
 type Region = [number, number, number, number];
@@ -17,8 +18,8 @@ const sections: Record<string, Region[]> = {
  accessories:[[7,0,86,26],[11,26,77,24],[11,50,77,26],[25,77,50,8],[13,85,75,15]],
  departure:[[9,0,82,25],[10,25,42,31],[51,25,38,31],[11,56,78,11],[28,68,45,16],[12,85,77,15]],
  live:[[8,0,84,23],[10,23,80,22],[11,45,77,15],[11,60,39,24],[50,60,39,24],[10,84,80,16]],
- arena:[[10,0,80,25],[0,25,50,51],[50,25,50,51],[25,77,50,20]],
- castle:[[10,0,80,25],[2,25,32,52],[34,25,32,52],[66,25,32,52],[25,78,50,18]],
+ arena:[[10,0,80,19.5],[0,19.5,50,66],[50,19.5,50,66],[28,85.5,44,13]],
+ castle:[[10,0,80,34],[2,34,33,44],[35,34,30.5,44],[65.5,34,33,44],[30,78,40,13.5]],
  games:[[12,0,76,25],[3,25,31,31],[34,25,31,31],[65,25,32,31],[3,60,31,31],[34,60,31,31],[65,60,32,31],[28,91,45,8]],
  expedition:[[12,0,76,23],[2,23,32,54],[34,23,32,54],[66,23,32,54],[31,77,39,22]],
  casino:[[8,0,84,25],[0,25,34,25],[33,25,34,25],[66,25,34,25],[0,52,34,27],[33,52,34,27],[66,52,34,27]],
@@ -54,7 +55,8 @@ export function reflowArtwork(stage:HTMLElement,kind:string){
    const cx=left+width/2,cy=top+height/2;
    if(cx<x||cx>x+w||cy<y||cy>y+h)continue;
    node.dataset.reflowed='true';
-   Object.assign(node.style,{left:(left-x)/w*100+'%',top:(top-y)/h*100+'%',width:width/w*100+'%',height:height/h*100+'%'});
+   const nx=Math.max(left,x),ny=Math.max(top,y),nw=Math.min(left+width,x+w)-nx,nh=Math.min(top+height,y+h)-ny;
+   Object.assign(node.style,{left:(nx-x)/w*100+'%',top:(ny-y)/h*100+'%',width:nw/w*100+'%',height:nh/h*100+'%'});
    if(kind==='forge'&&index===4&&node.classList.contains('forge-materials'))Object.assign(node.style,{left:'8%',top:'38px',width:'84%',height:'90px'});
    section.append(node);
   }
@@ -67,6 +69,7 @@ export function reflowArtwork(stage:HTMLElement,kind:string){
 export function fitArtworkText(panel:HTMLElement){
  requestAnimationFrame(()=>{
   if(!panel.isConnected)return;
+  alignCompactButtons(panel);
   for(const n of Array.from(panel.querySelectorAll<HTMLElement>('.art-overlay,.art-hit'))){if(!n.style.left)continue;for(const key of ['left','top','width','height']){const v=n.style.getPropertyValue(key);if(v)n.style.setProperty(key,v,'important');}n.style.setProperty('position','absolute','important');}
 
   for(const input of Array.from(panel.querySelectorAll<HTMLInputElement>('.art-overlay input,.game-stake input'))){const base=parseFloat(getComputedStyle(input).fontSize),fit=input.clientWidth/Math.max(1,input.value.length*.65);if(input.clientWidth)input.style.setProperty('font-size',Math.max(11,Math.min(base,fit))+'px','important');}

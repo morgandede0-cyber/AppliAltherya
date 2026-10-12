@@ -1,0 +1,25 @@
+/* Final geometry rules: controls use the same coordinate plane as their artwork. */
+#panel .art-hit{padding:0!important;border-radius:0!important;line-height:1!important;transform:none!important;box-sizing:border-box!important;min-width:0!important;min-height:0!important}
+#panel .art-overlay{box-sizing:border-box!important;text-align:center!important;min-width:0!important;min-height:0!important}
+#panel .compact-button>span{box-sizing:border-box;transform:none!important;flex:none!important;max-width:none!important;text-wrap:balance;overflow:hidden}
+#panel.native-commerce .native-trade-button,#panel.native-commerce .native-market-switch{display:flex!important;align-items:center!important;justify-content:center!important;line-height:1!important;text-align:center!important}
+#panel.native-commerce .merchant-item-icon>svg{object-fit:contain;aspect-ratio:auto}
+#panel.native-commerce .merchant-tabs{justify-content:space-between!important;gap:0!important}
+#panel.native-commerce .merchant-tabs>.native-tab{flex:none!important;width:32%!important;margin:0!important}
+#panel.native-commerce .merchant-footer{align-items:center!important;justify-content:space-between!important}
+#panel.native-commerce .merchant-footer>button{flex:none!important;width:48%!important;margin:0!important}
+#panel.native-commerce .native-tab.selected{outline:none!important;filter:brightness(1.12);box-shadow:inset 0 0 0 1px #ffe7a766!important}
+#panel .forge-detail{white-space:nowrap!important;justify-content:center!important;align-items:center!important}
+#panel .art-section>.art-hit{overflow:hidden!important}
+#panel.native-commerce .merchant-item-info>h3{width:100%;max-width:100%;min-width:0;font-size:clamp(12px,1.35cqw,20px);overflow-wrap:anywhere;text-wrap:balance}
+#panel.native-commerce .merchant-tabs{max-width:none!important;min-width:0!important}
+#panel.native-commerce[data-kind="market-story"] .merchant-tabs{justify-content:center!important}
+#panel.native-commerce[data-kind="market-story"] .merchant-tabs>.native-tab{width:100%!important}
+@media(max-width:600px){
+ #panel.native-commerce[data-kind="market-story"] .art-section:has(>.merchant-tabs){height:110px;aspect-ratio:auto!important}
+ #panel.native-commerce[data-kind="market-sell"] .art-section:has(>.merchant-tabs){height:270px;aspect-ratio:auto!important}
+ #panel.native-commerce:is([data-kind="market-story"],[data-kind="market-sell"]) .merchant-tabs{flex-direction:column!important;align-items:center!important;justify-content:space-around!important}
+ #panel.native-commerce:is([data-kind="market-story"],[data-kind="market-sell"]) .merchant-tabs>.native-tab{width:90%!important;height:30%!important}
+ #panel.native-commerce[data-kind="market-story"] .merchant-tabs>.native-tab{height:100%!important}
+}
+@media(max-width:600px){#panel.native-commerce:is([data-kind="market-story"],[data-kind="market-sell"]) .art-section:has(>.merchant-tabs)>svg{visibility:hidden!important}}

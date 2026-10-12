@@ -1,5 +1,5 @@
 import {sizeMenu,watchMenuSize} from './menu-layout';
-import {composeNativeGame} from './native-games';
+import {composeBlankGame} from './blank-compose';
 import {chime} from '../audio/sound';
 import {coinImage,gestureImage,diceFrame,reelImage,blankDie,hiddenCardImage,casinoOpponent} from './game-art';
 import type {Snapshot,Card,PlayState} from '../activity';
@@ -58,7 +58,7 @@ export function openLiveGame(panel:HTMLElement,kind:string,host:Host){
   if(p?.status==='active'&&kind==='blackjack')actions.append(btn('Tirer une carte',()=>void play('hit')),btn('Rester',()=>void play('stand')));
   else if(p?.status==='active'&&kind==='russian')actions.append(btn('Tenter',()=>void play('try')));
   else{const b=btn(p?.status==='finished'?'Rejouer':kind==='blackjack'?'Distribuer':kind==='roulette'?'Lancer la roulette':kind==='slots'?'Lancer les rouleaux':kind==='horses'?'Lancer la course':kind==='russian'?'Commencer':'Jouer',()=>void play());b.dataset.start='true';actions.append(b);}
-  actions.append(btn('Retour',()=>{if(!busy)host.route(['dice','coin','rps'].includes(kind)?'games':'casino');}));const extras=el('div','game-extras');extras.append(btn('Règles',()=>modal()),btn('Manches récentes',()=>modal(true)));table.append(extras);composeNativeGame(panel,kind);sizeMenu(panel,['blackjack','roulette','slots','russian','horses'].includes(kind)?1.5:0,1120);panel.scrollTop=scroll;validate();shownRevision=s.play.revision;
+  actions.append(btn('Retour',()=>{if(!busy)host.route(['dice','coin','rps'].includes(kind)?'games':'casino');}));const extras=el('div','game-extras');extras.append(btn('Règles',()=>modal()),btn('Manches récentes',()=>modal(true)));table.append(extras);composeBlankGame(panel,titles[kind]);panel.scrollTop=scroll;validate();shownRevision=s.play.revision;
  }
  function validate(){panel.querySelectorAll<HTMLElement>('.native-stake-value').forEach(n=>n.textContent=stake.value+' Gold');panel.querySelectorAll<HTMLButtonElement>('[data-start]').forEach(b=>b.disabled=busy||!Number.isInteger(wager)||wager<1||wager>maxBet()||host.state().play.status==='active');panel.querySelectorAll<HTMLElement>('[data-chip]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.chip)===wager)));stake.setAttribute('aria-invalid',String(!Number.isInteger(wager)||wager<1||wager>maxBet()));}
  function choices(parent:HTMLElement,keys:string[]){const row=el('div','game-choice-row');keys.forEach(k=>{const b=btn(labels[k],()=>{choice=k;render();});b.classList.toggle('selected',choice===k);b.setAttribute('aria-pressed',String(choice===k));if(kind==='rps'){b.classList.add('gesture-choice');b.prepend(gestureImage(k));}row.append(b);});parent.append(row);}

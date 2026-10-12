@@ -48,3 +48,7 @@ try{await refresh();await navigate('hub');if(state.name==='Aventurier'){show('Bi
 import './ui/polished-menus.css';
 
 import "./ui/native-menus.css";
+
+import './ui/alignment.css';
+
+import './ui/menu-framework.css';

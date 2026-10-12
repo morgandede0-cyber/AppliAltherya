@@ -1,3 +1,4 @@
+import {composeBlankCommerce} from './blank-compose';
 import {sizeMenu,watchMenuSize} from './menu-layout';
 import type {Snapshot} from '../activity';
 import {categories,products,pageItems,clampQuantity,tradeBlock,tradeBody,type CommerceMode,type Product} from './commerce-model';
@@ -29,6 +30,8 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
   root.replaceChildren();root.setAttribute('aria-busy',String(busy));root.setAttribute('aria-label',mode==='sell'?'Vendre au marché':mode==='story'?'Objets d’histoire':'Boutique de Legacy');document.body.classList.add('illustrated-open');
   const stage=el('section','art-stage commerce-art');root.append(stage);
   const image=new Image();image.src='/assets/catalog/merchant-blank.webp';image.className='art-image';image.alt='Marchand de IV';stage.append(image);
+  if(mode!=='buy'){const ns='http://www.w3.org/2000/svg',defs=document.createElementNS(ns,'svg'),clip=document.createElementNS(ns,'clipPath'),path=document.createElementNS(ns,'path'),id='merchant-tabs-'+Math.random().toString(36).slice(2);defs.setAttribute('width','0');defs.setAttribute('height','0');defs.style.position='absolute';clip.id=id;clip.setAttribute('clipPathUnits','objectBoundingBox');path.setAttribute('d','M0 0H1V1H0Z M.065 .23H.77V.35H.065Z');path.setAttribute('clip-rule','evenodd');path.setAttribute('fill-rule','evenodd');clip.append(path);defs.append(clip);stage.append(defs);image.style.setProperty('clip-path',`url(#${id})`,'important');}
+
   const place=(node:HTMLElement,x:number,y:number,w:number,h:number)=>{Object.assign(node.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});stage.append(node);return node;};
   const wallet=place(el('div','art-overlay merchant-wallet',`${host.state().balance.wallet} Gold`),85,30,11,4);
   wallet.setAttribute('aria-label','Portefeuille');
@@ -70,7 +73,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
    const actions=el('div','trade-confirm-actions');actions.append(button(busy?'En cours…':'Confirmer',()=>void submit(),!!tradeBlock(selected,mode,host.state().balance.wallet,quantity)),button('Annuler',()=>{selected=undefined;draw();}));dialog.append(actions);backdrop.append(dialog);root.append(backdrop);stage.inert=true;
    requestAnimationFrame(()=>dialog.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus({preventScroll:true}));
   }else if(focused)Array.from(root.querySelectorAll<HTMLElement>('[aria-label]')).find(n=>n.getAttribute('aria-label')===focused)?.focus({preventScroll:true});
-  root.scrollTop=scroll;
+  composeBlankCommerce(root,host.state());root.scrollTop=scroll;
  }
  const stopSize=watchMenuSize(root,draw);
  root.onkeydown=e=>{

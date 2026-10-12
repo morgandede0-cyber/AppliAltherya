@@ -12,3 +12,15 @@ export function decorateButton(button:HTMLButtonElement,label:string){
  const text=document.createElement('span');text.textContent=label;button.replaceChildren(svg,text);button.classList.add('compact-button');button.setAttribute('aria-label',label);button.title=label;return button;
 }
 export function themedHeader(file:string){const n=assetSlice('/assets/catalog/'+file+'.webp',250,0,1040,240);n.classList.add('themed-header');return n;}
+
+/** Align labels to the blue interior after the SVG's meet/letterbox scaling. */
+export function alignCompactButtons(root:HTMLElement){
+ for(const b of Array.from(root.querySelectorAll<HTMLElement>('.compact-button'))){
+  const svg=b.querySelector<SVGSVGElement>(':scope > svg'),label=b.querySelector<HTMLElement>(':scope > span');if(!svg||!label||!b.clientWidth||!b.clientHeight)continue;
+  const view=svg.viewBox.baseVal,scale=Math.min(b.clientWidth/view.width,b.clientHeight/view.height),ox=(b.clientWidth-view.width*scale)/2,oy=(b.clientHeight-view.height*scale)/2;
+  const width=424*scale,height=79*scale;
+  Object.assign(label.style,{position:'absolute',left:ox+(166-view.x)*scale+'px',top:oy+(436-view.y)*scale+'px',width:width+'px',height:height+'px',display:'flex',alignItems:'center',justifyContent:'center',padding:'0',margin:'0',lineHeight:'1.05',whiteSpace:'normal',textAlign:'center'});
+  let font=Math.min(parseFloat(getComputedStyle(b).fontSize),height*.7);label.style.fontSize=font+'px';
+  while(font>9&&(label.scrollWidth>width+1||label.scrollHeight>height+1)){font-=.5;label.style.fontSize=font+'px';}
+ }
+}
