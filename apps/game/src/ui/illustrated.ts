@@ -1,3 +1,4 @@
+import {openBankMenu} from './bank-menu';
 import {composeBlankMenu} from './blank-compose';
 import {navigationRect} from './art-coordinates';
 import {reflowArtwork,fitArtworkText} from './artwork-layout';
@@ -14,6 +15,7 @@ import {assetSlice} from './menu-kit';
 type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;close:()=>void;route:(key:string)=>void;refresh:()=>Promise<void>};
 export const illustratedKinds=new Set('bank jobs tavern games castle dashboard podium arena combat techniques alley thief casino blackjack roulette russian slots horses expedition tools destinations accessories departure live dice coin rps'.split(' '));
 export function openIllustrated(panel:HTMLElement,initial:string,host:Host,location='elarwyn'){
+ if(initial==='bank')return openBankMenu(panel,host);
  let kind=initial,selected='beer',amount=Math.min(100,host.state().balance.wallet),withdraw=Math.min(100,host.state().balance.bank),page=0,tool='axe',tier=1,destination='',wager=10,choice:string|number='red',number=0,locked=false,notice='',destroyed=false,animationUntil=0,animationStarted=0,rotation=0,spinRevision=-1,dialog='',acknowledgedResult=-1,offset=host.state().server_now*1000-Date.now();
  const el=(tag:string,text='',cls='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};let stage:HTMLElement,dock:HTMLElement;let live:ReturnType<typeof openLiveGame>|undefined,liveKind='';
  const box=(x:number,y:number,w:number,h:number,text='',cls='art-mask')=>{const n=el('div',text,'art-overlay '+cls);Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});if(cls.includes('art-mask')||cls==='bank-amount')materialField(n,kind,cls.includes('job-rarity')?'seal':cls==='bank-amount'||cls.includes('art-blue')?'blue':cls.includes('art-paper')?'paper':cls.includes('art-wood')||kind==='bank'||kind==='tools'||kind==='destinations'?'wood':'blue');stage.append(n);return n;};
@@ -156,16 +158,14 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
    box(47.5,59.4,5,2.8,`${tier} / 5`,'art-mask art-wood art-small');
    hit('Palier précédent',8,28,12,27,()=>{tier--;draw();},tier<=1);hit('Palier suivant',81,28,12,27,()=>{tier++;draw();},tier>=5);
    [1,2,3,4,5].forEach(t=>hit(`Palier ${t}`,17+(t-1)*10.8,63,11,11,()=>{tier=t;draw();},false,tier===t));hit('Palier non disponible',72,63,11,11,()=>{},true);
-   const available=[...new Set(Object.entries(s.loot_tables??{}).filter(([key])=>s.destinations[key]?.location_key===location).flatMap(([,table])=>(table[tool]??[]).filter(([,minimum])=>tier>=minimum).map(([name])=>name)))];
-   box(8,76,84,10,'Ressources possibles : '+(available.join(' · ')||'Aucune pour ce palier'),'art-mask art-wood art-small');
-
+   box(38,78,25,8,!s.owned[tool]?'Outil non possédé':!s.owned.bag?'Un sac est nécessaire':'Préparation disponible','art-mask art-wood art-small');
    hit('Choisir cet outil',24,88,36,9,()=>change('destinations'),!s.owned[tool]||!s.owned.bag||tier>max);footer('expedition',61,90,20,6);
   }else if(kind==='destinations'){
    const ds=Object.entries(s.destinations).filter(([,d])=>d.location_key===location&&d.tools.includes(tool));page=Math.max(0,Math.min(page,ds.length-1));const d=ds[page];
    if(d){destination=d[0];const preview=box(23,27,54,23,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=d[1].name;preview.append(picture);box(37,21,28,3.7,s.tools[String(tier)]?.[tool]??tool,'art-mask art-blue art-small');box(39,52.6,23,4.6,d[1].name,'art-mask art-blue art-small');
     
     box(23,61,14,3.2,`Niveau requis : ${d[1].level}`,'art-mask art-wood art-small');box(43,61,15,3.2,d[1].duration_label,'art-mask art-wood art-small');box(65,61,13,3.2,s.level>=d[1].level?'Accès disponible':'Accès verrouillé','art-mask art-wood art-small');box(47,66,6,3.1,`${page+1} / ${ds.length}`,'art-mask art-wood art-small');
-    box(8,73,84,12,'Ressources possibles : '+((s.loot_tables?.[d[0]]?.[tool]??[]).filter(([,minimum])=>tier>=minimum).map(([name])=>name).join(' · ')||'Aucune pour ce palier'),'art-mask art-wood art-small');hit('Destination précédente',5,28,12,27,()=>{page--;draw();},page===0);hit('Destination suivante',82,28,12,27,()=>{page++;draw();},page>=ds.length-1);hit('Choisir cette destination',17,87,43,10,()=>change('accessories'),s.level<d[1].level);
+    box(37,75,27,8,'Découvertes durant le voyage','art-mask art-wood art-small');hit('Destination précédente',5,28,12,27,()=>{page--;draw();},page===0);hit('Destination suivante',82,28,12,27,()=>{page++;draw();},page>=ds.length-1);hit('Choisir cette destination',17,87,43,10,()=>change('accessories'),s.level<d[1].level);
    }else box(38,53,25,4,'Aucune destination','art-mask art-small');footer('tools',62,88,22,9);
   }else if(kind==='accessories'){
    box(35,22,30,4,s.destinations[destination]?.name??'Destination','art-small');

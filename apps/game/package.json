@@ -1,1 +1,23 @@
-{"name":"altherya-game","private":true,"type":"module","scripts":{"dev":"vite --host 0.0.0.0","build":"tsc --noEmit && vite build","test":"node --import tsx --test tests/*.test.ts"},"dependencies":{"pixi.js":"^8.13.0","@discord/embedded-app-sdk":"^2.2.0"},"devDependencies":{"vite":"^7.1.0","typescript":"^5.9.2","tsx":"^4.20.5","@types/node":"^24.0.0","@playwright/test":"^1.55.0"}}
+{
+  "name": "altherya-game",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "test": "node --import tsx --test tests/*.test.ts tests/bank-dom.test.cjs"
+  },
+  "dependencies": {
+    "@discord/embedded-app-sdk": "^2.2.0",
+    "pixi.js": "^8.13.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.0.0",
+    "esbuild": "^0.28.2",
+    "happy-dom": "^20.14.5",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.0"
+  }
+}

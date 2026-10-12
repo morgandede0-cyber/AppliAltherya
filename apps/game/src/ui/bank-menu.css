@@ -1,0 +1,34 @@
+
+#bank-polished{width:100%;box-sizing:border-box;container-type:inline-size;padding:24px 14px 18px;background:radial-gradient(ellipse at 50% 45%,#24303d,#101721 70%);border-radius:12px;color:#f9df9d;font-family:Georgia,serif}
+#bank-polished *{box-sizing:border-box}#bank-polished img{display:block;width:100%;height:auto}
+#bank-polished .heading{width:84%;max-width:640px;margin:0 auto 16px;filter:drop-shadow(0 7px 9px #0006)}
+#bank-polished .ledger{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 3% 18px}
+#bank-polished .account{background:var(--panel) center/100% 100% no-repeat;aspect-ratio:411/146;display:flex;align-items:flex-end;justify-content:center;padding:17% 6% 6% 40%;min-width:0;filter:drop-shadow(0 4px 6px #0005)}
+#bank-polished output{font-size:clamp(13px,2.55cqw,20px);font-variant-numeric:tabular-nums;white-space:nowrap;text-shadow:0 2px 3px #1d0a00;letter-spacing:.4px;max-width:100%}
+#bank-polished .operations{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,.57fr) minmax(0,1fr);align-items:center;gap:12px}
+#bank-polished .transaction{aspect-ratio:517/490;background:var(--panel) center/100% 100% no-repeat;display:flex;flex-direction:column;justify-content:center;gap:10px;margin:0;padding:29% 10% 7%;min-width:0;filter:drop-shadow(0 7px 9px #0006)}
+#bank-polished .amount-row{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;gap:3px;align-items:center}
+#bank-polished input{background:url(/assets/bank-ui/input.webp) center/100% 100% no-repeat;width:100%;min-width:0;border:0;color:#fbe4a9;font:clamp(16px,2.6cqw,22px) Georgia,serif;text-align:center;font-variant-numeric:tabular-nums;appearance:textfield;padding:11px 5px;margin:0;box-shadow:none;border-radius:0;height:44px}
+#bank-polished input::-webkit-inner-spin-button{appearance:none}
+#bank-polished .presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+#bank-polished button{background:none;border:0;display:block;width:100%;padding:0;margin:0;box-shadow:none;min-width:0;color:inherit;font:inherit}
+#bank-polished .presets button{min-height:36px;display:flex;align-items:center}
+#bank-polished .confirm{margin-top:4px}#bank-polished .amount-row button{clip-path:circle(48%)}#bank-polished .presets button img{clip-path:polygon(12% 2%,88% 2%,99% 20%,99% 80%,88% 98%,12% 98%,1% 80%,1% 20%)}
+#bank-polished button:hover:not(:disabled){filter:brightness(1.15)}#bank-polished button:active:not(:disabled){transform:translateY(1px)}#bank-polished button:disabled{filter:grayscale(.5) brightness(.65);cursor:not-allowed}
+#bank-polished .treasure{width:100%;filter:drop-shadow(0 8px 12px #0008)}
+#bank-polished .back{width:37%;max-width:330px;margin:22px auto 0}
+#bank-polished .status{min-height:24px;margin:12px 0 0;text-align:center;font-size:14px;line-height:1.5}
+@container(max-width:560px){#bank-polished .operations{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#bank-polished .treasure{display:none}#bank-polished .amount-row{grid-template-columns:32px minmax(0,1fr) 32px}#bank-polished .ledger{margin-left:0;margin-right:0;gap:4px}#bank-polished output{font-size:12px}}
+@container(max-width:430px){#bank-polished .heading{width:100%;margin-bottom:12px}#bank-polished .ledger{grid-template-columns:1fr;width:92%;margin:0 auto 12px;gap:8px}#bank-polished .account{padding:0 7% 7% 39%}#bank-polished output{font-size:23px}#bank-polished .operations{grid-template-columns:1fr;width:100%;max-width:360px;margin:auto;gap:16px}#bank-polished .transaction{gap:12px;padding:30% 10% 9%}#bank-polished .amount-row{grid-template-columns:46px minmax(0,1fr) 46px}#bank-polished input{font-size:24px;height:52px}#bank-polished .presets button{min-height:44px}#bank-polished .back{width:85%;margin-top:16px}}
+
+#panel.bank-menu.polished-menu{overflow:auto!important;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#a88a4e #101721;border-radius:12px!important}
+#bank-polished{min-height:0}#bank-polished .transaction{position:static;inset:auto;width:auto;transform:none}
+#bank-polished .fee-note{font:13px/1.35 Georgia,serif;text-align:center;margin:4px 0 0;color:#f9df9d}
+#bank-polished input:disabled{opacity:.65}#bank-polished input:focus-visible{outline:2px solid #efc979;outline-offset:2px}
+
+#bank-polished .fee-note{min-height:18px}
+#bank-polished .account{clip-path:inset(0 0 3% 0)}
+#bank-polished .treasure{clip-path:polygon(12% 0,82% 0,87% 30%,83% 43%,95% 52%,100% 71%,100% 97%,0 97%,0 61%,4% 43%,5% 28%)}
+/* Keep neighboring ornaments out of each isolated component. */
+#bank-polished .transaction[data-mode=deposit]{clip-path:polygon(0 0,100% 0,100% 33%,95% 35%,95% 87%,100% 90%,100% 100%,0 100%)}
+#bank-polished .transaction[data-mode=withdraw]{clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 90%,5% 87%,5% 35%,0 33%)}
