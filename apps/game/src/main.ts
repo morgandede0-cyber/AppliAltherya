@@ -18,7 +18,7 @@ function hud(){if(!state)return;$('hud').textContent=`${state.name} · Niv. ${st
 function clearCommerce(){service?.destroy();service=undefined;commerce?.destroy();commerce=undefined;panel.className='';panel.onkeydown=null;panel.replaceChildren();panel.removeAttribute('data-kind');panel.removeAttribute('aria-busy');panel.removeAttribute('aria-label');panel.style.removeProperty('--art-ratio');}
 function close(){if(!busy){clearCommerce();panel.hidden=true;}}
 function closeService(){close();if(current!=='hub'&&current!=='market')void navigate(scenes[current].parent??'hub');}
-function show(title:string,text:string){clearCommerce();panel.replaceChildren();const h=document.createElement('h2');h.textContent=title;const p=document.createElement('p');p.textContent=text;panel.append(h,p);panel.hidden=false;}
+function show(title:string,text:string){clearCommerce();panel.className='native-welcome';panel.replaceChildren();const h=document.createElement('h2');h.textContent=title;const p=document.createElement('p');p.textContent=text;panel.append(h,p);panel.hidden=false;}
 function button(label:string,fn:()=>void,disabled=false){const b=document.createElement('button');b.textContent=label;b.disabled=disabled;b.onclick=()=>{if(!busy){chime();fn();}};return b;}
 function actions(...buttons:HTMLButtonElement[]){const a=document.createElement('div');a.className='actions';a.append(...buttons);panel.append(a);}
 function row(text:string,...buttons:HTMLButtonElement[]){const r=document.createElement('div');r.className='item';const p=document.createElement('span');p.textContent=text;r.append(p,...buttons);panel.append(r);}
@@ -52,3 +52,5 @@ import "./ui/native-menus.css";
 import './ui/alignment.css';
 
 import './ui/menu-framework.css';
+
+import './ui/native-all-menus.css';

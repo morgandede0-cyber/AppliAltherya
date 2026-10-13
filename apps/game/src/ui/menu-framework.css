@@ -135,9 +135,3 @@
 #panel.game-menu .gm-amount-controls .gm-input{width:100%!important}
 #panel.game-menu .gm-bank-presets{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 #panel.game-menu .gm-bank-presets>.gm-button{width:100%;min-width:0;min-height:52px;padding:17px 18px!important;font-size:14px!important}
-
-/* Active missions display only the signed parchment and its live clock. */
-#panel.game-menu.gm-active-contract{border:0;border-image:none;background:transparent;padding:0;box-shadow:none;width:min(660px,94vw)}
-.gm-active-contract .mission-active{max-height:none;overflow:visible;border-radius:8px;width:100%;padding:24px clamp(18px,5vw,42px)}
-.gm-active-contract .gm-footer{margin-top:10px;padding:0;justify-content:center}
-.gm-active-contract .mission-countdown{font-variant-numeric:tabular-nums}

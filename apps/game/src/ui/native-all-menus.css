@@ -1,0 +1,88 @@
+/* Original menu components, live contents, transparent exterior. */
+#panel.game-menu{border:0!important;border-image:none!important;background:transparent!important;box-shadow:none!important;padding:14px 16px 16px!important;color:#fff0ca!important;isolation:isolate}
+#panel.game-menu .gm-header{position:static!important;background:transparent!important;border:0;padding:0!important;margin:0 0 18px;min-height:0}
+#panel.game-menu .gm-eyebrow{display:none}
+#panel.game-menu .native-heading{width:min(76%,680px);height:auto!important;max-width:100%;margin:0 auto!important;display:block;line-height:0;filter:drop-shadow(0 3px 5px #0008)}
+#panel.game-menu .native-heading>img{display:block;width:100%;height:auto;object-fit:contain}
+#panel.game-menu .gm-title-plaque{height:110px!important;max-width:580px!important}
+#panel.game-menu .gm-title-plaque>.gm-title-text{font-size:clamp(16px,2.5cqw,26px)!important}
+#panel.game-menu .gm-body{gap:16px}
+#panel.game-menu .gm-card{border:18px solid transparent!important;border-image:url('/assets/menu-components/panel-frame.webp') 45 /18px /0 stretch!important;background:url('/assets/menu-components/wood.webp') center/cover!important;padding:12px 14px;gap:12px;overflow:visible;min-width:0;filter:drop-shadow(0 3px 4px #0007)}
+#panel.game-menu .gm-material{display:none!important}
+#panel.game-menu .gm-card-title{font-weight:400;font-size:20px;color:#ffe1a0;text-shadow:0 1px 2px #241300}
+#panel.game-menu .gm-copy{color:#fff0ce}
+#panel.game-menu .gm-art{background:transparent!important;border:0!important;border-image:none!important;padding:0!important;height:150px}
+#panel.game-menu .gm-art:has(img){height:155px}
+#panel.game-menu .gm-stat{border:12px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /12px /0 stretch;background:url('/assets/menu-components/wood.webp') center/cover;padding:8px 12px;gap:6px}
+#panel.game-menu .gm-stat-label{color:#f2d38e}
+#panel.game-menu .gm-footer{position:static!important;inset:auto!important;background:transparent!important;border:0;padding:0!important;margin-top:16px}
+#panel.game-menu .native-choice{display:flex;align-items:center;justify-content:center;min-width:0}
+#panel.game-menu .gm-button.native-art-button{background:transparent!important;border:0!important;border-image:none!important;padding:0!important;min-width:0;width:100%;min-height:44px;height:auto;line-height:0;filter:drop-shadow(0 2px 3px #0006)}
+#panel.game-menu .native-button-art{position:static!important;width:100%!important;height:auto!important;display:block;object-fit:contain;pointer-events:none}
+#panel.game-menu .native-art-button[aria-pressed=true]{outline:2px solid #ffe5a0;outline-offset:2px;filter:brightness(1.12)}
+#panel.game-menu .native-art-button:disabled{opacity:.55;filter:grayscale(.65)}
+#panel.game-menu[data-kind=tavern] .gm-grid,#panel.game-menu[data-kind=alley] .gm-grid,#panel.game-menu[data-kind=thief] .gm-grid,#panel.game-menu[data-kind=casino] .gm-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#panel.game-menu[data-kind=castle] .gm-grid,#panel.game-menu[data-kind=expedition] .gm-grid,#panel.game-menu[data-kind=games] .gm-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#panel.game-menu[data-kind=market] .gm-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+#panel.game-menu[data-kind=forge] .gm-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;gap:10px}
+#panel.game-menu[data-kind=forge] .gm-tabs>.gm-button{max-width:none}
+#panel.game-menu[data-kind=jobs] .gm-card{background:url('/assets/menu-components/paper.webp') center/cover!important;color:#453016;text-shadow:none}
+#panel.game-menu[data-kind=jobs] .gm-card-title,#panel.game-menu[data-kind=jobs] .gm-copy{color:#453016;text-shadow:none}
+#panel.game-menu .gm-notice{background:url('/assets/menu-components/wood.webp') center/cover;border:12px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /12px /0 stretch;color:#fff0c4}
+#panel.game-menu .gm-input,#panel.game-menu .game-stake input{background:url('/assets/bank-ui/input.webp') center/100% 100% no-repeat!important;border:0!important;border-radius:0!important;color:#fff0c4!important;padding:12px 10px!important;min-height:48px;box-shadow:none!important}
+#panel.game-menu .gm-dialog{border-image:url('/assets/menu-components/panel-frame.webp') 45 /20px /0 stretch;background:url('/assets/menu-components/wood.webp') center/cover;border-width:20px}
+#panel.game-menu .gm-dialog.gm-contract{background:#eddfb9!important;color:#49301a!important;border-image:none!important;border:5px double #9c7841!important;border-radius:5px}
+#panel.game-menu .gm-modal{background:#050a1088!important}
+#panel.game-menu .gm-contract p,#panel.game-menu .gm-contract h3{color:#49301a}
+#panel.game-menu.blank-game .game-table{background:transparent!important}
+#panel.game-menu.blank-game .game-header{border:0!important;gap:8px;padding-bottom:0!important}
+#panel.game-menu.blank-game .game-title.native-heading{width:min(80%,680px)!important;min-height:0!important;height:auto!important;max-width:100%!important}
+#panel.game-menu.blank-game .game-playfield{border:18px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /18px /0 stretch;background:url('/assets/menu-components/wood.webp') center/cover;box-shadow:0 4px 10px #0005;padding:16px!important}
+#panel.game-menu.blank-game .game-blackjack .game-playfield{background:radial-gradient(ellipse,#12533a,#06281c)}
+#panel.game-menu.blank-game .game-controls{background:url('/assets/menu-components/wood.webp') center/cover;border:12px solid transparent!important;border-image:url('/assets/menu-components/panel-frame.webp') 45 /12px /0 stretch!important;padding:12px!important}
+#panel.game-menu.blank-game .game-wallet,#panel.game-menu.blank-game .game-result{background:url('/assets/menu-components/wood.webp') center/cover!important;border:12px solid transparent!important;border-image:url('/assets/menu-components/panel-frame.webp') 45 /12px /0 stretch!important;padding:10px 14px!important}
+#panel.game-menu .game-help-overlay{background:#050a10aa!important}
+#panel.game-menu .game-help{background:url('/assets/menu-components/wood.webp') center/cover!important;color:#fff0cc}
+#panel.game-menu.gm-content-menu .menu-header{background:transparent!important;border:0;margin-bottom:16px;padding:0;min-height:0}
+#panel.game-menu.gm-content-menu .menu-content{padding:0!important;background:transparent}
+#panel.game-menu.gm-content-menu .profile-identity,#panel.game-menu.gm-content-menu .menu-stat,#panel.game-menu.gm-content-menu .profile-gear-item,#panel.game-menu.gm-content-menu .profile-resource,#panel.game-menu.gm-content-menu .profile-activities,#panel.game-menu.gm-content-menu .profile-story-items,#panel.game-menu.gm-content-menu .world-entry-copy{border:14px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /14px /0 stretch;background:url('/assets/menu-components/wood.webp') center/cover;color:#fff0cc;padding:12px}
+#panel.game-menu.gm-content-menu .menu-footer{border:0;background:transparent;padding:0;margin-top:16px}
+#panel.refined-world{background:transparent!important;box-shadow:none!important;border:0!important;padding:0!important}
+#panel.game-menu .chronicle-book{background:transparent;box-shadow:none}
+@media(max-width:700px){#panel.game-menu{padding:10px 8px!important;border:0!important;border-image:none!important}#panel.game-menu .native-heading{width:94%}#panel.game-menu .gm-grid,#panel.game-menu .gm-grid[data-columns="3"],#panel.game-menu[data-kind=castle] .gm-grid,#panel.game-menu[data-kind=expedition] .gm-grid,#panel.game-menu[data-kind=games] .gm-grid,#panel.game-menu[data-kind=market] .gm-grid{grid-template-columns:1fr}#panel.game-menu[data-kind=tavern] .gm-grid,#panel.game-menu[data-kind=alley] .gm-grid,#panel.game-menu[data-kind=thief] .gm-grid,#panel.game-menu[data-kind=casino] .gm-grid{grid-template-columns:1fr 1fr}#panel.game-menu[data-kind=forge] .gm-tabs{grid-template-columns:1fr 1fr}#panel.game-menu .native-choice>.native-art-button{max-width:360px}#panel.game-menu .gm-card{padding:10px;border-width:14px!important;border-image-width:14px!important}#panel.game-menu .gm-stat{border-width:10px}#panel.game-menu.blank-game .game-playfield{padding:12px!important}#panel.game-menu.blank-game .game-title.native-heading{width:100%!important}#panel.game-menu .gm-title-plaque{height:90px!important}}
+
+#panel.native-welcome{border:20px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /20px /0 stretch;background:url('/assets/menu-components/wood.webp') center/cover;border-radius:0;padding:18px 20px;color:#fff0ca}
+#panel.native-welcome button{border:0;border-radius:0;background:url('/assets/blank-ui/button.png') center/100% 100% no-repeat;box-shadow:none;padding:18px 34px;min-height:56px}
+#panel.native-welcome input{background:url('/assets/bank-ui/input.webp') center/100% 100% no-repeat;border:0;padding:15px;color:#fff0ca}
+/* Keep controls at the proportions of the original sprites. */
+#panel.game-menu .gm-card>.gm-button{width:min(100%,320px);align-self:center;justify-self:center}
+#panel.game-menu.gm-content-menu .gm-title-plaque{margin:0 auto!important}
+#panel.game-menu[data-kind=jobs] .gm-card{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px 14px;padding:12px}
+#panel.game-menu[data-kind=jobs] .gm-card>.gm-art{grid-column:1;grid-row:1/span 2;width:60px;height:74px;align-self:center}
+#panel.game-menu[data-kind=jobs] .gm-card-title,#panel.game-menu[data-kind=jobs] .gm-copy{grid-column:2;text-align:left}
+#panel.game-menu[data-kind=jobs] .gm-card>.gm-button{grid-column:1/span 2;margin-top:6px}
+#panel.game-menu[data-kind=jobs] .gm-timer{color:#5a3b16}
+#panel.game-menu[data-kind=forge] .native-heading{max-width:500px}
+#panel.game-menu[data-kind=forge] .gm-art{height:110px}
+#panel.game-menu[data-kind=forge] .gm-card{padding:8px 12px;gap:8px}
+#panel.game-menu[data-kind=guard] .gm-card,#panel.game-menu[data-kind=robber] .gm-card{display:grid;grid-template-columns:240px minmax(0,1fr);gap:12px 20px;align-items:center}
+#panel.game-menu[data-kind=guard] .gm-card>.gm-art,#panel.game-menu[data-kind=robber] .gm-card>.gm-art{grid-column:1;grid-row:1/span 5;width:240px;height:240px}
+#panel.game-menu[data-kind=guard] .gm-card-title,#panel.game-menu[data-kind=guard] .gm-copy,#panel.game-menu[data-kind=guard] .gm-card>.gm-button,#panel.game-menu[data-kind=robber] .gm-card-title,#panel.game-menu[data-kind=robber] .gm-copy,#panel.game-menu[data-kind=robber] .gm-card>.gm-button{grid-column:2}
+@media(min-width:701px){#panel.game-menu[data-kind=forge] .gm-body>.gm-card{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center}#panel.game-menu[data-kind=forge] .gm-body>.gm-card>.gm-card-title,#panel.game-menu[data-kind=forge] .gm-body>.gm-card>.gm-ledger{grid-column:1/span 3}#panel.game-menu[data-kind=forge] .gm-body>.gm-card .gm-stat{padding:6px;gap:3px}#panel.game-menu[data-kind=forge] .gm-body>.gm-card .gm-stat-value{font-size:20px}}
+@media(max-width:700px){#panel.game-menu[data-kind=guard] .gm-card,#panel.game-menu[data-kind=robber] .gm-card{display:flex;flex-direction:column}#panel.game-menu[data-kind=guard] .gm-card>.gm-art,#panel.game-menu[data-kind=robber] .gm-card>.gm-art{width:100%;height:190px}#panel.game-menu[data-kind=jobs] .gm-card-title{font-size:18px}}
+#panel.game-menu .native-heading img[src$="title-guard.webp"],#panel.game-menu .native-heading img[src$="title-robber.webp"]{clip-path:polygon(46% 0,54% 0,65% 22%,93% 35%,100% 68%,94% 88%,90% 100%,10% 100%,6% 88%,0 68%,7% 35%,35% 22%)}
+#panel.game-menu[data-kind=forge] .gm-grid>.gm-card{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 12px;align-items:center}
+#panel.game-menu[data-kind=forge] .gm-grid>.gm-card>.gm-art{grid-column:1;grid-row:1/span 3;width:110px;height:110px}
+#panel.game-menu[data-kind=forge] .gm-grid>.gm-card>.gm-card-title,#panel.game-menu[data-kind=forge] .gm-grid>.gm-card>.gm-copy{grid-column:2}
+#panel.game-menu[data-kind=podium] .gm-art{height:200px}
+@media(max-width:700px){#panel.game-menu[data-kind=forge] .gm-grid>.gm-card{grid-template-columns:90px minmax(0,1fr)}#panel.game-menu[data-kind=forge] .gm-grid>.gm-card>.gm-art{width:90px;height:100px}#panel.game-menu[data-kind=forge] .gm-grid>.gm-card>.gm-card-title{font-size:18px}}
+#panel.game-menu .gm-footer>.native-art-button{width:min(100%,300px);flex:none}
+@media(max-width:700px){#panel.game-menu[data-kind^="market-"] .gm-tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px}#panel.game-menu[data-kind^="market-"] .gm-tabs>.native-art-button{min-height:44px!important;min-width:0!important;width:100%!important}}
+#panel.game-menu[data-kind=techniques] .gm-card[data-skill=defend]{grid-column:1/-1;display:grid;grid-template-columns:100px minmax(0,1fr) 240px;gap:8px 16px;align-items:center}
+#panel.game-menu[data-kind=techniques] .gm-card[data-skill=defend]>.gm-art{grid-column:1;grid-row:1/span 2;width:90px;height:90px}
+#panel.game-menu[data-kind=techniques] .gm-card[data-skill=defend]>.gm-card-title,#panel.game-menu[data-kind=techniques] .gm-card[data-skill=defend]>.gm-copy{grid-column:2}
+#panel.game-menu[data-kind=techniques] .gm-card[data-skill=defend]>.gm-button{grid-column:3;grid-row:1/span 2;margin:0}
+#panel.game-menu.blank-game .game-controls>.native-step-button{width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;flex:none}
+#panel.game-menu.blank-game .game-stake{display:flex!important;align-items:center;justify-content:center;gap:8px;min-width:0;flex:none}
+#panel.game-menu.blank-game .game-stake input{width:100px!important;min-width:0;max-width:100%}
+@media(max-width:700px){#panel.game-menu.blank-game .game-controls{gap:6px}#panel.game-menu.blank-game .game-stake{font-size:14px;flex:1}#panel.game-menu.blank-game .game-stake input{width:76px!important;font-size:20px!important;padding:10px 6px!important}#panel.game-menu[data-kind=techniques] .gm-card[data-skill=defend]{display:flex;flex-direction:column}#panel.game-menu[data-kind=techniques] .gm-art{height:110px}}

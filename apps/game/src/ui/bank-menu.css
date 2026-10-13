@@ -38,3 +38,5 @@
 #bank-polished .transaction[data-mode=withdraw]{grid-column:3}
 @container(max-width:560px){#bank-polished .transaction[data-mode=withdraw]{grid-column:2}}
 @container(max-width:430px){#bank-polished .transaction[data-mode=withdraw]{grid-column:1}}
+/* Prevent decorative shadow overflow when the menu is resized across breakpoints. */
+#bank-polished{overflow-x:clip}

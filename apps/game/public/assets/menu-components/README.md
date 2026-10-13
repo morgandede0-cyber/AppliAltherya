@@ -1,0 +1,1 @@
+Composants découpés dans Menus_vierges_Altherya.zip. Aucun chiffre joueur figé dans ces assets. Titres et commandes statiques originaux ; données, images des objets, timers et actions restent dans le DOM. Les surfaces bois/parchemin servent de matériaux aux cadres extensibles.

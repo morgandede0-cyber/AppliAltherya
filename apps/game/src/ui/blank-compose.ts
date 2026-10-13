@@ -1,3 +1,4 @@
+import {nativeHeading,nativeButton} from './native-components';
 import type {Snapshot} from '../activity';
 import {assetSlice} from './assets';
 import {equipmentArt,resourceArt} from './catalog-art';
@@ -10,12 +11,6 @@ const backLabels=/^(Retour|Quitter|Partir)/;
 /** Recompose live controls from the existing engines; listeners, validation and server actions are retained. */
 export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  const kind=panel.dataset.kind??'';if(panel.classList.contains('game-menu')||panel.classList.contains('live-game')||['world','profile','story','khaz','ashkar'].includes(kind))return;
- // A signed mission is a standalone parchment, never the announcements board.
- if(kind==='jobs'&&s.pending){
-  const paper=panel.querySelector<HTMLElement>('.mission-active');
-  const actions=Array.from(panel.querySelectorAll<HTMLButtonElement>('.compact-dock button'));
-  if(paper){panel.replaceChildren(paper);panel.className='game-menu gm-active-contract';panel.setAttribute('aria-label','Contrat signé');const footer=node('footer','gm-footer');for(const b of actions){skinBlankButton(b);footer.append(b);}panel.append(footer);sizeMenu(panel,0,660);return;}
- }
  const old=Array.from(panel.querySelectorAll<HTMLButtonElement>('button')).filter(n=>!n.closest('.art-extra'));
  const inputs=Array.from(panel.querySelectorAll<HTMLInputElement>('input')).filter(n=>!n.closest('.art-extra'));
  const modal=panel.querySelector<HTMLElement>('.art-extra');
@@ -27,7 +22,7 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  const byLabel=(label:string)=>old.find(n=>n.getAttribute('aria-label')===label);
  const used=new Set<HTMLButtonElement>();
  const {body,footer}=mountMenu(panel,kind,title,busy);sizeMenu(panel,0,1020);
- function button(b:HTMLButtonElement|undefined,parent:HTMLElement){if(!b||used.has(b))return;used.add(b);skinBlankButton(b);parent.append(b);return b;}
+ function button(b:HTMLButtonElement|undefined,parent:HTMLElement){if(!b||used.has(b))return;used.add(b);skinBlankButton(b,kind);parent.append(b);return b;}
  function action(label:string,parent=footer){return button(byLabel(label),parent);}
  function controls(parent:HTMLElement,labels:string[]){const row=node('div','gm-actions');for(const label of labels)action(label,row);parent.append(row);return row;}
  function field(parent:HTMLElement,input:HTMLInputElement,label:string){input.removeAttribute('style');input.className='gm-input';const l=node('label','gm-input-label',label);l.append(input);parent.append(l);return input;}
@@ -39,13 +34,9 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  if(navigation.has(kind)){
   const choices=old.filter(b=>!backLabels.test(b.getAttribute('aria-label')??''));
   const grid=menuGrid(body,['tavern','castle','market'].includes(kind)?3:2);
-  const hints:Record<string,string>={'Le tavernier':'Choisir une boisson','Les jeux':'Jouer à la taverne','Le troubadour':'Lire les chapitres débloqués','Tableau de bord':'Vos objectifs et votre progression',Podium:'Le classement des aventuriers',Acheter:'Outils, consommables et divers',Vendre:'Ressources des métiers',Histoire:'Objets séparés par chapitre'};
-  for(const [i,b] of choices.entries()){
-   const label=b.getAttribute('aria-label')??'';if(label==='Jeu contre un ami indisponible'){used.add(b);continue;}const c=card(grid,label,hints[label]??'');
-   if(kind==='expedition'&&i<3)art(c,equipmentArt(['axe','pickaxe','spear'][i],s.gear[['axe_level','pickaxe_level','spear_level'][i]]||1));
-   if(kind==='arena'&&i<2)art(c,assetSlice('/assets/menus/arena.webp',i===0?65:820,220,650,480));
-   if(kind==='tavern'){const files=['tavern_barman.webp','tavern_games.webp','tavern_troubadour.webp'];const im=new Image();im.src='/assets/scenes/'+files[i];im.alt='';im.className='gm-scene';art(c,im);}
-   button(b,c);
+  for(const b of choices){
+   const label=b.getAttribute('aria-label')??'';if(label==='Jeu contre un ami indisponible'){used.add(b);continue;}
+   const c=node('div','native-choice');grid.append(c);button(b,c);
   }
  }else if(kind==='bank'){
   const ledger=node('div','gm-ledger');for(const [label,value] of [['Portefeuille',s.balance.wallet],['Banque',s.balance.bank],['Fortune',s.balance.wallet+s.balance.bank]] as const)menuStat(ledger,label,`${value} Gold`);body.append(ledger);
@@ -64,17 +55,17 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
   const grid=menuGrid(body,3);for(const [i,d] of s.tavern.drinks_catalog.entries()){const c=card(grid,d.name,'',assetSlice('/assets/menus/drinks.webp',140+(i%3)*445,180+Math.floor(i/3)*348,385,215));const b=byLabel(d.name);const chosen=b?.classList.contains('selected');button(b,c);b?.setAttribute('aria-pressed',String(chosen));}menuStat(body,'Services restants',String(s.tavern.remaining_today));for(const n of timers)timer(body,n);action('Commander');
  }else if(kind==='jobs'){
   if(s.pending){const c=card(body,s.pending.job.title,`${s.pending.job.reward} Gold · Contrat signé`);for(const n of timers)timer(c,n);const p=menuProgress(c,3600-s.pending.remaining,3600,'Progression du contrat');p.classList.add('mission-progress');action('Récupérer la récompense');}
-  else{const grid=menuGrid(body);for(const b of old.filter(n=>(n.getAttribute('aria-label')??'').startsWith('Accepter '))){const title=(b.getAttribute('aria-label')??'').slice(9),j=s.board.jobs.find(j=>j.title===title);const c=card(grid,title,j?`${j.reward} Gold · 1 heure`:'',j?raritySeal(j.rarity):undefined);button(b,c);}const p=overlays.find(n=>/^\d+\/\d+$/.test(n.textContent?.trim()??''));const row=controls(body,['Page précédente','Page suivante']);if(p)row.insertBefore(node('span','gm-copy',p.textContent??''),row.lastElementChild);}
+  else{const grid=menuGrid(body);for(const b of old.filter(n=>(n.getAttribute('aria-label')??'').startsWith('Accepter '))){const title=(b.getAttribute('aria-label')??'').slice(9),j=s.board.jobs.find(j=>j.title===title);const c=card(grid,title,j?`${j.reward} Gold · 1 heure`:'',j?raritySeal(j.rarity):undefined);button(b,c);const label=b.querySelector<HTMLElement>('.gm-button-label');if(label)label.textContent='Accepter';}const p=overlays.find(n=>/^\d+\/\d+$/.test(n.textContent?.trim()??''));const row=controls(body,['Page précédente','Page suivante']);if(p)row.insertBefore(node('span','gm-copy',p.textContent??''),row.lastElementChild);}
  }else if(kind==='dashboard'){
   const ledger=node('div','gm-ledger');menuStat(ledger,'Niveau',String(s.level));menuStat(ledger,'Portefeuille',`${s.balance.wallet} Gold`);menuStat(ledger,'Banque',`${s.balance.bank} Gold`);body.append(ledger);const c=card(body,'Expérience',`${s.xp} / ${s.xp_needed} XP`);menuProgress(c,s.xp,s.xp_needed,'Progression du niveau');const grid=menuGrid(body),done=s.quests.filter(q=>q.progress>=q.target).length,q=card(grid,'Quêtes quotidiennes',`${done} / ${s.quests.length} terminées`);menuProgress(q,done,s.quests.length,'Quêtes accomplies');controls(q,['Quêtes quotidiennes','Réclamer les quêtes']);card(grid,'Activités',`${s.active?s.active.name:'Aucune expédition'}\n${s.stats.wins} victoires · ${s.stats.losses} défaites`);action('Actualiser');
  }else if(kind==='podium'){
-  const grid=menuGrid(body,3);for(const rank of [1,0,2]){const e=s.podium[rank];card(grid,`${rank+1}${rank===0?'er':'e'} — ${e?.name??'Place libre'}`,e?`${e.total} Gold`:'—');}action('Actualiser');
+  const grid=menuGrid(body,3);for(const rank of [1,0,2]){const e=s.podium[rank];const c=card(grid,`${rank+1}${rank===0?'er':'e'} — ${e?.name??'Place libre'}`,e?`${e.total} Gold`:'—');const im=new Image();im.src='/assets/menu-components/podium-'+rank+'.webp';im.alt='';art(c,im);}action('Actualiser');
  }else if(kind==='guard'||kind==='robber'){
   const c=card(body,kind==='guard'?'Salle clandestine':'Banque de IV',kind==='guard'?(s.alley.access.valid?'Accès valable jusqu’à minuit':s.alley.vip?'Entrée VIP gratuite':`${s.alley.fee} Gold · jusqu’à minuit`):'Préparez votre opération et trouvez la combinaison du coffre.',assetSlice('/assets/menus/'+kind+'.webp',...(kind==='guard'?[70,210,670,470]:[80,305,650,350]) as [number,number,number,number]));for(const b of old.filter(n=>!backLabels.test(n.getAttribute('aria-label')??'')))button(b,c);
  }else if(kind==='combat'){
   const grid=menuGrid(body);for(const f of s.play.fighters??[]){const c=card(grid,f.name,`${f.hp} / ${f.max_hp} PV`);menuProgress(c,f.hp,f.max_hp,'PV de '+f.name);}menuStat(body,'Tour',String(s.play.turn??0));const c=card(body,'Journal des attaques'),log=node('div','gm-battle-log');for(const t of (s.play.logs??[]).slice(-8))log.append(node('p','',t.replaceAll('*','')));c.append(log);for(const b of old)button(b,footer);
  }else if(kind==='techniques'){
-  const grid=menuGrid(body,3);for(const [key,skill] of Object.entries(s.arena.skills)){const c=card(grid,skill.name,`Puissance : ${skill.power}${key==='ultimate'?'\nRecharge : '+(s.play.fighters?.[0]?.ultimate_cd??0)+' tour(s)':''}`);action('Utiliser '+skill.name,c);}
+  const grid=menuGrid(body,3);for(const [key,skill] of Object.entries(s.arena.skills)){const c=card(grid,skill.name,key==='defend'?'Réduit les dégâts du prochain impact.':`Puissance : ${skill.power??0}${key==='ultimate'?'\nRecharge : '+(s.play.fighters?.[0]?.ultimate_cd??0)+' tour(s)':''}`);c.dataset.skill=key;const im=new Image();im.src='/assets/menu-components/technique-'+(key==='defend'?'defend':key==='light'?'0':key==='heavy'?'1':'2')+'.webp';im.alt='';art(c,im);action('Utiliser '+skill.name,c);}
  }else if(kind==='accessories'){
   const grid=menuGrid(body);card(grid,'Accessoire 1','Aucun objet disponible');card(grid,'Accessoire 2','Aucun objet disponible');
  }else if(kind==='live'){
@@ -93,23 +84,23 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  if(notice){notice.removeAttribute('style');notice.className='gm-notice';if(!modal?.contains(notice))body.append(notice);}
  if(modal){skinBlankModal(modal);panel.append(modal);}sizeMenu(panel,0,1020);
 }
-export function skinBlankButton(b:HTMLButtonElement){const label=b.getAttribute('aria-label')??b.textContent??'';b.removeAttribute('style');b.className='gm-button';b.setAttribute('aria-label',label);b.replaceChildren(node('span','gm-button-label',label));}
+export function skinBlankButton(b:HTMLButtonElement,kind=b.closest<HTMLElement>('#panel')?.dataset.kind??''){const label=b.getAttribute('aria-label')??b.textContent??'';b.removeAttribute('style');b.className='gm-button';b.setAttribute('aria-label',label);b.replaceChildren(node('span','gm-button-label',label));nativeButton(b,kind);}
 export function skinBlankModal(modal:HTMLElement){modal.removeAttribute('style');modal.classList.add('gm-modal');for(const b of Array.from(modal.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b);const paper=modal.querySelector<HTMLElement>('.mission-parchment');if(paper){paper.classList.add('gm-dialog','gm-contract');}else{const wrapper=node('section','gm-dialog');wrapper.append(...Array.from(modal.childNodes));modal.append(wrapper);}for(const input of Array.from(modal.querySelectorAll<HTMLInputElement>('input'))){input.removeAttribute('style');input.className='gm-input';}}
 
 export function composeBlankCommerce(panel:HTMLElement,s:Snapshot){
  const kind=panel.dataset.kind??'market-buy';const mode=kind.slice(7),tabs=panel.querySelector<HTMLElement>('.merchant-tabs'),pager=panel.querySelector<HTMLElement>('.merchant-pager'),cards=Array.from(panel.querySelectorAll<HTMLElement>('.merchant-card')),buttons=Array.from(panel.querySelectorAll<HTMLButtonElement>('.merchant-footer>button')),modal=panel.querySelector<HTMLElement>('.merchant-modal'),status=panel.querySelector<HTMLElement>('.merchant-status');
  const {body,footer}=mountMenu(panel,kind,mode==='sell'?'Vendre au marché':mode==='story'?'Objets d’histoire':'Boutique de Legacy',panel.getAttribute('aria-busy')==='true');sizeMenu(panel,0,1020);
  menuStat(body,'Portefeuille',`${s.balance.wallet} Gold`);
- if(tabs){tabs.removeAttribute('style');tabs.className='gm-tabs';for(const b of Array.from(tabs.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b);body.append(tabs);}
- const grid=menuGrid(body);for(const c of cards){c.removeAttribute('style');c.className='gm-card merchant-card';const svg=c.querySelector<SVGSVGElement>('.merchant-item-icon>svg'),info=c.querySelector<HTMLElement>('.merchant-item-info'),trade=c.querySelector<HTMLButtonElement>('button'),empty=c.querySelector<HTMLElement>('.native-empty');c.replaceChildren();if(svg){const art=node('div','gm-art');art.append(svg);c.append(art);}if(info){const h=info.querySelector('h3');if(h){h.className='gm-card-title';c.append(h);}for(const n of Array.from(info.children)){n.removeAttribute('style');n.className=n.classList.contains('merchant-chapter')?'gm-copy merchant-chapter':'gm-copy';c.append(n);}}if(empty){empty.className='gm-copy';empty.removeAttribute('style');c.append(empty);}if(trade){skinBlankButton(trade);c.append(trade);}grid.append(c);}
- if(pager){pager.removeAttribute('style');pager.className='gm-actions gm-pager';for(const b of Array.from(pager.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b);const p=pager.querySelector<HTMLElement>(':scope > span');if(p){p.className='gm-copy';pager.insertBefore(p,pager.children[1]);}Array.from(pager.querySelectorAll<HTMLElement>('.gm-button-label')).forEach((n,i)=>n.textContent=i===0?'‹':'›');body.append(pager);}
- for(const b of buttons){skinBlankButton(b);footer.append(b);}if(status){status.className='gm-notice';body.append(status);}
- if(modal){modal.removeAttribute('style');modal.className='merchant-modal gm-modal';const content=modal.querySelector<HTMLElement>('.merchant-confirm')!;content.removeAttribute('style');content.className='merchant-confirm gm-dialog gm-contract';for(const b of Array.from(content.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b);for(const i of Array.from(content.querySelectorAll<HTMLInputElement>('input')))i.className='gm-input';panel.append(modal);}sizeMenu(panel,0,1020);
+ if(tabs){tabs.removeAttribute('style');tabs.className='gm-tabs';for(const b of Array.from(tabs.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b,kind);body.append(tabs);}
+ const grid=menuGrid(body);for(const c of cards){c.removeAttribute('style');c.className='gm-card merchant-card';const svg=c.querySelector<SVGSVGElement>('.merchant-item-icon>svg'),info=c.querySelector<HTMLElement>('.merchant-item-info'),trade=c.querySelector<HTMLButtonElement>('button'),empty=c.querySelector<HTMLElement>('.native-empty');c.replaceChildren();if(svg){const art=node('div','gm-art');art.append(svg);c.append(art);}if(info){const h=info.querySelector('h3');if(h){h.className='gm-card-title';c.append(h);}for(const n of Array.from(info.children)){n.removeAttribute('style');n.className=n.classList.contains('merchant-chapter')?'gm-copy merchant-chapter':'gm-copy';c.append(n);}}if(empty){empty.className='gm-copy';empty.removeAttribute('style');c.append(empty);}if(trade){skinBlankButton(trade,kind);c.append(trade);}grid.append(c);}
+ if(pager){pager.removeAttribute('style');pager.className='gm-actions gm-pager';for(const b of Array.from(pager.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b,kind);const p=pager.querySelector<HTMLElement>(':scope > span');if(p){p.className='gm-copy';pager.insertBefore(p,pager.children[1]);}Array.from(pager.querySelectorAll<HTMLElement>('.gm-button-label')).forEach((n,i)=>n.textContent=i===0?'‹':'›');body.append(pager);}
+ for(const b of buttons){skinBlankButton(b,kind);footer.append(b);}if(status){status.className='gm-notice';body.append(status);}
+ if(modal){modal.removeAttribute('style');modal.className='merchant-modal gm-modal';const content=modal.querySelector<HTMLElement>('.merchant-confirm')!;content.removeAttribute('style');content.className='merchant-confirm gm-dialog gm-contract';for(const b of Array.from(content.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b,kind);for(const i of Array.from(content.querySelectorAll<HTMLInputElement>('input')))i.className='gm-input';panel.append(modal);}sizeMenu(panel,0,1020);
 }
 
 export function composeBlankGame(panel:HTMLElement,title:string){
  panel.className='game-menu live-game blank-game';sizeMenu(panel,0,1120);
  const table=panel.querySelector<HTMLElement>('.game-table')!;table.classList.add('gm-game-table');
- const heading=table.querySelector<HTMLElement>('.game-title');if(heading){heading.classList.remove('compact-button','sr-only');const plaque=blankHeading(title);heading.replaceChildren(...Array.from(plaque.childNodes));heading.classList.add('gm-title-plaque');}
+ const heading=table.querySelector<HTMLElement>('.game-title');if(heading){heading.classList.remove('compact-button','sr-only');const plaque=nativeHeading(panel.dataset.kind??'',title)??blankHeading(title);heading.replaceChildren(...Array.from(plaque.childNodes));heading.classList.add('native-heading');}
  for(const b of Array.from(table.querySelectorAll<HTMLButtonElement>('button.compact-button'))){if(b.classList.contains('slot-lever'))continue;const classes=Array.from(b.classList).filter(c=>!['compact-button','art-button'].includes(c)),gestures=Array.from(b.querySelectorAll<SVGSVGElement>('svg[data-gesture]'));skinBlankButton(b);b.classList.add(...classes);for(const g of gestures)b.prepend(g);}sizeMenu(panel,0,1120);
 }
