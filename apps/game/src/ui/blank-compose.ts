@@ -33,9 +33,9 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  function card(parent:HTMLElement,title:string,copy='',icon?:Node){const n=menuCard(parent,title,copy,icon);n.dataset.material=kind==='bank'?'blue':'wood';const material=kind==='bank'?assetSlice('/assets/blank-ui/bank.png',190,450,440,200):navigation.has(kind)?assetSlice('/assets/blank-ui/navigation.png',215,565,230,80):assetSlice('/assets/blank-ui/forge.png',415,450,275,160);material.classList.add('gm-material');material.setAttribute('preserveAspectRatio','none');n.prepend(material);return n;}
  if(navigation.has(kind)){
   const choices=old.filter(b=>!backLabels.test(b.getAttribute('aria-label')??''));
-  const grid=menuGrid(body,['tavern','castle','market'].includes(kind)?3:2);
+  const grid=menuGrid(body,['tavern','market'].includes(kind)?3:2);grid.classList.add('gm-navigation');
   for(const b of choices){
-   const label=b.getAttribute('aria-label')??'';if(label==='Jeu contre un ami indisponible'){used.add(b);continue;}
+   const label=b.getAttribute('aria-label')??'';if(kind==='castle'&&['Récompense quotidienne','Déjà récupéré','Déjà récupérée'].includes(label)){button(b,footer)?.classList.add('gm-daily-action');continue;}if(label==='Jeu contre un ami indisponible'){used.add(b);continue;}
    const c=node('div','native-choice');grid.append(c);button(b,c);
   }
  }else if(kind==='bank'){
@@ -54,7 +54,7 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  }else if(kind==='drinks'){
   const grid=menuGrid(body,3);for(const [i,d] of s.tavern.drinks_catalog.entries()){const c=card(grid,d.name,'',assetSlice('/assets/menus/drinks.webp',140+(i%3)*445,180+Math.floor(i/3)*348,385,215));const b=byLabel(d.name);const chosen=b?.classList.contains('selected');button(b,c);b?.setAttribute('aria-pressed',String(chosen));}menuStat(body,'Services restants',String(s.tavern.remaining_today));for(const n of timers)timer(body,n);action('Commander');
  }else if(kind==='jobs'){
-  if(s.pending){const c=card(body,s.pending.job.title,`${s.pending.job.reward} Gold · Contrat signé`);for(const n of timers)timer(c,n);const p=menuProgress(c,3600-s.pending.remaining,3600,'Progression du contrat');p.classList.add('mission-progress');action('Récupérer la récompense');}
+  if(s.pending){const c=card(body,s.pending.job.title,`${s.pending.job.reward} Gold · Contrat signé`);c.classList.add('gm-active-contract');for(const n of timers)timer(c,n);const p=menuProgress(c,3600-s.pending.remaining,3600,'Progression du contrat');p.classList.add('mission-progress');action('Récupérer la récompense');}
   else{const grid=menuGrid(body);for(const b of old.filter(n=>(n.getAttribute('aria-label')??'').startsWith('Accepter '))){const title=(b.getAttribute('aria-label')??'').slice(9),j=s.board.jobs.find(j=>j.title===title);const c=card(grid,title,j?`${j.reward} Gold · 1 heure`:'',j?raritySeal(j.rarity):undefined);button(b,c);const label=b.querySelector<HTMLElement>('.gm-button-label');if(label)label.textContent='Accepter';}const p=overlays.find(n=>/^\d+\/\d+$/.test(n.textContent?.trim()??''));const row=controls(body,['Page précédente','Page suivante']);if(p)row.insertBefore(node('span','gm-copy',p.textContent??''),row.lastElementChild);}
  }else if(kind==='dashboard'){
   const ledger=node('div','gm-ledger');menuStat(ledger,'Niveau',String(s.level));menuStat(ledger,'Portefeuille',`${s.balance.wallet} Gold`);menuStat(ledger,'Banque',`${s.balance.bank} Gold`);body.append(ledger);const c=card(body,'Expérience',`${s.xp} / ${s.xp_needed} XP`);menuProgress(c,s.xp,s.xp_needed,'Progression du niveau');const grid=menuGrid(body),done=s.quests.filter(q=>q.progress>=q.target).length,q=card(grid,'Quêtes quotidiennes',`${done} / ${s.quests.length} terminées`);menuProgress(q,done,s.quests.length,'Quêtes accomplies');controls(q,['Quêtes quotidiennes','Réclamer les quêtes']);card(grid,'Activités',`${s.active?s.active.name:'Aucune expédition'}\n${s.stats.wins} victoires · ${s.stats.losses} défaites`);action('Actualiser');
@@ -81,8 +81,8 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  }
  // Existing return actions remain attached to their original handlers.
  for(const b of old)if(!used.has(b))button(b,footer);
- if(notice){notice.removeAttribute('style');notice.className='gm-notice';if(!modal?.contains(notice))body.append(notice);}
- if(modal){skinBlankModal(modal);panel.append(modal);}sizeMenu(panel,0,1020);
+ if(notice&&!(kind==='jobs'&&s.pending&&/(?:contrat|boulot) accepté/i.test(notice.textContent??''))){notice.removeAttribute('style');notice.className='gm-notice';if(!modal?.contains(notice))body.append(notice);}
+ if(modal){skinBlankModal(modal);panel.append(modal);}const navigationLimits:Record<string,number>={market:840,castle:640,alley:650,tavern:800,arena:660,games:800,thief:680,casino:880,expedition:880};sizeMenu(panel,0,navigationLimits[kind]??(kind==='jobs'&&s.pending?700:1020),navigation.has(kind));
 }
 export function skinBlankButton(b:HTMLButtonElement,kind=b.closest<HTMLElement>('#panel')?.dataset.kind??''){const label=b.getAttribute('aria-label')??b.textContent??'';b.removeAttribute('style');b.className='gm-button';b.setAttribute('aria-label',label);b.replaceChildren(node('span','gm-button-label',label));nativeButton(b,kind);}
 export function skinBlankModal(modal:HTMLElement){modal.removeAttribute('style');modal.classList.add('gm-modal');for(const b of Array.from(modal.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b);const paper=modal.querySelector<HTMLElement>('.mission-parchment');if(paper){paper.classList.add('gm-dialog','gm-contract');}else{const wrapper=node('section','gm-dialog');wrapper.append(...Array.from(modal.childNodes));modal.append(wrapper);}for(const input of Array.from(modal.querySelectorAll<HTMLInputElement>('input'))){input.removeAttribute('style');input.className='gm-input';}}

@@ -86,3 +86,50 @@
 #panel.game-menu.blank-game .game-stake{display:flex!important;align-items:center;justify-content:center;gap:8px;min-width:0;flex:none}
 #panel.game-menu.blank-game .game-stake input{width:100px!important;min-width:0;max-width:100%}
 @media(max-width:700px){#panel.game-menu.blank-game .game-controls{gap:6px}#panel.game-menu.blank-game .game-stake{font-size:14px;flex:1}#panel.game-menu.blank-game .game-stake input{width:76px!important;font-size:20px!important;padding:10px 6px!important}#panel.game-menu[data-kind=techniques] .gm-card[data-skill=defend]{display:flex;flex-direction:column}#panel.game-menu[data-kind=techniques] .gm-art{height:110px}}
+
+/* Balanced navigation groups: original sprites at readable, restrained sizes. */
+#panel.game-menu .native-heading{width:min(78%,500px)}
+#panel.game-menu:has(.gm-navigation) .gm-header{margin-bottom:20px}
+#panel.game-menu:has(.gm-navigation) .native-heading{width:min(74%,410px)}
+#panel.game-menu .gm-navigation.gm-grid{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px 20px;width:100%;margin:auto}
+#panel.game-menu .gm-navigation>.native-choice{flex:0 1 240px;max-width:100%}
+#panel.game-menu[data-kind=alley] .gm-navigation>.native-choice{flex-basis:280px}
+#panel.game-menu[data-kind=castle] .gm-navigation>.native-choice{flex-basis:235px}
+#panel.game-menu[data-kind=castle] .gm-footer{flex-direction:column;gap:14px}
+#panel.game-menu[data-kind=castle] .gm-daily-action{width:230px;min-height:52px;padding:18px 28px!important}
+#panel.game-menu:has(.gm-navigation) .gm-footer{margin-top:22px}
+#panel.game-menu[data-kind=jobs] .native-heading{width:min(85%,430px)}
+#panel.game-menu[data-kind=jobs] .gm-active-contract{display:flex;flex-direction:column;gap:18px;padding:26px 30px;min-height:210px}
+#panel.game-menu[data-kind=jobs] .gm-active-contract>.gm-card-title,#panel.game-menu[data-kind=jobs] .gm-active-contract>.gm-copy{text-align:center;max-width:100%}
+#panel.game-menu[data-kind=jobs] .gm-active-contract>.gm-card-title{font-size:clamp(20px,2.4vw,25px);line-height:1.3}
+#panel.game-menu[data-kind=jobs] .gm-active-contract>.gm-timer{display:block;width:auto;min-width:0;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:clamp(26px,3vw,36px);line-height:1.2;text-align:center;letter-spacing:.04em}
+#panel.game-menu[data-kind=jobs] .gm-active-contract>.mission-progress{width:min(100%,480px);height:12px;margin:0 auto}
+#panel.game-menu[data-kind=jobs] .gm-footer{gap:12px}
+@media(max-width:700px){
+ #panel.game-menu:has(.gm-navigation) .native-heading{width:min(92%,360px)}
+ #panel.game-menu .gm-navigation.gm-grid{gap:12px}
+ #panel.game-menu .gm-navigation>.native-choice{flex-basis:260px}
+ #panel.game-menu[data-kind=alley] .gm-navigation>.native-choice{flex-basis:calc(50% - 6px)}
+ #panel.game-menu[data-kind=castle] .gm-navigation>.native-choice{flex-basis:calc(50% - 6px)}
+ #panel.game-menu[data-kind=jobs] .gm-active-contract{padding:22px 12px;gap:16px;min-height:220px}
+ #panel.game-menu[data-kind=jobs] .gm-footer{flex-direction:column}
+ #panel.game-menu[data-kind=jobs] .gm-footer>.gm-button{flex:none;width:min(100%,310px)}
+}
+@media(min-width:701px) and (max-height:650px){
+ #panel.game-menu:has(.gm-navigation) .native-heading{max-width:340px}
+ #panel.game-menu:has(.gm-navigation) .gm-header{margin-bottom:12px}
+ #panel.game-menu:has(.gm-navigation) .gm-footer{margin-top:14px}
+ #panel.game-menu[data-kind=castle] .gm-navigation>.native-choice{flex-basis:185px}
+}
+
+#panel.game-menu:has(.gm-navigation) .gm-title-plaque{height:84px!important;max-width:410px!important;margin:auto}
+
+#panel.game-menu[data-kind=jobs] .gm-active-contract>.gm-timer{margin:0}
+#panel.game-menu[data-kind=jobs] .gm-active-contract{padding:18px 24px}
+@media(max-width:700px){#panel.game-menu[data-kind=jobs] .gm-active-contract{padding:18px 10px}}
+
+@media(min-width:701px) and (max-height:650px){
+ #panel.game-menu[data-kind=jobs]:has(.gm-active-contract) .native-heading{max-width:360px}
+ #panel.game-menu[data-kind=jobs] .gm-active-contract{gap:14px;padding:14px 22px;min-height:190px}
+ #panel.game-menu[data-kind=jobs] .gm-active-contract>.gm-card-title{font-size:22px}
+}
