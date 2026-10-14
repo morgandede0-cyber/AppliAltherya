@@ -7,6 +7,7 @@ class ActivityTests(unittest.TestCase):
  def setUp(self):
   self.tmp=tempfile.TemporaryDirectory();self.a=Activity(self.tmp.name+'/test.sqlite3');(self.uid,self.name),self.token=self.a.session('');self.a.snapshot(self.uid,self.name)
   with self.a.conn() as c:c.execute('UPDATE tutorial_progress SET completed=1 WHERE user_id=?',(self.uid,))
+  with self.a.conn() as c:c.execute('UPDATE activity_tutorial_revision SET finished=1 WHERE user_id=?',(self.uid,))
  def tearDown(self):self.tmp.cleanup()
  def snapshot(self):return self.a.snapshot(self.uid,self.name)
  def act(self,**body):return self.a.action(self.uid,body)
@@ -70,7 +71,7 @@ class ActivityHttpTests(unittest.IsolatedAsyncioTestCase):
  async def test_cookie_state_reward_and_csrf(self):
   r=await self.client.get('/api/activity');self.assertEqual(r.status,200);self.assertIn('altherya_test',r.cookies)
   r=await self.client.post('/api/activity',json={'action':'daily'});self.assertEqual(r.status,403)
-  with adapter.SERVICE.conn() as c:c.execute('UPDATE tutorial_progress SET completed=1')
+  with adapter.SERVICE.conn() as c:c.execute('UPDATE tutorial_progress SET completed=1');c.execute('UPDATE activity_tutorial_revision SET finished=1')
   for _ in range(2):
    r=await self.client.post('/api/activity',json={'action':'daily'},headers={'X-Altherya-Request':'1'});self.assertEqual(r.status,200);self.assertEqual((await r.json())['state']['balance']['wallet'],200)
  async def test_malformed_action_has_clear_error(self):

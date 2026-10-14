@@ -34,13 +34,13 @@ class DiscordIdentity:
     while c.execute('SELECT 1 FROM players WHERE user_id=? UNION SELECT 1 FROM activity_sessions WHERE user_id=?',(target,target)).fetchone():target=secrets.randbelow(2**52)+1
    else:target=uid
    c.execute('INSERT OR IGNORE INTO activity_discord_accounts VALUES(?,?)',(p['discord_id'],target))
-   previous=c.execute('SELECT name FROM activity_sessions WHERE user_id=? LIMIT 1',(target,)).fetchone()
-   name=previous['name'] if previous else p['display_name']
+   name=p['display_name']
    if token:
     digest=hashlib.sha256(token.encode()).hexdigest()
     if not c.execute('SELECT 1 FROM activity_sessions WHERE token=? AND user_id=?',(digest,uid)).fetchone():raise ValueError('Session Discord invalide.')
     c.execute('UPDATE activity_sessions SET user_id=?,name=? WHERE token=?',(target,name,digest))
    elif target!=uid:
     c.execute('UPDATE activity_sessions SET user_id=?,name=? WHERE user_id=?',(target,name,uid))
+   c.execute('UPDATE activity_sessions SET name=? WHERE user_id=?',(name,target))
    c.execute('INSERT INTO activity_discord VALUES(?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET discord_id=excluded.discord_id,avatar=excluded.avatar,username=excluded.username,display_name=excluded.display_name,discriminator=excluded.discriminator',(target,p['discord_id'],p['avatar'],p['username'],p['display_name'],p['discriminator']))
   return target

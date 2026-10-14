@@ -11,7 +11,7 @@ class AdminTests(unittest.TestCase):
   self.tmp=tempfile.TemporaryDirectory();self.a=Activity(self.tmp.name+'/test.db');self.admin,self.token=self.make(USER['id'],'Moi');self.player,_=self.make('123456789012345678','Aventurier');self.did='123456789012345678'
  def tearDown(self):self.tmp.cleanup()
  def make(self,did,name,complete=True):
-  (uid,_),token=self.a.session('');self.a.snapshot(uid,name);self.a.action(uid,{'action':'name','name':name});uid=self.a.bind_discord(uid,{**USER,'id':did,'username':name},token)
+  (uid,_),token=self.a.session('');self.a.snapshot(uid,name);self.a.action(uid,{'action':'name','name':name});uid=self.a.bind_discord(uid,{**USER,'id':did,'username':name,'global_name':name},token)
   if complete:
    for i in range(5):self.a.action(uid,{'action':'tutorial_next','step':i})
    self.a.action(uid,{'action':'tutorial_finish','step':5})

@@ -38,7 +38,7 @@ class TutorialTests(unittest.TestCase):
  def test_other_profile_is_independent_and_legacy_completion_is_kept(self):
   self.complete();(uid,name),_=self.a.session('');other=self.a.snapshot(uid,name);self.assertFalse(other['tutorial']['completed']);self.assertEqual(other['balance']['wallet'],0)
   with self.a.conn() as c:c.execute('UPDATE tutorial_progress SET completed=1,reward_claimed=1 WHERE user_id=?',(uid,))
-  self.a.action(uid,dict(action='tutorial_replay'))
+  self.assertFalse(self.a.snapshot(uid,name)['tutorial']['completed'])
   for i in range(5):self.a.action(uid,dict(action='tutorial_next',step=i))
   self.a.action(uid,dict(action='tutorial_finish',step=5));self.assertEqual(self.a.snapshot(uid,name)['balance']['wallet'],0)
  def test_reward_transaction_rolls_back_on_error(self):

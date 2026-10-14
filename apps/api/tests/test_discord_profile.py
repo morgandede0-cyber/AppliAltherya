@@ -14,7 +14,7 @@ class ProfileTests(unittest.TestCase):
   self.tmp=tempfile.TemporaryDirectory();self.a=Activity(self.tmp.name+'/test.db');(self.uid,self.name),self.token=self.a.session('');self.a.snapshot(self.uid,self.name)
  def tearDown(self):self.tmp.cleanup()
  def test_verified_metadata_persists_without_changing_wallet_or_identity(self):
-  before=self.a.snapshot(self.uid,self.name);self.a.bind_discord(self.uid,USER);a=Activity(self.a.path);after=a.snapshot(self.uid,self.name);self.assertEqual(after['balance'],before['balance']);self.assertEqual(after['name'],before['name']);self.assertEqual(a.session_uid(self.token),self.uid);self.assertEqual(after['discord']['display_name'],'Voyageur');self.assertTrue(after['discord']['avatar_url'].startswith('/api/avatar?v='));self.assertNotIn('discord_id',after['discord']);(other,_),_=a.session('');self.assertIsNone(a.snapshot(other,'Autre')['discord'])
+  before=self.a.snapshot(self.uid,self.name);self.a.bind_discord(self.uid,USER);a=Activity(self.a.path);after=a.snapshot(self.uid,self.name);self.assertEqual(after['balance'],before['balance']);self.assertEqual(after['name'],'Voyageur');self.assertEqual(a.session_uid(self.token),self.uid);self.assertEqual(after['discord']['display_name'],'Voyageur');self.assertTrue(after['discord']['avatar_url'].startswith('/api/avatar?v='));self.assertNotIn('discord_id',after['discord']);(other,_),_=a.session('');self.assertIsNone(a.snapshot(other,'Autre')['discord'])
  def test_rejects_client_supplied_profile_and_invalid_cdn_paths(self):
   with self.assertRaises(ValueError):self.a.action(self.uid,{'action':'profile','avatar_url':'https://example.com'})
   for field,value in [('id','../x'),('avatar','../../x'),('username',[]),('discriminator','oops')]:

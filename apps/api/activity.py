@@ -80,6 +80,7 @@ class Activity:
         with self.conn() as c:names={r['user_id']:r['name'] for r in c.execute('SELECT user_id,name FROM activity_sessions')}
         podium=[dict(name=names.get(r['user_id'],'Aventurier'),total=r['total']) for r in self.castle.leaderboard(10)]
         discord=self.discord_profile(uid)
+        if discord:name=discord['display_name']
         public_discord=None if not discord else dict(username=discord['username'],display_name=discord['display_name'],avatar_url='/api/avatar?v='+avatar_revision(discord))
         history_inventory=self.story.inventory(uid)
         owned_story_items=[dict(name=n,quantity=q) for n,q in history_inventory.items() if n in STORY_ITEM_PRICES]
@@ -87,8 +88,9 @@ class Activity:
     def action(self,uid,body):
         action=body.get('action'); key=body.get('key','')
         if not isinstance(action,str) or not isinstance(key,str):raise ValueError('Action invalide.')
-        if action in ('tutorial_next','tutorial_finish','tutorial_replay','tutorial_cancel'):return self.tutorial.action(uid,body)
+        if action in ('tutorial_next','tutorial_previous','tutorial_finish','tutorial_replay','tutorial_cancel'):return self.tutorial.action(uid,body)
         if action=='name':
+            if self.discord_profile(uid):raise ValueError('Le nom est synchronisé automatiquement avec Discord.')
             name=body.get('name')
             if not isinstance(name,str) or not 1<=len(name.strip())<=24:raise ValueError('Nom invalide.')
             with self.conn() as c:c.execute('UPDATE activity_sessions SET name=? WHERE user_id=?',(name.strip(),uid))

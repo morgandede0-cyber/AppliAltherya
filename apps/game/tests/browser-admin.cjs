@@ -4,7 +4,7 @@ const tokens=JSON.parse(execFileSync('python3',['-c',`import sys,json;sys.path.i
 from activity import Activity
 a=Activity(sys.argv[1]);tokens=[]
 for i in range(7):
- (uid,_),token=a.session('');a.snapshot(uid,'Test');a.action(uid,dict(action='name',name='Admin' if i==0 else 'Joueur '+str(i)));a.bind_discord(uid,dict(id='666805849011912705' if i==0 else str(123456789012345670+i),username='admin' if i==0 else 'joueur'+str(i),global_name='Test',avatar=None,discriminator='0'),token)
+ (uid,_),token=a.session('');a.snapshot(uid,'Test');a.action(uid,dict(action='name',name='Admin' if i==0 else 'Joueur '+str(i)));a.bind_discord(uid,dict(id='666805849011912705' if i==0 else str(123456789012345670+i),username='admin' if i==0 else 'joueur'+str(i),global_name='Admin' if i==0 else 'Joueur '+str(i),avatar=None,discriminator='0'),token)
  for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
  a.action(uid,dict(action='tutorial_finish',step=5));tokens.append(token)
 print(json.dumps(tokens))`,db],{cwd:root,encoding:'utf8'}));

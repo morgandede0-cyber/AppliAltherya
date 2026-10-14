@@ -1,5 +1,6 @@
 """Private Activity registry. Discord identities come exclusively from OAuth."""
 import os,re
+from tutorial import TUTORIAL_REVISION
 DEFAULT_ADMIN_IDS={'666805849011912705','342359563791761410','587578557027450900'}
 
 class ActivityAdmin:
@@ -14,7 +15,7 @@ class ActivityAdmin:
   if not self.allowed(uid):raise PermissionError('Accès administrateur refusé.')
  def target(self,discord_id):
   if not isinstance(discord_id,str) or not re.fullmatch(r'[0-9]{15,22}',discord_id):raise ValueError('Joueur invalide.')
-  with self.a.conn() as c:r=c.execute('SELECT a.user_id FROM activity_discord_accounts a JOIN tutorial_progress t ON t.user_id=a.user_id JOIN activity_tutorial_receipts r ON r.identity_key=? WHERE a.discord_id=? AND t.completed=1 AND t.reward_claimed=1 AND r.gold_paid>=100 AND r.xp_paid>=25',('discord:'+discord_id,discord_id)).fetchone()
+  with self.a.conn() as c:r=c.execute('SELECT a.user_id FROM activity_discord_accounts a JOIN tutorial_progress t ON t.user_id=a.user_id JOIN activity_tutorial_revision v ON v.user_id=a.user_id AND v.revision=? AND v.finished=1 JOIN activity_tutorial_receipts r ON r.identity_key=? WHERE a.discord_id=? AND t.completed=1 AND t.reward_claimed=1 AND r.gold_paid>=100 AND r.xp_paid>=25',(TUTORIAL_REVISION,'discord:'+discord_id,discord_id)).fetchone()
   if not r:raise ValueError('Ce joueur n’a pas terminé le tutoriel.')
   return r['user_id']
  def handle(self,actor,body):
@@ -25,7 +26,7 @@ class ActivityAdmin:
    if not isinstance(q,str) or len(q)>80 or type(page) is not int or page<0 or page>100000:raise ValueError('Recherche invalide.')
    # Canonical accounts, not guild members or one row per browser session.
    with self.a.conn() as c:
-    rows=c.execute('SELECT a.discord_id,a.user_id,d.username,d.display_name,COALESCE((SELECT name FROM activity_sessions s WHERE s.user_id=a.user_id LIMIT 1),d.display_name) AS name FROM activity_discord_accounts a JOIN activity_discord d ON d.user_id=a.user_id JOIN tutorial_progress t ON t.user_id=a.user_id JOIN activity_tutorial_receipts r ON r.identity_key=(\'discord:\'||a.discord_id) WHERE t.completed=1 AND t.reward_claimed=1 AND r.gold_paid>=100 AND r.xp_paid>=25').fetchall()
+    rows=c.execute('SELECT a.discord_id,a.user_id,d.username,d.display_name,COALESCE((SELECT name FROM activity_sessions s WHERE s.user_id=a.user_id LIMIT 1),d.display_name) AS name FROM activity_discord_accounts a JOIN activity_discord d ON d.user_id=a.user_id JOIN tutorial_progress t ON t.user_id=a.user_id JOIN activity_tutorial_revision v ON v.user_id=a.user_id AND v.revision=? AND v.finished=1 JOIN activity_tutorial_receipts r ON r.identity_key=(\'discord:\'||a.discord_id) WHERE t.completed=1 AND t.reward_claimed=1 AND r.gold_paid>=100 AND r.xp_paid>=25',(TUTORIAL_REVISION,)).fetchall()
    matches=[dict(r) for r in rows if q.strip().casefold() in ' '.join(str(r[k]) for k in ('discord_id','username','display_name','name')).casefold()]
    matches.sort(key=lambda r:(r['name'].casefold(),r['discord_id']));pages=max(1,(len(matches)+3)//4);page=min(page,pages-1)
    return dict(players=[{k:v for k,v in r.items() if k!='user_id'} for r in matches[page*4:page*4+4]],page=page,pages=pages,total=len(matches))

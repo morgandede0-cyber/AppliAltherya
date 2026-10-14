@@ -2,10 +2,13 @@
 import os
 from tutorial_engine import TutorialStore, TUTORIAL_GOLD, TUTORIAL_XP
 
+TUTORIAL_REVISION='illustrated-20261015-v1'
+
 class ActivityTutorial:
  def __init__(self, activity):
   self.a=activity;self.store=TutorialStore(activity.path)
   with self.a.conn() as c:
+   c.execute('CREATE TABLE IF NOT EXISTS activity_tutorial_revision(user_id INTEGER PRIMARY KEY,revision TEXT NOT NULL,finished INTEGER NOT NULL DEFAULT 0)')
    c.execute('CREATE TABLE IF NOT EXISTS activity_tutorial_receipts(identity_key TEXT PRIMARY KEY,user_id INTEGER NOT NULL,discord_id TEXT,name TEXT NOT NULL,claimed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,gold_paid INTEGER NOT NULL DEFAULT 0,xp_paid INTEGER NOT NULL DEFAULT 0)')
    c.execute('CREATE TABLE IF NOT EXISTS activity_tutorial_steps(user_id INTEGER PRIMARY KEY,step INTEGER NOT NULL DEFAULT 0,replay INTEGER NOT NULL DEFAULT 0)')
  @staticmethod
@@ -26,27 +29,37 @@ class ActivityTutorial:
     c.execute('UPDATE tutorial_progress SET completed=1,reward_claimed=1,gold_claimed=1,xp_claimed=1,completed_at=COALESCE(completed_at,?) WHERE user_id=?',(receipt['claimed_at'],uid))
     old={**old,'completed':1,'reward_claimed':1}
    c.execute('INSERT OR IGNORE INTO activity_tutorial_steps(user_id) VALUES(?)',(uid,))
+   version=c.execute('SELECT revision,finished FROM activity_tutorial_revision WHERE user_id=?',(uid,)).fetchone()
+   if not version or version['revision']!=TUTORIAL_REVISION:
+    c.execute('INSERT INTO activity_tutorial_revision VALUES(?,?,0) ON CONFLICT(user_id) DO UPDATE SET revision=excluded.revision,finished=0',(uid,TUTORIAL_REVISION))
+    c.execute('UPDATE activity_tutorial_steps SET step=0,replay=0 WHERE user_id=?',(uid,))
+   version=c.execute('SELECT finished FROM activity_tutorial_revision WHERE user_id=?',(uid,)).fetchone()
    row=c.execute('SELECT step,replay FROM activity_tutorial_steps WHERE user_id=?',(uid,)).fetchone()
-  return dict(completed=bool(old['completed']),reward_claimed=bool(old['reward_claimed']),step=row['step'],replay=bool(row['replay']),gold=TUTORIAL_GOLD,xp=TUTORIAL_XP,discord_required=self.discord_required(),discord_verified=bool(discord_id))
+  return dict(completed=bool(old['completed'] and version['finished']),reward_claimed=bool(old['reward_claimed']),step=row['step'],replay=bool(row['replay']),gold=TUTORIAL_GOLD,xp=TUTORIAL_XP,discord_required=self.discord_required(),discord_verified=bool(discord_id))
  def action(self, uid, body):
   self.state(uid)
   action=body['action'];expected=body.get('step')
   if self.discord_required() and not self.a.discord_profile(uid):raise ValueError('Connexion Discord requise pour suivre le tutoriel.')
   key,discord_id=self.identity(uid)
-  if action in ('tutorial_next','tutorial_finish') and (type(expected) is not int or not 0<=expected<=5):raise ValueError('Étape du tutoriel invalide.')
+  if action in ('tutorial_next','tutorial_previous','tutorial_finish') and (type(expected) is not int or not 0<=expected<=5):raise ValueError('Étape du tutoriel invalide.')
   with self.a.conn() as c:
    c.execute('BEGIN IMMEDIATE')
    progress=c.execute('SELECT * FROM tutorial_progress WHERE user_id=?',(uid,)).fetchone()
    row=c.execute('SELECT step,replay FROM activity_tutorial_steps WHERE user_id=?',(uid,)).fetchone()
+   version=c.execute('SELECT finished FROM activity_tutorial_revision WHERE user_id=?',(uid,)).fetchone()
+   completed=bool(progress['completed'] and version['finished'])
    if action=='tutorial_replay':
-    if not progress['completed']:raise ValueError('Terminez d’abord votre premier tutoriel.')
+    if not completed:raise ValueError('Terminez d’abord votre premier tutoriel.')
     if not row['replay']:c.execute('UPDATE activity_tutorial_steps SET step=0,replay=1 WHERE user_id=?',(uid,))
     return 'Tutoriel ouvert.'
    if action=='tutorial_cancel':
-    if not progress['completed']:raise ValueError('Terminez le tutoriel pour entrer dans Legacy.')
+    if not completed:raise ValueError('Terminez le tutoriel pour entrer dans Legacy.')
     c.execute('UPDATE activity_tutorial_steps SET replay=0 WHERE user_id=?',(uid,));return 'Tutoriel fermé.'
-   if progress['completed'] and not row['replay']:return 'Tutoriel déjà terminé. Récompense déjà enregistrée.'
+   if completed and not row['replay']:return 'Tutoriel déjà terminé. Récompense déjà enregistrée.'
    if expected!=row['step']:return 'Votre progression a été actualisée.'
+   if action=='tutorial_previous':
+    if expected<=0:raise ValueError('Vous êtes au début du tutoriel.')
+    c.execute('UPDATE activity_tutorial_steps SET step=step-1 WHERE user_id=?',(uid,));return ''
    if action=='tutorial_next':
     if expected>=5:raise ValueError('Validez la dernière étape du tutoriel.')
     if expected==0:c.execute('UPDATE tutorial_progress SET runs=runs+1,last_started_at=CURRENT_TIMESTAMP WHERE user_id=?',(uid,))
@@ -68,4 +81,5 @@ class ActivityTutorial:
    c.execute('UPDATE activity_tutorial_receipts SET gold_paid=?,xp_paid=?,user_id=?,name=? WHERE identity_key=?',(TUTORIAL_GOLD,TUTORIAL_XP,uid,name[0] if name else 'Aventurier',key))
    c.execute('UPDATE tutorial_progress SET completed=1,reward_claimed=1,gold_claimed=1,xp_claimed=1,completed_at=COALESCE(completed_at,CURRENT_TIMESTAMP),last_completed_at=CURRENT_TIMESTAMP WHERE user_id=?',(uid,))
    c.execute('UPDATE activity_tutorial_steps SET replay=0 WHERE user_id=?',(uid,))
+   c.execute('UPDATE activity_tutorial_revision SET finished=1 WHERE user_id=?',(uid,))
    return f'Bienvenue dans Legacy ! +{gold} Gold et +{xp} XP.' if gold or xp else 'Tutoriel terminé. Récompense déjà obtenue.'
