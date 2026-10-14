@@ -1,4 +1,5 @@
 """Isolated Activity test adapter. Original bot engines remain unchanged."""
+from activity_cookie import set_activity_cookie
 import os, sys, secrets, sqlite3, hashlib, time, json
 from pathlib import Path
 from dataclasses import asdict
@@ -155,5 +156,5 @@ async def activity(request):
             with SERVICE.conn() as c:name=c.execute('SELECT name FROM activity_sessions WHERE user_id=?',(uid,)).fetchone()[0]
         except (ValueError,TypeError) as e:return web.json_response({'error':str(e)},status=400)
     response=web.json_response({'state':SERVICE.snapshot(uid,name),'message':message},headers={'Cache-Control':'no-store'})
-    if token:response.set_cookie('altherya_test',token,httponly=True,samesite='Strict',secure=request.secure,max_age=31536000)
+    set_activity_cookie(response,request,token or request.cookies.get('altherya_test',''))
     return response

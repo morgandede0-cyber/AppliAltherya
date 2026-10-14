@@ -1,0 +1,16 @@
+const {chromium}=require('@playwright/test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{spawn,execFileSync}=require('node:child_process');
+const root=path.resolve(__dirname,'../../..'),tmp=fs.mkdtempSync(path.join(os.tmpdir(),'altherya-cookie-')),cert=path.join(tmp,'cert.pem'),key=path.join(tmp,'key.pem'),url='https://127.0.0.1:20599';
+execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',key,'-out',cert,'-days','1','-subj','/CN=localhost','-addext','subjectAltName=DNS:localhost,IP:127.0.0.1'],{stdio:'ignore'});
+(async()=>{const server=spawn('python3',['apps/api/tests/iframe_fixture.py',path.join(tmp,'test.db'),cert,key],{cwd:root,stdio:'ignore'});let browser,checks=0;
+try{browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:JSON.parse(process.env.CHROMIUM_ARGS||'[]')});const ctx=await browser.newContext({ignoreHTTPSErrors:true});const p=await ctx.newPage();for(let i=0;i<60;i++){try{await p.goto(url+'/parent');break;}catch{await new Promise(r=>setTimeout(r,100));}}
+await p.locator('iframe').waitFor();let frame=await p.locator('iframe').contentFrame().locator('body').elementHandle().then(h=>h.ownerFrame());
+const api=async(body,endpoint='/api/activity')=>frame.evaluate(async({body,endpoint})=>{const r=await fetch(endpoint,body?{method:'POST',credentials:'include',headers:{'Content-Type':'application/json','X-Altherya-Request':'1'},body:JSON.stringify(body)}:{credentials:'include'});return {status:r.status,...await r.json()};},{body,endpoint});
+await api(null,'/legacy');assert.equal((await api(null,'/legacy')).present,false);checks++;
+assert.equal((await api()).state.discord,null);assert.equal((await api({action:'list'},'/api/admin')).status,403);checks+=2;
+assert.equal((await api({code:'fake-local-code'},'/api/auth/discord')).status,200);assert.ok((await api()).state.discord);checks++;
+for(let i=0;i<5;i++)assert.equal((await api({action:'tutorial_next',step:i})).status,200);assert.equal((await api({action:'tutorial_finish',step:5})).state.balance.wallet,100);checks++;
+const cookies=(await ctx.cookies()).filter(c=>c.name==='altherya_test');assert.equal(cookies.length,1);assert.equal(cookies[0].sameSite,'None');assert.ok(cookies[0].secure&&cookies[0].httpOnly&&cookies[0].partitionKey);checks++;
+await frame.goto('https://localhost:20599/probe');const state=(await api()).state;assert.ok(state.tutorial.completed);assert.equal(state.xp,25);assert.equal(state.balance.wallet,100);checks++;
+assert.equal((await api({action:'tutorial_finish',step:5})).state.balance.wallet,100);checks++;
+await ctx.clearCookies();assert.equal((await api()).state.discord,null);await api({code:'new-device-code'},'/api/auth/discord');const again=(await api()).state;assert.ok(again.tutorial.completed);assert.equal(again.balance.wallet,100);checks++;
+console.log(JSON.stringify({checks,thirdPartyIframe:true,https:true,partitioned:true}));}finally{await browser?.close();server.kill();}})().catch(e=>{console.error(e);process.exitCode=1});

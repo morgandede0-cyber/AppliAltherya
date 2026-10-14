@@ -39,7 +39,7 @@ class FakeSession:
  def get(self,url,**kwargs):return FakeResponse(USER) if url.endswith('/users/@me') else FakeResponse({})
 class ProfileHttpTests(unittest.IsolatedAsyncioTestCase):
  async def asyncSetUp(self):
-  self.tmp=tempfile.TemporaryDirectory();self.previous=adapter.SERVICE;adapter.SERVICE=Activity(self.tmp.name+'/http.db');app=web.Application();app.router.add_get('/api/activity',adapter.activity);app.router.add_post('/api/activity',adapter.activity);app.router.add_post('/api/auth/discord',server.auth);app.router.add_get('/api/avatar',server.avatar);self.client=TestClient(TestServer(app));await self.client.start_server();await self.client.get('/api/activity')
+  self.tmp=tempfile.TemporaryDirectory();self.previous=adapter.SERVICE;adapter.SERVICE=Activity(self.tmp.name+'/http.db');app=web.Application();app.router.add_get('/api/activity',adapter.activity);app.router.add_post('/api/activity',adapter.activity);app.router.add_post('/api/auth/discord',server.auth);app.router.add_get('/api/avatar',server.avatar);self.client=TestClient(TestServer(app),headers={'X-Altherya-Request':'1'});await self.client.start_server();await self.client.get('/api/activity')
  async def asyncTearDown(self):await self.client.close();adapter.SERVICE=self.previous;self.tmp.cleanup()
  async def test_oauth_uses_verified_response_not_submitted_avatar(self):
   with patch.dict(os.environ,{'DISCORD_CLIENT_ID':'test','DISCORD_CLIENT_SECRET':'test'}),patch.object(server,'ClientSession',FakeSession):

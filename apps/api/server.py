@@ -1,4 +1,5 @@
 """OAuth gateway only. No client-submitted Gold or rewards accepted."""
+from activity_cookie import set_activity_cookie
 import os
 import asyncio
 from pathlib import Path
@@ -9,6 +10,7 @@ async def health(request): return web.json_response({'status':'ok','economy':'is
 async def auth(request):
     client_id=os.getenv('DISCORD_CLIENT_ID');secret=os.getenv('DISCORD_CLIENT_SECRET')
     if not client_id or not secret: return web.json_response({'error':'Discord OAuth non configuré'},status=503)
+    if request.headers.get('X-Altherya-Request')!='1':return web.json_response({'error':'Requête de connexion refusée'},status=403,headers={'Cache-Control':'no-store'})
     try:
         body=await request.json();code=body.get('code')
         if not isinstance(code,str) or not 1<=len(code)<=2048: raise ValueError()
@@ -28,7 +30,7 @@ async def auth(request):
     try:service.bind_discord(uid,user,token or request.cookies.get('altherya_test',''))
     except ValueError:return web.json_response({'error':'Profil Discord invalide'},status=502)
     response=web.json_response({'access_token':data['access_token']},headers={'Cache-Control':'no-store'})
-    if token:response.set_cookie('altherya_test',token,httponly=True,samesite='Strict',secure=request.secure,max_age=31536000)
+    set_activity_cookie(response,request,token or request.cookies.get('altherya_test',''))
     return response
 
 def get_service():
@@ -69,7 +71,10 @@ async def static(request):
     relative=request.match_info['path'] or 'index.html'
     for root in (DIST,PUBLIC):
         path=(root/relative).resolve()
-        if path.is_relative_to(root.resolve()) and path.is_file():return web.FileResponse(path)
+        if path.is_relative_to(root.resolve()) and path.is_file():
+            response=web.FileResponse(path)
+            if path.name=='index.html':response.headers['Cache-Control']='no-store'
+            return response
     raise web.HTTPNotFound()
 app=web.Application(client_max_size=4096)
 import sys
