@@ -1,3 +1,4 @@
+import {arenaSummary} from './arena-view';
 import {nativeHeading,nativeButton} from './native-components';
 import type {Snapshot} from '../activity';
 import {assetSlice} from './assets';
@@ -31,7 +32,10 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  const tabRow=()=>{const n=node('nav','gm-tabs');n.setAttribute('aria-label','Choix du menu');body.append(n);return n;};
  const gearName=(key:string,t:number)=>key==='bag'?s.bags[String(t)]?.name:s.tools[String(t)]?.[key];
  function card(parent:HTMLElement,title:string,copy='',icon?:Node){const n=menuCard(parent,title,copy,icon);n.dataset.material=kind==='bank'?'blue':'wood';const material=kind==='bank'?assetSlice('/assets/blank-ui/bank.png',190,450,440,200):navigation.has(kind)?assetSlice('/assets/blank-ui/navigation.png',215,565,230,80):assetSlice('/assets/blank-ui/forge.png',415,450,275,160);material.classList.add('gm-material');material.setAttribute('preserveAspectRatio','none');n.prepend(material);return n;}
- if(navigation.has(kind)){
+ if(kind==='arena'){
+  body.append(arenaSummary(s));const actions=node('div','gm-actions arena-lobby-actions');body.append(actions);
+  for(const label of ['Affronter le champion','Affronter un ami']){const b=action(label,actions);if(b){b.classList.remove('native-art-button');b.replaceChildren(node('span','gm-button-label',label));}}
+ }else if(navigation.has(kind)){
   const choices=old.filter(b=>!backLabels.test(b.getAttribute('aria-label')??''));
   const grid=menuGrid(body,['tavern','market'].includes(kind)?3:2);grid.classList.add('gm-navigation');
   for(const b of choices){
@@ -82,7 +86,7 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  // Existing return actions remain attached to their original handlers.
  for(const b of old)if(!used.has(b))button(b,footer);
  if(notice&&!(kind==='jobs'&&s.pending&&/(?:contrat|boulot) accepté/i.test(notice.textContent??''))){notice.removeAttribute('style');notice.className='gm-notice';if(!modal?.contains(notice))body.append(notice);}
- if(modal){skinBlankModal(modal);panel.append(modal);}const navigationLimits:Record<string,number>={market:840,castle:640,alley:650,tavern:800,arena:660,games:800,thief:680,casino:880,expedition:880};sizeMenu(panel,0,navigationLimits[kind]??(kind==='jobs'&&s.pending?700:1020),navigation.has(kind));
+ if(modal){skinBlankModal(modal);panel.append(modal);}const navigationLimits:Record<string,number>={market:840,castle:640,alley:650,tavern:800,arena:780,games:800,thief:680,casino:880,expedition:880};sizeMenu(panel,0,navigationLimits[kind]??(kind==='jobs'&&s.pending?700:1020),navigation.has(kind)&&kind!=='arena');
 }
 export function skinBlankButton(b:HTMLButtonElement,kind=b.closest<HTMLElement>('#panel')?.dataset.kind??''){const label=b.getAttribute('aria-label')??b.textContent??'';b.removeAttribute('style');b.className='gm-button';b.setAttribute('aria-label',label);b.replaceChildren(node('span','gm-button-label',label));nativeButton(b,kind);}
 export function skinBlankModal(modal:HTMLElement){modal.removeAttribute('style');modal.classList.add('gm-modal');for(const b of Array.from(modal.querySelectorAll<HTMLButtonElement>('button')))skinBlankButton(b);const paper=modal.querySelector<HTMLElement>('.mission-parchment');if(paper){paper.classList.add('gm-dialog','gm-contract');}else{const wrapper=node('section','gm-dialog');wrapper.append(...Array.from(modal.childNodes));modal.append(wrapper);}for(const input of Array.from(modal.querySelectorAll<HTMLInputElement>('input'))){input.removeAttribute('style');input.className='gm-input';}}

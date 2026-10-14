@@ -1,3 +1,4 @@
+import {alleyComponent} from './alley-components';
 const node=(tag:string,cls='')=>{const n=document.createElement(tag);n.className=cls;return n;};
 const path='/assets/menu-components/';
 const headings=new Set('forge jobs castle arena games robber guard drinks podium dashboard techniques expedition tools destinations accessories departure live combat alley thief blackjack roulette russian slots horses'.split(' '));
@@ -12,8 +13,8 @@ const labels:Record<string,string>={
  'Black Jack':'action-casino-0','Roulette':'action-casino-1','Roulette russe':'action-casino-2','Machine à sous':'action-casino-3','Courses':'action-casino-4',
  'Hache':'forge-tab-0','Pioche':'forge-tab-1','Lance':'forge-tab-2','Sac':'forge-tab-3',
 };
-export function nativeHeading(kind:string,title:string){if(!headings.has(kind))return null;const h=node('h2','native-heading');const img=new Image();img.src=path+'title-'+kind+'.webp';img.alt=title;h.append(img);return h;}
-export function nativeButton(button:HTMLButtonElement,kind=''){const label=button.getAttribute('aria-label')??'',name=labels[label];
+export function nativeHeading(kind:string,title:string){if(!headings.has(kind))return null;const h=node('h2','native-heading');if(kind==='alley'){h.setAttribute('aria-label',title);const art=alleyComponent('title')!;art.classList.remove('native-button-art');h.append(art);return h;}const img=new Image();img.src=path+'title-'+kind+'.webp';img.alt=title;h.append(img);return h;}
+export function nativeButton(button:HTMLButtonElement,kind=''){const label=button.getAttribute('aria-label')??'',name=labels[label];if(kind==='alley'){const art=alleyComponent(label);if(art){button.classList.add('native-art-button');button.replaceChildren(art);return true;}}
  if(label==='Diminuer la mise'||label==='Augmenter la mise'){const image=new Image();image.src='/assets/bank-ui/'+(label==='Diminuer la mise'?'minus':'plus')+'.webp';image.alt='';image.className='native-button-art';button.classList.add('native-art-button','native-step-button');button.replaceChildren(image);return true;}
  const tradeTabs:Record<string,string>={Outils:'tab-tools.webp',Consommables:'tab-consumables.webp',Divers:'tab-misc.webp',Bûcheron:'tab-woodcutter.webp',Mineur:'tab-miner.webp',Chasseur:'tab-hunter.webp'};
  const marketHome:Record<string,string>={Acheter:'merchant-buy.webp',Vendre:'merchant-sell.webp',Histoire:'merchant-story.webp',Partir:'merchant-leave.webp'};

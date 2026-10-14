@@ -8,6 +8,7 @@ class GameTests(unittest.TestCase):
  def setUp(self):
   self.tmp=tempfile.TemporaryDirectory();self.a=Activity(self.tmp.name+'/games.sqlite3');(self.uid,self.name),_=self.a.session('');self.s()
   with self.a.conn() as c:c.execute('UPDATE players SET wallet_gold=10000 WHERE user_id=?',(self.uid,))
+  with self.a.conn() as c:c.execute('UPDATE tutorial_progress SET completed=1 WHERE user_id=?',(self.uid,))
  def tearDown(self):self.tmp.cleanup()
  def s(self):return self.a.snapshot(self.uid,self.name)
  def act(self,**b):return self.a.action(self.uid,{'revision':self.s()['play']['revision'],**b})

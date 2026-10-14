@@ -39,7 +39,7 @@ class FakeSession:
  def get(self,url,**kwargs):return FakeResponse(USER) if url.endswith('/users/@me') else FakeResponse({})
 class ProfileHttpTests(unittest.IsolatedAsyncioTestCase):
  async def asyncSetUp(self):
-  self.tmp=tempfile.TemporaryDirectory();self.previous=adapter.SERVICE;adapter.SERVICE=Activity(self.tmp.name+'/http.db');app=web.Application();app.router.add_get('/api/activity',adapter.activity);app.router.add_post('/api/auth/discord',server.auth);app.router.add_get('/api/avatar',server.avatar);self.client=TestClient(TestServer(app));await self.client.start_server();await self.client.get('/api/activity')
+  self.tmp=tempfile.TemporaryDirectory();self.previous=adapter.SERVICE;adapter.SERVICE=Activity(self.tmp.name+'/http.db');app=web.Application();app.router.add_get('/api/activity',adapter.activity);app.router.add_post('/api/activity',adapter.activity);app.router.add_post('/api/auth/discord',server.auth);app.router.add_get('/api/avatar',server.avatar);self.client=TestClient(TestServer(app));await self.client.start_server();await self.client.get('/api/activity')
  async def asyncTearDown(self):await self.client.close();adapter.SERVICE=self.previous;self.tmp.cleanup()
  async def test_oauth_uses_verified_response_not_submitted_avatar(self):
   with patch.dict(os.environ,{'DISCORD_CLIENT_ID':'test','DISCORD_CLIENT_SECRET':'test'}),patch.object(server,'ClientSession',FakeSession):
@@ -53,3 +53,15 @@ class ProfileHttpTests(unittest.IsolatedAsyncioTestCase):
    async def __aenter__(self):raise server.ClientError('offline')
   with patch.dict(os.environ,{'DISCORD_CLIENT_ID':'test','DISCORD_CLIENT_SECRET':'test'}),patch.object(server,'ClientSession',DownSession):self.assertEqual((await self.client.post('/api/auth/discord',json={'code':'test-code'})).status,502)
   self.assertIsNone((await(await self.client.get('/api/activity')).json())['state']['discord'])
+
+ async def test_new_cookie_oauth_recovers_completed_tutorial_without_second_reward(self):
+  with patch.dict(os.environ,{'DISCORD_CLIENT_ID':'test','DISCORD_CLIENT_SECRET':'test'}),patch.object(server,'ClientSession',FakeSession):
+   self.assertEqual((await self.client.post('/api/auth/discord',json={'code':'first'})).status,200)
+   for i in range(5):
+    r=await self.client.post('/api/activity',json={'action':'tutorial_next','step':i},headers={'X-Altherya-Request':'1'});self.assertEqual(r.status,200)
+   r=await self.client.post('/api/activity',json={'action':'tutorial_finish','step':5},headers={'X-Altherya-Request':'1'});self.assertEqual((await r.json())['state']['balance']['wallet'],100)
+   self.client.session.cookie_jar.clear()
+   self.assertFalse((await(await self.client.get('/api/activity')).json())['state']['tutorial']['completed'])
+   self.assertEqual((await self.client.post('/api/auth/discord',json={'code':'second','id':'999999999999999999'})).status,200)
+   s=(await(await self.client.get('/api/activity')).json())['state'];self.assertTrue(s['tutorial']['completed']);self.assertEqual((s['balance']['wallet'],s['xp']),(100,25))
+   r=await self.client.post('/api/activity',json={'action':'tutorial_finish','step':5},headers={'X-Altherya-Request':'1'});self.assertEqual((await r.json())['state']['balance']['wallet'],100)

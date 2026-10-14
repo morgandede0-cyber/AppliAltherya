@@ -1,0 +1,74 @@
+/* Complete original ornaments, with no rectangle cutting the side diamonds. */
+#panel.game-menu .native-heading>svg{display:block;width:100%;height:auto;aspect-ratio:846/174;overflow:visible}
+#panel.game-menu .native-button-art.alley-complete-art{display:block;height:auto!important;overflow:visible;aspect-ratio:var(--component-ratio,511/132)}
+#panel.game-menu .alley-complete-art[data-component="Le braqueur"]{--component-ratio:510/132}
+#panel.game-menu .alley-complete-art[data-component="Le vigile"]{--component-ratio:483/132}
+#panel.game-menu .alley-complete-art[data-component="Panneau de la ruelle"]{--component-ratio:591/132}
+#panel.game-menu .alley-complete-art[data-component="Retour en ville"]{--component-ratio:551/134}
+#panel.game-menu[data-kind=alley] .gm-navigation>.native-choice{flex-basis:290px}
+#panel.game-menu[data-kind=alley] .gm-navigation{gap:16px 12px}
+/* Refined arena surfaces, original ornament and live contents. */
+#panel.game-menu[data-kind=arena] .native-heading{width:min(84%,420px)}
+#panel.game-menu .arena-summary{display:grid;grid-template-columns:135px minmax(0,1fr);gap:12px 24px;align-items:center;padding:20px 26px;border:14px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /14px /0 stretch;background:radial-gradient(ellipse at 18% 0%,#204c6a77,transparent 65%),linear-gradient(130deg,#0e2a44f7,#06172a),url('/assets/menu-components/wood.webp') center/cover;color:#fff0ce;min-width:0;box-shadow:0 8px 24px #0006,inset 0 0 45px #0005;isolation:isolate}
+#panel.game-menu .arena-emblem{width:100%;height:105px;display:grid;place-items:center;background:radial-gradient(ellipse,#d9a84224,transparent 70%);filter:drop-shadow(0 5px 5px #0008)}
+#panel.game-menu .arena-emblem>svg{width:100%;height:100%;object-fit:contain}
+#panel.game-menu .arena-summary-copy{min-width:0;text-align:left}
+#panel.game-menu .arena-summary .arena-kicker{font:11px/1.4 Georgia,serif;letter-spacing:.2em;color:#dcbf7b;margin:0 0 10px}
+#panel.game-menu .arena-summary .arena-champion-title{font:600 34px/1.1 Georgia,serif;color:#ffe6ae;margin:0;text-shadow:0 2px 3px #0008}
+#panel.game-menu .arena-summary-stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%}
+#panel.game-menu .arena-summary-stats .gm-stat{border:1px solid #bb904345;background:linear-gradient(180deg,#254d6a40,#010c1980);padding:11px 8px;gap:7px;align-items:center;text-align:center;box-shadow:inset 0 1px 0 #fff1}
+#panel.game-menu .arena-summary-stats .gm-stat-label{font:12px/1.2 Georgia,serif;color:#d4c39d}
+#panel.game-menu .arena-summary-stats .gm-stat-value{font:600 23px/1.2 Georgia,serif;color:#ffe3a1;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#panel.game-menu .arena-summary .arena-availability{grid-column:1/-1;border-top:1px solid #c89d4540;width:100%;padding-top:12px;font:14px/1.4 Georgia,serif;text-align:center;color:#e4d3b1;margin:0}
+#panel.game-menu .arena-cooldown{display:block;color:#efc779;font:16px/1.4 Georgia,serif;margin-top:6px}
+#panel.game-menu .arena-lobby-actions{gap:14px}
+#panel.game-menu .arena-lobby-actions>.gm-button{width:min(100%,300px)}
+#panel.game-menu .arena-match-dialog .gm-dialog{width:min(740px,100%);max-width:740px;padding:14px;display:flex;flex-direction:column;gap:14px;background:transparent!important;border:0;box-shadow:none}
+#panel.game-menu .arena-match-header{display:flex;justify-content:center;padding:0!important;margin:0!important}
+#panel.game-menu .arena-match-header .native-heading{width:min(100%,340px);margin:0!important}
+#panel.game-menu .arena-wager{border:14px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /14px /0 stretch;background:linear-gradient(100deg,#11080366,#2e180644),url('/assets/menu-components/wood.webp') center/cover;padding:14px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0;box-shadow:0 5px 18px #0005,inset 0 0 30px #0003}
+#panel.game-menu .arena-wager-label{display:flex;align-items:center;justify-content:center;gap:14px;font:18px/1.3 Georgia,serif;color:#ffe3ab}
+#panel.game-menu .arena-wager-label>.gm-input{width:120px!important;max-width:100%;min-width:0!important;margin:0;font:600 25px Georgia,serif;text-align:center;font-variant-numeric:tabular-nums}
+#panel.game-menu .arena-wager-unit{font:14px Georgia,serif;color:#e3c27b}
+#panel.game-menu .gm-dialog .arena-wager-help{font:12px/1.4 Georgia,serif;text-align:center;margin:0;color:#ceba91}
+#panel.game-menu .arena-wager-presets{gap:10px!important;padding:0!important}
+#panel.game-menu .gm-dialog .arena-wager-presets>.gm-button{font-size:14px!important;min-height:48px!important;padding:16px 22px!important;min-width:110px;transition:filter .15s,transform .15s}
+#panel.game-menu .arena-wager-presets>.gm-button[aria-pressed=true]{outline:0;filter:brightness(1.25) drop-shadow(0 0 5px #f0be5e70);transform:translateY(-2px)}
+#panel.game-menu .arena-wager-presets>.gm-button:disabled{filter:grayscale(.6);opacity:.45}
+#panel.game-menu .arena-wager-presets>.gm-button:focus-visible{outline:2px solid #ffdc8c;outline-offset:2px}
+#panel.game-menu .arena-match-dialog .gm-dialog>.art-buttons{margin:0!important;padding:0!important}
+@media(max-width:700px){
+ #panel.game-menu[data-kind=alley] .gm-navigation>.native-choice{flex-basis:calc(50% - 6px)}
+ #panel.game-menu .arena-summary{grid-template-columns:85px minmax(0,1fr);gap:12px;padding:14px 12px;border-width:10px;border-image-width:10px}
+ #panel.game-menu .arena-emblem{height:75px}
+ #panel.game-menu .arena-summary .arena-kicker{font-size:10px;letter-spacing:.12em;margin-bottom:8px}
+ #panel.game-menu .arena-summary .arena-champion-title{font-size:27px}
+ #panel.game-menu .arena-summary-stats{gap:6px}
+ #panel.game-menu .arena-summary-stats .gm-stat{padding:10px 5px;gap:6px}
+ #panel.game-menu .arena-summary-stats .gm-stat-label{font-size:10px;min-height:24px;display:flex;align-items:center;justify-content:center}
+ #panel.game-menu .arena-summary-stats .gm-stat-value{font-size:18px}
+ #panel.game-menu .arena-summary .arena-availability{font-size:12px;padding-top:10px}
+ #panel.game-menu .arena-match-dialog .gm-dialog{padding:4px;gap:12px}
+ #panel.game-menu .arena-match-header .native-heading{width:min(100%,280px)}
+ #panel.game-menu .arena-wager{padding:12px 6px;border-width:10px;border-image-width:10px;gap:10px}
+ #panel.game-menu .arena-wager-label{gap:8px;font-size:15px}
+ #panel.game-menu .arena-wager-label>.gm-input{width:90px!important}
+ #panel.game-menu .arena-wager-unit{font-size:12px}
+ #panel.game-menu .gm-dialog .arena-wager-presets>.gm-button{min-width:85px;padding:16px 14px!important}
+}
+@media(min-width:701px) and (max-height:650px){
+ #panel.game-menu .arena-match-dialog .gm-dialog{gap:10px;padding:6px}
+ #panel.game-menu .arena-match-header .native-heading{width:255px}
+ #panel.game-menu .arena-match-dialog .arena-summary{padding:10px 18px;grid-template-columns:90px minmax(0,1fr);gap:8px 18px}
+ #panel.game-menu .arena-match-dialog .arena-emblem{height:65px}
+ #panel.game-menu .arena-summary .arena-champion-title{font-size:28px}
+ #panel.game-menu .arena-match-dialog .arena-summary-stats .gm-stat{padding:7px;gap:4px}
+ #panel.game-menu .arena-match-dialog .arena-summary .arena-availability{padding-top:8px;font-size:12px}
+ #panel.game-menu .arena-match-dialog .arena-wager{display:grid;grid-template-columns:1fr auto;gap:8px 10px;align-items:center;padding:8px 10px}
+ #panel.game-menu .arena-match-dialog .arena-wager-label{grid-column:1;grid-row:1;justify-content:flex-start;gap:10px;font-size:16px}
+ #panel.game-menu .arena-match-dialog .arena-wager-label>.gm-input{width:90px!important}
+ #panel.game-menu .arena-match-dialog .arena-wager-presets{grid-column:2;grid-row:1;gap:6px!important}
+ #panel.game-menu .arena-match-dialog .arena-wager-presets>.gm-button{min-width:100px;padding:16px 18px!important}
+ #panel.game-menu .arena-match-dialog .arena-wager-help{grid-column:1/-1;grid-row:2}
+}
+@media(prefers-reduced-motion:reduce){#panel.game-menu .arena-wager-presets>.gm-button{transition:none;transform:none}}

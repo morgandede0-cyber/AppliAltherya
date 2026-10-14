@@ -12,7 +12,10 @@ from job_board_engine import JobBoardStore, BoardJob
 from progression import JOB_RARITY_XP
 from aiohttp import web
 from play import Play
-from discord_profile import verified_user,avatar_revision
+from tutorial import ActivityTutorial
+from identity import DiscordIdentity
+from activity_admin import ActivityAdmin
+from discord_profile import avatar_revision
 
 class Activity:
     def __init__(self, path):
@@ -26,6 +29,9 @@ class Activity:
             c.execute('CREATE TABLE IF NOT EXISTS activity_discord(user_id INTEGER PRIMARY KEY,discord_id TEXT NOT NULL,avatar TEXT NOT NULL,username TEXT NOT NULL,display_name TEXT NOT NULL,discriminator TEXT NOT NULL)')
             c.execute('CREATE TABLE IF NOT EXISTS activity_rewards(reference TEXT PRIMARY KEY)')
         self.play=Play(self)
+        self.tutorial=ActivityTutorial(self)
+        self.identities=DiscordIdentity(self)
+        self.admin=ActivityAdmin(self)
     def conn(self):
         c=sqlite3.connect(self.path);c.row_factory=sqlite3.Row;return c
     def session(self, token):
@@ -35,10 +41,8 @@ class Activity:
         token=secrets.token_urlsafe(32); uid=secrets.randbelow(2**52)+1
         with self.conn() as c:c.execute('INSERT INTO activity_sessions VALUES(?,?,?)',(hashlib.sha256(token.encode()).hexdigest(),uid,'Aventurier'))
         return (uid,'Aventurier'),token
-    def bind_discord(self, uid, user):
-        profile=verified_user(user)
-        with self.conn() as c:
-            c.execute('INSERT INTO activity_discord VALUES(?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET discord_id=excluded.discord_id,avatar=excluded.avatar,username=excluded.username,display_name=excluded.display_name,discriminator=excluded.discriminator',(uid,profile['discord_id'],profile['avatar'],profile['username'],profile['display_name'],profile['discriminator']))
+    def bind_discord(self, uid, user, token=None):
+        return self.identities.bind(uid,user,token)
     def discord_profile(self, uid):
         with self.conn() as c:row=c.execute('SELECT * FROM activity_discord WHERE user_id=?',(uid,)).fetchone()
         return dict(row) if row else None
@@ -78,15 +82,18 @@ class Activity:
         public_discord=None if not discord else dict(username=discord['username'],display_name=discord['display_name'],avatar_url='/api/avatar?v='+avatar_revision(discord))
         history_inventory=self.story.inventory(uid)
         owned_story_items=[dict(name=n,quantity=q) for n,q in history_inventory.items() if n in STORY_ITEM_PRICES]
-        return dict(owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
+        return dict(admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
     def action(self,uid,body):
         action=body.get('action'); key=body.get('key','')
         if not isinstance(action,str) or not isinstance(key,str):raise ValueError('Action invalide.')
+        if action in ('tutorial_next','tutorial_finish','tutorial_replay','tutorial_cancel'):return self.tutorial.action(uid,body)
         if action=='name':
             name=body.get('name')
             if not isinstance(name,str) or not 1<=len(name.strip())<=24:raise ValueError('Nom invalide.')
             with self.conn() as c:c.execute('UPDATE activity_sessions SET name=? WHERE user_id=?',(name.strip(),uid))
             return 'Nom enregistré.'
+        if self.tutorial.discord_required() and not self.discord_profile(uid):raise ValueError('Connexion Discord requise pour jouer.')
+        if not self.tutorial.state(uid)['completed']:raise ValueError('Terminez le tutoriel et récupérez votre récompense avant de jouer.')
         if action in ('deposit','withdraw','sell'):
             amount=body.get('amount')
             if type(amount) is not int or not 1<=amount<=1000000000:raise ValueError('Indiquez une quantité entière positive.')

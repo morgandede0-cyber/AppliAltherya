@@ -25,7 +25,7 @@ async def auth(request):
         return web.json_response({'error':'Connexion Discord indisponible'},status=502)
     service=get_service()
     (uid,_),token=service.session(request.cookies.get('altherya_test',''))
-    try:service.bind_discord(uid,user)
+    try:service.bind_discord(uid,user,token or request.cookies.get('altherya_test',''))
     except ValueError:return web.json_response({'error':'Profil Discord invalide'},status=502)
     response=web.json_response({'access_token':data['access_token']},headers={'Cache-Control':'no-store'})
     if token:response.set_cookie('altherya_test',token,httponly=True,samesite='Strict',secure=request.secure,max_age=31536000)
@@ -35,8 +35,23 @@ def get_service():
     if adapter.SERVICE is None:adapter.SERVICE=adapter.Activity(os.getenv('ACTIVITY_DB',str(Path(__file__).resolve().parents[2]/'data'/'activity.sqlite3')))
     return adapter.SERVICE
 
+async def admin(request):
+    service=get_service();uid=service.session_uid(request.cookies.get('altherya_test',''))
+    try:
+        service.admin.require(uid)
+        if request.headers.get('X-Altherya-Request')!='1':raise web.HTTPForbidden()
+        body=await request.json()
+        if not isinstance(body,dict):raise ValueError('Requête invalide.')
+        data=service.admin.handle(uid,body)
+        return web.json_response(data,headers={'Cache-Control':'no-store'})
+    except PermissionError:return web.json_response({'error':'Accès administrateur refusé.'},status=403,headers={'Cache-Control':'no-store'})
+    except (ValueError,TypeError):return web.json_response({'error':'Requête invalide ou données modifiées. Actualisez la fiche.'},status=400,headers={'Cache-Control':'no-store'})
+
 async def avatar(request):
     service=get_service();uid=service.session_uid(request.cookies.get('altherya_test',''))
+    if 'player' in request.query:
+        try:service.admin.require(uid);uid=service.admin.target(request.query['player'])
+        except (PermissionError,ValueError):raise web.HTTPForbidden()
     profile=service.discord_profile(uid) if uid else None
     if not profile:raise web.HTTPNotFound()
     try:
@@ -63,5 +78,5 @@ import activity as adapter
 from activity import activity
 from discord_profile import avatar_cdn
 app.router.add_get('/api/activity',activity);app.router.add_post('/api/activity',activity)
-app.router.add_get('/api/avatar',avatar);app.router.add_get('/api/health',health);app.router.add_post('/api/auth/discord',auth);app.router.add_get('/{path:.*}',static)
+app.router.add_post('/api/admin',admin);app.router.add_get('/api/avatar',avatar);app.router.add_get('/api/health',health);app.router.add_post('/api/auth/discord',auth);app.router.add_get('/{path:.*}',static)
 if __name__=='__main__':web.run_app(app,host='0.0.0.0',port=int(os.getenv('PORT','8080')))
