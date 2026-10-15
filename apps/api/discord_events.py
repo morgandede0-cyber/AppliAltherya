@@ -101,7 +101,7 @@ class DiscordEvents:
 
     def admin_event(self,c,rid,actor,target,field,before,after,reason):
         def name(did):
-            r=c.execute('SELECT display_name FROM activity_discord WHERE discord_id=? LIMIT 1',(did,)).fetchone()
+            r=c.execute('SELECT d.display_name FROM activity_discord_accounts a JOIN activity_discord d ON d.user_id=a.user_id WHERE a.discord_id=?',(did,)).fetchone()
             return safe(r[0]) if r else 'Joueur'
         self.enqueue(c,'admin:'+rid,'logs','🛡️ Modification administrateur',
           f'**{name(actor)}** (`{actor}`) → **{name(target)}** (`{target}`)\n{safe(field)} : {before} → {after}\nMotif : {safe(reason)}')
@@ -118,7 +118,7 @@ class DiscordEvents:
             if installed>=end:return
             key='gazette:'+day.isoformat()
             if c.execute('SELECT 1 FROM activity_discord_outbox WHERE event_key=?',(key,)).fetchone():return
-            rows=c.execute('SELECT discord_id,name,SUM(net) net,COUNT(*) games FROM activity_discord_game_results WHERE created>=? AND created<? GROUP BY discord_id ORDER BY net DESC',(start,end)).fetchall()
+            rows=c.execute('SELECT r.discord_id,COALESCE((SELECT d.display_name FROM activity_discord_accounts a JOIN activity_discord d ON d.user_id=a.user_id WHERE a.discord_id=r.discord_id),MAX(r.name)) name,SUM(r.net) net,COUNT(*) games FROM activity_discord_game_results r WHERE r.created>=? AND r.created<? GROUP BY r.discord_id ORDER BY net DESC',(start,end)).fetchall()
             top=c.execute('SELECT d.display_name,p.wallet_gold+p.bank_gold total FROM activity_discord_accounts a JOIN activity_discord d ON d.user_id=a.user_id JOIN players p ON p.user_id=a.user_id JOIN activity_tutorial_revision t ON t.user_id=a.user_id WHERE t.finished=1 ORDER BY total DESC LIMIT 1').fetchone()
             lines=[f'**Édition du {day.strftime("%d/%m/%Y")}**',f'Bilan des jeux du {(day-timedelta(days=1)).strftime("%d/%m/%Y")} (heure de Paris).']
             if top:lines.append(f'👑 Plus grande fortune actuelle : **{safe(top["display_name"])}** — {top["total"]} Gold.')

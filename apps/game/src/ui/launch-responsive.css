@@ -1,0 +1,57 @@
+/* Final viewport layer: preserve supplied signs and adapt their layout. */
+#game{background:#08111f;overflow:hidden}
+#game::before{content:'';position:absolute;inset:-25px;background:linear-gradient(#06112544,#06112588),var(--scene-background,url('/assets/scenes/hub-clean.webp')) center/cover;filter:blur(16px);opacity:.75;pointer-events:none}
+#scene-stage{flex-shrink:0;max-height:none;max-width:100%;margin-top:46px}
+#scene-stage>img{object-fit:contain}
+#hud{top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));max-width:none;width:fit-content;max-height:60px;display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap;padding:9px 16px;border:1px solid #c9a05299;border-radius:8px;background:linear-gradient(120deg,#10243df0,#081424ee);box-shadow:0 4px 22px #0005;font-size:13px;line-height:1.25}
+.hud-name{color:#ffe2a3;font-weight:bold;max-width:min(40vw,360px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hud-details{display:flex;gap:12px;align-items:center;flex-wrap:wrap;color:#f6e9cc;font-size:12px}.hud-xp{color:#b8cfdf}.hud-bank{color:#c8b88f}
+#objective{top:max(12px,env(safe-area-inset-top));left:auto;right:16px;max-width:30vw;margin:0;padding:10px 12px;font-size:12px;background:#081422cc;border-radius:6px;color:#e7d4a9}
+body.menu-open #hud{max-width:calc(100vw - 24px)}
+body.portrait-view #scene-stage{width:100%!important;height:100%!important;aspect-ratio:auto;margin:0}
+body.portrait-view #scene-stage>img{object-fit:cover;object-position:50% 35%}
+body.portrait-view #objective{top:76px;left:16px;right:auto;max-width:calc(100vw - 32px);background:none;text-shadow:0 2px 5px #000}
+body.portrait-view #hud{width:calc(100% - 24px);max-height:none;gap:5px;padding:10px 13px;display:grid;grid-template-columns:1fr}
+body.portrait-view .hud-name{max-width:100%;font-size:14px}
+body.portrait-view .hud-details{font-size:11px;gap:6px 12px}
+body.portrait-view .hub-toolbar{inset:auto 0 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 9px;align-content:end;padding:48px max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom));background:linear-gradient(transparent,#061323e8 12%,#061323f7);pointer-events:none}
+body.portrait-view .hub-toolbar>.hotspot{position:relative!important;inset:auto!important;transform:none!important;width:100%!important;height:clamp(49px,7.2dvh,78px)!important;min-width:0;min-height:44px;pointer-events:auto}
+body.portrait-view .hub-toolbar>.hotspot:last-child{grid-column:1/-1;width:calc(50% - 5px)!important;justify-self:center}
+body.portrait-view .hub-toolbar>.hotspot:focus-visible{outline:2px solid #ffe4a1;outline-offset:1px}
+body.portrait-view .admin-hub-button{top:max(110px,calc(100% - clamp(294px,43.2dvh,468px) - 130px))!important;left:calc(50% - 62px)!important;width:124px!important;height:44px!important;min-height:44px!important;font-size:14px!important}
+body.portrait-view .admin-hub-button .gm-button-label{font-size:14px}
+body.launching #hud,body.launching #objective,body.launching #scene-stage{visibility:hidden}
+#launch-screen{position:fixed;inset:0;z-index:20;display:grid;place-items:center;overflow:auto;padding:20px max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom));background:#0a182c;isolation:isolate}
+#launch-screen::before{content:'';position:absolute;inset:0;z-index:-2;background:linear-gradient(#0616324d,#07142ca6),url('/assets/scenes/hub-clean.webp') center/cover;filter:blur(5px);transform:scale(1.03)}
+#launch-screen::after{content:'';position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at center,transparent 10%,#0310248c);pointer-events:none}
+.launch-content{width:min(850px,85vw);display:flex;align-items:center;flex-direction:column;text-align:center;margin:auto;gap:14px}
+.launch-logo{display:block;width:min(100%,800px);height:min(57dvh,550px);object-fit:contain;filter:drop-shadow(0 10px 20px #0008)}
+.launch-meter{position:relative;width:100%;height:30px;flex-shrink:0;padding:4px;border:2px solid #e2b65e;border-radius:30px;background:#06152bea;box-shadow:0 0 0 3px #251e13,0 0 0 4px #b38a4d,inset 0 2px 8px #000,0 0 26px #378dff30;overflow:hidden}
+.launch-fill{height:100%;border-radius:20px;background:linear-gradient(#9ee6ff,#2b99f9 45%,#1662cf 65%,#6bc9ff);box-shadow:0 0 15px #5fcaff;transition:width .35s ease;position:relative;min-width:0}
+.launch-fill::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(100deg,transparent 25%,#ffffff80 50%,transparent 75%);background-size:250% 100%;animation:launch-shimmer 2.4s linear infinite}
+.launch-value{position:absolute;inset:0;display:grid;place-items:center;color:#fff3ce;font:bold 14px Georgia,serif;text-shadow:0 1px 4px #000,0 0 4px #000}
+.launch-message{font-size:clamp(14px,1.7vw,21px);line-height:1.45;color:#ffedc5;text-shadow:0 2px 5px #000;margin:4px 0;max-width:100%;overflow-wrap:anywhere;min-height:1.5em}
+.launch-steps{list-style:none;padding:0;margin:4px 0;display:flex;justify-content:center;gap:clamp(24px,6vw,100px);width:100%}
+.launch-steps li{display:grid;justify-items:center;gap:7px;font-size:14px;color:#c0b18e;position:relative}
+.launch-step-icon{display:grid;place-items:center;width:48px;height:48px;border:1px solid #aa8650;border-radius:50%;background:linear-gradient(#16365d,#08182d);box-shadow:inset 0 0 0 3px #07162b;font-size:27px;color:#e6c985}
+.launch-steps li[data-status=active]{color:#fff0c8}.launch-steps li[data-status=active] .launch-step-icon{border-color:#a4e1ff;box-shadow:0 0 18px #45a5ff99,inset 0 0 0 3px #133b64;color:#e3f6ff}
+.launch-steps li[data-status=done] .launch-step-icon{color:#ffe49c;border-color:#f3ca70}.launch-steps li[data-status=done]::after{content:'✓';position:absolute;right:-3px;top:-4px;width:19px;height:19px;font-size:13px;line-height:18px;background:#153148;border:1px solid #e1bd72;border-radius:50%;color:#ffe09e}
+.launch-retry{min-height:44px;padding:10px 30px;background:linear-gradient(#1c4777,#0c213e);border:1px solid #dfb968;border-radius:6px;color:#ffe5ad;font-size:16px;box-shadow:0 0 15px #0005}.launch-retry[hidden]{display:none}.launch-retry:focus-visible{outline:2px solid #c8ecff;outline-offset:4px}
+.launch-error .launch-fill::after{animation:none}.launch-error .launch-message{color:#ffe1b4}
+@keyframes launch-shimmer{from{background-position:150% 0}to{background-position:-100% 0}}
+@media(max-aspect-ratio:114/100){.launch-content{width:min(92vw,650px);gap:20px}.launch-logo{height:min(43dvh,470px)}.launch-steps{gap:clamp(20px,8vw,60px)}.launch-meter{height:28px}.launch-message{font-size:16px}.launch-steps li{font-size:13px}}
+@media(max-height:500px) and (min-aspect-ratio:115/100){#scene-stage{margin-top:36px}#hud{font-size:11px;padding:6px 10px;gap:10px}.hud-details{font-size:10px;gap:10px}#objective{display:none}.launch-content{width:min(620px,76vw);gap:7px}.launch-logo{height:49dvh}.launch-meter{height:25px}.launch-message{font-size:14px;margin:2px 0}.launch-step-icon{width:30px;height:30px;font-size:19px}.launch-steps li{font-size:11px;gap:3px}.launch-steps{margin:0}.launch-retry{min-height:36px;padding:6px 20px}}
+@media(prefers-reduced-motion:reduce){.launch-fill{transition:none}.launch-fill::after{animation:none}}
+
+.launch-step-icon svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
+@media(max-height:500px) and (min-aspect-ratio:115/100){.launch-step-icon svg{width:18px;height:18px}}
+@media(min-aspect-ratio:115/100) and (max-width:1100px){#objective{display:none}}
+/* Short landscape windows use a compact dock with real 44px touch targets. */
+@media(max-height:500px) and (min-aspect-ratio:115/100){
+ #scene-stage{width:100%!important;height:100%!important;margin:0;aspect-ratio:auto}
+ #scene-stage>img{object-fit:cover;object-position:50% 40%}
+ .hub-toolbar{inset:auto 0 0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px 6px;padding:30px max(12px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom));background:linear-gradient(transparent,#061323ef 28%);pointer-events:none}
+ .hub-toolbar>.hotspot{position:relative!important;inset:auto!important;grid-column:span 2;width:100%!important;height:48px!important;min-width:0;min-height:44px;pointer-events:auto;transform:none!important}
+ .hub-toolbar>.hotspot:nth-child(7){grid-column:2/span 2}
+ .admin-hub-button{left:calc(50% - 55px)!important;top:38%!important;width:110px!important;height:44px!important;min-height:44px!important}
+ .admin-hub-button .gm-button-label{font-size:14px}
+}

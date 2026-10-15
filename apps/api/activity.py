@@ -18,6 +18,7 @@ from identity import DiscordIdentity
 from activity_admin import ActivityAdmin
 from discord_profile import avatar_revision
 from discord_events import DiscordEvents
+from guild_names import GuildNames
 
 class Activity:
     def __init__(self, path):
@@ -35,6 +36,7 @@ class Activity:
         self.identities=DiscordIdentity(self)
         self.admin=ActivityAdmin(self)
         self.notifications=DiscordEvents(self)
+        self.guild_names=GuildNames(self)
     def conn(self):
         c=sqlite3.connect(self.path);c.row_factory=sqlite3.Row;return c
     def session(self, token):

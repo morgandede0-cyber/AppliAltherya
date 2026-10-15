@@ -27,8 +27,9 @@ async def auth(request):
         return web.json_response({'error':'Connexion Discord indisponible'},status=502)
     service=get_service()
     (uid,_),token=service.session(request.cookies.get('altherya_test',''))
-    try:service.bind_discord(uid,user,token or request.cookies.get('altherya_test',''))
+    try:target=service.bind_discord(uid,user,token or request.cookies.get('altherya_test',''))
     except ValueError:return web.json_response({'error':'Profil Discord invalide'},status=502)
+    await service.guild_names.login(target,user)
     response=web.json_response({'access_token':data['access_token']},headers={'Cache-Control':'no-store'})
     set_activity_cookie(response,request,token or request.cookies.get('altherya_test',''))
     return response
@@ -84,9 +85,11 @@ from activity import activity
 from discord_profile import avatar_cdn
 from discord_events import discord_lifecycle
 from discord_portal import portal_lifecycle
+from guild_names import names_lifecycle
 app['discord_service_factory']=get_service
 app.cleanup_ctx.append(discord_lifecycle)
 app.cleanup_ctx.append(portal_lifecycle)
+app.cleanup_ctx.append(names_lifecycle)
 app.router.add_get('/api/activity',activity);app.router.add_post('/api/activity',activity)
 app.router.add_post('/api/admin',admin);app.router.add_get('/api/avatar',avatar);app.router.add_get('/api/health',health);app.router.add_post('/api/auth/discord',auth);app.router.add_get('/{path:.*}',static)
 if __name__=='__main__':web.run_app(app,host='0.0.0.0',port=int(os.getenv('PORT','8080')))

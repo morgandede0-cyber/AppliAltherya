@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {Window} from 'happy-dom';
+import {launchScreen,preloadLaunchAssets} from '../src/ui/launch-screen';
+function dom(){const w=new Window();Object.assign(globalThis,{window:w,document:w.document});return w;}
+test('startup progress never decreases and failure exposes a working retry without dismissing the screen',()=>{const w=dom();let retried=0;const screen=launchScreen(()=>retried++);screen.update(65,'Monde',2);screen.update(35,'Vérification',1);assert.equal(document.querySelector('[role=progressbar]')?.getAttribute('aria-valuenow'),'65');screen.error('Connexion refusée');assert.equal(document.querySelector('[role=alert]')?.textContent,'Connexion refusée');(document.querySelector('.launch-retry') as HTMLButtonElement).click();assert.equal(retried,1);screen.destroy();assert.equal(document.querySelector('#launch-screen'),null);assert.ok(!document.body.classList.contains('launching'));w.happyDOM.abort();});
+test('missing asset prevents completion and late asset responses cannot overwrite the failure or a retry',async()=>{const w=dom(),images:{onload:()=>void;onerror:()=>void;src:string}[]=[];class FakeImage{onload=()=>{};onerror=()=>{};src='';constructor(){images.push(this);}}Object.assign(globalThis,{Image:FakeImage});const progress:number[]=[];const pending=preloadLaunchAssets(['one','two','three'],done=>progress.push(done));images[0].onload();images[1].onerror();await assert.rejects(pending,/décor/);images[2].onload();assert.deepEqual(progress,[1]);w.happyDOM.abort();});

@@ -33,7 +33,11 @@ class Play:
  def save(self,uid,p):
   with self.a.conn() as c:c.execute('UPDATE activity_play SET revision=revision+1,payload=? WHERE user_id=?',(json.dumps(p),uid))
  def public(self,uid):
-  rev,p=self.read(uid);p=dict(p);p.pop('deck',None);p.pop('danger',None);p.pop('battle',None)
+  rev,p=self.read(uid);p=dict(p)
+  profile=self.a.discord_profile(uid)
+  if profile and isinstance(p.get('fighters'),list) and p['fighters']:
+   p['fighters']=[{**p['fighters'][0],'name':profile['display_name']},*p['fighters'][1:]]
+  p.pop('deck',None);p.pop('danger',None);p.pop('battle',None)
   if p.get('kind')=='blackjack' and p.get('status')=='active':p['dealer']=[p['dealer'][0],{'hidden':True}];p['dealer_total']=total([p['dealer'][0]])
   return {**p,'revision':rev}
  def horse_odds(self,uid,renew=False):
