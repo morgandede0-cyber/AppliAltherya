@@ -59,4 +59,5 @@ class ActivityAdmin:
     if after>before:self.a.castle._queue_levelups(c,uid,before,after)
     self.a.castle._sync_level(c,uid)
    c.execute('INSERT INTO activity_admin_log(request_id,actor,target,field,before_value,after_value,reason) VALUES(?,?,?,?,?,?,?)',(rid,identity,target,field,before,after,reason.strip()))
+   self.a.notifications.admin_event(c,rid,identity,target,field,before,after,reason.strip())
   return dict(message='Modification enregistrée.')

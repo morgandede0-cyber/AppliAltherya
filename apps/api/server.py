@@ -82,6 +82,11 @@ sys.path.insert(0,str(Path(__file__).resolve().parent))
 import activity as adapter
 from activity import activity
 from discord_profile import avatar_cdn
+from discord_events import discord_lifecycle
+from discord_portal import portal_lifecycle
+app['discord_service_factory']=get_service
+app.cleanup_ctx.append(discord_lifecycle)
+app.cleanup_ctx.append(portal_lifecycle)
 app.router.add_get('/api/activity',activity);app.router.add_post('/api/activity',activity)
 app.router.add_post('/api/admin',admin);app.router.add_get('/api/avatar',avatar);app.router.add_get('/api/health',health);app.router.add_post('/api/auth/discord',auth);app.router.add_get('/{path:.*}',static)
 if __name__=='__main__':web.run_app(app,host='0.0.0.0',port=int(os.getenv('PORT','8080')))

@@ -17,6 +17,7 @@ from tutorial import ActivityTutorial
 from identity import DiscordIdentity
 from activity_admin import ActivityAdmin
 from discord_profile import avatar_revision
+from discord_events import DiscordEvents
 
 class Activity:
     def __init__(self, path):
@@ -33,6 +34,7 @@ class Activity:
         self.tutorial=ActivityTutorial(self)
         self.identities=DiscordIdentity(self)
         self.admin=ActivityAdmin(self)
+        self.notifications=DiscordEvents(self)
     def conn(self):
         c=sqlite3.connect(self.path);c.row_factory=sqlite3.Row;return c
     def session(self, token):
@@ -86,6 +88,13 @@ class Activity:
         owned_story_items=[dict(name=n,quantity=q) for n,q in history_inventory.items() if n in STORY_ITEM_PRICES]
         return dict(admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
     def action(self,uid,body):
+        profile=self.discord_profile(uid)
+        name=profile["display_name"] if profile else "Aventurier"
+        if profile:self.notifications.observe(uid,self.snapshot(uid,name))
+        result=self._action(uid,body)
+        if profile:self.notifications.observe(uid,self.snapshot(uid,name),body.get("action"),result)
+        return result
+    def _action(self,uid,body):
         action=body.get('action'); key=body.get('key','')
         if not isinstance(action,str) or not isinstance(key,str):raise ValueError('Action invalide.')
         if action in ('tutorial_next','tutorial_previous','tutorial_finish','tutorial_replay','tutorial_cancel'):return self.tutorial.action(uid,body)
@@ -157,6 +166,8 @@ async def activity(request):
             message=SERVICE.action(uid,body)
             with SERVICE.conn() as c:name=c.execute('SELECT name FROM activity_sessions WHERE user_id=?',(uid,)).fetchone()[0]
         except (ValueError,TypeError) as e:return web.json_response({'error':str(e)},status=400)
-    response=web.json_response({'state':SERVICE.snapshot(uid,name),'message':message},headers={'Cache-Control':'no-store'})
+    state=SERVICE.snapshot(uid,name)
+    SERVICE.notifications.observe(uid,state)
+    response=web.json_response({'state':state,'message':message},headers={'Cache-Control':'no-store'})
     set_activity_cookie(response,request,token or request.cookies.get('altherya_test',''))
     return response
