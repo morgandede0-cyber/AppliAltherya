@@ -41,3 +41,11 @@ body.launching #hud,body.launching #objective,body.launching #scene-stage{visibi
 /* Decorative hub effects never cover the supplied interactive signs. */
 #scene-stage[data-scene=hub]>.hub-toolbar{z-index:2}
 #scene-stage[data-scene=hub]>.admin-hub-button{z-index:3}
+
+/* Small motion control stays in the HUD and never displaces map signs. */
+#hud .hud-identity{display:flex;align-items:center;gap:10px;min-width:0}
+#hub-motion-toggle{flex:0 0 auto;padding:4px 8px;min-height:28px;font:inherit;font-size:11px;color:#efd799;background:rgba(22,16,10,.65);border:1px solid #937748;border-radius:5px;cursor:pointer;white-space:nowrap}
+#hub-motion-toggle:hover{background:rgba(93,65,27,.8)}
+#hub-motion-toggle:focus-visible{outline:2px solid #efd799;outline-offset:2px}
+body.menu-open #hub-motion-toggle{visibility:hidden}
+@media(max-width:480px){#hud .hud-identity{gap:6px}#hub-motion-toggle{font-size:10px;padding:3px 6px}}
