@@ -37,3 +37,7 @@ body.launching #hud,body.launching #objective,body.launching #scene-stage{visibi
 .launch-step-icon svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
 @media(max-height:500px) and (min-aspect-ratio:115/100){.launch-step-icon svg{width:18px;height:18px}}
 @media(min-aspect-ratio:115/100) and (max-width:1100px){#objective{display:none}}
+
+/* Decorative hub effects never cover the supplied interactive signs. */
+#scene-stage[data-scene=hub]>.hub-toolbar{z-index:2}
+#scene-stage[data-scene=hub]>.admin-hub-button{z-index:3}
