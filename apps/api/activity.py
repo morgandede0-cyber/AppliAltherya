@@ -1,9 +1,12 @@
-"""Isolated Activity test adapter. Original bot engines remain unchanged."""
+"""Activity adapter: server-owned economy and atomic durable actions."""
 from activity_cookie import set_activity_cookie
-import os, sys, secrets, sqlite3, hashlib, time, json
+import os, sys, secrets, hashlib, time, json
+from save_safety import backup
 from pathlib import Path
 from dataclasses import asdict
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'bot' / 'tourwork'))
+from sqlite_store import connect as local_connect, atomic
+from economy_balance import DAILY_GOLD, BALANCE_VERSION
 from economy import Economy
 from castle_engine import CastleStore
 from expedition_engine import ExpeditionStore, STARTER_GEAR, EXPEDITIONS, RESOURCE_SELL_PRICES, TOOL_LEVELS, BAG_LEVELS, UPGRADE_RECIPES, BAG_UPGRADE_RECIPES, EXPEDITION_OBJECTS
@@ -26,12 +29,15 @@ class Activity:
         if os.getenv('ECONOMY_DATABASE_URL','').strip():
             raise RuntimeError('Le mode de test Activity exige une économie locale séparée. Retirez ECONOMY_DATABASE_URL de ce service.')
         self.path=Path(path)
+        self.path.parent.mkdir(parents=True,exist_ok=True)
+        backup(self.path)
         self.economy=Economy(path); self.expeditions=ExpeditionStore(path); self.castle=CastleStore(path)
         self.story=StoryStore(path);self.jobs=JobBoardStore(path)
         with self.conn() as c:
             c.execute('CREATE TABLE IF NOT EXISTS activity_sessions(token TEXT PRIMARY KEY,user_id INTEGER UNIQUE,name TEXT NOT NULL)')
             c.execute('CREATE TABLE IF NOT EXISTS activity_discord(user_id INTEGER PRIMARY KEY,discord_id TEXT NOT NULL,avatar TEXT NOT NULL,username TEXT NOT NULL,display_name TEXT NOT NULL,discriminator TEXT NOT NULL)')
             c.execute('CREATE TABLE IF NOT EXISTS activity_rewards(reference TEXT PRIMARY KEY)')
+            c.execute('CREATE TABLE IF NOT EXISTS activity_operations(user_id INTEGER NOT NULL,request_id TEXT NOT NULL,fingerprint TEXT NOT NULL,message TEXT NOT NULL,created_at REAL NOT NULL,PRIMARY KEY(user_id,request_id))')
         self.play=Play(self)
         self.tutorial=ActivityTutorial(self)
         self.identities=DiscordIdentity(self)
@@ -40,7 +46,7 @@ class Activity:
         self.guild_names=GuildNames(self)
         self.campaign=Campaign(self)
     def conn(self):
-        c=sqlite3.connect(self.path);c.row_factory=sqlite3.Row;return c
+        return local_connect(self.path)
     def session(self, token):
         digest=hashlib.sha256(token.encode()).hexdigest() if token else ''
         with self.conn() as c: row=c.execute('SELECT user_id,name FROM activity_sessions WHERE token=?',(digest,)).fetchone()
@@ -90,12 +96,29 @@ class Activity:
         public_discord=None if not discord else dict(username=discord['username'],display_name=discord['display_name'],avatar_url='/api/avatar?v='+avatar_revision(discord))
         history_inventory=self.story.inventory(uid)
         owned_story_items=[dict(name=n,quantity=q) for n,q in history_inventory.items() if n in STORY_ITEM_PRICES]
-        return dict(campaign=self.campaign.snapshot(uid),admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
+        state=dict(save_owner=hashlib.sha256(f'activity:{uid}'.encode()).hexdigest()[:24],economy_version=BALANCE_VERSION,daily_reward={'gold':DAILY_GOLD,'xp':20},campaign=self.campaign.snapshot(uid),admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
+        from objectives import objectives
+        state['objectives']=objectives(state)
+        return state
     def action(self,uid,body):
         profile=self.discord_profile(uid)
         name=profile["display_name"] if profile else "Aventurier"
         if profile:self.notifications.observe(uid,self.snapshot(uid,name))
-        result=self._action(uid,body)
+        owner=body.get('save_owner')
+        if owner is not None and owner!=hashlib.sha256(f'activity:{uid}'.encode()).hexdigest()[:24]:raise ValueError('Le personnage connecté a changé. Vérifiez votre compte avant de recommencer.')
+        request_id=body.get('request_id')
+        if request_id is not None and (not isinstance(request_id,str) or not 16<=len(request_id)<=80 or not all(ch.isalnum() or ch in '-_' for ch in request_id)):
+            raise ValueError('Identifiant de sauvegarde invalide.')
+        payload={k:v for k,v in body.items() if k not in ('request_id','save_owner')}
+        fingerprint=hashlib.sha256(json.dumps(payload,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+        with atomic(self.path) as c:
+            previous=c.execute('SELECT fingerprint,message FROM activity_operations WHERE user_id=? AND request_id=?',(uid,request_id)).fetchone() if request_id else None
+            if previous:
+                if previous['fingerprint']!=fingerprint:raise ValueError('Cette opération a déjà été utilisée pour une autre action.')
+                result=previous['message']
+            else:
+                result=self._action(uid,payload)
+                if request_id:c.execute('INSERT INTO activity_operations VALUES(?,?,?,?,?)',(uid,request_id,fingerprint,result,time.time()))
         if profile:self.notifications.observe(uid,self.snapshot(uid,name),body.get("action"),result)
         return result
     def _action(self,uid,body):

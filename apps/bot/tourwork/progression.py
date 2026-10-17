@@ -27,10 +27,8 @@ def level_from_xp(xp: int):
 FORGE_LEVEL_REQUIREMENTS = {2: 5, 3: 10, 4: 18, 5: 28}
 
 # Coûts Gold : outils / sac. Les matériaux restent la ressource principale.
-FORGE_GOLD_COSTS = {
-    "tool": {2: 150, 3: 350, 4: 700, 5: 1400},
-    "bag":  {2: 200, 3: 450, 4: 900, 5: 1800},
-}
+from economy_balance import FORGE_COSTS
+FORGE_GOLD_COSTS = FORGE_COSTS
 
 # XP mesurée, pensée pour éviter le farm rapide.
 XP_REWARDS = {

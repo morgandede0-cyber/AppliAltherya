@@ -7,11 +7,12 @@ from pathlib import Path
 from progression import level_from_xp, XP_REWARDS
 from admin_engine import event_multiplier
 
-DAILY_REWARD = 200
+from economy_balance import DAILY_GOLD, DAILY_QUEST_GOLD
+DAILY_REWARD = DAILY_GOLD
 DAILY_XP = 20
 
 # Objectifs classiques disponibles dès Legacy, sans lieu avancé ni amélioration.
-QUEST_GLOBAL_GOLD = 400
+QUEST_GLOBAL_GOLD = DAILY_QUEST_GOLD
 QUEST_GLOBAL_XP = 75
 QUESTS = {
     'combat': ('Participer à un combat d’arène', 1, 'combat'),

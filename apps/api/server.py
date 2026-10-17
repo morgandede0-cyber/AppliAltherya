@@ -87,6 +87,8 @@ from discord_events import discord_lifecycle
 from discord_portal import portal_lifecycle
 from guild_names import names_lifecycle
 app['discord_service_factory']=get_service
+from save_safety import save_lifecycle
+app.cleanup_ctx.append(save_lifecycle)
 app.cleanup_ctx.append(discord_lifecycle)
 app.cleanup_ctx.append(portal_lifecycle)
 app.cleanup_ctx.append(names_lifecycle)

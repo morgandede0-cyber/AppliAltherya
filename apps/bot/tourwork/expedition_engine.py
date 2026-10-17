@@ -55,11 +55,12 @@ TOOL_META = {
     "hands": {"emoji": "👐", "label": "Mains nues", "family": "foraging"},
 }
 
+from economy_balance import STARTER_PRICES
 STARTER_GEAR = {
-    "pickaxe": {"name": "Pioche en bois", "price": 400},
-    "axe": {"name": "Hache en bois", "price": 400},
-    "spear": {"name": "Lance en bois", "price": 400},
-    "bag": {"name": "Sac de fortune", "price": 400},
+    "pickaxe": {"name": "Pioche en bois", "price": STARTER_PRICES['pickaxe']},
+    "axe": {"name": "Hache en bois", "price": STARTER_PRICES['axe']},
+    "spear": {"name": "Lance en bois", "price": STARTER_PRICES['spear']},
+    "bag": {"name": "Sac de fortune", "price": STARTER_PRICES['bag']},
 }
 
 # Prix de revente volontairement modérés : les matériaux de Forge ont plus de valeur

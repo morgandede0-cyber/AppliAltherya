@@ -12,12 +12,12 @@ class ActivityTests(unittest.TestCase):
  def snapshot(self):return self.a.snapshot(self.uid,self.name)
  def act(self,**body):return self.a.action(self.uid,body)
  def test_daily_only_once_and_session_survives_restart(self):
-  self.act(action='daily');self.act(action='daily');s=self.snapshot();self.assertEqual(s['balance']['wallet'],200);self.assertEqual(s['xp'],20)
+  self.act(action='daily');self.act(action='daily');s=self.snapshot();self.assertEqual(s['balance']['wallet'],10);self.assertEqual(s['xp'],20)
   restored=Activity(self.a.path);self.assertEqual(restored.session(self.token)[0][0],self.uid)
   (other,_),_=restored.session('');self.assertNotEqual(other,self.uid)
  def test_bank_conserves_fortune_and_rejects_invalid(self):
-  self.act(action='daily');self.act(action='deposit',amount=150);self.assertEqual(self.snapshot()['balance']['bank'],150)
-  self.act(action='withdraw',amount=50);s=self.snapshot();self.assertEqual(s['balance']['wallet']+s['balance']['bank'],200)
+  self.act(action='daily');self.act(action='deposit',amount=8);self.assertEqual(self.snapshot()['balance']['bank'],8)
+  self.act(action='withdraw',amount=3);s=self.snapshot();self.assertEqual(s['balance']['wallet']+s['balance']['bank'],10)
   for amount in [-1,0,1.5,True,'10']:
    with self.assertRaises(ValueError):self.act(action='deposit',amount=amount)
  def test_purchase_once_upgrade_checks_level(self):
@@ -73,6 +73,6 @@ class ActivityHttpTests(unittest.IsolatedAsyncioTestCase):
   r=await self.client.post('/api/activity',json={'action':'daily'});self.assertEqual(r.status,403)
   with adapter.SERVICE.conn() as c:c.execute('UPDATE tutorial_progress SET completed=1');c.execute('UPDATE activity_tutorial_revision SET finished=1')
   for _ in range(2):
-   r=await self.client.post('/api/activity',json={'action':'daily'},headers={'X-Altherya-Request':'1'});self.assertEqual(r.status,200);self.assertEqual((await r.json())['state']['balance']['wallet'],200)
+   r=await self.client.post('/api/activity',json={'action':'daily'},headers={'X-Altherya-Request':'1'});self.assertEqual(r.status,200);self.assertEqual((await r.json())['state']['balance']['wallet'],10)
  async def test_malformed_action_has_clear_error(self):
   r=await self.client.post('/api/activity',json={'action':'buy','key':[]},headers={'X-Altherya-Request':'1'});self.assertEqual(r.status,400);self.assertIn('error',await r.json())

@@ -19,15 +19,15 @@ LARCENY_COOLDOWN = 30 * 60         # petit larcin : 1 fois / 30 minutes
 ALLEY_BAN_SECONDS = 5 * 60 * 60    # échec du braquage : 5 h
 HEIST_ATTEMPTS = 7
 HEIST_CODE_LENGTH = 4
-HEIST_REWARD_MIN = 450
-HEIST_REWARD_MAX = 900
-HEIST_FAIL_FINE = 250
-GUARD_ENTRY_FEE = 150
+HEIST_REWARD_MIN = 75
+HEIST_REWARD_MAX = 150
+HEIST_FAIL_FINE = 40
+GUARD_ENTRY_FEE = 30
 INVITATION_ITEM = "Invitation clandestine"
 
-CRIME_REWARD_MIN = 80
-CRIME_REWARD_MAX = 160
-CRIME_FINE = 75
+CRIME_REWARD_MIN = 8
+CRIME_REWARD_MAX = 16
+CRIME_FINE = 10
 THEFT_MIN = 10
 THEFT_MAX = 100
 THEFT_PERCENT = 0.10
@@ -39,8 +39,9 @@ NPC_THEFT_TARGETS = {
     "forgeron": ("Le Forgeron", 55, 145, 0.36, 0.34, 0.30, 90),
     "vigile": ("Le Vigile", 90, 220, 0.22, 0.28, 0.50, 150),
 }
-SPECIAL_CONTRACT_REWARD_MIN = 600
-SPECIAL_CONTRACT_REWARD_MAX = 1100
+NPC_THEFT_TARGETS = {key: (v[0], max(1, v[1]//5), max(1, v[2]//5), *v[3:6], max(1, v[6]//5)) for key, v in NPC_THEFT_TARGETS.items()}
+SPECIAL_CONTRACT_REWARD_MIN = 60
+SPECIAL_CONTRACT_REWARD_MAX = 110
 
 CRIMINAL_REPUTATION_TIERS = [(5, "Inconnu"), (20, "Petite frappe"), (60, "Bandit"), (150, "Criminel"), (300, "Seigneur de la Ruelle")]
 
@@ -255,7 +256,7 @@ class DarkAlleyStore:
             ok, remaining = self._consume_action(conn, user_id, "larceny")
             if not ok:
                 conn.rollback(); return {"ok": False, "cooldown": remaining}
-            reward = random.randint(10, 35) * event_multiplier(self.db_path, 'gold_x2')
+            reward = random.randint(2, 6) * event_multiplier(self.db_path, 'gold_x2')
             conn.execute("UPDATE players SET wallet_gold=wallet_gold+? WHERE user_id=?", (reward, user_id))
             self._add_criminal_success(conn, user_id)
             conn.commit()
@@ -303,11 +304,11 @@ class DarkAlleyStore:
             return {"ok":False,"message":"🔒 Atteins au moins le rang **Petite frappe** pour recevoir des contrats criminels."}
 
         pools = {
-            1: [("steal_npc",2,350)],
-            2: [("steal_npc",4,550),("crime",2,700)],
-            3: [("steal_npc",5,800),("crime",4,950),("heist",1,1200)],
-            4: [("steal_npc",6,1400),("crime",6,1600),("heist",2,1900)],
-            5: [("steal_npc",6,1400),("crime",6,1600),("heist",2,1900)],
+            1: [("steal_npc",2,35)],
+            2: [("steal_npc",4,55),("crime",2,70)],
+            3: [("steal_npc",5,80),("crime",4,95),("heist",1,120)],
+            4: [("steal_npc",6,140),("crime",6,160),("heist",2,190)],
+            5: [("steal_npc",6,140),("crime",6,160),("heist",2,190)],
         }
         now=int(time.time())
         with self._connect() as conn:

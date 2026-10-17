@@ -13,7 +13,7 @@
       "resolution": "Le marchand ne reconnaît ni la commande ni sa signature. Vous conservez une copie du reçu suspect.",
       "min_level": 1,
       "difficulty": 1,
-      "gold": 115,
+      "gold": 10,
       "xp": 20,
       "min_duration": 300,
       "steps": [
@@ -55,7 +55,7 @@
       "resolution": "La banque ne retrouve aucune trace du paiement annoncé. L’attestation rejoint le dossier du marchand.",
       "min_level": 1,
       "difficulty": 1,
-      "gold": 115,
+      "gold": 10,
       "xp": 20,
       "min_duration": 300,
       "steps": [
@@ -103,7 +103,7 @@
       "resolution": "Les témoignages convergent : les caisses portaient toutes la même marque et prenaient la route d’Elarwyn.",
       "min_level": 1,
       "difficulty": 1,
-      "gold": 115,
+      "gold": 10,
       "xp": 20,
       "min_duration": 300,
       "steps": [
@@ -151,7 +151,7 @@
       "resolution": "Le voleur identifie un chargement abandonné à la Lisière des Chênes. La piste sort enfin de Legacy.",
       "min_level": 1,
       "difficulty": 1,
-      "gold": 115,
+      "gold": 10,
       "xp": 20,
       "min_duration": 300,
       "steps": [
@@ -196,7 +196,7 @@
       "resolution": "Vous récupérez la plaque du convoi. Ses fixations semblent plus récentes que la caisse qui la portait.",
       "min_level": 1,
       "difficulty": 1,
-      "gold": 115,
+      "gold": 10,
       "xp": 20,
       "min_duration": 300,
       "steps": [
@@ -244,7 +244,7 @@
       "resolution": "Le forgeron confirme que la plaque a été remontée. Le détournement avait été préparé avant la publication des annonces.",
       "min_level": 2,
       "difficulty": 1,
-      "gold": 115,
+      "gold": 10,
       "xp": 20,
       "min_duration": 300,
       "steps": [
@@ -292,7 +292,7 @@
       "resolution": "Le château vous confie la protection d’un véritable convoi. Le marchand rassemble les porteurs et les fournitures.",
       "min_level": 2,
       "difficulty": 1,
-      "gold": 115,
+      "gold": 10,
       "xp": 20,
       "min_duration": 300,
       "steps": [
@@ -334,7 +334,7 @@
       "resolution": "L’intermédiaire est arrêté. Sur son itinéraire figure un nom de commanditaire : le Faussaire. La piste mène à Vorak.",
       "min_level": 3,
       "difficulty": 2,
-      "gold": 270,
+      "gold": 30,
       "xp": 50,
       "min_duration": 300,
       "steps": [
@@ -377,7 +377,7 @@
       "resolution": "Thorgar reconnaît le travail d’un ancien équipement de convoi. Il vous demande de confronter cette découverte aux récits du troubadour.",
       "min_level": 3,
       "difficulty": 2,
-      "gold": 190,
+      "gold": 18,
       "xp": 35,
       "min_duration": 600,
       "steps": [
@@ -419,7 +419,7 @@
       "resolution": "Les récits des expéditions de Seraph mentionnent une halte dans les Galeries de Khar. Vous emportez les indications utiles.",
       "min_level": 3,
       "difficulty": 2,
-      "gold": 190,
+      "gold": 18,
       "xp": 35,
       "min_duration": 600,
       "steps": [
@@ -467,7 +467,7 @@
       "resolution": "Thorgar prépare les étais avec le bois livré. Ils permettront de travailler sans mettre les convoyeurs en danger.",
       "min_level": 3,
       "difficulty": 2,
-      "gold": 190,
+      "gold": 18,
       "xp": 35,
       "min_duration": 600,
       "steps": [
@@ -510,7 +510,7 @@
       "resolution": "La reconnaissance révèle un passage praticable vers les anciennes galeries. Le matériel est prêt pour la recherche du dépôt.",
       "min_level": 3,
       "difficulty": 2,
-      "gold": 190,
+      "gold": 18,
       "xp": 35,
       "min_duration": 600,
       "steps": [
@@ -552,7 +552,7 @@
       "resolution": "Les marques du dépôt sont anciennes, mais des hommes ont emprunté récemment son passage de service.",
       "min_level": 5,
       "difficulty": 2,
-      "gold": 190,
+      "gold": 18,
       "xp": 35,
       "min_duration": 600,
       "steps": [
@@ -600,7 +600,7 @@
       "resolution": "Le journal rassemble un relevé de route et des annotations anciennes. Leur lien avec Seraph mérite d’être étudié, sans certitude prématurée.",
       "min_level": 5,
       "difficulty": 2,
-      "gold": 190,
+      "gold": 18,
       "xp": 35,
       "min_duration": 600,
       "steps": [
@@ -648,7 +648,7 @@
       "resolution": "Les convoyeurs sont évacués et les secours prennent le relais. Les voleurs ont emporté une copie incomplète du relevé.",
       "min_level": 5,
       "difficulty": 2,
-      "gold": 190,
+      "gold": 18,
       "xp": 35,
       "min_duration": 600,
       "steps": [
@@ -699,7 +699,7 @@
       "resolution": "Les repères métalliques et la copie du journal désignent Ashkar. Le château autorise la poursuite de l’enquête.",
       "min_level": 5,
       "difficulty": 2,
-      "gold": 290,
+      "gold": 33,
       "xp": 55,
       "min_duration": 600,
       "steps": [
@@ -741,7 +741,7 @@
       "resolution": "Les premiers repères d’Ashkar correspondent au relevé. Une observation depuis le belvédère permettra de l’orienter.",
       "min_level": 5,
       "difficulty": 3,
-      "gold": 265,
+      "gold": 26,
       "xp": 50,
       "min_duration": 900,
       "steps": [
@@ -789,7 +789,7 @@
       "resolution": "La ligne prise pour une rivière représente une crête. Vous corrigez le relevé avant qu’une nouvelle erreur ne coûte des vies.",
       "min_level": 5,
       "difficulty": 3,
-      "gold": 265,
+      "gold": 26,
       "xp": 50,
       "min_duration": 900,
       "steps": [
@@ -837,7 +837,7 @@
       "resolution": "Les deux reconnaissances suivent la même colonne de chariots. Le convoi du Faussaire se prépare à quitter les routes sûres.",
       "min_level": 5,
       "difficulty": 3,
-      "gold": 265,
+      "gold": 26,
       "xp": 50,
       "min_duration": 900,
       "steps": [
@@ -885,7 +885,7 @@
       "resolution": "Un intermédiaire accepte de transmettre un message. Il propose une rencontre sous l’autorité du château.",
       "min_level": 5,
       "difficulty": 3,
-      "gold": 265,
+      "gold": 26,
       "xp": 50,
       "min_duration": 900,
       "steps": [
@@ -930,7 +930,7 @@
       "resolution": "Le Faussaire promet d’ouvrir les anciennes routes. Les témoignages recueillis contredisent pourtant ce qu’il raconte sur les risques.",
       "min_level": 6,
       "difficulty": 3,
-      "gold": 265,
+      "gold": 26,
       "xp": 50,
       "min_duration": 900,
       "steps": [
@@ -981,7 +981,7 @@
       "resolution": "Thorgar confirme que les ouvrages du passage ont cessé d’être entretenus. Vous adressez un avertissement documenté au château.",
       "min_level": 6,
       "difficulty": 3,
-      "gold": 265,
+      "gold": 26,
       "xp": 50,
       "min_duration": 900,
       "steps": [
@@ -1029,7 +1029,7 @@
       "resolution": "Les fausses urgences portent la signature déjà repérée. Vous prévenez la forge avant que la diversion ne disperse ses défenseurs.",
       "min_level": 7,
       "difficulty": 3,
-      "gold": 265,
+      "gold": 26,
       "xp": 50,
       "min_duration": 900,
       "steps": [
@@ -1077,7 +1077,7 @@
       "resolution": "Les travailleurs sont à l’abri et une partie des pièces est sauvée. Le Faussaire fuit avec le reste du chargement.",
       "min_level": 7,
       "difficulty": 4,
-      "gold": 420,
+      "gold": 46,
       "xp": 80,
       "min_duration": 900,
       "steps": [
@@ -1120,7 +1120,7 @@
       "resolution": "Les derniers départs sont identifiés. Le château donne priorité à l’évacuation des voyageurs entraînés dans le projet.",
       "min_level": 8,
       "difficulty": 4,
-      "gold": 340,
+      "gold": 34,
       "xp": 65,
       "min_duration": 1200,
       "steps": [
@@ -1168,7 +1168,7 @@
       "resolution": "La banque enregistre un mandat vérifiable. Chaque fourniture et chaque bénéficiaire possèdent désormais une référence claire.",
       "min_level": 8,
       "difficulty": 4,
-      "gold": 340,
+      "gold": 34,
       "xp": 65,
       "min_duration": 1200,
       "steps": [
@@ -1216,7 +1216,7 @@
       "resolution": "Le plan d’interception est approuvé. Le chargement volé doit être récupéré sans confondre les voyageurs avec les hommes armés.",
       "min_level": 8,
       "difficulty": 4,
-      "gold": 340,
+      "gold": 34,
       "xp": 65,
       "min_duration": 1200,
       "steps": [
@@ -1261,7 +1261,7 @@
       "resolution": "La reconnaissance de la Faille Rouge est achevée. Les équipes installent un point de repli avant le segment instable du passage.",
       "min_level": 10,
       "difficulty": 4,
-      "gold": 340,
+      "gold": 34,
       "xp": 65,
       "min_duration": 1200,
       "steps": [
@@ -1303,7 +1303,7 @@
       "resolution": "Les voyageurs sont séparés de l’escorte et les pièces récupérées. Le Faussaire continue seul avec ses derniers hommes.",
       "min_level": 10,
       "difficulty": 5,
-      "gold": 395,
+      "gold": 39,
       "xp": 75,
       "min_duration": 1200,
       "steps": [
@@ -1352,7 +1352,7 @@
       "resolution": "Le Faussaire est vaincu. Le passage menace de céder : il faut organiser le retour et choisir ce qui peut encore être sauvé.",
       "min_level": 10,
       "difficulty": 5,
-      "gold": 600,
+      "gold": 75,
       "xp": 100,
       "min_duration": 1200,
       "steps": [
@@ -1396,7 +1396,7 @@
       "resolution": "Les témoins sont évacués et les preuves conservées sont remises au château. Votre dernier choix pèsera sur le récit des événements.",
       "min_level": 10,
       "difficulty": 4,
-      "gold": 340,
+      "gold": 34,
       "xp": 65,
       "min_duration": 1200,
       "steps": [
@@ -1441,7 +1441,7 @@
       "resolution": "Le premier relais est sécurisé. La Gazette relate le retour des convois, tandis que le troubadour ajoute votre aventure aux récits de Legacy.",
       "min_level": 10,
       "difficulty": 4,
-      "gold": 440,
+      "gold": 49,
       "xp": 85,
       "min_duration": 1200,
       "steps": [

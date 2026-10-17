@@ -51,6 +51,10 @@ RARITIES: Dict[str, dict] = {
     },
 }
 
+from economy_balance import JOB_GOLD, BALANCE_VERSION
+for _rarity, (_low, _high) in JOB_GOLD.items():
+    RARITIES[_rarity].update(gold_min=_low, gold_max=_high)
+
 # Les raretés sont tirées indépendamment pour chaque emplacement.
 # Il n'y a donc aucun quota : un panneau peut contenir uniquement du commun,
 # plusieurs légendaires, ou n'importe quelle combinaison entre les deux.
@@ -160,6 +164,7 @@ class JobBoardStore:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_db()
+        self._rebalance_offers()
 
     def _connect(self) -> sqlite3.Connection:
         conn = connect_shared(self.db_path, timeout=10)
@@ -203,6 +208,20 @@ class JobBoardStore:
                 """
             )
             conn.commit()
+
+    def _rebalance_offers(self):
+        # Change unsigned offers once; never modify a contract already accepted.
+        with self._connect() as conn:
+            conn.execute('BEGIN IMMEDIATE')
+            conn.execute('CREATE TABLE IF NOT EXISTS economy_balance_meta(version TEXT PRIMARY KEY)')
+            if conn.execute('SELECT 1 FROM economy_balance_meta WHERE version=?',(BALANCE_VERSION,)).fetchone():return
+            rows=conn.execute("SELECT user_id,jobs_json FROM job_board_state WHERE pending_job_json='' AND jobs_json!='[]'").fetchall()
+            for uid,raw in rows:
+                jobs=self._decode_jobs(raw)
+                adjusted=[BoardJob(j.job_id,j.title,j.rarity,max(JOB_GOLD[j.rarity][0],min(j.reward,JOB_GOLD[j.rarity][1]))) for j in jobs]
+                if jobs and any(a.reward!=b.reward for a,b in zip(jobs,adjusted)):
+                    conn.execute('UPDATE job_board_state SET batch_id=?,jobs_json=? WHERE user_id=?',(uuid.uuid4().hex[:12],self._encode_jobs(adjusted),uid))
+            conn.execute('INSERT INTO economy_balance_meta VALUES(?)',(BALANCE_VERSION,))
 
     @staticmethod
     def _rarity_roll() -> str:

@@ -22,7 +22,7 @@ TAVERN_REPUTATION_TIERS = [
 TAVERN_DRINK_COOLDOWN = 60 * 60
 # V1.57 — la limite quotidienne dépend désormais de la réputation de Taverne.
 TAVERN_DAILY_LIMITS = {0: 2, 1: 3, 2: 4, 3: 5, 4: 6, 5: 8}
-TAVERN_ROUND_COST = 300
+TAVERN_ROUND_COST = 30
 
 # V1.57 — Ivresse narrative. Aucun bonus de statistiques : boire ouvre des scènes,
 # des conséquences, des secrets et des objets mystérieux.
@@ -47,33 +47,33 @@ DRUNK_EVENTS = [
     {"id":"not_my_pretzel","cat":"social","min_tier":0,"min_drinks":2,"weight":9,"title":"🥨 C'était pas à moi ?","text":"Tu termines fièrement un énorme bretzel. Le silence autour de toi devient étrange. Il appartenait au mercenaire assis juste derrière.","achievement":"tavern_secret:0:2"},
     {"id":"wrong_toast","cat":"social","min_tier":0,"min_drinks":1,"weight":14,"title":"🍻 Santé... à qui déjà ?","text":"Tu portes un toast passionné à quelqu'un dont tu as oublié le nom avant même la fin de ta phrase."},
     {"id":"chair_duel","cat":"fun","min_tier":0,"min_drinks":2,"weight":12,"title":"🪑 Duel contre une chaise","text":"La chaise a gagné. Personne ne semble surpris."},
-    {"id":"coin_floor","cat":"fun","min_tier":0,"min_drinks":2,"weight":7,"title":"🪙 Coup de chance","text":"En cherchant ton équilibre, tu trouves quelques Gold sous une table.","gold":18},
-    {"id":"bad_tip","cat":"fun","min_tier":0,"min_drinks":2,"weight":7,"title":"💸 Pourboire généreux","text":"Tu laisses un pourboire beaucoup trop enthousiaste au Tavernier.","gold":-12},
+    {"id":"coin_floor","cat":"fun","min_tier":0,"min_drinks":2,"weight":7,"title":"🪙 Coup de chance","text":"En cherchant ton équilibre, tu trouves quelques Gold sous une table.","gold":3},
+    {"id":"bad_tip","cat":"fun","min_tier":0,"min_drinks":2,"weight":7,"title":"💸 Pourboire généreux","text":"Tu laisses un pourboire beaucoup trop enthousiaste au Tavernier.","gold":-2},
     # Client discret
     {"id":"why_chicken","cat":"fun","min_tier":1,"min_drinks":3,"weight":6,"title":"🐔 Pourquoi j'ai une poule ?","text":"Une poule te suit depuis plusieurs minutes. Le plus inquiétant : elle répond quand tu l'appelles « Gérard ».","item":"Poule nommée Gérard","achievement":"tavern_secret:1:1"},
     {"id":"wrong_shoe","cat":"fun","min_tier":1,"min_drinks":3,"weight":6,"title":"👞 C'est pas ma chaussure","text":"Tu regardes tes pieds. Deux chaussures. Deux tailles différentes. Deux propriétaires probablement différents.","item":"Chaussure inconnue","achievement":"tavern_secret:1:2"},
     {"id":"new_best_friend","cat":"social","min_tier":1,"min_drinks":2,"weight":12,"title":"🤝 Meilleur ami depuis 4 minutes","text":"Tu jures fidélité éternelle à un client que tu viens de rencontrer. Vous oubliez vos prénoms presque immédiatement."},
     {"id":"tavern_debt","cat":"social","min_tier":1,"min_drinks":3,"weight":7,"title":"🧾 Une petite dette","text":"Le Tavernier te montre une ardoise. Ton écriture est dessus. Tu n'as aucun souvenir de l'avoir signée."},
-    {"id":"lucky_pouch","cat":"social","min_tier":1,"min_drinks":3,"weight":6,"title":"👝 Une bourse sous le banc","text":"Une petite bourse oubliée glisse jusqu'à tes pieds. Personne ne la réclame.","gold":32},
+    {"id":"lucky_pouch","cat":"social","min_tier":1,"min_drinks":3,"weight":6,"title":"👝 Une bourse sous le banc","text":"Une petite bourse oubliée glisse jusqu'à tes pieds. Personne ne la réclame.","gold":6},
     {"id":"napkin_map","cat":"secret","min_tier":1,"min_drinks":3,"weight":4,"title":"🗺️ Une carte sur une serviette","text":"Quelqu'un a dessiné un plan incompréhensible sur une serviette. Un X rouge est entouré trois fois.","item":"Serviette cartographiée"},
     # Habitué
     {"id":"short_career","cat":"social","min_tier":2,"min_drinks":4,"weight":5,"title":"🎤 Une carrière très courte","text":"Tu prends le luth du Troubadour et annonces ton premier concert. Ton dernier concert a lieu environ quarante secondes plus tard.","achievement":"tavern_secret:2:1"},
     {"id":"ring_what","cat":"secret","min_tier":2,"min_drinks":4,"weight":4,"title":"💍 J'ai fait QUOI ?!","text":"Une bague inconnue est passée à ton doigt. Le Tavernier refuse catégoriquement de répondre à tes questions.","item":"Bague sans propriétaire","achievement":"tavern_secret:2:2"},
     {"id":"arm_wrestle","cat":"challenge","min_tier":2,"min_drinks":3,"weight":9,"title":"💪 Mauvaise idée, excellent souvenir","text":"Tu provoques un bûcheron au bras de fer. Il accepte. Ton bras regrette immédiatement la décision."},
-    {"id":"free_round_memory","cat":"social","min_tier":2,"min_drinks":4,"weight":6,"title":"🍻 C'est moi qui régale ?","text":"Tout le comptoir t'applaudit. Apparemment tu avais promis de payer quelque chose. Tu décides de ne pas poser de question.","gold":-35},
+    {"id":"free_round_memory","cat":"social","min_tier":2,"min_drinks":4,"weight":6,"title":"🍻 C'est moi qui régale ?","text":"Tout le comptoir t'applaudit. Apparemment tu avais promis de payer quelque chose. Tu décides de ne pas poser de question.","gold":-7},
     {"id":"old_coin","cat":"secret","min_tier":2,"min_drinks":4,"weight":4,"title":"🪙 Une monnaie qui n'existe plus","text":"Un vieil habitué te glisse une pièce frappée d'un blason inconnu puis disparaît dans la foule.","item":"Ancienne pièce de Altherya"},
-    {"id":"dice_luck","cat":"challenge","min_tier":2,"min_drinks":4,"weight":5,"title":"🎲 Tu ne sais même pas à quoi tu jouais","text":"Quelqu'un te félicite pour ta victoire aux dés et te donne ta part.","gold":48},
+    {"id":"dice_luck","cat":"challenge","min_tier":2,"min_drinks":4,"weight":5,"title":"🎲 Tu ne sais même pas à quoi tu jouais","text":"Quelqu'un te félicite pour ta victoire aux dés et te donne ta part.","gold":9},
     # Pilier
     {"id":"horse_judges","cat":"chaos","min_tier":3,"min_drinks":5,"weight":4,"title":"🐴 Il juge mes choix de vie","text":"Tu te réveilles dans une écurie. Un cheval te fixe avec une déception si profonde que tu t'excuses spontanément.","achievement":"tavern_secret:3:1"},
     {"id":"door_not_there","cat":"secret","min_tier":3,"min_drinks":5,"weight":3,"title":"🚪 Cette porte n'était pas là hier","text":"Au fond d'un couloir que tu ne te souviens pas avoir emprunté, tu aperçois une vieille porte sans poignée. Quand tu clignes des yeux, elle a disparu.","item":"Souvenir de la porte","achievement":"tavern_secret:3:2"},
     {"id":"alley_wakeup","cat":"alley","min_tier":3,"min_drinks":5,"weight":6,"title":"🌑 Mauvais chemin","text":"Tu reprends tes esprits à l'entrée de la Ruelle Sombre. Tu avais pourtant juré être parti dans l'autre direction."},
     {"id":"mysterious_note","cat":"secret","min_tier":3,"min_drinks":5,"weight":4,"title":"📜 Ne fais confiance à personne","text":"Un papier plié est dans ta poche : « Quand la cloche sonnera trois fois, regarde sous la pierre fendue. »","item":"Note chiffonnée"},
-    {"id":"broken_stool","cat":"challenge","min_tier":3,"min_drinks":5,"weight":6,"title":"🪑 Le tabouret n'a pas survécu","text":"Le Tavernier te présente les restes d'un tabouret. Tu paies les dégâts sans demander la version complète.","gold":-45},
-    {"id":"strange_bet","cat":"challenge","min_tier":3,"min_drinks":5,"weight":4,"title":"🎲 Le pari impossible","text":"Tu ne sais plus ce que tu avais parié, mais quelqu'un te remet une petite récompense avec un respect inquiétant.","gold":62},
+    {"id":"broken_stool","cat":"challenge","min_tier":3,"min_drinks":5,"weight":6,"title":"🪑 Le tabouret n'a pas survécu","text":"Le Tavernier te présente les restes d'un tabouret. Tu paies les dégâts sans demander la version complète.","gold":-9},
+    {"id":"strange_bet","cat":"challenge","min_tier":3,"min_drinks":5,"weight":4,"title":"🎲 Le pari impossible","text":"Tu ne sais plus ce que tu avais parié, mais quelqu'un te remet une petite récompense avec un respect inquiétant.","gold":12},
     # Ivrogne notoire
     {"id":"your_majesty","cat":"chaos","min_tier":4,"min_drinks":6,"weight":3,"title":"👑 Votre Majesté...","text":"Tu viens de tenir une conversation diplomatique extrêmement sérieuse avec une statue. Tu l'as même laissée gagner le débat.","achievement":"tavern_secret:4:1"},
     {"id":"technically_alive","cat":"chaos","min_tier":4,"min_drinks":6,"weight":3,"title":"⚰️ Techniquement, je suis vivant","text":"Tu ouvres les yeux dans un cercueil vide entreposé derrière une échoppe. Une étiquette indique : « Réservé ». Tu préfères partir.","achievement":"tavern_secret:4:2"},
-    {"id":"someone_pouch","cat":"alley","min_tier":4,"min_drinks":6,"weight":5,"title":"👝 Cette bourse n'est clairement pas à toi","text":"Tu trouves une bourse pleine dans ta veste. Quelqu'un, quelque part, doit être très énervé.","gold":73},
+    {"id":"someone_pouch","cat":"alley","min_tier":4,"min_drinks":6,"weight":5,"title":"👝 Cette bourse n'est clairement pas à toi","text":"Tu trouves une bourse pleine dans ta veste. Quelqu'un, quelque part, doit être très énervé.","gold":14},
     {"id":"wolf_mark","cat":"alley","min_tier":4,"min_drinks":6,"weight":3,"title":"🐺 La marque du loup","text":"Un symbole de loup a été tracé sur ton poignet à l'encre noire. Il ne part pas avec de l'eau.","item":"Marque du loup"},
     {"id":"barrel_passenger","cat":"chaos","min_tier":4,"min_drinks":6,"weight":4,"title":"🛢️ Voyage en première classe","text":"Tu te réveilles assis dans un tonneau. Le tonneau se trouve à cinquante mètres de la Taverne. Belle performance."},
     {"id":"unknown_tab","cat":"social","min_tier":4,"min_drinks":6,"weight":4,"title":"🧾 Qui a commandé tout ça ?","text":"L'addition porte ton nom. La moitié des commandes ne te dit absolument rien."},
@@ -83,7 +83,7 @@ DRUNK_EVENTS = [
     {"id":"nameless_letter","cat":"secret","min_tier":5,"min_drinks":7,"weight":2,"title":"✉️ La lettre sans destinataire","text":"Une enveloppe scellée porte seulement ces mots : « Tu sauras quand l'ouvrir. »","item":"Lettre scellée"},
     {"id":"roof_wakeup","cat":"chaos","min_tier":5,"min_drinks":7,"weight":3,"title":"🏠 Comment je suis monté là ?","text":"Tu reprends tes esprits sur un toit, enlacé à une girouette. La question de la descente devient soudain prioritaire."},
     {"id":"three_lands_token","cat":"secret","min_tier":5,"min_drinks":8,"weight":1,"title":"🌒 Le jeton des Trois Terres","text":"Un jeton en métal sombre est dans ta paume. Trois royaumes y sont gravés, mais aucun artisan du coin ne reconnaît l'objet.","item":"Jeton des Trois Terres","legendary":True},
-    {"id":"legendary_tip","cat":"chaos","min_tier":5,"min_drinks":8,"weight":2,"title":"💰 Le matin est parfois généreux","text":"Tu ne sais pas ce que tu as fait cette nuit, mais quelqu'un a glissé une belle somme dans ta poche avec le mot « pour services rendus ».","gold":110,"legendary":True},
+    {"id":"legendary_tip","cat":"chaos","min_tier":5,"min_drinks":8,"weight":2,"title":"💰 Le matin est parfois généreux","text":"Tu ne sais pas ce que tu as fait cette nuit, mais quelqu'un a glissé une belle somme dans ta poche avec le mot « pour services rendus ».","gold":22,"legendary":True},
 ]
 
 

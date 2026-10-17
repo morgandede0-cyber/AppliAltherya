@@ -15,7 +15,7 @@ class GameTests(unittest.TestCase):
  def act(self,**b):return self.a.action(self.uid,{'revision':self.s()['play']['revision'],**b})
  def access(self):self.act(action='guard',key='pay')
  def test_access_atomic_and_no_second_charge(self):
-  self.access();self.access();self.assertEqual(self.s()['balance']['wallet'],9850);self.assertTrue(self.s()['alley']['access']['valid'])
+  self.access();self.access();self.assertEqual(self.s()['balance']['wallet'],9970);self.assertTrue(self.s()['alley']['access']['valid'])
  def test_no_bets_without_access_or_invalid_wager(self):
   with self.assertRaises(ValueError):self.act(action='game_start',key='slots',wager=10)
   self.access();before=self.s()['balance']['wallet']
@@ -44,8 +44,8 @@ class GameTests(unittest.TestCase):
   p=self.s()['play'];self.assertEqual(p['status'],'active');self.assertNotIn('deck',p);self.assertEqual(p['dealer'][1],{'hidden':True})
   self.act(action='game_cancel');self.act(action='game_start',key='russian',wager=10);self.assertNotIn('danger',self.s()['play'])
  def test_restart_refunds_only_once(self):
-  self.access();self.act(action='game_start',key='russian',wager=100);self.assertEqual(self.s()['balance']['wallet'],9750)
-  self.a=Activity(self.a.path);self.assertEqual(self.s()['balance']['wallet'],9850);self.assertEqual(self.s()['play']['status'],'refunded');self.a=Activity(self.a.path);self.assertEqual(self.s()['balance']['wallet'],9850)
+  self.access();self.act(action='game_start',key='russian',wager=100);self.assertEqual(self.s()['balance']['wallet'],9870)
+  self.a=Activity(self.a.path);self.assertEqual(self.s()['balance']['wallet'],9970);self.assertEqual(self.s()['play']['status'],'refunded');self.a=Activity(self.a.path);self.assertEqual(self.s()['balance']['wallet'],9970)
  def test_tavern_rps_uses_original_french_symbols(self):
   with patch('play.rps_bot',return_value='ciseaux'):self.act(action='game_start',key='rps',wager=10,choice='rock')
   self.assertEqual(self.s()['play']['payout'],20);self.assertEqual(self.s()['xp'],5)

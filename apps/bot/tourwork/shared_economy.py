@@ -193,7 +193,8 @@ def connect_shared(database, *args, **kwargs):
     # Always delegate to sqlite3.connect. Calling connect_shared here recursively
     # prevents Altherya from opening its local database.
     if not enabled():
-        return sqlite3.connect(database, *args, **kwargs)
+        from sqlite_store import connect
+        return connect(database, *args, **kwargs)
     kwargs['factory'] = SharedConnection
     c = sqlite3.connect(database, *args, **kwargs)
     c._sync_in()
