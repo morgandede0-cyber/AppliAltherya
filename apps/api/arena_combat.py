@@ -3,6 +3,7 @@
 The campaign, historical bot, wagers and award rules keep their existing engine.
 """
 import time
+import arena_techniques
 from arena_engine import CHAMPION_PROFILES, resolve_action
 
 TACTICS = {
@@ -45,7 +46,7 @@ def init(p,b,now=None):
 def resolve(p,b,action):
  """Resolve one engine action and record actual HP losses, not client estimates."""
  actor=b.current;target=1-actor;before=[f.hp for f in b.fighters];guarded=b.fighters[target].defending
- lines=resolve_action(b,action);b.log.extend(lines)
+ lines=arena_techniques.resolve(b,action,resolve_action);b.log.extend(lines)
  damage=before[target]-b.fighters[target].hp;bleed=before[actor]-b.fighters[actor].hp
  stat=p['combat_stats'][actor]
  if action=='defend' and b.fighters[actor].alive:stat['guards']+=1

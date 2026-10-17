@@ -175,7 +175,7 @@ class Activity:
             for field in ('tool_level','bag_level'):
                 if field in body and type(body[field]) is not int:raise ValueError('Palier invalide.')
             return self.expeditions.start(uid,key,body.get('tool','hands'),tool_level=body.get('tool_level'),bag_level=body.get('bag_level'))[1]
-        if action in ('drink','guard','larceny','npc_theft','crime','heist_start','heist_guess','game_cancel','game_start','game_step','battle_start','battle_step'):return self.play.action(uid,body)
+        if action in ('drink','guard','larceny','npc_theft','crime','heist_start','heist_guess','game_cancel','game_start','game_step','battle_start','battle_step','arena_equip'):return self.play.action(uid,body)
         raise ValueError('Action inconnue.')
 
 SERVICE=None

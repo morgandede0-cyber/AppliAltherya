@@ -1,6 +1,6 @@
 """Activity game orchestration: source engines, server-owned outcomes, isolated SQLite."""
 import json,random,time
-import arena_combat
+import arena_combat,arena_techniques
 from dataclasses import asdict
 from casino_engine import CasinoStore,draw_slot,slot_multiplier,roulette_spin,MAX_BET,VIP_MAX_BET
 from tavern_engine import TavernGameStore,roll_die,flip_coin,rps_bot,rps_result
@@ -18,6 +18,7 @@ class Play:
   self.a=activity;path=activity.path
   self.casino=CasinoStore(path);self.tavern=TavernGameStore(path);self.dark=DarkAlleyStore(path);self.arena=ArenaStore(path)
   with self.a.conn() as c:
+   arena_techniques.setup(c)
    c.execute('CREATE TABLE IF NOT EXISTS activity_play(user_id INTEGER PRIMARY KEY,revision INTEGER NOT NULL DEFAULT 0,payload TEXT NOT NULL DEFAULT "{}")')
    c.execute('CREATE TABLE IF NOT EXISTS activity_arena_results(battle_id TEXT PRIMARY KEY,user_id INTEGER NOT NULL,payload TEXT NOT NULL,created_at REAL NOT NULL)')
    c.execute('CREATE INDEX IF NOT EXISTS idx_activity_arena_results_user ON activity_arena_results(user_id,created_at DESC)')
@@ -29,6 +30,7 @@ class Play:
    for uid,payload in rows:
     p=json.loads(payload)
     if p.get('status')=='active':c.execute('UPDATE activity_play SET revision=revision+1,payload=? WHERE user_id=?',(json.dumps({'status':'refunded','message':'Partie interrompue : mise remboursée au redémarrage.'}),uid))
+  arena_techniques.reset_once(self.a)
  def read(self,uid):
   with self.a.conn() as c:
    c.execute('INSERT OR IGNORE INTO activity_play(user_id) VALUES(?)',(uid,));r=c.execute('SELECT revision,payload FROM activity_play WHERE user_id=?',(uid,)).fetchone()
@@ -50,9 +52,11 @@ class Play:
    odds=[round(random.uniform(1.5,2),1),round(random.uniform(2.1,2.5),1),round(random.uniform(2.1,2.5),1),round(random.uniform(2.6,3),1)];random.shuffle(odds)
    c.execute('INSERT INTO activity_horse_odds VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET payload=excluded.payload',(uid,json.dumps(odds)))
    return odds
+ def technique_book(self,uid):
+  with self.a.conn() as c:return arena_techniques.book(c,uid,self.a.castle.current_level(uid),self.arena.progress(uid)["champion_wins"])
  def snapshot(self,uid):
   rep=self.tavern.tavern_reputation(uid);dr=self.tavern.drink_status(uid);heist=self.dark.active_heist(uid)
-  return dict(play=self.public(uid),tavern={**rep,**dr,'drinks_catalog':[dict(key=k,name=n,required=t,available=rep['tier']>=t) for k,n,t in DRINKS]},alley=dict(reputation=self.dark.criminal_reputation(uid),access=self.dark.clandestine_access_info(uid),vip=self.casino.loyalty(uid)['vip'],fee=GUARD_ENTRY_FEE,invitations=self.dark.invitation_count(uid),larceny_remaining=self.dark.cooldown_remaining(uid,'larceny'),ban_remaining=self.dark.ban_remaining(uid),npc_targets=[dict(key=k,name=v[0]) for k,v in NPC_THEFT_TARGETS.items()],record=self.dark.criminal_record(uid),heist=None if not heist else dict(attempts_left=heist.attempts_left,code_length=HEIST_CODE_LENGTH)),arena={**self.arena.progress(uid),'remaining':self.arena.champion_remaining_seconds(uid),'skills':arena_player_skills(self.a.castle.current_level(uid)),'champion':arena_combat.champion(self.arena.progress(uid)['champion_level']),'recent':self.recent(uid)},casino=dict(max_bet=VIP_MAX_BET if self.casino.loyalty(uid)['vip'] else MAX_BET,horses=HORSES,odds=self.horse_odds(uid)))
+  return dict(play=self.public(uid),tavern={**rep,**dr,'drinks_catalog':[dict(key=k,name=n,required=t,available=rep['tier']>=t) for k,n,t in DRINKS]},alley=dict(reputation=self.dark.criminal_reputation(uid),access=self.dark.clandestine_access_info(uid),vip=self.casino.loyalty(uid)['vip'],fee=GUARD_ENTRY_FEE,invitations=self.dark.invitation_count(uid),larceny_remaining=self.dark.cooldown_remaining(uid,'larceny'),ban_remaining=self.dark.ban_remaining(uid),npc_targets=[dict(key=k,name=v[0]) for k,v in NPC_THEFT_TARGETS.items()],record=self.dark.criminal_record(uid),heist=None if not heist else dict(attempts_left=heist.attempts_left,code_length=HEIST_CODE_LENGTH)),arena={**self.arena.progress(uid),'remaining':self.arena.champion_remaining_seconds(uid),**self.technique_book(uid),'champion':arena_combat.champion(self.arena.progress(uid)['champion_level']),'recent':self.recent(uid)},casino=dict(max_bet=VIP_MAX_BET if self.casino.loyalty(uid)['vip'] else MAX_BET,horses=HORSES,odds=self.horse_odds(uid)))
  def finish_casino(self,uid,p,payout,message):
   result=self.casino.settle(p['session'],payout);p.update(status='finished',payout=result.get('payout',payout),message=message)
   if result.get('ok'):
@@ -84,17 +88,22 @@ class Play:
     rating_before=before['rating'],rating_after=after['rating'],rating_delta=after['rating']-before['rating'],
     wins_before=before['champion_wins'],wins_after=after['champion_wins'],next_champion=arena_combat.champion(after['champion_level']),
     circuit_complete=after['champion_wins']>=10,rounds=p.get('round',max(1,(b.turn_no+1)//2)),
-    duration=max(0,int(time.time()-p.get('started_at',time.time()))),stats=p.get('combat_stats',[]),fighters=arena_combat.public_fighters(b),events=p.get('events',[]),logs=b.log[-60:],skills=arena_player_skills(b.fighters[0].player_level),hp=b.fighters[0].hp,max_hp=b.fighters[0].max_hp)
+    duration=max(0,int(time.time()-p.get('started_at',time.time()))),stats=p.get('combat_stats',[]),fighters=arena_combat.public_fighters(b),events=p.get('events',[]),logs=b.log[-60:],skills=b.fighters[0].cfg["skills"],hp=b.fighters[0].hp,max_hp=b.fighters[0].max_hp)
+   if won:
+    with self.a.conn() as c:result['technique_unlocked']=arena_techniques.grant(c,uid,b.fighters[1].champion_level)
    p['result']=result
    with self.a.conn() as c:c.execute('INSERT OR IGNORE INTO activity_arena_results VALUES(?,?,?,?)',(b.battle_id,uid,json.dumps(result),time.time()))
  def battle_public(self,p,b):
-  p['skills']=arena_player_skills(b.fighters[0].player_level);p['battle']=asdict(b);p['fighters']=arena_combat.public_fighters(b);p['turn']=b.turn_no;p['logs']=b.log[-16:]
+  p['skills']=b.fighters[0].cfg['skills'];p['battle']=asdict(b);p['fighters']=arena_combat.public_fighters(b);p['turn']=b.turn_no;p['logs']=b.log[-16:]
   if not b.finished:
    key=p.get('enemy_action','light');p['intent']=dict(key=key,name=b.fighters[1].cfg['skills'][key]['name'])
   else:p.pop('intent',None)
  def action(self,uid,body):
   action=body['action'];key=body.get('key','');rev,p=self.read(uid)
   if action.startswith(('game_','battle_')) and (type(body.get('revision')) is not int or body.get('revision')!=rev):raise ValueError('La partie a changé. Actualisez le menu avant de réessayer.')
+  if action=='arena_equip':
+   if p.get('kind')=='combat' and p.get('status')=='active':raise ValueError('Terminez votre combat avant de remplacer une technique.')
+   with self.a.conn() as c:return arena_techniques.equip(c,uid,self.a.castle.current_level(uid),self.arena.progress(uid)['champion_wins'],body.get('slot'),body.get('technique'),body.get('loadout_revision'))
   if action=='drink':
    drink=next((d for d in DRINKS if d[0]==key),None)
    if not drink or self.tavern.tavern_reputation(uid)['tier']<drink[2]:raise ValueError('Boisson verrouillée.')
@@ -186,14 +195,16 @@ class Play:
    if not ok:raise ValueError(msg)
    level=self.a.castle.current_level(uid);champ=self.arena.progress(uid)['champion_level'];cfg=CHAMPION_PROFILES[champ]
    with self.a.conn() as c:name=c.execute('SELECT name FROM activity_sessions WHERE user_id=?',(uid,)).fetchone()[0]
-   b=BattleState(bid,'champion',wager,[Fighter(uid,name,'arena_fighter',max_hp=100+10*(level-1),player_level=level),Fighter(None,cfg['name'],cfg['class_key'],champion_level=champ)],0)
+   b=BattleState(bid,'champion',wager,[arena_techniques.ArenaFighter(uid,name,'arena_fighter',max_hp=100+10*(level-1),player_level=level),Fighter(None,cfg['name'],cfg['class_key'],champion_level=champ)],0)
+   b.fighters[0].loadout=self.technique_book(uid)['skills']
    p=dict(kind='combat',status='active',wager=wager,message='À votre tour.');arena_combat.init(p,b);self.battle_public(p,b);self.save(uid,p);return p['message']
   if action=='battle_step':
    if p.get('kind')!='combat' or p.get('status')!='active':raise ValueError('Aucun combat en cours.')
    if key not in ('light','heavy','ultimate','defend','abandon'):raise ValueError('Technique invalide.')
    raw=p['battle'];fighters=[]
    for f in raw['fighters']:
-    fighter=Fighter(**f);fighter.max_hp=f['max_hp'];fighter.hp=f['hp'];fighters.append(fighter)
+    fighter=arena_techniques.ArenaFighter(**f);fighter.max_hp=f['max_hp'];fighter.hp=f['hp'];fighters.append(fighter)
+   fighters[0].loadout=p.get('skills') or arena_player_skills(fighters[0].player_level)
    raw['fighters']=fighters;b=BattleState(**raw)
    if key=='ultimate' and b.fighters[0].ultimate_cd>0:raise ValueError('Technique en recharge.')
    if 'combat_stats' not in p:

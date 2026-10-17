@@ -121,3 +121,16 @@
  #panel.game-menu.arena-combat .arena-result-awards .gm-stat-label{font:11px/1.3 Georgia,serif}
  #panel.game-menu.arena-combat .arena-result-awards .gm-stat{padding:10px 4px}
 }
+/* Champion collection uses the same original frame and buttons as the duel. */
+.arena-book-intro{color:#dac8a4;text-align:center;font:14px/1.6 Georgia,serif;margin:0 auto;max-width:780px}
+.arena-book-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+#panel.arena-technique-book .arena-book-slots .gm-button{width:100%;min-width:0;height:70px;font:12px/1.3 Georgia,serif!important;padding:18px 23px!important;white-space:normal!important}
+#panel.arena-technique-book .arena-book-slots [aria-pressed=true]{filter:brightness(1.35);text-shadow:0 0 6px #f0cc7f}
+.arena-book-heading{font:20px/1.4 Georgia,serif;color:#f1d7a1;margin:4px 0}
+.arena-book-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.arena-book-card{min-width:0;display:flex;flex-direction:column;align-items:stretch;padding:14px;border:8px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /8px /0 stretch;background:linear-gradient(135deg,#1a3445,#0a1928);color:#e2d2b5}
+.arena-book-card h3{font:21px/1.3 Georgia,serif;color:#f5d799;margin:7px 0}.arena-book-card p{font:13px/1.5 Georgia,serif;margin:6px 0}.arena-book-card .arena-book-limit{color:#bfb9b0}.arena-book-card.is-locked{background:#081622}
+#panel.arena-technique-book .arena-book-card .gm-button{align-self:center;margin-top:auto!important;min-width:0;width:min(270px,100%);white-space:normal!important;height:64px;padding:16px 24px!important;font-size:13px!important}
+.arena-book-confirm{border:1px solid #d1aa63;padding:18px;text-align:center;background:#142e3d;color:#f0d3a1}.arena-book-confirm h3{font:20px Georgia,serif}.arena-book-confirm p{font:14px/1.5 Georgia,serif}.arena-book-confirm .gm-button{margin:5px auto!important;max-width:100%;white-space:normal!important}
+.arena-unlocked{padding:14px;border:1px solid #c4a25c;background:#b6993912;color:#f2d69e;font:14px/1.5 Georgia,serif;text-align:center}
+@media(max-width:700px){.arena-book-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.arena-book-cards{grid-template-columns:1fr}.arena-book-card{padding:13px}.arena-book-intro{font-size:12px}#panel.arena-technique-book .arena-book-slots .gm-button{font-size:10px!important;height:64px;padding:16px 20px!important}.arena-book-heading{font-size:17px}}
