@@ -1,0 +1,12 @@
+CORRECTION DU BUILD COOLIFY — CAMPAGNE
+
+Les logs signalent que le Snapshot compile ne contient pas campaign. Les memes erreurs ont ete reproduites avec l’ancien activity.ts, puis la compilation a reussi avec le fichier joint.
+
+1. Extraire ce ZIP DANS le dossier contenant Dockerfile et apps.
+2. Choisir REMPLACER TOUS LES FICHIERS EXISTANTS, sans ajouter de sous-dossier.
+3. Lancer VERIFIER_CAMPAGNE.bat, puis votre .bat habituel de mise a jour GitHub.
+4. Sur GitHub, branche main, verifier que apps/game/src/activity.ts contient campaign?:CampaignState.
+5. Relancer le deploiement Coolify.
+
+Le verificateur est en lecture seule. Ce ZIP contient le correctif complet de campagne, sans base de donnees ni secret.
+Les fichiers main.ts et quest-tracker.ts doivent aussi etre remplaces pour relier le menu a la campagne.

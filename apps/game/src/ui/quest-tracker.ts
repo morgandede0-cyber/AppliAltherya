@@ -1,6 +1,6 @@
 import type {Snapshot} from '../activity';
 import './quest-tracker.css';
-type Tab='story'|'daily'|'activity';
+type Tab='story'|'chronicles'|'daily'|'activity';
 export function storyObjective(s:Pick<Snapshot,'chapters'>){
  const next=s.chapters.find(c=>!c.unlocked);return next?{title:`Chapitre ${next.chapter} · ${next.title}`,missing:next.missing,ready:next.can_unlock,complete:false}:{title:'Chroniques débloquées',missing:[],ready:false,complete:true};
 }
@@ -17,7 +17,7 @@ export function createQuestTracker(host:{route:(key:string)=>void},dailyOnly=fal
  let state:Snapshot|undefined,tab:Tab=dailyOnly?'daily':'story',page=0,expanded=!window.matchMedia('(max-width: 700px), (max-height: 520px)').matches;
  const preference=dailyOnly?'altherya.daily-tracker.v1':'altherya.quest-tracker.v1';try{const p=window.localStorage.getItem(preference);if(p==='open'||p==='closed')expanded=p==='open';}catch{}
  const tabButtons=new Map<Tab,HTMLButtonElement>();
- for(const [key,label] of (dailyOnly?[]:[['story','Histoire'],['activity','Missions']]) as [Tab,string][]){const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>{tab=key;page=0;draw();};tabs.append(b);tabButtons.set(key,b);}
+ for(const [key,label] of (dailyOnly?[]:[['story','Aventure'],['chronicles','Chroniques'],['activity','Missions']]) as [Tab,string][]){const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>{tab=key;page=0;draw();};tabs.append(b);tabButtons.set(key,b);}
  function fold(){body.hidden=!expanded;toggle.textContent=dailyOnly?(expanded?'‹  Quotidiennes':'›  Quotidiennes'):(expanded?'Quêtes  ›':'Quêtes  ‹');toggle.setAttribute('aria-expanded',String(expanded));toggle.setAttribute('aria-label',dailyOnly?(expanded?'Replier les quêtes quotidiennes':'Ouvrir les quêtes quotidiennes'):(expanded?'Replier le suivi des quêtes':'Ouvrir le suivi des quêtes'));if(expanded&&window.matchMedia('(max-width: 700px), (max-height: 520px)').matches)window.dispatchEvent(new window.CustomEvent('quest-tracker-open',{detail:root.id}));}
  const anotherOpened=(event:Event)=>{if((event as CustomEvent).detail!==root.id&&expanded){expanded=false;fold();}};window.addEventListener('quest-tracker-open',anotherOpened);
  toggle.onclick=()=>{expanded=!expanded;try{window.localStorage.setItem(preference,expanded?'open':'closed');}catch{}fold();};
@@ -25,8 +25,16 @@ export function createQuestTracker(host:{route:(key:string)=>void},dailyOnly=fal
  function node(tag:string,text:string,cls=''){const n=document.createElement(tag);n.textContent=text;if(cls)n.className=cls;return n;}
  function route(key:string){if(window.matchMedia('(max-width: 700px), (max-height: 520px)').matches){expanded=false;fold();}host.route(key);queueMicrotask(()=>document.querySelector<HTMLElement>('#panel:not([hidden]) button')?.focus());}
  function draw(){if(!state)return;const s=state;root.hidden=!s.tutorial.completed||s.tutorial.replay;for(const [k,b] of tabButtons)b.setAttribute('aria-pressed',String(k===tab));content.replaceChildren();
-  footer.onclick=()=>route(tab==='story'?'story':tab==='daily'?'castle':'journal');footer.textContent=tab==='story'?'Voir le troubadour':tab==='daily'?'Voir les récompenses':'Ouvrir le journal';
-  if(tab==='story'){
+  footer.onclick=()=>route(tab==='story'&&s.campaign?'campaign':tab==='story'||tab==='chronicles'?'story':tab==='daily'?'castle':'journal');footer.textContent=tab==='story'&&s.campaign?'Ouvrir la quête':tab==='story'||tab==='chronicles'?'Voir le troubadour':tab==='daily'?'Voir les récompenses':'Ouvrir le journal';
+  if(tab==='story'&&s.campaign){
+   const c=s.campaign,q=c.quest;content.append(node('p',`Campagne · ${c.completed}/${c.total}`,'quest-kicker'));
+   if(c.complete)content.append(node('h3','Les routes des Trois Terres'),node('p','✓ Campagne terminée. Vos choix sont conservés.','quest-ready'));
+   else if(q){content.append(node('h3',q.title),node('p',`Saison ${q.season} · Niveau ${q.min_level}`,'quest-note'));
+    if(!c.accepted)content.append(node('p',c.level_allowed?'Quête disponible · ouvrez le journal pour l’accepter.':`Atteignez le niveau ${q.min_level} pour poursuivre.`));
+    else{const list=document.createElement('ul');for(const [i,step] of q.steps.entries())list.append(node('li',`${i<c.stage?'✓ ':''}${step.label}`,i<c.stage?'quest-done':''));content.append(list);if(c.stage===q.steps.length)content.append(node('p','Objectifs terminés · remettez la quête dans le journal.','quest-ready'));}
+    content.append(node('p',`${q.gold} Gold · ${q.xp} XP`,'quest-note'));
+   }
+  }else if(tab==='story'||tab==='chronicles'){
    const q=storyObjective(s);content.append(node('p','Chroniques · Saison 1','quest-kicker'),node('h3',q.title));
    if(q.complete)content.append(node('p','Tous les chapitres sont débloqués. Retrouvez-les dans le livre du troubadour.'));
    else if(q.ready)content.append(node('p','✓ Collection réunie. Débloquez ce chapitre chez le troubadour.','quest-ready'));

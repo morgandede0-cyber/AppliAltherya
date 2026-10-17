@@ -13,6 +13,7 @@ from job_board_engine import JobBoardStore, BoardJob
 from progression import JOB_RARITY_XP
 from aiohttp import web
 from play import Play
+from campaign import Campaign
 from tutorial import ActivityTutorial
 from identity import DiscordIdentity
 from activity_admin import ActivityAdmin
@@ -37,6 +38,7 @@ class Activity:
         self.admin=ActivityAdmin(self)
         self.notifications=DiscordEvents(self)
         self.guild_names=GuildNames(self)
+        self.campaign=Campaign(self)
     def conn(self):
         c=sqlite3.connect(self.path);c.row_factory=sqlite3.Row;return c
     def session(self, token):
@@ -88,7 +90,7 @@ class Activity:
         public_discord=None if not discord else dict(username=discord['username'],display_name=discord['display_name'],avatar_url='/api/avatar?v='+avatar_revision(discord))
         history_inventory=self.story.inventory(uid)
         owned_story_items=[dict(name=n,quantity=q) for n,q in history_inventory.items() if n in STORY_ITEM_PRICES]
-        return dict(admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
+        return dict(campaign=self.campaign.snapshot(uid),admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
     def action(self,uid,body):
         profile=self.discord_profile(uid)
         name=profile["display_name"] if profile else "Aventurier"
@@ -108,6 +110,7 @@ class Activity:
             return 'Nom enregistré.'
         if self.tutorial.discord_required() and not self.discord_profile(uid):raise ValueError('Connexion Discord requise pour jouer.')
         if not self.tutorial.state(uid)['completed']:raise ValueError('Terminez le tutoriel et récupérez votre récompense avant de jouer.')
+        if action.startswith('campaign_'):return self.campaign.action(uid,body)
         if action in ('deposit','withdraw','sell'):
             amount=body.get('amount')
             if type(amount) is not int or not 1<=amount<=1000000000:raise ValueError('Indiquez une quantité entière positive.')

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build",
-    "test": "node --import tsx --test tests/*.test.ts tests/bank-dom.test.cjs tests/native-components.test.cjs tests/quest-tracker-dom.test.cjs"
+    "test": "node --import tsx --test tests/*.test.ts tests/bank-dom.test.cjs tests/native-components.test.cjs tests/quest-tracker-dom.test.cjs tests/campaign-menu-dom.test.cjs"
   },
   "dependencies": {
     "@discord/embedded-app-sdk": "^2.2.0",
