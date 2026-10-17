@@ -33,7 +33,7 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  const gearName=(key:string,t:number)=>key==='bag'?s.bags[String(t)]?.name:s.tools[String(t)]?.[key];
  function card(parent:HTMLElement,title:string,copy='',icon?:Node){const n=menuCard(parent,title,copy,icon);n.dataset.material=kind==='bank'?'blue':'wood';const material=kind==='bank'?assetSlice('/assets/blank-ui/bank.png',190,450,440,200):navigation.has(kind)?assetSlice('/assets/blank-ui/navigation.png',215,565,230,80):assetSlice('/assets/blank-ui/forge.png',415,450,275,160);material.classList.add('gm-material');material.setAttribute('preserveAspectRatio','none');n.prepend(material);return n;}
  if(kind==='arena'){
-  body.append(arenaSummary(s));const actions=node('div','gm-actions arena-lobby-actions');body.append(actions);
+  body.append(arenaSummary(s));action('Mes techniques',footer);action('Dernier résultat',footer);const actions=node('div','gm-actions arena-lobby-actions');body.append(actions);
   for(const label of ['Affronter le champion','Affronter un ami']){const b=action(label,actions);if(b){b.classList.remove('native-art-button');b.replaceChildren(node('span','gm-button-label',label));}}
  }else if(navigation.has(kind)){
   const choices=old.filter(b=>!backLabels.test(b.getAttribute('aria-label')??''));

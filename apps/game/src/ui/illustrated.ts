@@ -1,3 +1,4 @@
+import {openArenaCombat} from './arena-combat';
 import {arenaSummary} from './arena-view';
 import {nativeHeading} from './native-components';
 import {openBankMenu} from './bank-menu';
@@ -15,21 +16,22 @@ import {itemArt} from './item-art';
 import {equipmentArt} from './catalog-art';
 import {assetSlice} from './menu-kit';
 type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;close:()=>void;route:(key:string)=>void;refresh:()=>Promise<void>};
-export const illustratedKinds=new Set('bank jobs tavern games castle dashboard podium arena combat techniques alley thief casino blackjack roulette russian slots horses expedition tools destinations accessories departure live dice coin rps'.split(' '));
+export const illustratedKinds=new Set('bank jobs tavern games castle dashboard podium arena combat techniques arena-result alley thief casino blackjack roulette russian slots horses expedition tools destinations accessories departure live dice coin rps'.split(' '));
 export function openIllustrated(panel:HTMLElement,initial:string,host:Host,location='elarwyn'){
  if(initial==='bank')return openBankMenu(panel,host);
- let kind=initial,selected='beer',amount=Math.min(100,host.state().balance.wallet),withdraw=Math.min(100,host.state().balance.bank),page=0,tool='axe',tier=1,destination='',wager=Math.min(10,host.state().balance.wallet),choice:string|number='red',number=0,locked=false,notice='',destroyed=false,animationUntil=0,animationStarted=0,rotation=0,spinRevision=-1,dialog='',acknowledgedResult=-1,offset=host.state().server_now*1000-Date.now();
+ if(['combat','techniques','arena-result'].includes(initial))return openArenaCombat(panel,host,initial==='techniques',initial==='arena-result');
+ let kind=initial,selected='beer',amount=Math.min(100,host.state().balance.wallet),withdraw=Math.min(100,host.state().balance.bank),page=0,tool='axe',tier=1,destination='',wager=Math.min(10,host.state().balance.wallet),choice:string|number='red',number=0,locked=false,notice='',destroyed=false,animationUntil=0,animationStarted=0,rotation=0,spinRevision=-1,dialog='',offset=host.state().server_now*1000-Date.now();
  const el=(tag:string,text='',cls='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};let stage:HTMLElement,dock:HTMLElement;let live:ReturnType<typeof openLiveGame>|undefined,liveKind='';
  const box=(x:number,y:number,w:number,h:number,text='',cls='art-mask')=>{const n=el('div',text,'art-overlay '+cls);Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});if(cls.includes('art-mask')||cls==='bank-amount')materialField(n,kind,cls.includes('job-rarity')?'seal':cls==='bank-amount'||cls.includes('art-blue')?'blue':cls.includes('art-paper')?'paper':cls.includes('art-wood')||kind==='bank'||kind==='tools'||kind==='destinations'?'wood':'blue');stage.append(n);return n;};
  const button=(label:string,fn:()=>void,disabled=false)=>{const n=el('button',label,'art-button') as HTMLButtonElement;n.disabled=disabled||locked||Date.now()<animationUntil;n.onclick=fn;decorateButton(n,label);return n;};
  const hit=(label:string,x:number,y:number,w:number,h:number,fn:()=>void,disabled=false,chosen=false)=>{
 const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n.setAttribute('aria-label',label);n.title=label;n.disabled=disabled||locked||Date.now()<animationUntil;Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});n.onclick=fn;stage.append(n);return n;};
  const route=(key:string)=>{dialog='';host.route(key);};
- function change(next:string){kind=next;dialog='';page=0;notice='';draw();}
+ function change(next:string){if(next==='combat'||next==='techniques'){route(next);return;}kind=next;dialog='';page=0;notice='';draw();}
  async function run(body:Record<string,unknown>,after?:()=>void,animate=false){if(locked||Date.now()<animationUntil)return;const revision=host.state().play.revision;locked=true;draw();try{notice=await host.mutate({...body,...((String(body.action).startsWith('game_')||String(body.action).startsWith('battle_'))?{revision}:{})});if(animate){animationStarted=Date.now();animationUntil=animationStarted+(matchMedia('(prefers-reduced-motion: reduce)').matches?10:kind==='russian'?1000:4000);}after?.();}catch(e){notice=String(e);}finally{locked=false;if(!destroyed)draw();}}
  function input(parent:HTMLElement,value:number,label:string,max:number,onChange:(v:number)=>void,min=1){const n=document.createElement('input');n.type='number';n.min=String(min);n.max=String(max);n.step='1';n.value=String(value);n.setAttribute('aria-label',label);n.onchange=()=>{onChange(Number(n.value));draw();};parent.append(n);return n;}
  function controls(parent:HTMLElement,...nodes:HTMLElement[]){const n=el('div','','art-buttons');n.append(...nodes);(parent.closest('.art-extra')?parent:dock).append(n);}
- function closeDialog(){if(dialog==='battle-result')acknowledgedResult=host.state().play.revision;dialog='';draw();}
+ function closeDialog(){dialog='';draw();}
  function refresh(){void host.refresh().catch(e=>{notice=String(e);draw();});}
  function footer(back:string,x=35,y=88,w=30,h=8){const action=()=>['expedition','tools','destinations','accessories','departure','live'].includes(back)?change(back):route(back);if(kind==='jobs'&&host.state().pending)dock.append(button('Retour en ville',action));else hit(back==='hub'?'Retour en ville':'Retour',x,y,w,h,action);}
  function text(parent:HTMLElement,value:string){parent.append(el('p',value));}
@@ -59,6 +61,7 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
   if(navigation[kind]){
    const nav=navigation[kind];stage.setAttribute('aria-label',nav.title);
    nav.items.forEach(([label,fn,disabled],i)=>{const [x,y,w,h]=navigationRect(kind,i);hit(label,x,y,w,h,fn,!!disabled);});
+   if(kind==='arena'){hit('Mes techniques',35,80,30,9,()=>route('techniques'));if(s.arena.recent?.length)hit('Dernier résultat',35,70,30,9,()=>route('arena-result'));}
    if(kind==='games')for(let i=0;i<3;i++)hit('Jeu contre un ami indisponible',4+31*i,64,30,25,()=>{},true);
    reflowArtwork(stage,kind);fitArtworkText(panel);if(dialog)drawDialog(s);if(notice&&!dialog){const n=el('div',notice,'art-notice');n.setAttribute('role','status');panel.append(n);}tick();return;
   }
@@ -92,33 +95,9 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
    box(35.5,23,4,5,String(s.level));const lvl=box(42,24.8,28,2.7);progress(lvl,s.xp,s.xp_needed);box(73,22,16,8,`${s.xp}/${s.xp_needed} XP`);box(26,42,18,6,`${s.balance.wallet} Gold`);box(71,42,20,6,`${s.balance.bank} Gold`);const done=s.quests.filter(q=>q.progress>=q.target).length,q=box(24,59,22,8,`${done}/${s.quests.length} terminées`);progress(q,done,s.quests.length);box(72,59,20,8,s.quests.every(q=>q.claimed)?'Récupérée':done===s.quests.length?'Disponible':'En cours');hit('Quêtes quotidiennes',7,51,41,17,()=>{dialog='quests';draw();});hit('Réclamer les quêtes',52,51,41,17,()=>void run({action:'quests_claim'}),done<s.quests.length||s.quests.every(q=>q.claimed));box(20,77,28,6,s.active?s.active.name:'Aucune expédition','art-mask art-small');box(67,77,25,6,`${s.stats.wins} victoires · ${s.stats.losses} défaites`,'art-mask art-small');hit('Actualiser',18,89,29,8,refresh);footer('castle',54,89,29,8);
   }else if(kind==='podium'){
    [1,0,2].forEach((rank,i)=>{const entry=s.podium[rank],x=i===0?14:i===1?42:74,y=i===1?62:67,w=i===1?17:15;box(x,y,w,5,entry?.name??'Place libre');box(x,i===1?70:73,w,5,entry?`${entry.total} Gold`:'—');});hit('Actualiser',19,88,31,8,refresh);footer('castle',54,88,35,8);
-  }else if(kind==='combat'){
-   const fighters=p.kind==='combat'?p.fighters??[]:[];
-   for(let i=0;i<2;i++){
-    const f=fighters[i],x=i===0?12:71,n=box(x,6,17,6,'','art-mask combat-fighter');
-    text(n,f?.name??'Aucun combat');if(f){text(n,`${f.hp}/${f.max_hp} PV`);const health=box(x,14,17,2.5,'','combat-health');progress(health,f.hp,f.max_hp);}
-   }
-   const labels=['Attaque rapide','Techniques','Se protéger','Abandonner'];
-   labels.forEach((label,i)=>box([12,37,60,83][i],84.5,[14,12,12,12][i],5.5,label,'art-small combat-action-label'));
-   box(44,14,13,4,`Tour ${p.turn??0}`,'art-mask combat-turn');
-   const logs=box(29,73,42,7,'','art-mask art-log combat-log');(p.logs??[]).slice(-4).forEach(l=>text(logs,l.replaceAll('*','')));
-   hit('Attaque rapide',2,81,26,12,()=>void run({action:'battle_step',key:'light'}),p.status!=='active');
-   hit('Techniques',28,81,22,12,()=>change('techniques'),p.status!=='active');
-   hit('Se protéger',50,81,24,12,()=>void run({action:'battle_step',key:'defend'}),p.status!=='active');
-   hit('Abandonner',74,81,24,12,()=>{dialog='abandon';draw();},p.status!=='active');
-   box(29,95,44,4,p.status==='finished'?`${p.message} · ${p.payout??0} Gold`:'À votre tour','art-mask art-small combat-status');
-   if(p.status==='finished'){dock.replaceChildren(button('Voir le résultat',()=>{dialog='battle-result';draw();}),button('Retour à l’arène',()=>route('arena')));}
-  }else if(kind==='techniques'){
-   ['light','heavy','ultimate'].forEach((key,i)=>{
-    const sk=s.arena.skills[key],x=6+i*32;
-    box(x+4,54,17,6,`Puissance : ${sk.power}${key==='ultimate'?'\nRecharge : '+(p.fighters?.[0]?.ultimate_cd??0)+' tour(s)':''}`,'art-mask art-small');
-    box(x+1,63,23,5.5,p.status==='active'?'Utiliser':'Hors combat','art-small technique-action-label');
-    hit('Utiliser '+sk.name,x-2,61,29,9,()=>void run({action:'battle_step',key},()=>change('combat')),p.status!=='active'||key==='ultimate'&&(p.fighters?.[0]?.ultimate_cd??0)>0);
-   });
-   hit('Retour au combat',33,90,35,9,()=>change('combat'));
   }
   else if(['expedition','tools','destinations','accessories','departure','live'].includes(kind))expeditions(s);
-  if(['combat','techniques'].includes(kind)&&p.kind==='combat'&&p.status==='finished'&&acknowledgedResult!==p.revision)dialog='battle-result';reflowArtwork(stage,kind);fitArtworkText(panel);if(dialog)drawDialog(s);dock.inert=!!dialog;dock.setAttribute('aria-hidden',String(!!dialog));if(notice&&!dialog){const n=el('div',Date.now()<animationUntil?'Animation en cours…':notice,'art-notice');n.setAttribute('role','status');panel.append(n);}tick();
+  reflowArtwork(stage,kind);fitArtworkText(panel);if(dialog)drawDialog(s);dock.inert=!!dialog;dock.setAttribute('aria-hidden',String(!!dialog));if(notice&&!dialog){const n=el('div',Date.now()<animationUntil?'Animation en cours…':notice,'art-notice');n.setAttribute('role','status');panel.append(n);}tick();
  }
  function drawMobileJobs(s:Snapshot,img:HTMLImageElement){
   panel.classList.add('mobile-jobs');img.remove();const root=stage;root.append(assetSlice('/assets/menus/jobs.webp',255,0,1035,245));
@@ -183,14 +162,7 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
   }
  }
  function drawDialog(s:Snapshot){const n=el('div','','art-extra');n.setAttribute('role','dialog');n.setAttribute('aria-modal','true');stage.append(n);
-  if(dialog==='battle-result'){
-   panel.append(n);n.classList.add('battle-result');n.setAttribute('aria-label','Résultat du combat');
-   const won=s.play.outcome==='victory'||(!s.play.outcome&&s.play.message?.startsWith('Victoire')),fighter=s.play.fighters?.[1];
-   const title=won?'Victoire !':'Défaite',heading=el('h2','','compact-button result-title result-banner'),ornament=decorateButton(document.createElement('button'),title);heading.append(...Array.from(ornament.childNodes));n.classList.toggle('victory',!!won);n.append(el('span',won?'⚜':'⚔','result-emblem'),heading,el('p',won?`Bravo, ${s.name} ! Vous avez vaincu ${fighter?.name??'le champion'}.`:`Courage, ${s.name}. ${fighter?.name??'Le champion'} remporte ce combat.`),el('p',won?'La foule acclame votre victoire !':'Revenez plus fort pour prendre votre revanche.'));
-   const summary=el('dl','','result-summary');for(const [label,value] of [['Gold reçus',`${s.play.payout??0} Gold`],['Tours',String(s.play.turn??0)],['PV restants',`${s.play.fighters?.[0]?.hp??0} / ${s.play.fighters?.[0]?.max_hp??0}`]])summary.append(el('dt',label),el('dd',value));n.append(summary);
-   controls(n,button('Voir les attaques',closeDialog),button('Retour à l’arène',()=>{acknowledgedResult=s.play.revision;route('arena');}));
-  }
-  else if(dialog==='number'){text(n,'Choisissez un numéro de 0 à 36');input(n,number,'Numéro',36,v=>number=v,0);controls(n,button('Confirmer',closeDialog,!Number.isInteger(number)||number<0||number>36));}
+  if(dialog==='number'){text(n,'Choisissez un numéro de 0 à 36');input(n,number,'Numéro',36,v=>number=v,0);controls(n,button('Confirmer',closeDialog,!Number.isInteger(number)||number<0||number>36));}
   else if(dialog==='contract'){
    n.classList.add('contract-backdrop');n.setAttribute('aria-label','Contrat de mission');
    const paper=el('article','','mission-parchment');n.append(paper);
@@ -216,10 +188,9 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
    const presets=el('div','','art-buttons arena-wager-presets');for(const value of [0,50,100]){const preset=button(value===0?'Sans mise':value+' Gold',()=>{wager=value;draw();},value>s.balance.wallet);preset.setAttribute('aria-pressed',String(wager===value));presets.append(preset);}stake.append(presets);n.append(stake);
    controls(n,button('Commencer le combat',()=>void run({action:'battle_start',wager},()=>{if(host.state().play.kind==='combat'&&host.state().play.status==='active')change('combat');}),!Number.isInteger(wager)||wager<0||wager>500||wager>s.balance.wallet),button('Retour',closeDialog));
   }
-  else if(dialog==='abandon'){text(n,'Abandonner ce combat ? La mise sera perdue.');controls(n,button('Abandonner',()=>void run({action:'battle_step',key:'abandon'},()=>{dialog='';})));}
   else if(dialog==='npc'){text(n,'Choisissez votre cible');controls(n,...s.alley.npc_targets.map(t=>button(t.name,()=>void run({action:'npc_theft',key:t.key},()=>{dialog='';}))));}
   else if(dialog==='record'){text(n,`Réputation : ${s.alley.reputation.label}`);Object.entries(s.alley.record).filter(([k])=>k!=='user_id').forEach(([k,v])=>text(n,`${({theft_success:'Vols réussis',theft_fail:'Vols ratés',crimes_success:'Crimes réussis',heists_success:'Braquages réussis',gold_stolen:'Gold volé',loot:'Butin',caught:'Arrestations'} as Record<string,string>)[k]??k} : ${v}`));}
-  else if(dialog==='quests'){text(n,'Quêtes quotidiennes');s.quests.forEach(q=>text(n,`${q.label} · ${q.progress}/${q.target}`));text(n,`Récompense : ${s.quest_reward.gold} Gold + ${s.quest_reward.xp} XP`);}if(!['contract','battle-result','champion'].includes(dialog))controls(n,button('Retour',closeDialog));
+  else if(dialog==='quests'){text(n,'Quêtes quotidiennes');s.quests.forEach(q=>text(n,`${q.label} · ${q.progress}/${q.target}`));text(n,`Récompense : ${s.quest_reward.gold} Gold + ${s.quest_reward.xp} XP`);}if(!['contract','champion'].includes(dialog))controls(n,button('Retour',closeDialog));
  }
  function tick(){panel.querySelectorAll<HTMLElement>('[data-deadline]').forEach(n=>{const seconds=Math.max(0,Math.ceil((Number(n.dataset.deadline)-Date.now())/1000));if(n.dataset.missionTimer){n.textContent=seconds>0?`${String(Math.floor(seconds/3600)).padStart(2,'0')} : ${String(Math.floor(seconds%3600/60)).padStart(2,'0')} : ${String(seconds%60).padStart(2,'0')}`:'Terminée';const bar=panel.querySelector<HTMLProgressElement>('.mission-progress');if(bar)bar.value=3600-seconds;if(seconds===0){const claim=panel.querySelector<HTMLButtonElement>('[data-mission-claim]');if(claim&&!locked)claim.disabled=false;const message=panel.querySelector('.mission-state');if(message)message.textContent='Mission terminée · votre récompense vous attend.';}}else fieldText(n,timeLabel(seconds));});if(animationUntil&&Date.now()>=animationUntil){animationUntil=0;draw();}}
  const stopSize=watchMenuSize(panel,draw);const clock=window.setInterval(tick,100);panel.onkeydown=e=>{if(e.key==='Escape'&&!locked){e.preventDefault();dialog?closeDialog():host.close();}if(e.key==='Tab'){const root=panel.querySelector('.art-extra')??panel,nodes=Array.from(root.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled)')),first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}};draw();panel.querySelector<HTMLElement>('button')?.focus({preventScroll:true});return {destroy(){destroyed=true;stopSize();live?.destroy();document.body.classList.remove('illustrated-open');clearInterval(clock);panel.onkeydown=null;},update(){offset=host.state().server_now*1000-Date.now();if(document.activeElement instanceof HTMLInputElement&&panel.contains(document.activeElement))return;if(!locked&&Date.now()>=animationUntil)draw();}};

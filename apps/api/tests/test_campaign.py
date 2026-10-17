@@ -108,4 +108,19 @@ class CampaignTests(unittest.TestCase):
    try:self.a.action(self.uid,body);return True
    except ValueError:return False
   with ThreadPoolExecutor(max_workers=2) as pool:self.assertEqual(sum(pool.map(invoke,range(2))),1)
-  self.assertEqual(self.a.economy.get_balance(self.uid).wallet-before,QUESTS[0]['gold']);self.assertEqual(self.a.castle.profile(self.uid)['quests_completed'],1)
+  self.assertEqual(self.s()['quest']['gold'],10);self.assertEqual(self.a.economy.get_balance(self.uid).wallet-before,10);self.assertEqual(self.a.castle.profile(self.uid)['quests_completed'],1)
+
+ def test_old_paid_reward_survives_restart_without_second_payment(self):
+  self.position(0,3)
+  with self.a.conn() as c:
+   c.execute('INSERT INTO campaign_receipts VALUES(?,?,?,?,?)',(self.uid,'S1-Q01',115,20,time.time()))
+   c.execute('UPDATE players SET wallet_gold=115 WHERE user_id=?',(self.uid,))
+   c.execute('UPDATE campaign_progress SET quest_index=1,stage=0,accepted_at=NULL WHERE user_id=?',(self.uid,))
+  self.a=Activity(self.a.path)
+  self.assertEqual(self.a.economy.get_balance(self.uid).wallet,115)
+  self.assertEqual(self.s()['quest']['gold'],10)
+  with self.a.conn() as c:
+   self.assertEqual(tuple(c.execute('SELECT gold,xp FROM campaign_receipts WHERE user_id=?',(self.uid,)).fetchone()),(115,20))
+  self.position(0,3)
+  with self.assertRaises(ValueError):self.act('campaign_claim')
+  self.assertEqual(self.a.economy.get_balance(self.uid).wallet,115)

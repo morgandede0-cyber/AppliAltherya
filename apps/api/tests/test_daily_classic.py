@@ -13,14 +13,16 @@ class ClassicDailyTests(unittest.TestCase):
    qs,meta=self.a.castle.quests(self.uid)
    self.assertEqual(len(qs),3);self.assertTrue({q['key'] for q in qs}<={'arena_win','combat','daily_bonus','tavern_game','expedition'})
    self.assertTrue(all(1<=q['target']<=2 for q in qs))
-   self.assertNotIn('Ashkar',' '.join(q['label'] for q in qs));self.assertEqual(meta['gold'],400)
+   self.assertNotIn('Ashkar',' '.join(q['label'] for q in qs));self.assertEqual(meta['gold'],30)
  def test_reward_all_or_nothing_and_once_across_restart(self):
   store=self.a.castle;self.assertFalse(store.claim_quests(self.uid)[0])
   plan,_=store.quest_config(self.uid)
   for key,(_,target,event) in plan.items():
    if key=='daily_bonus':store.claim_daily(self.uid)
    else:store.record(self.uid,event,target)
-  self.assertTrue(store.claim_quests(self.uid)[0]);before=self.a.economy.get_balance(self.uid).wallet
+  before_claim=self.a.economy.get_balance(self.uid).wallet
+  result=store.claim_quests(self.uid);self.assertTrue(result[0]);self.assertEqual(result[1:3],(30,75))
+  before=self.a.economy.get_balance(self.uid).wallet;self.assertEqual(before-before_claim,30)
   other=Activity(self.a.path);self.assertFalse(other.castle.claim_quests(self.uid)[0]);self.assertEqual(other.economy.get_balance(self.uid).wallet,before)
 
  def test_previous_six_claimed_cannot_claim_new_three_again(self):

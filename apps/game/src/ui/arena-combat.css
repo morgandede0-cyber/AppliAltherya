@@ -1,0 +1,123 @@
+/* Arena panels reuse the validated frame, ornaments and button artwork. */
+#panel.game-menu.arena-combat{--menu-width:min(1120px,96vw);padding:8px 14px 14px!important;border:16px solid transparent!important;border-image:url('/assets/menu-components/panel-frame.webp') 45 /16px /0 stretch!important;background:linear-gradient(125deg,#102b40,#071421)!important;box-shadow:0 14px 50px #000b!important;scroll-behavior:smooth}
+#panel.arena-combat .gm-header{margin-bottom:10px;padding:0 8px 8px}
+#panel.arena-combat .native-heading{width:min(320px,65%);margin:0 auto}
+#panel.arena-combat .gm-body{gap:14px}
+.arena-combat-top{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #b9914140;padding-bottom:10px}
+.arena-combat-top p{margin:0;color:#dec38a;font:14px/1.4 Georgia,serif}
+.arena-combat-top .arena-round{font-size:20px;color:#ffe4aa}
+.arena-duel{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.arena-fighter{position:relative;display:flex;gap:14px;align-items:center;min-width:0;padding:14px;border:10px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /10px /0 stretch;background:linear-gradient(125deg,#194461d9,#07172cf5);box-shadow:inset 0 0 28px #0007}
+.arena-fighter-1{background:linear-gradient(125deg,#3e2926e8,#101d30f5)}
+.arena-portrait{flex:0 0 62px;width:62px;height:76px;border:1px solid #bd9b60;border-radius:36px 36px 12px 12px;background:radial-gradient(ellipse,#4a5360,#101927);display:grid;place-items:center;overflow:hidden;color:var(--champion-accent,#efcd85);font-size:40px}
+.arena-portrait img{width:100%;height:100%;object-fit:cover}
+.arena-fighter-copy{min-width:0;flex:1}
+.arena-eyebrow{font:10px/1.4 Georgia,serif;letter-spacing:.13em;color:#ceb37e}
+.arena-fighter-name{margin:5px 0 10px;font:600 19px/1.2 Georgia,serif;color:#ffe9b9;overflow-wrap:anywhere}
+.arena-hp{position:relative}
+.arena-hp-track{height:15px;border:1px solid #c5ab7080;border-radius:8px;background:#020d18;overflow:hidden}
+.arena-hp-fill{display:block;height:100%;background:linear-gradient(#9dd5aa,#40795f);border-radius:7px;transition:width .5s ease}
+.arena-fighter-1 .arena-hp-fill{background:linear-gradient(#e2b29a,#a95348)}
+.arena-fighter.low-health .arena-hp-fill{background:linear-gradient(#e68f73,#a33637)}
+.arena-hp-value{display:block;margin-top:6px;text-align:right;font:14px Georgia,serif;font-variant-numeric:tabular-nums;color:#fff0d0}
+.arena-statuses{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;min-height:24px}
+.arena-status{font:11px/1.4 Georgia,serif;border:1px solid #a8946155;background:#050e1d99;border-radius:12px;padding:3px 8px;color:#f0d095}
+.arena-status.neutral{border-color:transparent;background:none;color:#a9b3b6;padding-left:0}
+.arena-intent{position:relative;padding:14px 18px;border-left:3px solid var(--champion-accent,#c6aa71);background:linear-gradient(90deg,#c5a14c19,#0a1928);min-width:0}
+.arena-intent h3{color:#ffe2a2;font:600 21px/1.25 Georgia,serif;margin:4px 0 8px}
+.arena-intent p{color:#d1c5af;font:14px/1.5 Georgia,serif;margin:0}
+.arena-phase-badge{display:inline-block;color:#edc387;border:1px solid #bf8f5770;border-radius:4px;padding:4px 8px;font-size:12px;margin-top:10px}
+.arena-techniques{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.arena-technique{display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;min-width:0}
+#panel.game-menu.arena-combat .arena-techniques .gm-button{width:100%;min-width:0;height:74px;min-height:74px;padding:19px 28px!important;font-size:14px!important;text-align:center}
+.arena-technique-name{font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.arena-technique-values{font:11px/1.4 Georgia,serif;color:#ddcba7;overflow-wrap:anywhere}
+.arena-technique-availability{font:10px/1.3 Georgia,serif;color:#e7d496}
+.arena-utilities{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+#panel.arena-combat .arena-utilities .gm-button{font-size:13px!important;min-height:44px;padding:12px 28px!important}
+.arena-technique-help{padding:12px 16px;background:#08182c;border:1px solid #a68a4340}
+.arena-technique-help p{font:13px/1.6 Georgia,serif;color:#ddd0b0}
+.arena-log{padding:14px 16px;border:1px solid #9f804945;background:linear-gradient(#081a2beb,#07111e);min-width:0}
+.arena-log h3{margin:0 0 10px;color:#ecd398;font:18px Georgia,serif}
+.arena-log-list{max-height:180px;overflow:auto;list-style:none;padding:0;margin:0;scrollbar-width:thin;overscroll-behavior:contain}
+.arena-log-list li{display:flex;gap:12px;border-top:1px solid #cba64c20;padding:9px 0;color:#d9d3c2;font:13px/1.5 Georgia,serif;overflow-wrap:anywhere}
+.arena-event-turn{flex:0 0 28px;color:#bfa677;font-size:11px}
+.arena-log-list .arena-event-critical{color:#f2c16a}.arena-log-list .arena-event-guard{color:#a7c9e3}.arena-log-list .arena-event-miss{color:#abaeaf}
+.arena-combat-notice{margin:0;text-align:center;color:#e7c480;font:13px/1.5 Georgia,serif;min-height:20px}
+.arena-result{text-align:center;padding:18px;border:12px solid transparent;border-image:url('/assets/menu-components/panel-frame.webp') 45 /12px /0 stretch;background:radial-gradient(ellipse at 50% 0,#b58c3a22,transparent 65%),#091a2b}
+.arena-result-seal{font:48px Georgia,serif;color:#e4bf70}.arena-result.defeat .arena-result-seal{color:#cb9180}
+.arena-result h2{font:600 38px/1.1 Georgia,serif;color:#f3d28f;margin:6px 0 10px}
+.arena-result-opponent{color:#dfc69a;font:17px/1.4 Georgia,serif}.arena-result-copy{font:14px/1.5 Georgia,serif;color:#d6cbb6}
+.arena-result-awards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}
+#panel.arena-combat .arena-result-awards .gm-stat{display:flex;flex-direction:column;gap:8px;text-align:center;background:#a88b4610;border:1px solid #bd9b4a55;padding:14px 8px;min-width:0}
+.arena-result-awards .gm-stat-value{color:#ffe0a5;font:600 22px/1.3 Georgia,serif;overflow-wrap:anywhere}.arena-result-awards .gm-stat-label{color:#bdb3a0;font:12px Georgia,serif}
+.arena-result-ledger{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;text-align:left;font:14px/1.4 Georgia,serif;margin:0 auto 18px;max-width:620px}.arena-result-ledger dt{color:#bfb399}.arena-result-ledger dd{margin:0;text-align:right;color:#f0dfbc}
+.arena-result-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}.arena-result-stats section{padding:12px;border-top:1px solid #c7a05244}.arena-result-stats h3{font:15px Georgia,serif;color:#ebce90;margin:0 0 7px}.arena-result-stats p{font:12px/1.6 Georgia,serif;color:#c6c4b9;margin:0}
+.arena-next{border-top:1px solid #b5904955;padding-top:14px;color:#e6d09c;font:15px/1.5 Georgia,serif}.arena-next-delay{color:#acaeaa;font:12px/1.5 Georgia,serif}
+.arena-confirm{position:sticky;bottom:0;z-index:5;background:#091a2bf8;border:2px solid #b18b48;padding:20px;box-shadow:0 -10px 45px #000a;text-align:center}.arena-confirm h3{color:#f0d395;margin-top:0}.arena-confirm p{color:#dfccac}.arena-confirm .gm-button{margin:8px auto!important;max-width:100%}
+.arena-floating-damage{pointer-events:none;position:absolute;right:14px;top:8px;color:#ffd1b5;font:bold 28px Georgia,serif;text-shadow:0 2px 5px #000;animation:arena-damage .9s ease-out forwards;z-index:3}.arena-hit{animation:arena-hit .35s ease-out}
+@keyframes arena-damage{0%{opacity:0;transform:translateY(12px)}20%{opacity:1}100%{opacity:0;transform:translateY(-28px)}}
+@keyframes arena-hit{20%{transform:translateX(-3px);filter:brightness(1.25)}50%{transform:translateX(3px)}80%{transform:translateX(-1px)}}
+#panel.game-menu .arena-champion-name{font:600 20px/1.3 Georgia,serif;color:#f1d6a3;margin:10px 0 6px}#panel.game-menu .arena-champion-role{font:14px/1.4 Georgia,serif;color:var(--champion-accent,#b4c3d0);margin:0 0 8px}#panel.game-menu .arena-champion-hint{font:12px/1.5 Georgia,serif;color:#d0c5b0;margin:0}
+#panel.game-menu .arena-recent{grid-column:1/-1;width:100%;text-align:left;border-top:1px solid #b9914144;padding-top:10px}#panel.game-menu .arena-recent h4{font:14px Georgia,serif;color:#ddc48f;margin:0 0 8px}#panel.game-menu .arena-recent p{font:12px/1.5 Georgia,serif;color:#c8c9bf;margin:6px 0}
+@media(max-width:700px){
+ #panel.game-menu.arena-combat{padding:4px 4px 12px!important;border-width:18px!important;border-image-width:18px!important;--menu-width:calc(100vw - 12px)}
+ #panel.arena-combat .native-heading{width:min(230px,80%)}
+ .arena-combat-top{align-items:flex-start}.arena-combat-top .arena-round{font-size:17px;flex-shrink:0}.arena-combat-top .arena-phase{font-size:11px;text-align:right}
+ .arena-duel{gap:8px}.arena-fighter{flex-direction:column;gap:7px;padding:8px 5px;border-width:6px;border-image-width:6px;align-items:stretch}
+ .arena-portrait{flex-basis:auto;width:46px;height:46px;font-size:28px;align-self:center;border-radius:50%}.arena-fighter-name{font-size:14px;min-height:34px;text-align:center}.arena-eyebrow{font-size:8px;letter-spacing:.06em}.arena-hp-value{font-size:12px}.arena-status{font-size:9px;padding:3px 5px}.arena-statuses{min-height:40px}
+ .arena-techniques{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 8px}#panel.game-menu.arena-combat .arena-techniques .gm-button{font-size:12px!important;min-height:70px;height:70px;padding:18px 16px!important}
+ .arena-intent{padding:10px 12px}.arena-intent h3{font-size:18px}.arena-intent p{font-size:12px}
+ .arena-result{padding:12px 5px;border-width:8px;border-image-width:8px}.arena-result h2{font-size:29px}.arena-result-opponent{font-size:14px}.arena-result-copy{font-size:12px}.arena-result-awards{gap:5px}.arena-result-awards .gm-stat-value{font-size:15px}.arena-result-awards .gm-stat-label{font-size:10px}
+ .arena-result-ledger{font-size:12px;gap:10px}.arena-result-stats{grid-template-columns:1fr;gap:0}.arena-next{font-size:13px}.arena-log{padding:12px 9px}.arena-log-list li{font-size:12px;gap:6px}.arena-log-list{max-height:190px}
+}
+@media(prefers-reduced-motion:reduce){.arena-hp-fill{transition:none}.arena-floating-damage,.arena-hit{animation:none}}
+
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-recent{display:none}
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-champion-hint{display:none}
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-kicker{display:none}
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-champion-title{font-size:22px}
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-champion-name{font-size:17px;margin:5px 0 4px}
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-champion-role{font-size:12px;margin:0}
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-summary{gap:8px 16px;padding:10px 16px;border-width:10px;border-image-width:10px}
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-emblem{height:64px}
+#panel.game-menu[data-kind=arena] .arena-match-dialog .arena-summary-stats .gm-stat{padding:7px 5px}
+#panel.game-menu.arena-combat .gm-title-plaque{height:74px!important;width:min(350px,90%);margin:auto;max-width:350px!important}
+#panel.game-menu.arena-combat .gm-title-plaque .gm-title-text{font-size:22px!important;white-space:normal}
+#panel.game-menu.arena-combat .arena-result-awards .gm-stat{border:1px solid #bd9b4a55;border-image:none;background:#c6a34c0a}
+.arena-result-opponent{margin:8px 0}.arena-result-copy{margin:6px 0}.arena-result .arena-next-delay{margin:8px 0 0}
+.arena-result-stats section{min-width:0;overflow-wrap:anywhere}
+.arena-result-opponent,.arena-result-ledger dd{overflow-wrap:anywhere}
+@media(min-width:701px){
+ #panel.game-menu.arena-combat .gm-title-plaque{height:64px!important}
+ .arena-result{padding:12px}
+ .arena-result-seal{font-size:34px}
+ .arena-result h2{font-size:32px;margin:4px 0 8px}
+ .arena-result-awards{margin:12px 0}
+ #panel.game-menu.arena-combat .arena-result-awards .gm-stat{padding:10px 8px}
+ .arena-result-ledger{gap:6px 22px;margin-bottom:12px}
+ .arena-result-stats section{padding:8px}
+ .arena-result .arena-next{margin:8px 0;padding-top:10px}
+}
+@media(max-width:700px){#panel.game-menu.arena-combat{border-width:12px!important;border-image-width:12px!important}#panel.game-menu.arena-combat .gm-title-plaque{height:62px!important}#panel.game-menu.arena-combat .gm-title-plaque .gm-title-text{font-size:18px!important}}
+
+#panel.game-menu[data-kind=arena] .arena-match-dialog .gm-dialog{gap:8px}
+.arena-values-compact{display:none}
+.arena-guide{padding:14px 18px;border-left:3px solid #b59352;background:#071827}
+.arena-guide h3,.arena-guide-title{font:20px Georgia,serif;color:#f0d49e;margin:0 0 8px}
+.arena-guide p{font:14px/1.5 Georgia,serif;color:#d2c9b6;margin:6px 0}
+@media(max-width:700px){
+ #panel.game-menu.arena-combat .gm-title-plaque{height:50px!important}
+ #panel.arena-combat .gm-header{margin-bottom:10px}
+ .arena-fighter{min-height:142px}
+ .arena-portrait{position:absolute;top:9px;right:9px;width:23px;height:23px;font-size:16px}
+ .arena-fighter-copy>.arena-eyebrow{display:block;padding-right:27px;min-height:24px}
+ .arena-fighter-name{margin:3px 0 8px;min-height:30px}
+ .arena-statuses{min-height:18px;margin-top:5px}
+ #panel.game-menu.arena-combat .arena-techniques .gm-button{height:58px;min-height:58px;padding:15px 15px!important}
+ .arena-values-full{display:none}.arena-values-compact{display:block}
+ .arena-technique-availability.ready{display:none}
+ #panel.game-menu.arena-combat .arena-result-awards .gm-stat-value{font:600 15px/1.3 Georgia,serif}
+ #panel.game-menu.arena-combat .arena-result-awards .gm-stat-label{font:11px/1.3 Georgia,serif}
+ #panel.game-menu.arena-combat .arena-result-awards .gm-stat{padding:10px 4px}
+}
