@@ -28,7 +28,8 @@ class EconomySaveTests(unittest.TestCase):
  def test_job_generation_in_new_ranges_and_signed_old_contract_preserved(self):
   for _ in range(50):
    _,jobs=self.a.jobs._generate_batch()
-   for j in jobs:self.assertTrue(JOB_GOLD[j.rarity][0]<=j.reward<=JOB_GOLD[j.rarity][1])
+   self.assertEqual(len(jobs),8)
+   for j in jobs:self.assertEqual((j.rarity,j.reward),('unrevealed',0))
   board=self.snap()['board'];j=board['jobs'][0];self.act(action='job_accept',batch=board['batch_id'],key=j['job_id'])
   with self.a.conn() as c:
    row=c.execute('SELECT pending_job_json FROM job_board_state WHERE user_id=?',(self.uid,)).fetchone();data=json.loads(row[0]);data['reward']=500
@@ -37,11 +38,10 @@ class EconomySaveTests(unittest.TestCase):
  def test_unsigned_old_offer_is_repriced_and_stale_batch_rejected(self):
   board=self.snap()['board']
   with self.a.conn() as c:
-   jobs=board['jobs'];jobs[0]['reward']=500
+   jobs=[{**j,'rarity':'common','reward':500} for j in board['jobs']]
    c.execute('UPDATE job_board_state SET jobs_json=? WHERE user_id=?',(json.dumps(jobs),self.uid))
-   c.execute('DELETE FROM economy_balance_meta')
   self.a=Activity(self.path);fresh=self.snap()['board']
-  self.assertNotEqual(fresh['batch_id'],board['batch_id']);self.assertLessEqual(fresh['jobs'][0]['reward'],60)
+  self.assertNotEqual(fresh['batch_id'],board['batch_id']);self.assertNotIn('reward',fresh['jobs'][0]);self.assertEqual(len(fresh['jobs']),8)
   self.act(action='job_accept',batch=board['batch_id'],key=jobs[0]['job_id']);self.assertIsNone(self.snap()['pending'])
  def test_duplicate_bank_operation_concurrent_and_after_restart(self):
   body=dict(action='deposit',amount=30,request_id=str(uuid.uuid4()))

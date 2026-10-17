@@ -12,7 +12,8 @@ from castle_engine import CastleStore
 from expedition_engine import ExpeditionStore, STARTER_GEAR, EXPEDITIONS, RESOURCE_SELL_PRICES, TOOL_LEVELS, BAG_LEVELS, UPGRADE_RECIPES, BAG_UPGRADE_RECIPES, EXPEDITION_OBJECTS
 from progression import level_from_xp, FORGE_LEVEL_REQUIREMENTS, FORGE_GOLD_COSTS, EXPEDITION_TIER_XP
 from story_engine import StoryStore, SEASON_1_TITLES, SEASON_1_TEXTS, STORY_ITEM_PRICES, STORY_REQUIREMENTS
-from job_board_engine import JobBoardStore, BoardJob
+from job_board_engine import BoardJob
+from activity_jobs import ActivityJobBoard
 from progression import JOB_RARITY_XP
 from aiohttp import web
 from play import Play
@@ -32,7 +33,7 @@ class Activity:
         self.path.parent.mkdir(parents=True,exist_ok=True)
         backup(self.path)
         self.economy=Economy(path); self.expeditions=ExpeditionStore(path); self.castle=CastleStore(path)
-        self.story=StoryStore(path);self.jobs=JobBoardStore(path)
+        self.story=StoryStore(path);self.jobs=ActivityJobBoard(path)
         with self.conn() as c:
             c.execute('CREATE TABLE IF NOT EXISTS activity_sessions(token TEXT PRIMARY KEY,user_id INTEGER UNIQUE,name TEXT NOT NULL)')
             c.execute('CREATE TABLE IF NOT EXISTS activity_discord(user_id INTEGER PRIMARY KEY,discord_id TEXT NOT NULL,avatar TEXT NOT NULL,username TEXT NOT NULL,display_name TEXT NOT NULL,discriminator TEXT NOT NULL)')
@@ -86,7 +87,7 @@ class Activity:
         active=None if not run else {'name':EXPEDITIONS[run.expedition_key]['name'],'ends_at':run.ends_at,'remaining':run.remaining_seconds,'capacity':run.capacity,'ends_at':run.ends_at,'started_at':run.started_at,'revealed_loot':self.expeditions.revealed_loot(run.run_id),'log':self.expeditions.drop_log(run.run_id)}
         self.story.unlock_chapter(uid,1,1)
         chapters=[dict(chapter=n,title=title,**self.story.chapter_state(uid,1,n)) for n,title in SEASON_1_TITLES.items()]
-        board=asdict(self.jobs.get_board(uid));pending=self.jobs.pending_reward(uid)
+        board=asdict(self.jobs.get_board(uid));board['jobs']=[dict(job_id=j['job_id'],title=j['title']) for j in board['jobs']];pending=self.jobs.pending_reward(uid)
         if pending:pending={**pending,'job':asdict(pending['job'])}
         quests,quest_reward=self.castle.quests(uid)
         with self.conn() as c:names={r['user_id']:r['name'] for r in c.execute('SELECT user_id,name FROM activity_sessions')}

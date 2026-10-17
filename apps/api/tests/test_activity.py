@@ -32,7 +32,7 @@ class ActivityTests(unittest.TestCase):
   self.a=Activity(self.a.path);one=self.snapshot();two=self.snapshot();self.assertIsNone(one['active']);self.assertEqual(one['resources'],run.loot);self.assertEqual(two['resources'],one['resources']);self.assertEqual(two['xp'],15)
  def test_contract_no_early_or_duplicate_reward(self):
   board=self.snapshot()['board'];job=board['jobs'][0]
-  self.act(action='job_accept',batch=board['batch_id'],key=job['job_id']);self.act(action='job_claim');self.assertEqual(self.snapshot()['balance']['wallet'],0)
+  self.act(action='job_accept',batch=board['batch_id'],key=job['job_id']);job=self.snapshot()['pending']['job'];self.act(action='job_claim');self.assertEqual(self.snapshot()['balance']['wallet'],0)
   with self.a.conn() as c:c.execute('UPDATE job_board_state SET reward_ready_at=0 WHERE user_id=?',(self.uid,))
   self.act(action='job_claim');first=self.snapshot();self.act(action='job_claim');second=self.snapshot();self.assertEqual(first['balance']['wallet'],job['reward']);self.assertEqual(first['xp'],second['xp']);self.assertEqual(first['balance'],second['balance'])
  def test_sell_exact_quantity_and_reject_overdraw(self):
