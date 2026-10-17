@@ -684,7 +684,7 @@ class CityHubV2(discord.ui.LayoutView):
                 '📋 **PANNEAU CENTRAL DE LEGACY**\n\n'
                 'Toutes tes informations personnelles sont regroupées ici.\n'
                 f'⭐ Niveau actuel : **{lvl}** • XP **{cur}/{need}**\n\n'
-                '📋 **Quêtes quotidiennes** — Consulte tes 6 objectifs.\n'
+                '📋 **Quêtes quotidiennes** — Consulte tes objectifs quotidiens.\n'
                 '📜 **Fiche joueur** — Consulte ta progression, tes réputations, ta fortune et tes statistiques.'
             )
             await interaction.response.send_message(content=txt, view=CentralBoardView(), ephemeral=True)
@@ -5704,7 +5704,7 @@ async def show_central_board(interaction):
         '📋 **PANNEAU CENTRAL DE LEGACY**\n\n'
         'Toutes tes informations personnelles sont regroupées ici.\n'
         f'⭐ Niveau actuel : **{lvl}** • XP **{cur}/{need}**\n\n'
-        '📋 **Quêtes quotidiennes** — Consulte tes 6 objectifs reliés à Ashkar, la Forge, l’Arène, la Taverne et aux activités du monde.\n'
+        '📋 **Quêtes quotidiennes** — Consulte tes objectifs classiques : Arène, Taverne et expédition au choix.\n'
         '📜 **Fiche joueur** — Consulte ta progression complète, tes réputations, ta fortune et tes statistiques.'
     )
     await interaction.edit_original_response(content=txt,attachments=[],embeds=[],view=CentralBoardView())
@@ -5718,12 +5718,12 @@ class QuestView(discord.ui.View):
             await safe_defer(i)
             ok,g,x,status=CASTLE_STORE.claim_quests(i.user.id)
             if ok:
-                await announce_gold_activity(i.guild, i.user, g, "Récompense globale des 6 quêtes quotidiennes")
-                msg=f'🎉 **6/6 quêtes terminées !** Récompense globale : **+{g} Gold** et **+{x} XP**.'
+                await announce_gold_activity(i.guild, i.user, g, "Récompense des quêtes quotidiennes")
+                msg=f'🎉 **Quêtes quotidiennes terminées !** Récompense globale : **+{g} Gold** et **+{x} XP**.'
             elif status=='claimed':
                 msg='🔒 La récompense globale a déjà été récupérée aujourd’hui.'
             else:
-                msg='⏳ Les **6 quêtes** doivent être terminées avant de recevoir la moindre récompense.'
+                msg='⏳ Toutes les **quêtes quotidiennes** doivent être terminées avant de recevoir la moindre récompense.'
             await show_castle_quests(i,msg)
             if ok:
                 await show_pending_levelups(i, i.user.id)
@@ -5741,13 +5741,13 @@ async def show_castle_quests(interaction,notice=''):
     completed=sum(1 for q in qs if q['progress']>=q['target'])
     claimed=all(q['claimed'] for q in qs)
     ready=(completed==len(qs)) and not claimed
-    status=('🎁 **Récompense disponible !**' if ready else ('🔒 **Récompense déjà récupérée aujourd’hui.**' if claimed else f'🔒 **{completed}/6 terminées — aucune récompense avant 6/6.**'))
+    status=('🎁 **Récompense disponible !**' if ready else ('🔒 **Récompense déjà récupérée aujourd’hui.**' if claimed else f'🔒 **{completed}/{len(qs)} terminées — terminez tous les objectifs.**'))
     txt=(
         '📋 **PANNEAU DES QUÊTES — PLACE CENTRALE**\n'
-        f'🐺 Difficulté adaptée à ta réputation : **{meta["label"]}**.\n'
+        f'📋 Objectifs quotidiens : **{meta["label"]}**.\n'
         'Réinitialisation à **00h00, heure du serveur**.\n\n'
         + '\n\n'.join(lines)
-        + f'\n\n🏆 **Récompense globale 6/6 : {meta["gold"]} Gold + {meta["xp"]} XP**\n'
+        + f'\n\n🏆 **Récompense globale : {meta["gold"]} Gold + {meta["xp"]} XP**\n'
         + status
     )
     if notice: txt+='\n\n'+notice

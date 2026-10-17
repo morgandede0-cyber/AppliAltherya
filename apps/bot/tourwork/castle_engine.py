@@ -1,7 +1,8 @@
 from __future__ import annotations
 import sqlite3
+import hashlib, itertools, json, random
 from shared_economy import connect_shared
-from datetime import datetime
+from datetime import datetime, date
 from pathlib import Path
 from progression import level_from_xp, XP_REWARDS
 from admin_engine import event_multiplier
@@ -9,30 +10,16 @@ from admin_engine import event_multiplier
 DAILY_REWARD = 200
 DAILY_XP = 20
 
-# Les 6 quêtes doivent TOUTES être terminées pour débloquer la récompense globale.
-# V1.63 : les objectifs relient directement les grands systèmes de Altherya.
+# Objectifs classiques disponibles dès Legacy, sans lieu avancé ni amélioration.
 QUEST_GLOBAL_GOLD = 400
 QUEST_GLOBAL_XP = 75
 QUESTS = {
-    'tower_clear': ('🗼 Valider des étages d’Ashkar', 2, 'tower_clear'),
-    'forge_upgrade': ('⚒️ Améliorer un équipement', 1, 'forge_upgrade'),
-    'arena_win': ('🏆 Gagner un combat d’arène', 1, 'arena_win'),
-    'tavern_game': ('🍺 Participer à un jeu de Taverne', 1, 'tavern_game'),
-    'expedition': ('🧭 Terminer une expédition', 1, 'expedition'),
-    'gold_earned': ('💰 Gagner du Gold', 400, 'gold_earned'),
+    'combat': ('Participer à un combat d’arène', 1, 'combat'),
+    'daily_bonus': ('Récupérer la récompense quotidienne', 1, 'daily_bonus'),
+    'arena_win': ('Gagner un combat d’arène', 1, 'arena_win'),
+    'tavern_game': ('Participer à un jeu de Taverne', 1, 'tavern_game'),
+    'expedition': ('Terminer une expédition au choix', 1, 'expedition'),
 }
-
-# La réputation criminelle continue d'augmenter légèrement la difficulté, sans jamais
-# rendre Ashkar impossible : la Tour reste limitée à 3 nouvelles validations / jour.
-QUEST_TIER_TARGETS = {
-    0: {'tower_clear':2,'forge_upgrade':1,'arena_win':1,'tavern_game':1,'expedition':1,'gold_earned':400},
-    1: {'tower_clear':2,'forge_upgrade':1,'arena_win':1,'tavern_game':1,'expedition':1,'gold_earned':500},
-    2: {'tower_clear':2,'forge_upgrade':1,'arena_win':2,'tavern_game':1,'expedition':1,'gold_earned':650},
-    3: {'tower_clear':3,'forge_upgrade':1,'arena_win':2,'tavern_game':2,'expedition':2,'gold_earned':850},
-    4: {'tower_clear':3,'forge_upgrade':2,'arena_win':2,'tavern_game':2,'expedition':2,'gold_earned':1100},
-    5: {'tower_clear':3,'forge_upgrade':2,'arena_win':2,'tavern_game':2,'expedition':2,'gold_earned':1100},
-}
-QUEST_TIER_REWARDS = {0:(400,75),1:(450,80),2:(525,90),3:(600,105),4:(700,125),5:(700,125)}
 
 
 
@@ -46,6 +33,7 @@ class CastleStore:
         with self._c() as c:
             c.execute('''CREATE TABLE IF NOT EXISTS castle_profiles(user_id INTEGER PRIMARY KEY, xp INTEGER NOT NULL DEFAULT 0, combats INTEGER NOT NULL DEFAULT 0, wins INTEGER NOT NULL DEFAULT 0, losses INTEGER NOT NULL DEFAULT 0, expeditions INTEGER NOT NULL DEFAULT 0, casino_games INTEGER NOT NULL DEFAULT 0, quests_completed INTEGER NOT NULL DEFAULT 0, member_since TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, last_daily TEXT)''')
             c.execute('''CREATE TABLE IF NOT EXISTS castle_daily_progress(user_id INTEGER NOT NULL, day TEXT NOT NULL, quest_key TEXT NOT NULL, progress INTEGER NOT NULL DEFAULT 0, claimed INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(user_id,day,quest_key))''')
+            c.execute('CREATE TABLE IF NOT EXISTS castle_daily_plans(user_id INTEGER NOT NULL, day TEXT NOT NULL, plan_json TEXT NOT NULL, PRIMARY KEY(user_id,day))')
             c.execute('''CREATE TABLE IF NOT EXISTS castle_levelups(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
@@ -104,34 +92,33 @@ class CastleStore:
             self._queue_levelups(c,uid,before,after)
             self._sync_level(c,uid); c.commit()
         return amount
-    def _criminal_reputation(self,user_id):
-        with self._c() as c:
-            row=c.execute('SELECT successes FROM criminal_reputation WHERE user_id=?',(int(user_id),)).fetchone()
-        successes=int(row['successes']) if row else 0
-        tiers=[(5,'Inconnu'),(20,'Petite frappe'),(60,'Bandit'),(150,'Criminel'),(300,'Seigneur de la Ruelle')]
-        tier=0; label='Inconnu'
-        for i,(needed,name) in enumerate(tiers,1):
-            if successes>=needed: tier,label=i,name
-        difficulty={'Inconnu':0,'Petite frappe':1,'Bandit':2,'Criminel':3,'Seigneur de la Ruelle':4}.get(label,0)
-        return difficulty,label,successes
     def quest_config(self,user_id):
-        tier,label,successes=self._criminal_reputation(user_id)
-        targets=QUEST_TIER_TARGETS[min(tier,5)]
-        gold,xp=QUEST_TIER_REWARDS[min(tier,5)]
-        out={}
-        for key,(base_label,_,event) in QUESTS.items():
-            target=targets[key]
-            # labels précis avec quantité adaptée
-            labels={
-                'tower_clear':f'🗼 Valider {target} étage'+('s' if target>1 else '')+' d’Ashkar',
-                'forge_upgrade':f'⚒️ Améliorer {target} équipement'+('s' if target>1 else ''),
-                'arena_win':f'🏆 Gagner {target} combat'+('s' if target>1 else '')+' d’arène',
-                'tavern_game':f'🍺 Participer à {target} jeu'+('x' if target>1 else '')+' de Taverne',
-                'expedition':f'🧭 Terminer {target} expédition'+('s' if target>1 else ''),
-                'gold_earned':f'💰 Gagner {target} Gold',
-            }
-            out[key]=(labels[key],target,event)
-        return out, {'tier':tier,'label':label,'successes':successes,'gold':gold,'xp':xp}
+        uid=int(user_id);day=self._today()
+        # A saved server plan survives reconnects, restarts and reputation changes.
+        # Adjacent days use distinct families, selected in a player-specific order.
+        seed=int(hashlib.sha256(f'altherya-daily-v1:{uid}'.encode()).hexdigest(),16)
+        choices=list(itertools.combinations(('arena','tavern','expedition','daily'),3))
+        random.Random(seed).shuffle(choices)
+        ordinal=date.fromisoformat(day).toordinal()
+        rng=random.Random(seed+ordinal)
+        generated={}
+        for family in choices[ordinal%len(choices)]:
+            key=rng.choice(('combat','arena_win')) if family=='arena' else {'tavern':'tavern_game','expedition':'expedition','daily':'daily_bonus'}[family]
+            label,target,event=QUESTS[key]
+            if key=='tavern_game':
+                target=rng.choice((1,2));label=f'Participer à {target} jeu'+('x' if target>1 else '')+' de Taverne'
+            generated[key]=(label,target,event)
+        with self._c() as c:
+            c.execute('INSERT OR IGNORE INTO castle_daily_plans VALUES(?,?,?)',(uid,day,json.dumps(generated,ensure_ascii=False)))
+            saved=c.execute('SELECT plan_json FROM castle_daily_plans WHERE user_id=? AND day=?',(uid,day)).fetchone()[0]
+            c.commit()
+        return {key:tuple(value) for key,value in json.loads(saved).items()}, {'tier':0,'label':'Classique · Tirage du jour','successes':0,
+                             'gold':QUEST_GLOBAL_GOLD,'xp':QUEST_GLOBAL_XP}
+
+    def _sync_daily_bonus(self,c,uid,day):
+        row=c.execute('SELECT last_daily FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()
+        if row and row['last_daily']==day:
+            c.execute("INSERT INTO castle_daily_progress(user_id,day,quest_key,progress) VALUES(?,?, 'daily_bonus',1) ON CONFLICT(user_id,day,quest_key) DO UPDATE SET progress=MAX(progress,1)",(uid,day))
 
     def record(self,user_id,event,amount=1):
         self.ensure(user_id); uid=int(user_id); amount=max(0,int(amount)); day=self._today(); quest_cfg,_=self.quest_config(uid)
@@ -157,21 +144,26 @@ class CastleStore:
     def quests(self,user_id):
         self.ensure(user_id); uid=int(user_id); day=self._today(); out=[]; quest_cfg,meta=self.quest_config(uid)
         with self._c() as c:
+            self._sync_daily_bonus(c,uid,day)
+            already_claimed=bool(c.execute('SELECT 1 FROM castle_daily_progress WHERE user_id=? AND day=? AND claimed=1 LIMIT 1',(uid,day)).fetchone())
             for key,(label,target,event) in quest_cfg.items():
                 c.execute('INSERT OR IGNORE INTO castle_daily_progress(user_id,day,quest_key) VALUES(?,?,?)',(uid,day,key))
             c.commit()
             rows={r['quest_key']:r for r in c.execute('SELECT * FROM castle_daily_progress WHERE user_id=? AND day=?',(uid,day))}
         for key,(label,target,event) in quest_cfg.items():
             r=rows[key]
-            out.append({'key':key,'label':label,'target':target,'progress':min(int(r['progress']),target),'claimed':bool(r['claimed'])})
+            out.append({'key':key,'label':label,'target':target,'progress':min(int(r['progress']),target),'claimed':already_claimed or bool(r['claimed'])})
         return out,meta
 
     def claim_quests(self,user_id):
-        """Récompense tout-ou-rien : les 6 quêtes doivent être terminées."""
+        """Récompense tout-ou-rien : toutes les quêtes proposées doivent être terminées."""
         uid=int(user_id); day=self._today(); quest_cfg,meta=self.quest_config(uid)
         with self._c() as c:
             c.execute('BEGIN IMMEDIATE')
             c.execute('INSERT OR IGNORE INTO castle_profiles(user_id) VALUES(?)',(uid,))
+            self._sync_daily_bonus(c,uid,day)
+            if c.execute('SELECT 1 FROM castle_daily_progress WHERE user_id=? AND day=? AND claimed=1 LIMIT 1',(uid,day)).fetchone():
+                c.rollback(); return False,0,0,'claimed'
             rows=[]
             for key,(label,target,event) in quest_cfg.items():
                 c.execute('INSERT OR IGNORE INTO castle_daily_progress(user_id,day,quest_key) VALUES(?,?,?)',(uid,day,key))

@@ -143,7 +143,7 @@ class Activity:
         if action=='daily':
             ok,gold=self.castle.claim_daily(uid);return f'{gold} Gold et 20 XP récupérés.' if ok else 'Déjà récupéré aujourd’hui.'
         if action=='quests_claim':
-            ok,gold,xp,_=self.castle.claim_quests(uid);return f'{gold} Gold et {xp} XP récupérés.' if ok else 'Terminez les six quêtes avant de réclamer la récompense.'
+            ok,gold,xp,_=self.castle.claim_quests(uid);return f'{gold} Gold et {xp} XP récupérés.' if ok else 'Terminez toutes les quêtes quotidiennes avant de réclamer la récompense.'
         if action=='start':
             if body.get('object1','none')!='none' or body.get('object2','none')!='none':raise ValueError('Les accessoires ne sont pas encore disponibles.')
             for field in ('tool_level','bag_level'):
