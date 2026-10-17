@@ -1,0 +1,38 @@
+import type {Snapshot} from '../activity';
+import {trapMenu} from './menu-kit';
+import './campaign-menu.css';
+type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;close:()=>void;route:(key:string)=>void};
+export function openCampaignMenu(panel:HTMLElement,host:Host){
+ let locked=false,destroyed=false,notice='',offset=host.state().server_now*1000-Date.now();
+ const el=(tag:string,text='',cls='')=>{const n=document.createElement(tag);n.textContent=text;n.className=cls;return n;};
+ function button(text:string,fn:()=>void,disabled=false){const b=el('button',text) as HTMLButtonElement;b.type='button';b.disabled=disabled||locked;b.onclick=fn;return b;}
+ async function run(action:string,extra:Record<string,unknown>={}){if(locked)return;const c=host.state().campaign;if(!c?.quest)return;locked=true;draw();try{notice=await host.mutate({action,quest_id:c.quest.id,revision:c.revision,...extra});offset=host.state().server_now*1000-Date.now();}catch(e){notice=String(e);}finally{locked=false;if(!destroyed)draw();}}
+ function countdown(deadline:number,parent:HTMLElement,label:string){const n=el('p','','campaign-timer');n.dataset.deadline=String(deadline);n.dataset.label=label;parent.append(n);}
+ function draw(){if(destroyed)return;const focused=panel.contains(document.activeElement)?document.activeElement?.getAttribute('data-focus'):null;const scroll=panel.scrollTop;panel.hidden=false;panel.className='campaign-menu';panel.dataset.kind='campaign';panel.setAttribute('aria-label','Quête principale');panel.setAttribute('aria-busy',String(locked));panel.replaceChildren();
+  const c=host.state().campaign;panel.append(el('p','LES ROUTES DES TROIS TERRES','campaign-kicker'));
+  if(!c){panel.append(el('h2','Quêtes principales'),el('p','Synchronisation de la campagne…'));}
+  else if(c.complete){panel.append(el('h2','Les routes sont ouvertes'),el('p',`${c.completed}/${c.total} quêtes accomplies. Votre parcours est conservé.`));for(const choice of Object.values(c.choices))panel.append(el('p',choice));}
+  else if(c.quest){const q=c.quest;panel.append(el('p',`Saison ${q.season} · Chapitre ${q.chapter} · ${c.completed}/${c.total} quêtes`,'campaign-kicker'),el('h2',q.title),el('p',`${q.giver} · ${q.locations}`,'campaign-place'),el('p',q.scene));const quote=el('blockquote',q.dialogue);panel.append(quote);
+   const meta=el('div','','campaign-meta');meta.append(el('span',`Niveau ${q.min_level}`),el('span',`Difficulté ${q.difficulty}/5`),el('span',`${q.gold} Gold · ${q.xp} XP`));panel.append(meta);
+   if(!c.accepted){panel.append(button(c.level_allowed?'Accepter la quête':`Niveau ${q.min_level} requis`,()=>void run('campaign_accept'),!c.level_allowed));}
+   else{const list=el('ol','','campaign-objectives');q.steps.forEach((s,i)=>{const li=el('li',`${i<c.stage?'✓ ':''}${s.label}`,i<c.stage?'done':i===c.stage?'active':'');list.append(li);});panel.append(list);const s=q.steps[c.stage];
+    if(s){const area=el('section','','campaign-step');if(s.place)area.append(el('p',s.place,'campaign-kicker'));if(s.scene_image){const art=new Image();art.src='/assets/scenes/'+s.scene_image;art.alt=s.place??'';art.className='campaign-scene';area.append(art);}area.append(el('h3',s.label));
+     if(c.retry_at>Date.now()/1000+offset/1000)countdown(c.retry_at,area,'Nouvelle tentative');
+     if(s.kind==='talk'){area.append(el('p',s.text??q.dialogue),button('Poursuivre le dialogue',()=>void run('campaign_step')));}
+     else if(s.kind==='choice'||s.kind==='puzzle'){if(s.question)area.append(el('p',s.question));for(const [i,option] of (s.options??[]).entries())area.append(button(option,()=>void run('campaign_step',{option:i})));}
+     else if(s.kind==='deliver'){area.append(el('p',`${host.state().resources[s.resource??'']??0}/${s.quantity} · ${s.resource}`),button('Remettre les ressources',()=>void run('campaign_step'),(host.state().resources[s.resource??'']??0)<(s.quantity??0)),button('Préparer une expédition',()=>host.route('expedition')));}
+     else if(s.kind==='expedition'){area.append(el('p','Cette étape demande un nouveau voyage vers la destination indiquée. Revenez ensuite remettre votre rapport.'),button('Préparer le voyage',()=>host.route(s.destination?.startsWith('vorak_')?'vorak':'elarwyn')),button(c.expedition_ready?'Remettre le rapport':'Vérifier le rapport du voyage',()=>void run('campaign_step')));}
+     else if(s.kind==='battle'){const b=c.battle;if(b){for(const f of b.fighters){const row=el('div','','campaign-fighter');row.append(el('span',`${f.name} · ${f.hp}/${f.max_hp} PV`));const bar=document.createElement('progress');bar.max=f.max_hp;bar.value=f.hp;bar.setAttribute('aria-label',`${f.name} : ${f.hp} sur ${f.max_hp} points de vie`);row.append(bar);area.append(row);}const log=el('ol','','campaign-log');for(const line of b.log)log.append(el('li',line.replace(/\*\*/g,'')));area.append(log);}
+      if(!b||b.finished)area.append(button('Engager le combat',()=>void run('campaign_battle',{key:'start'})));
+      else for(const [key,label] of [['light','Coup rapide'],['heavy','Coup puissant'],['ultimate','Frappe décisive'],['defend','Garde'],['abandon','Se replier']])area.append(button(label,()=>void run('campaign_battle',{key}),key==='ultimate'&&b.ultimate_cd>0));
+     }else{if(c.deadline)countdown(c.deadline,area,'Rapport disponible dans');else area.append(el('p',`Durée : ${Math.ceil((s.duration??0)/60)} min. Vous pouvez jouer à d’autres activités pendant la mission.`));const report=button(c.deadline?'Récupérer le rapport':'Lancer la mission',()=>void run('campaign_step'));if(c.deadline)report.dataset.readyAt=String(c.deadline);area.append(report);}
+     if(c.retry_at>Date.now()/1000+offset/1000)area.querySelectorAll<HTMLButtonElement>('button').forEach(b=>b.dataset.readyAt=String(c.retry_at));panel.append(area);
+    }else{panel.append(el('p',q.resolution));if(c.claim_at>Date.now()/1000+offset/1000)countdown(c.claim_at,panel,'Remise de mission');const claim=button(`Remettre la quête · ${q.gold} Gold + ${q.xp} XP`,()=>void run('campaign_claim'));claim.dataset.readyAt=String(c.claim_at);panel.append(claim);}
+   }
+  }
+  if(notice){const n=el('p',notice,'campaign-notice');n.setAttribute('role','status');panel.append(n);}const footer=el('div','','campaign-footer');footer.append(button('Retour au jeu',host.close),button('Lire les chroniques',()=>host.route('story')));panel.append(footer);
+  panel.querySelectorAll('button').forEach((b,i)=>b.dataset.focus=String(i));panel.scrollTop=scroll;if(focused)panel.querySelector<HTMLElement>(`[data-focus="${focused}"]`)?.focus({preventScroll:true});tick();
+ }
+ function tick(){panel.querySelectorAll<HTMLButtonElement>('[data-ready-at]').forEach(b=>b.disabled=locked||Number(b.dataset.readyAt)*1000>Date.now()+offset);panel.querySelectorAll<HTMLElement>('[data-deadline]').forEach(n=>{const seconds=Math.max(0,Math.ceil((Number(n.dataset.deadline)*1000-Date.now()-offset)/1000));n.textContent=seconds?`${n.dataset.label} : ${Math.floor(seconds/3600)} h ${Math.floor(seconds%3600/60)} min ${seconds%60} s`:'Rapport disponible · validez pour continuer';});}
+ trapMenu(panel,()=>locked,host.close);draw();panel.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus();const timer=window.setInterval(tick,1000);return{update(){offset=host.state().server_now*1000-Date.now();if(!locked)draw();},destroy(){destroyed=true;window.clearInterval(timer);panel.onkeydown=null;}};
+}
