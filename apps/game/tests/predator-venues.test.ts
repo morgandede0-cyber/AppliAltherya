@@ -1,0 +1,13 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {Window} from 'happy-dom';
+import {buildSync} from 'esbuild';
+const code=buildSync({entryPoints:['src/ui/predator-venues.ts','src/ui/predator-art.ts'],bundle:true,write:false,outdir:'out',format:'cjs',platform:'node',loader:{'.css':'empty'}}).outputFiles;
+function load(s:string){const m={exports:{}};new Function('module','exports',s)(m,m.exports);return m.exports as any;}
+const {openPredatorVenue}=load(code[0].text);
+const {decoratePredator}=load(code[1].text);
+import {scenes} from '../src/world/scenes';
+import {existsSync} from 'node:fs';
+for(const kind of ['market','tavern','games'] as const)test('new '+kind+' artwork routes every action once',async()=>{const w=new Window();Object.assign(globalThis,{document:w.document,Image:w.Image,requestAnimationFrame:(fn:()=>void)=>{fn();return 0;}});const panel=document.createElement('div'),calls:string[]=[];document.body.append(panel);const ui=openPredatorVenue(panel,kind,{state:()=>({}) as never,route:k=>calls.push(k),close(){}});try{const expected=kind==='market'?['market:story','market:buy','market:sell','hub']:kind==='tavern'?['barman','troubadour','games','hub']:['dice','coin','rps','tavern'];for(const button of Array.from(panel.querySelectorAll<HTMLButtonElement>('button')))button.click();assert.deepEqual(calls,expected);assert.equal(panel.querySelectorAll('nav').length,1);assert.ok(existsSync('public'+panel.querySelector('img')!.getAttribute('src')));panel.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape'}));assert.equal(calls.at(-1),kind==='games'?'tavern':'hub');}finally{ui.destroy();await w.happyDOM.abort();}});
+test('merchant and barman skins keep mutation handlers and disabled state',async()=>{const w=new Window();Object.assign(globalThis,{document:w.document});const root=document.createElement('div');root.innerHTML='<header class="realm-header"><h2>Boissons</h2></header><article class="realm-card"><h3>Bière</h3><button aria-label="Commander">Commander</button></article>';const b=root.querySelector('button')!;let n=0;b.onclick=()=>n++;decoratePredator(root,true);b.click();assert.equal(n,1);b.disabled=true;decoratePredator(root,true);b.click();assert.equal(n,1);assert.equal(b.textContent,'Commander');assert.equal(b.querySelectorAll('.predator-frame').length,1);await w.happyDOM.abort();});
+test('all five destinations use approved predator scenes',()=>{for(const id of ['market','tavern','barman','games','troubadour'] as const){assert.match(scenes[id].image,/predator/);assert.ok(existsSync('public/assets/scenes/'+scenes[id].image));}});

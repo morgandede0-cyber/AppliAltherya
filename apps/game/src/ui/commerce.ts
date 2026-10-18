@@ -1,3 +1,4 @@
+import {decoratePredator} from './predator-art';
 import {approvedCard,decorateApproved} from './approved-art';
 import {mountRealm,realmButton} from './realm-menu';
 import {generatedItemArt} from './generated-item-art';
@@ -53,7 +54,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
   pager.append(el('span','native-page-label',`Page ${page+1} / ${slice.last+1}`));
   const footer=realmFooter;
   const switcher=document.createElement('button');switcher.className='native-market-switch';switcher.textContent=mode==='sell'?'Acheter':'Vendre';switcher.setAttribute('aria-label',switcher.textContent);switcher.disabled=busy;switcher.onclick=()=>host.switchMode(mode==='sell'?'buy':'sell');
-  const back=document.createElement('button');back.className='native-market-back';back.setAttribute('aria-label','Retour au hub');back.textContent='Retour au hub';back.disabled=busy;back.onclick=host.back;footer.append(switcher,button(mode==='story'?'Acheter':'Histoire',()=>host.switchMode(mode==='story'?'buy':'story')),back);
+  const back=document.createElement('button');back.className='native-market-back';back.setAttribute('aria-label','Retour au marchand');back.textContent='Retour au marchand';back.disabled=busy;back.onclick=host.back;footer.append(switcher,button(mode==='story'?'Acheter':'Histoire',()=>host.switchMode(mode==='story'?'buy':'story')),back);
 
   if(message){const status=el('p','merchant-status',message);status.setAttribute('role','status');root.append(status);}
   if(selected){
@@ -62,13 +63,13 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
    if(selected.chapter)dialog.append(el('span','merchant-chapter',`Chapitre ${selected.chapter}`));
    if(mode==='sell'){
     const q=el('label','trade-quantity','Quantité : '),input=document.createElement('input');input.type='number';input.min='1';input.max=String(selected.stock);input.step='1';input.value=String(quantity);input.setAttribute('aria-label','Quantité à vendre');input.disabled=busy;
-    input.onchange=()=>{quantity=clampQuantity(Number(input.value),selected!.stock);draw();};q.append(input);dialog.append(q);
+    input.onchange=()=>{quantity=clampQuantity(Number(input.value),selected!.stock);input.value=String(quantity);const total=dialog.querySelector('.trade-total');if(total)total.textContent=`${quantity*selected!.price} Gold`;const confirm=dialog.querySelector<HTMLButtonElement>('.realm-trade-actions button');if(confirm)confirm.disabled=busy||!!tradeBlock(selected!,mode,host.state().balance.wallet,quantity);};q.append(input);dialog.append(q);
    }
    dialog.append(el('strong','trade-total',`${quantity*selected.price} Gold`));
    const actions=el('div','realm-trade-actions');actions.append(button(busy?'En cours…':'Confirmer',()=>void submit(),!!tradeBlock(selected,mode,host.state().balance.wallet,quantity)),button('Annuler',()=>{selected=undefined;draw();}));dialog.append(actions);backdrop.append(dialog);root.append(backdrop);stage.inert=true;
    requestAnimationFrame(()=>dialog.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus({preventScroll:true}));
   }else if(focused)Array.from(root.querySelectorAll<HTMLElement>('[aria-label]')).find(n=>n.getAttribute('aria-label')===focused)?.focus({preventScroll:true});
-  decorateApproved(root);body.scrollTop=scroll;
+  decorateApproved(root);decoratePredator(root);body.scrollTop=scroll;
  }
  const stopSize=watchMenuSize(root,draw);
  root.onkeydown=e=>{
