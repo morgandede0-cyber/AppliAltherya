@@ -19,7 +19,7 @@ export const scenes:Record<SceneId,Scene>={
  guard:{name:'Le vigile',image:'alley_guard.webp',parent:'alley',caption:'Le vigile surveille le passage.',spots:[]},
  thief:{name:'Le voleur',image:'alley_thief.webp',parent:'alley',caption:'Le voleur sait des choses.',spots:[]},
  robber:{name:'Le brigand',image:'alley_robber.webp',parent:'alley',caption:'Un marché discret se négocie.',spots:[]},
- casino:{name:'Salle clandestine',image:'casino_room.webp',parent:'guard',caption:'Derrière les portes de la ruelle.',spots:[]},
+ casino:{name:'Salle clandestine',image:'casino-clandestine-live.png',parent:'guard',caption:'Derrière les portes de la ruelle.',spots:[]},
  expeditions:{name:'Expéditions',image:'expeditions.webp',parent:'hub',caption:'Choisissez une terre à découvrir.',spots:[]},
  elarwyn:{name:'Forêt d’Elarwyn',image:'elarwyn.webp',parent:'expeditions',caption:'Bûcheronnage, chasse et cueillette : préparez votre voyage.',spots:[]},
  vorak:{name:'Mont Vorak',image:'vorak.webp',parent:'expeditions',caption:'Les hauteurs du royaume.',spots:[]}
