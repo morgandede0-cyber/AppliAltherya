@@ -1,0 +1,213 @@
+[
+  {
+    "id": "story-01",
+    "items": [
+      "🎈 Ballon oublié",
+      "🪨 Fragment d’Arche",
+      "✨ Éclat du Passage",
+      "⭐ Premier Passage",
+      "🪙 Pièce de la Cité",
+      "🗺️ Carte des Terres Tempérées",
+      "🏛️ Sceau de la Cité",
+      "⭐ Première Installation",
+      "🚩 Bannière de Ville",
+      "📜 Charte des Dirigeants",
+      "⚔️ Ordre de Bataille",
+      "⭐ Premières Conquêtes",
+      "📖 Registre des Dirigeants",
+      "🪶 Plume d’Inscription",
+      "🖋️ Encre des Fondateurs",
+      "⭐ Nouvel Arrivant"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: 🎈 Ballon oublié\nRow 1, column 2: 🪨 Fragment d’Arche\nRow 1, column 3: ✨ Éclat du Passage\nRow 1, column 4: ⭐ Premier Passage\nRow 2, column 1: 🪙 Pièce de la Cité\nRow 2, column 2: 🗺️ Carte des Terres Tempérées\nRow 2, column 3: 🏛️ Sceau de la Cité\nRow 2, column 4: ⭐ Première Installation\nRow 3, column 1: 🚩 Bannière de Ville\nRow 3, column 2: 📜 Charte des Dirigeants\nRow 3, column 3: ⚔️ Ordre de Bataille\nRow 3, column 4: ⭐ Premières Conquêtes\nRow 4, column 1: 📖 Registre des Dirigeants\nRow 4, column 2: 🪶 Plume d’Inscription\nRow 4, column 3: 🖋️ Encre des Fondateurs\nRow 4, column 4: ⭐ Nouvel Arrivant"
+  },
+  {
+    "id": "story-02",
+    "items": [
+      "Compas d’Explorateur",
+      "Décret de Fondation",
+      "Acte de Capitale",
+      "Vers un Nouveau Départ",
+      "Bottes de Voyage",
+      "Sac du Colon",
+      "Permis de Colonisation",
+      "Le Grand Départ",
+      "Coffret du Fondateur",
+      "Pierre de Fondation",
+      "Sceau de la Capitale",
+      "Première Capitale",
+      "Clé des Arches",
+      "Insigne du Gardien",
+      "Relique des Arches",
+      "Le Gardien des Arches"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Compas d’Explorateur\nRow 1, column 2: Décret de Fondation\nRow 1, column 3: Acte de Capitale\nRow 1, column 4: Vers un Nouveau Départ\nRow 2, column 1: Bottes de Voyage\nRow 2, column 2: Sac du Colon\nRow 2, column 3: Permis de Colonisation\nRow 2, column 4: Le Grand Départ\nRow 3, column 1: Coffret du Fondateur\nRow 3, column 2: Pierre de Fondation\nRow 3, column 3: Sceau de la Capitale\nRow 3, column 4: Première Capitale\nRow 4, column 1: Clé des Arches\nRow 4, column 2: Insigne du Gardien\nRow 4, column 3: Relique des Arches\nRow 4, column 4: Le Gardien des Arches"
+  },
+  {
+    "id": "story-03",
+    "items": [
+      "Parchemin Ancien",
+      "Chronique Ancienne",
+      "Secret des Arches",
+      "Le Mystère des Arches",
+      "Première Bannière",
+      "Carte Territoriale",
+      "Sceau du Territoire",
+      "Premières Conquêtes",
+      "Monture d’Éclaireur",
+      "Tambour de Guerre",
+      "Échelle de Siège",
+      "La Course aux Territoires",
+      "Lame d’Avant-garde",
+      "Carquois Militaire",
+      "Étendard de Guerre",
+      "Premier Engagement"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Parchemin Ancien\nRow 1, column 2: Chronique Ancienne\nRow 1, column 3: Secret des Arches\nRow 1, column 4: Le Mystère des Arches\nRow 2, column 1: Première Bannière\nRow 2, column 2: Carte Territoriale\nRow 2, column 3: Sceau du Territoire\nRow 2, column 4: Premières Conquêtes\nRow 3, column 1: Monture d’Éclaireur\nRow 3, column 2: Tambour de Guerre\nRow 3, column 3: Échelle de Siège\nRow 3, column 4: La Course aux Territoires\nRow 4, column 1: Lame d’Avant-garde\nRow 4, column 2: Carquois Militaire\nRow 4, column 3: Étendard de Guerre\nRow 4, column 4: Premier Engagement"
+  },
+  {
+    "id": "story-04",
+    "items": [
+      "Casque du Vainqueur",
+      "Porte Fortifiée",
+      "Médaille de Victoire",
+      "Première Victoire",
+      "Balise de Campagne",
+      "Plan de Manœuvre",
+      "Boussole Stratégique",
+      "Faire les Bons Choix",
+      "Chronomètre de Campagne",
+      "Rapport de Reconnaissance",
+      "Itinéraire de Marche",
+      "La Course Continue",
+      "Piège Camouflé",
+      "Cor de Retraite",
+      "Manœuvre d’Embuscade",
+      "Le Piège"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Casque du Vainqueur\nRow 1, column 2: Porte Fortifiée\nRow 1, column 3: Médaille de Victoire\nRow 1, column 4: Première Victoire\nRow 2, column 1: Balise de Campagne\nRow 2, column 2: Plan de Manœuvre\nRow 2, column 3: Boussole Stratégique\nRow 2, column 4: Faire les Bons Choix\nRow 3, column 1: Chronomètre de Campagne\nRow 3, column 2: Rapport de Reconnaissance\nRow 3, column 3: Itinéraire de Marche\nRow 3, column 4: La Course Continue\nRow 4, column 1: Piège Camouflé\nRow 4, column 2: Cor de Retraite\nRow 4, column 3: Manœuvre d’Embuscade\nRow 4, column 4: Le Piège"
+  },
+  {
+    "id": "story-05",
+    "items": [
+      "Anneau Ancien",
+      "Outil de Seraph",
+      "Coffre d’Expédition",
+      "Les Premières Découvertes",
+      "Lanterne d’Expédition",
+      "Relique Exhumée",
+      "Coffre Scellé",
+      "Première Expédition",
+      "Plastron Usé",
+      "Médaille de Campagne",
+      "Insigne du Vétéran",
+      "Le Vétéran",
+      "Cloche du Temple",
+      "Relique Sacrée",
+      "Emblème du Temple",
+      "L’Éveil des Temples"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Anneau Ancien\nRow 1, column 2: Outil de Seraph\nRow 1, column 3: Coffre d’Expédition\nRow 1, column 4: Les Premières Découvertes\nRow 2, column 1: Lanterne d’Expédition\nRow 2, column 2: Relique Exhumée\nRow 2, column 3: Coffre Scellé\nRow 2, column 4: Première Expédition\nRow 3, column 1: Plastron Usé\nRow 3, column 2: Médaille de Campagne\nRow 3, column 3: Insigne du Vétéran\nRow 3, column 4: Le Vétéran\nRow 4, column 1: Cloche du Temple\nRow 4, column 2: Relique Sacrée\nRow 4, column 3: Emblème du Temple\nRow 4, column 4: L’Éveil des Temples"
+  },
+  {
+    "id": "story-06",
+    "items": [
+      "Bouclier de Siège",
+      "Pierre du Temple",
+      "Étendard du Temple",
+      "La Guerre des Temples",
+      "Œil de l’Éclaireur",
+      "Repère Stratégique",
+      "Plan d’Expansion",
+      "Voir Plus Loin",
+      "Lettre Scellée",
+      "Message Diplomatique",
+      "Pacte Inconnu",
+      "Une Réputation naissante",
+      "Chariot Marchand",
+      "Caisse de Provision",
+      "Cargaison Royale",
+      "Le Prix de la Progression"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Bouclier de Siège\nRow 1, column 2: Pierre du Temple\nRow 1, column 3: Étendard du Temple\nRow 1, column 4: La Guerre des Temples\nRow 2, column 1: Œil de l’Éclaireur\nRow 2, column 2: Repère Stratégique\nRow 2, column 3: Plan d’Expansion\nRow 2, column 4: Voir Plus Loin\nRow 3, column 1: Lettre Scellée\nRow 3, column 2: Message Diplomatique\nRow 3, column 3: Pacte Inconnu\nRow 3, column 4: Une Réputation naissante\nRow 4, column 1: Chariot Marchand\nRow 4, column 2: Caisse de Provision\nRow 4, column 3: Cargaison Royale\nRow 4, column 4: Le Prix de la Progression"
+  },
+  {
+    "id": "story-07",
+    "items": [
+      "Roue de Chariot",
+      "Cor de Siège",
+      "Ordre de Défense",
+      "Le Siège",
+      "Shield Protecteur",
+      "Sablier de Recharge",
+      "Noyau du Shield",
+      "Le Bouclier",
+      "Longue-vue d’Éclaireur",
+      "Rapport d’Observation",
+      "Journal de Reconnaissance",
+      "Les Éclaireurs",
+      "Panorama des Terres",
+      "Atlas des Explorateurs",
+      "Vision des Trois Terres",
+      "Au-delà de l’Horizon"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Roue de Chariot\nRow 1, column 2: Cor de Siège\nRow 1, column 3: Ordre de Défense\nRow 1, column 4: Le Siège\nRow 2, column 1: Shield Protecteur\nRow 2, column 2: Sablier de Recharge\nRow 2, column 3: Noyau du Shield\nRow 2, column 4: Le Bouclier\nRow 3, column 1: Longue-vue d’Éclaireur\nRow 3, column 2: Rapport d’Observation\nRow 3, column 3: Journal de Reconnaissance\nRow 3, column 4: Les Éclaireurs\nRow 4, column 1: Panorama des Terres\nRow 4, column 2: Atlas des Explorateurs\nRow 4, column 3: Vision des Trois Terres\nRow 4, column 4: Au-delà de l’Horizon"
+  },
+  {
+    "id": "story-08",
+    "items": [
+      "Tableau des Dirigeants",
+      "Insigne de Progression",
+      "Couronne des Premiers",
+      "Le Classement",
+      "👑 Couronne du Royaume",
+      "📖 Chronique des Trois Terres",
+      "🌎 Héritage des Trois Terres",
+      "⭐ Le Royaume des Trois Terres"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Tableau des Dirigeants\nRow 1, column 2: Insigne de Progression\nRow 1, column 3: Couronne des Premiers\nRow 1, column 4: Le Classement\nRow 2, column 1: 👑 Couronne du Royaume\nRow 2, column 2: 📖 Chronique des Trois Terres\nRow 2, column 3: 🌎 Héritage des Trois Terres\nRow 2, column 4: ⭐ Le Royaume des Trois Terres\nRow 3, column 1: EMPTY transparent cell, nothing\nRow 3, column 2: EMPTY transparent cell, nothing\nRow 3, column 3: EMPTY transparent cell, nothing\nRow 3, column 4: EMPTY transparent cell, nothing\nRow 4, column 1: EMPTY transparent cell, nothing\nRow 4, column 2: EMPTY transparent cell, nothing\nRow 4, column 3: EMPTY transparent cell, nothing\nRow 4, column 4: EMPTY transparent cell, nothing"
+  },
+  {
+    "id": "expedition-extras",
+    "items": [
+      "Herbes des chemins",
+      "Petite fleur sauvage",
+      "Viande de sanglier",
+      "Viande de loup",
+      "Viande de crocodile",
+      "Croc de loup",
+      "Croc de crocodile",
+      "Croc de félin du désert",
+      "Croc Alpha",
+      "Griffe d’ours",
+      "Griffe Alpha",
+      "Corde solide",
+      "Torche renforcée",
+      "Rations de voyage",
+      "Boussole d’explorateur"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Herbes des chemins\nRow 1, column 2: Petite fleur sauvage\nRow 1, column 3: Viande de sanglier\nRow 1, column 4: Viande de loup\nRow 2, column 1: Viande de crocodile\nRow 2, column 2: Croc de loup\nRow 2, column 3: Croc de crocodile\nRow 2, column 4: Croc de félin du désert\nRow 3, column 1: Croc Alpha\nRow 3, column 2: Griffe d’ours\nRow 3, column 3: Griffe Alpha\nRow 3, column 4: Corde solide\nRow 4, column 1: Torche renforcée\nRow 4, column 2: Rations de voyage\nRow 4, column 3: Boussole d’explorateur\nRow 4, column 4: EMPTY transparent cell, nothing"
+  },
+  {
+    "id": "quest-props",
+    "items": [
+      "Reçu marchand",
+      "Plaque de transport",
+      "Faux contrat",
+      "Rivets anciens",
+      "Caisses de voyage",
+      "Assemblage ancien",
+      "Étais de mission",
+      "Journal de Seraph",
+      "Rapport de secours",
+      "Relevé d’Ashkar",
+      "Balise d’Elarwyn",
+      "Plan de protection",
+      "Mandat de secours",
+      "Dossier de mandat",
+      "Pièces volées",
+      "Gazette"
+    ],
+    "prompt": "Use case: stylized-concept. Production inventory sprite atlas for medieval fantasy RPG Altherya. Match the reference quality and rich dimensional hand-painted icons, warm gold highlights and natural materials. Exactly 4 columns by 4 rows in a square 1024x1024 PNG with genuine alpha transparency. Sixteen equal invisible cells, one centered isolated small object per cell. Maintain at least 25px internal padding per cell. Do not cross cell edges. No backgrounds, grid lines, frames, labels, letters or readable text. The following French item names define what to depict, not text to draw. Abstract milestones should be represented by distinct small symbolic relics or medallions. Buildings and vehicles become collectible miniatures. Order left-to-right, row-by-row:\nRow 1, column 1: Reçu marchand\nRow 1, column 2: Plaque de transport\nRow 1, column 3: Faux contrat\nRow 1, column 4: Rivets anciens\nRow 2, column 1: Caisses de voyage\nRow 2, column 2: Assemblage ancien\nRow 2, column 3: Étais de mission\nRow 2, column 4: Journal de Seraph\nRow 3, column 1: Rapport de secours\nRow 3, column 2: Relevé d’Ashkar\nRow 3, column 3: Balise d’Elarwyn\nRow 3, column 4: Plan de protection\nRow 4, column 1: Mandat de secours\nRow 4, column 2: Dossier de mandat\nRow 4, column 3: Pièces volées\nRow 4, column 4: Gazette"
+  }
+]

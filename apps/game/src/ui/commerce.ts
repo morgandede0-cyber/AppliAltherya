@@ -1,3 +1,4 @@
+import {generatedItemArt} from './generated-item-art';
 import {composeBlankCommerce} from './blank-compose';
 import {sizeMenu,watchMenuSize} from './menu-layout';
 import type {Snapshot} from '../activity';
@@ -14,7 +15,7 @@ type Host={state:()=>Snapshot;trade:(body:Record<string,unknown>)=>Promise<strin
 export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
  let category=categories(mode)[0],page=0,selected:Product|undefined,quantity=1,busy=false,message='',dead=false;
  const el=(tag:string,cls='',text='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};
- const art=(p:Product)=>['axe','pickaxe','spear','bag'].includes(p.icon)?equipmentArt(p.icon):resourceArt(p.name)??itemArt(p.icon);
+ const art=(p:Product)=>['axe','pickaxe','spear','bag'].includes(p.icon)?equipmentArt(p.icon):generatedItemArt(p.name)??resourceArt(p.name)??itemArt(p.icon);
  const button=(label:string,fn:()=>void,disabled=false)=>{const b=ornamentButton(label,()=>{if(!busy){host.sound();fn();}},busy||disabled);return b;};
  async function submit(){
   if(!selected||busy||tradeBlock(selected,mode,host.state().balance.wallet,quantity))return;

@@ -1,3 +1,4 @@
+import {generatedItemArt} from './generated-item-art';
 import {arenaSummary} from './arena-view';
 import {nativeHeading,nativeButton} from './native-components';
 import type {Snapshot} from '../activity';
@@ -71,9 +72,9 @@ export function composeBlankMenu(panel:HTMLElement,s:Snapshot){
  }else if(kind==='techniques'){
   const grid=menuGrid(body,3);for(const [key,skill] of Object.entries(s.arena.skills)){const c=card(grid,skill.name,key==='defend'?'Réduit les dégâts du prochain impact.':`Puissance : ${skill.power??0}${key==='ultimate'?'\nRecharge : '+(s.play.fighters?.[0]?.ultimate_cd??0)+' tour(s)':''}`);c.dataset.skill=key;const im=new Image();im.src='/assets/menu-components/technique-'+(key==='defend'?'defend':key==='light'?'0':key==='heavy'?'1':'2')+'.webp';im.alt='';art(c,im);action('Utiliser '+skill.name,c);}
  }else if(kind==='accessories'){
-  const grid=menuGrid(body);card(grid,'Accessoire 1','Aucun objet disponible');card(grid,'Accessoire 2','Aucun objet disponible');
+  const grid=menuGrid(body);for(const [key,item] of Object.entries(s.objects)){if(key==='none')continue;card(grid,item.name,'Indisponible',generatedItemArt(item.name));}card(body,'Emplacements de préparation','Aucun accessoire équipé.');
  }else if(kind==='live'){
-  const a=s.active;if(a){const c=card(body,a.name);const scene=overlays.map(o=>o.querySelector('img')).find(Boolean);if(scene){scene.className='gm-scene';c.prepend(scene);}for(const n of timers)timer(c,n);menuProgress(c,s.server_now-a.started_at,a.ends_at-a.started_at,'Progression du voyage');const grid=menuGrid(body);card(grid,'Ressources découvertes',Object.entries(a.revealed_loot).map(([k,v])=>`${k} × ${v}`).join('\n')||'Aucune ressource découverte');card(grid,'Journal du voyage',a.log.slice(-5).map(l=>`${l.resource_name} +${l.quantity}`).join('\n')||'Le voyage commence…');}else card(body,'Expédition terminée','Les gains ont été ajoutés à votre personnage.');
+  const a=s.active;if(a){const c=card(body,a.name);const scene=overlays.map(o=>o.querySelector('img')).find(Boolean);if(scene){scene.className='gm-scene';c.prepend(scene);}for(const n of timers)timer(c,n);menuProgress(c,s.server_now-a.started_at,a.ends_at-a.started_at,'Progression du voyage');const grid=menuGrid(body);const loot=card(grid,'Ressources découvertes');const drops=Object.entries(a.revealed_loot);if(!drops.length)loot.append(node('p','gm-copy','Aucune ressource découverte'));for(const [name,qty] of drops){const row=node('div','gm-resource'),icon=resourceArt(name);if(icon)row.append(icon);row.append(node('span','',name),node('strong','',String(qty)));loot.append(row);}card(grid,'Journal du voyage',a.log.slice(-5).map(l=>`${l.resource_name} +${l.quantity}`).join('\n')||'Le voyage commence…');}else card(body,'Expédition terminée','Les gains ont été ajoutés à votre personnage.');
  }else if(['tools','destinations','departure'].includes(kind)){
   const content=card(body,menuTitles[kind]);
   for(const o of overlays){if(o.matches('.art-extra *'))continue;const artNode=o.querySelector<SVGSVGElement>(':scope > svg:not(.native-field-text svg)');if(o.classList.contains('native-equipment')&&artNode){art(content,artNode);continue;}const scene=o.querySelector('img');if(scene){scene.className='gm-scene';scene.removeAttribute('style');content.prepend(scene);continue;}

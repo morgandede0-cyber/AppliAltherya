@@ -1,3 +1,5 @@
+import {questObjectArt} from './generated-item-art';
+import {resourceArt} from './catalog-art';
 import type {Snapshot} from '../activity';
 import {trapMenu} from './menu-kit';
 import './campaign-menu.css';
@@ -12,7 +14,7 @@ export function openCampaignMenu(panel:HTMLElement,host:Host){
   const c=host.state().campaign;panel.append(el('p','LES ROUTES DES TROIS TERRES','campaign-kicker'));
   if(!c){panel.append(el('h2','Quêtes principales'),el('p','Synchronisation de la campagne…'));}
   else if(c.complete){panel.append(el('h2','Les routes sont ouvertes'),el('p',`${c.completed}/${c.total} quêtes accomplies. Votre parcours est conservé.`));for(const choice of Object.values(c.choices))panel.append(el('p',choice));}
-  else if(c.quest){const q=c.quest;panel.append(el('p',`Saison ${q.season} · Chapitre ${q.chapter} · ${c.completed}/${c.total} quêtes`,'campaign-kicker'),el('h2',q.title),el('p',`${q.giver} · ${q.locations}`,'campaign-place'),el('p',q.scene));const quote=el('blockquote',q.dialogue);panel.append(quote);
+  else if(c.quest){const q=c.quest;panel.append(el('p',`Saison ${q.season} · Chapitre ${q.chapter} · ${c.completed}/${c.total} quêtes`,'campaign-kicker'),el('h2',q.title),el('p',`${q.giver} · ${q.locations}`,'campaign-place'),el('p',q.scene));const illustration=resourceArt(q.steps[c.stage]?.resource??'')??questObjectArt(q.id);if(illustration){const figure=el('div','','campaign-object-art');figure.append(illustration);panel.append(figure);}const quote=el('blockquote',q.dialogue);panel.append(quote);
    const meta=el('div','','campaign-meta');meta.append(el('span',`Niveau ${q.min_level}`),el('span',`Difficulté ${q.difficulty}/5`),el('span',`${q.gold} Gold · ${q.xp} XP`));panel.append(meta);
    if(!c.accepted){panel.append(button(c.level_allowed?'Accepter la quête':`Niveau ${q.min_level} requis`,()=>void run('campaign_accept'),!c.level_allowed));}
    else{const list=el('ol','','campaign-objectives');q.steps.forEach((s,i)=>{const li=el('li',`${i<c.stage?'✓ ':''}${s.label}`,i<c.stage?'done':i===c.stage?'active':'');list.append(li);});panel.append(list);const s=q.steps[c.stage];

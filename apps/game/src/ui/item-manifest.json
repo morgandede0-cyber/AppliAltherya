@@ -1,0 +1,1235 @@
+{
+  "columns": 4,
+  "rows": 4,
+  "sheets": {
+    "story-01": {
+      "file": "story-01.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-02": {
+      "file": "story-02.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-03": {
+      "file": "story-03.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-04": {
+      "file": "story-04.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-05": {
+      "file": "story-05.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-06": {
+      "file": "story-06.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-07": {
+      "file": "story-07.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "story-08": {
+      "file": "story-08.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "expedition-extras": {
+      "file": "expedition-extras.png",
+      "width": 1254,
+      "height": 1254
+    },
+    "quest-props": {
+      "file": "quest-props.png",
+      "width": 1254,
+      "height": 1254
+    }
+  },
+  "items": [
+    {
+      "name": "🎈 Ballon oublié",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 0,
+      "column": 0,
+      "chapter": 2
+    },
+    {
+      "name": "🪨 Fragment d’Arche",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 0,
+      "column": 1,
+      "chapter": 2
+    },
+    {
+      "name": "✨ Éclat du Passage",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 0,
+      "column": 2,
+      "chapter": 2
+    },
+    {
+      "name": "⭐ Premier Passage",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 0,
+      "column": 3,
+      "chapter": 2
+    },
+    {
+      "name": "🪙 Pièce de la Cité",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 1,
+      "column": 0,
+      "chapter": 3
+    },
+    {
+      "name": "🗺️ Carte des Terres Tempérées",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 1,
+      "column": 1,
+      "chapter": 3
+    },
+    {
+      "name": "🏛️ Sceau de la Cité",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 1,
+      "column": 2,
+      "chapter": 3
+    },
+    {
+      "name": "⭐ Première Installation",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 1,
+      "column": 3,
+      "chapter": 3
+    },
+    {
+      "name": "🚩 Bannière de Ville",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 2,
+      "column": 0,
+      "chapter": 4
+    },
+    {
+      "name": "📜 Charte des Dirigeants",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 2,
+      "column": 1,
+      "chapter": 4
+    },
+    {
+      "name": "⚔️ Ordre de Bataille",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 2,
+      "column": 2,
+      "chapter": 4
+    },
+    {
+      "name": "⭐ Premières Conquêtes",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 2,
+      "column": 3,
+      "chapter": 4
+    },
+    {
+      "name": "📖 Registre des Dirigeants",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 3,
+      "column": 0,
+      "chapter": 5
+    },
+    {
+      "name": "🪶 Plume d’Inscription",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 3,
+      "column": 1,
+      "chapter": 5
+    },
+    {
+      "name": "🖋️ Encre des Fondateurs",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 3,
+      "column": 2,
+      "chapter": 5
+    },
+    {
+      "name": "⭐ Nouvel Arrivant",
+      "category": "story",
+      "sheet": "story-01",
+      "row": 3,
+      "column": 3,
+      "chapter": 5
+    },
+    {
+      "name": "Compas d’Explorateur",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 0,
+      "column": 0,
+      "chapter": 6
+    },
+    {
+      "name": "Décret de Fondation",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 0,
+      "column": 1,
+      "chapter": 6
+    },
+    {
+      "name": "Acte de Capitale",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 0,
+      "column": 2,
+      "chapter": 6
+    },
+    {
+      "name": "Vers un Nouveau Départ",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 0,
+      "column": 3,
+      "chapter": 6
+    },
+    {
+      "name": "Bottes de Voyage",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 1,
+      "column": 0,
+      "chapter": 7
+    },
+    {
+      "name": "Sac du Colon",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 1,
+      "column": 1,
+      "chapter": 7
+    },
+    {
+      "name": "Permis de Colonisation",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 1,
+      "column": 2,
+      "chapter": 7
+    },
+    {
+      "name": "Le Grand Départ",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 1,
+      "column": 3,
+      "chapter": 7
+    },
+    {
+      "name": "Coffret du Fondateur",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 2,
+      "column": 0,
+      "chapter": 8
+    },
+    {
+      "name": "Pierre de Fondation",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 2,
+      "column": 1,
+      "chapter": 8
+    },
+    {
+      "name": "Sceau de la Capitale",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 2,
+      "column": 2,
+      "chapter": 8
+    },
+    {
+      "name": "Première Capitale",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 2,
+      "column": 3,
+      "chapter": 8
+    },
+    {
+      "name": "Clé des Arches",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 3,
+      "column": 0,
+      "chapter": 9
+    },
+    {
+      "name": "Insigne du Gardien",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 3,
+      "column": 1,
+      "chapter": 9
+    },
+    {
+      "name": "Relique des Arches",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 3,
+      "column": 2,
+      "chapter": 9
+    },
+    {
+      "name": "Le Gardien des Arches",
+      "category": "story",
+      "sheet": "story-02",
+      "row": 3,
+      "column": 3,
+      "chapter": 9
+    },
+    {
+      "name": "Parchemin Ancien",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 0,
+      "column": 0,
+      "chapter": 10
+    },
+    {
+      "name": "Chronique Ancienne",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 0,
+      "column": 1,
+      "chapter": 10
+    },
+    {
+      "name": "Secret des Arches",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 0,
+      "column": 2,
+      "chapter": 10
+    },
+    {
+      "name": "Le Mystère des Arches",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 0,
+      "column": 3,
+      "chapter": 10
+    },
+    {
+      "name": "Première Bannière",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 1,
+      "column": 0,
+      "chapter": 11
+    },
+    {
+      "name": "Carte Territoriale",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 1,
+      "column": 1,
+      "chapter": 11
+    },
+    {
+      "name": "Sceau du Territoire",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 1,
+      "column": 2,
+      "chapter": 11
+    },
+    {
+      "name": "Premières Conquêtes",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 1,
+      "column": 3,
+      "chapter": 11
+    },
+    {
+      "name": "Monture d’Éclaireur",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 2,
+      "column": 0,
+      "chapter": 12
+    },
+    {
+      "name": "Tambour de Guerre",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 2,
+      "column": 1,
+      "chapter": 12
+    },
+    {
+      "name": "Échelle de Siège",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 2,
+      "column": 2,
+      "chapter": 12
+    },
+    {
+      "name": "La Course aux Territoires",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 2,
+      "column": 3,
+      "chapter": 12
+    },
+    {
+      "name": "Lame d’Avant-garde",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 3,
+      "column": 0,
+      "chapter": 13
+    },
+    {
+      "name": "Carquois Militaire",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 3,
+      "column": 1,
+      "chapter": 13
+    },
+    {
+      "name": "Étendard de Guerre",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 3,
+      "column": 2,
+      "chapter": 13
+    },
+    {
+      "name": "Premier Engagement",
+      "category": "story",
+      "sheet": "story-03",
+      "row": 3,
+      "column": 3,
+      "chapter": 13
+    },
+    {
+      "name": "Casque du Vainqueur",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 0,
+      "column": 0,
+      "chapter": 14
+    },
+    {
+      "name": "Porte Fortifiée",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 0,
+      "column": 1,
+      "chapter": 14
+    },
+    {
+      "name": "Médaille de Victoire",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 0,
+      "column": 2,
+      "chapter": 14
+    },
+    {
+      "name": "Première Victoire",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 0,
+      "column": 3,
+      "chapter": 14
+    },
+    {
+      "name": "Balise de Campagne",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 1,
+      "column": 0,
+      "chapter": 15
+    },
+    {
+      "name": "Plan de Manœuvre",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 1,
+      "column": 1,
+      "chapter": 15
+    },
+    {
+      "name": "Boussole Stratégique",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 1,
+      "column": 2,
+      "chapter": 15
+    },
+    {
+      "name": "Faire les Bons Choix",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 1,
+      "column": 3,
+      "chapter": 15
+    },
+    {
+      "name": "Chronomètre de Campagne",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 2,
+      "column": 0,
+      "chapter": 16
+    },
+    {
+      "name": "Rapport de Reconnaissance",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 2,
+      "column": 1,
+      "chapter": 16
+    },
+    {
+      "name": "Itinéraire de Marche",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 2,
+      "column": 2,
+      "chapter": 16
+    },
+    {
+      "name": "La Course Continue",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 2,
+      "column": 3,
+      "chapter": 16
+    },
+    {
+      "name": "Piège Camouflé",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 3,
+      "column": 0,
+      "chapter": 17
+    },
+    {
+      "name": "Cor de Retraite",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 3,
+      "column": 1,
+      "chapter": 17
+    },
+    {
+      "name": "Manœuvre d’Embuscade",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 3,
+      "column": 2,
+      "chapter": 17
+    },
+    {
+      "name": "Le Piège",
+      "category": "story",
+      "sheet": "story-04",
+      "row": 3,
+      "column": 3,
+      "chapter": 17
+    },
+    {
+      "name": "Anneau Ancien",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 0,
+      "column": 0,
+      "chapter": 18
+    },
+    {
+      "name": "Outil de Seraph",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 0,
+      "column": 1,
+      "chapter": 18
+    },
+    {
+      "name": "Coffre d’Expédition",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 0,
+      "column": 2,
+      "chapter": 18
+    },
+    {
+      "name": "Les Premières Découvertes",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 0,
+      "column": 3,
+      "chapter": 18
+    },
+    {
+      "name": "Lanterne d’Expédition",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 1,
+      "column": 0,
+      "chapter": 19
+    },
+    {
+      "name": "Relique Exhumée",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 1,
+      "column": 1,
+      "chapter": 19
+    },
+    {
+      "name": "Coffre Scellé",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 1,
+      "column": 2,
+      "chapter": 19
+    },
+    {
+      "name": "Première Expédition",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 1,
+      "column": 3,
+      "chapter": 19
+    },
+    {
+      "name": "Plastron Usé",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 2,
+      "column": 0,
+      "chapter": 20
+    },
+    {
+      "name": "Médaille de Campagne",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 2,
+      "column": 1,
+      "chapter": 20
+    },
+    {
+      "name": "Insigne du Vétéran",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 2,
+      "column": 2,
+      "chapter": 20
+    },
+    {
+      "name": "Le Vétéran",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 2,
+      "column": 3,
+      "chapter": 20
+    },
+    {
+      "name": "Cloche du Temple",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 3,
+      "column": 0,
+      "chapter": 21
+    },
+    {
+      "name": "Relique Sacrée",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 3,
+      "column": 1,
+      "chapter": 21
+    },
+    {
+      "name": "Emblème du Temple",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 3,
+      "column": 2,
+      "chapter": 21
+    },
+    {
+      "name": "L’Éveil des Temples",
+      "category": "story",
+      "sheet": "story-05",
+      "row": 3,
+      "column": 3,
+      "chapter": 21
+    },
+    {
+      "name": "Bouclier de Siège",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 0,
+      "column": 0,
+      "chapter": 22
+    },
+    {
+      "name": "Pierre du Temple",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 0,
+      "column": 1,
+      "chapter": 22
+    },
+    {
+      "name": "Étendard du Temple",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 0,
+      "column": 2,
+      "chapter": 22
+    },
+    {
+      "name": "La Guerre des Temples",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 0,
+      "column": 3,
+      "chapter": 22
+    },
+    {
+      "name": "Œil de l’Éclaireur",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 1,
+      "column": 0,
+      "chapter": 23
+    },
+    {
+      "name": "Repère Stratégique",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 1,
+      "column": 1,
+      "chapter": 23
+    },
+    {
+      "name": "Plan d’Expansion",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 1,
+      "column": 2,
+      "chapter": 23
+    },
+    {
+      "name": "Voir Plus Loin",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 1,
+      "column": 3,
+      "chapter": 23
+    },
+    {
+      "name": "Lettre Scellée",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 2,
+      "column": 0,
+      "chapter": 24
+    },
+    {
+      "name": "Message Diplomatique",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 2,
+      "column": 1,
+      "chapter": 24
+    },
+    {
+      "name": "Pacte Inconnu",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 2,
+      "column": 2,
+      "chapter": 24
+    },
+    {
+      "name": "Une Réputation naissante",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 2,
+      "column": 3,
+      "chapter": 24
+    },
+    {
+      "name": "Chariot Marchand",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 3,
+      "column": 0,
+      "chapter": 25
+    },
+    {
+      "name": "Caisse de Provision",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 3,
+      "column": 1,
+      "chapter": 25
+    },
+    {
+      "name": "Cargaison Royale",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 3,
+      "column": 2,
+      "chapter": 25
+    },
+    {
+      "name": "Le Prix de la Progression",
+      "category": "story",
+      "sheet": "story-06",
+      "row": 3,
+      "column": 3,
+      "chapter": 25
+    },
+    {
+      "name": "Roue de Chariot",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 0,
+      "column": 0,
+      "chapter": 26
+    },
+    {
+      "name": "Cor de Siège",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 0,
+      "column": 1,
+      "chapter": 26
+    },
+    {
+      "name": "Ordre de Défense",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 0,
+      "column": 2,
+      "chapter": 26
+    },
+    {
+      "name": "Le Siège",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 0,
+      "column": 3,
+      "chapter": 26
+    },
+    {
+      "name": "Shield Protecteur",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 1,
+      "column": 0,
+      "chapter": 27
+    },
+    {
+      "name": "Sablier de Recharge",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 1,
+      "column": 1,
+      "chapter": 27
+    },
+    {
+      "name": "Noyau du Shield",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 1,
+      "column": 2,
+      "chapter": 27
+    },
+    {
+      "name": "Le Bouclier",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 1,
+      "column": 3,
+      "chapter": 27
+    },
+    {
+      "name": "Longue-vue d’Éclaireur",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 2,
+      "column": 0,
+      "chapter": 28
+    },
+    {
+      "name": "Rapport d’Observation",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 2,
+      "column": 1,
+      "chapter": 28
+    },
+    {
+      "name": "Journal de Reconnaissance",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 2,
+      "column": 2,
+      "chapter": 28
+    },
+    {
+      "name": "Les Éclaireurs",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 2,
+      "column": 3,
+      "chapter": 28
+    },
+    {
+      "name": "Panorama des Terres",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 3,
+      "column": 0,
+      "chapter": 29
+    },
+    {
+      "name": "Atlas des Explorateurs",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 3,
+      "column": 1,
+      "chapter": 29
+    },
+    {
+      "name": "Vision des Trois Terres",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 3,
+      "column": 2,
+      "chapter": 29
+    },
+    {
+      "name": "Au-delà de l’Horizon",
+      "category": "story",
+      "sheet": "story-07",
+      "row": 3,
+      "column": 3,
+      "chapter": 29
+    },
+    {
+      "name": "Tableau des Dirigeants",
+      "category": "story",
+      "sheet": "story-08",
+      "row": 0,
+      "column": 0,
+      "chapter": 30
+    },
+    {
+      "name": "Insigne de Progression",
+      "category": "story",
+      "sheet": "story-08",
+      "row": 0,
+      "column": 1,
+      "chapter": 30
+    },
+    {
+      "name": "Couronne des Premiers",
+      "category": "story",
+      "sheet": "story-08",
+      "row": 0,
+      "column": 2,
+      "chapter": 30
+    },
+    {
+      "name": "Le Classement",
+      "category": "story",
+      "sheet": "story-08",
+      "row": 0,
+      "column": 3,
+      "chapter": 30
+    },
+    {
+      "name": "👑 Couronne du Royaume",
+      "category": "story",
+      "sheet": "story-08",
+      "row": 1,
+      "column": 0,
+      "chapter": 31
+    },
+    {
+      "name": "📖 Chronique des Trois Terres",
+      "category": "story",
+      "sheet": "story-08",
+      "row": 1,
+      "column": 1,
+      "chapter": 31
+    },
+    {
+      "name": "🌎 Héritage des Trois Terres",
+      "category": "story",
+      "sheet": "story-08",
+      "row": 1,
+      "column": 2,
+      "chapter": 31
+    },
+    {
+      "name": "⭐ Le Royaume des Trois Terres",
+      "category": "story",
+      "sheet": "story-08",
+      "row": 1,
+      "column": 3,
+      "chapter": 31
+    },
+    {
+      "name": "Herbes des chemins",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 0,
+      "column": 0
+    },
+    {
+      "name": "Petite fleur sauvage",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 0,
+      "column": 1
+    },
+    {
+      "name": "Viande de sanglier",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 0,
+      "column": 2
+    },
+    {
+      "name": "Viande de loup",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 0,
+      "column": 3
+    },
+    {
+      "name": "Viande de crocodile",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 1,
+      "column": 0
+    },
+    {
+      "name": "Croc de loup",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 1,
+      "column": 1
+    },
+    {
+      "name": "Croc de crocodile",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 1,
+      "column": 2
+    },
+    {
+      "name": "Croc de félin du désert",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 1,
+      "column": 3
+    },
+    {
+      "name": "Croc Alpha",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 2,
+      "column": 0
+    },
+    {
+      "name": "Griffe d’ours",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 2,
+      "column": 1
+    },
+    {
+      "name": "Griffe Alpha",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 2,
+      "column": 2
+    },
+    {
+      "name": "Corde solide",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 2,
+      "column": 3
+    },
+    {
+      "name": "Torche renforcée",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 3,
+      "column": 0
+    },
+    {
+      "name": "Rations de voyage",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 3,
+      "column": 1
+    },
+    {
+      "name": "Boussole d’explorateur",
+      "category": "expedition",
+      "sheet": "expedition-extras",
+      "row": 3,
+      "column": 2
+    },
+    {
+      "name": "Reçu marchand",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 0,
+      "column": 0
+    },
+    {
+      "name": "Plaque de transport",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 0,
+      "column": 1
+    },
+    {
+      "name": "Faux contrat",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 0,
+      "column": 2
+    },
+    {
+      "name": "Rivets anciens",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 0,
+      "column": 3
+    },
+    {
+      "name": "Caisses de voyage",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 1,
+      "column": 0
+    },
+    {
+      "name": "Assemblage ancien",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 1,
+      "column": 1
+    },
+    {
+      "name": "Étais de mission",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 1,
+      "column": 2
+    },
+    {
+      "name": "Journal de Seraph",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 1,
+      "column": 3
+    },
+    {
+      "name": "Rapport de secours",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 2,
+      "column": 0
+    },
+    {
+      "name": "Relevé d’Ashkar",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 2,
+      "column": 1
+    },
+    {
+      "name": "Balise d’Elarwyn",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 2,
+      "column": 2
+    },
+    {
+      "name": "Plan de protection",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 2,
+      "column": 3
+    },
+    {
+      "name": "Mandat de secours",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 3,
+      "column": 0
+    },
+    {
+      "name": "Dossier de mandat",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 3,
+      "column": 1
+    },
+    {
+      "name": "Pièces volées",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 3,
+      "column": 2
+    },
+    {
+      "name": "Gazette",
+      "category": "quest",
+      "sheet": "quest-props",
+      "row": 3,
+      "column": 3
+    }
+  ]
+}
