@@ -4,7 +4,7 @@ export type Spot={label:string;x:number;y:number;w:number;h:number;action:string
 type Scene={name:string;image:string;parent?:SceneId;caption:string;spots:Spot[]};
 const spot=(label:string,x:number,y:number,w:number,h:number,action:string,embedded=false):Spot=>({label,x,y,w,h,action,embedded});
 export const scenes:Record<SceneId,Scene>={
- hub:{name:'Legacy · La cité d’Altherya',image:'hub-predateurs-v2.png',caption:'Choisissez un lieu dans la cité.',spots:[spot('Ruelle sombre',3,24,12,8,'scene:alley',true),spot('Taverne',26,25,13,10,'scene:tavern',true),spot('Château',54,16,10,7,'scene:castle',true),spot('Arène',88,18,10,7,'scene:arena',true),spot('Marché',11,58,11,9,'scene:market',true),spot('Forge',70,47,11,9,'scene:forge',true),spot('Banque',82,44,11,9,'scene:bank',true),spot('Petites annonces',0,0,10,10,'jobs'),spot('Panneau central',0,0,10,10,'gazette'),spot('Monde',0,0,10,10,'world'),spot('Mon profil',0,0,10,10,'profile')]},
+ hub:{name:'Legacy · La cité d’Altherya',image:'hub-panels-clean-v1.png',caption:'Choisissez un lieu dans la cité.',spots:[spot('Ruelle sombre',3,24,12,8,'scene:alley',true),spot('Taverne',26,25,13,10,'scene:tavern',true),spot('Château',54,16,10,7,'scene:castle',true),spot('Arène',88,18,10,7,'scene:arena',true),spot('Marché',11,58,11,9,'scene:market',true),spot('Forge',70,47,11,9,'scene:forge',true),spot('Banque',82,44,11,9,'scene:bank',true),spot('Petites annonces',0,0,10,10,'jobs'),spot('Panneau central',0,0,10,10,'gazette'),spot('Monde',0,0,10,10,'world'),spot('Mon profil',0,0,10,10,'profile')]},
  tavern:{name:'Taverne de Legacy',image:'tavern.webp',parent:'hub',caption:'Approchez du comptoir ou écoutez les récits des voyageurs.',spots:[]},
  barman:{name:'Le tavernier',image:'tavern_barman.webp',parent:'tavern',caption:'Le tavernier vous accueille près du feu.',spots:[]},
  games:{name:'Les jeux de la taverne',image:'tavern_games.webp',parent:'tavern',caption:'Les tables de la taverne.',spots:[]},
@@ -15,7 +15,7 @@ export const scenes:Record<SceneId,Scene>={
  arena:{name:'Arène de Legacy',image:'arena.webp',parent:'hub',caption:'La foule attend son champion.',spots:[]},
  champion:{name:'Champion de Legacy',image:'arena_champion.webp',parent:'arena',caption:'Le champion vous jauge.',spots:[]},
  bank:{name:'Banque de Legacy',image:'bank.webp',parent:'hub',caption:'Votre bourse et les coffres du royaume.',spots:[]},
- alley:{name:'Ruelle sombre',image:'alley-predateurs-v2.png',parent:'hub',caption:'Des regards se tournent vers vous dans la ruelle.',spots:[spot('Le voleur',3,15,22,64,'scene:thief',true),spot('Le braqueur',41,24,22,51,'scene:robber',true),spot('Le vigile',68,10,28,66,'scene:guard',true),spot('Retour au hub',1,89,18,8,'scene:hub',true)]},
+ alley:{name:'Ruelle sombre',image:'alley-panels-clean-v1.png',parent:'hub',caption:'Des regards se tournent vers vous dans la ruelle.',spots:[spot('Le voleur',3,15,22,64,'scene:thief',true),spot('Le braqueur',41,24,22,51,'scene:robber',true),spot('Le vigile',68,10,28,66,'scene:guard',true),spot('Retour au hub',1,89,18,8,'scene:hub',true)]},
  guard:{name:'Le vigile',image:'alley_guard.webp',parent:'alley',caption:'Le vigile surveille le passage.',spots:[]},
  thief:{name:'Le voleur',image:'alley_thief.webp',parent:'alley',caption:'Le voleur sait des choses.',spots:[]},
  robber:{name:'Le brigand',image:'alley_robber.webp',parent:'alley',caption:'Un marché discret se négocie.',spots:[]},

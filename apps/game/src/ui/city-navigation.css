@@ -8,3 +8,12 @@ body.menu-open #scene-stage .city-navigation{visibility:hidden!important;pointer
 
 /* Matte frames: keep native labels clear while toning down decorative brass. */
 .city-control svg{filter:saturate(.18) brightness(.62);opacity:.9}
+
+/* Actual transparent sign buttons, anchored to the clean scene coordinates. */
+#scene-stage .city-panel-button{transform:none!important;min-width:0!important;min-height:0!important;overflow:visible!important;border-radius:0!important;outline:none!important;transition:filter .14s ease}
+.city-panel-button>svg{display:block;width:100%;height:100%;overflow:hidden;pointer-events:none;transition:transform .14s ease;transform-origin:50% 15%}
+#scene-stage .city-panel-button:hover{outline:none!important;filter:brightness(1.08)}
+.city-panel-button:hover>svg{transform:translateY(-1px)}
+.city-panel-button:active>svg{transform:translateY(1px) scale(.985)}
+#scene-stage .city-panel-button:focus-visible{outline:none!important;filter:brightness(1.2) drop-shadow(0 0 2px #dce5e8)}
+@media(prefers-reduced-motion:reduce){.city-panel-button,.city-panel-button>svg{transition:none!important}.city-panel-button:hover>svg,.city-panel-button:active>svg{transform:none!important}}
