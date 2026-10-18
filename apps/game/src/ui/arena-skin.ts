@@ -1,0 +1,11 @@
+import type {Snapshot} from '../activity';
+import {node} from './menu-framework';
+import {assetSlice} from './assets';
+import art from './arena-art.json';
+import './arena-skin.css';
+export const arenaPlayerName=(s:Snapshot)=>s.discord?.display_name||s.name;
+export function playerPortrait(s:Snapshot){const root=node('div','arena-portrait arena-avatar');const name=arenaPlayerName(s);root.append(node('span','arena-initials',Array.from(name.trim()).slice(0,2).join('').toLocaleUpperCase('fr-FR')));if(s.discord?.avatar_url){const image=document.createElement('img');image.src=s.discord.avatar_url;image.alt='Photo Discord de '+name;image.referrerPolicy='no-referrer';image.draggable=false;image.onerror=()=>image.remove();root.append(image);}return root;}
+export function championPortrait(level:number){const root=node('div','arena-portrait arena-champion-portrait');const index=Math.max(0,Math.min(9,level-1)),w=art.champions.width/4,h=art.champions.height/3;root.append(assetSlice('/assets/arena/champions.png',index%4*w,Math.floor(index/4)*h,w,h,art.champions.width,art.champions.height));root.dataset.champion=String(index+1);return root;}
+export function arenaIcon(index:number){const w=art.icons.width/4,h=art.icons.height/2;const icon=assetSlice('/assets/arena/icons.png',index%4*w,Math.floor(index/4)*h,w,h,art.icons.width,art.icons.height);icon.classList.add('arena-skin-icon');return icon;}
+export function arenaButton(label:string,fn:()=>void,disabled=false){const b=document.createElement('button');b.type='button';b.className='arena-button';b.textContent=label;b.setAttribute('aria-label',label);b.disabled=disabled;b.onclick=()=>{if(!b.disabled)fn();};return b;}
+export function mountArena(panel:HTMLElement,kind:string,title:string,busy=false){panel.hidden=false;panel.className='game-menu arena-combat arena-surface';panel.dataset.kind=kind;panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label',title);panel.setAttribute('aria-busy',String(busy));panel.replaceChildren();document.body.classList.add('illustrated-open');const inner=node('div','arena-inner'),header=node('div','gm-header');header.append(node('h2','arena-heading',title));const body=node('section','gm-body'),footer=node('div','gm-footer');inner.append(header,body,footer);panel.append(inner);return{body,footer};}

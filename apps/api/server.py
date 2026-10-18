@@ -56,6 +56,13 @@ async def avatar(request):
         try:service.admin.require(uid);uid=service.admin.target(request.query['player'])
         except (PermissionError,ValueError):raise web.HTTPForbidden()
     profile=service.discord_profile(uid) if uid else None
+    if 'podium' in request.query:
+        if not uid:raise web.HTTPForbidden()
+        profile=None
+        for entry in service.castle.leaderboard(10):
+            candidate=service.discord_profile(entry['user_id'])
+            if candidate and avatar_revision(candidate)==request.query['podium']:
+                profile=candidate;break
     if not profile:raise web.HTTPNotFound()
     try:
         async with ClientSession(timeout=ClientTimeout(total=10)) as session:
@@ -82,7 +89,7 @@ import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import activity as adapter
 from activity import activity
-from discord_profile import avatar_cdn
+from discord_profile import avatar_cdn,avatar_revision
 from discord_events import discord_lifecycle
 from discord_portal import portal_lifecycle
 from guild_names import names_lifecycle

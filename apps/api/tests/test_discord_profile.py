@@ -65,3 +65,15 @@ class ProfileHttpTests(unittest.IsolatedAsyncioTestCase):
    self.assertEqual((await self.client.post('/api/auth/discord',json={'code':'second','id':'999999999999999999'})).status,200)
    s=(await(await self.client.get('/api/activity')).json())['state'];self.assertTrue(s['tutorial']['completed']);self.assertEqual((s['balance']['wallet'],s['xp']),(100,25))
    r=await self.client.post('/api/activity',json={'action':'tutorial_finish','step':5},headers={'X-Altherya-Request':'1'});self.assertEqual((await r.json())['state']['balance']['wallet'],100)
+
+ async def test_podium_avatar_is_authenticated_and_limited_to_current_leaderboard(self):
+  a=adapter.SERVICE
+  cookie=self.client.session.cookie_jar.filter_cookies(self.client.make_url('/'))['altherya_test'].value
+  uid=a.session_uid(cookie);a.bind_discord(uid,USER,cookie)
+  a.guild_names.record_member(uid,'123456789012345679',dict(user=USER,nick='Gardien du serveur'))
+  state=a.snapshot(uid,'Autre');entry=next(p for p in state['podium'] if p['name']=='Gardien du serveur')
+  self.assertNotIn(USER['id'],entry['avatar_url']);self.assertNotIn('user_id',entry)
+  with patch.object(server,'ClientSession',FakeSession):
+   response=await self.client.get(entry['avatar_url']);self.assertEqual(response.status,200);self.assertEqual(await response.read(),b'avatar-image')
+   self.assertEqual((await self.client.get('/api/avatar?podium=inconnu')).status,404)
+   self.client.session.cookie_jar.clear();self.assertEqual((await self.client.get(entry['avatar_url'])).status,403)

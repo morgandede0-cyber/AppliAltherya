@@ -91,7 +91,10 @@ class Activity:
         if pending:pending={**pending,'job':asdict(pending['job'])}
         quests,quest_reward=self.castle.quests(uid)
         with self.conn() as c:names={r['user_id']:r['name'] for r in c.execute('SELECT user_id,name FROM activity_sessions')}
-        podium=[dict(name=names.get(r['user_id'],'Aventurier'),total=r['total']) for r in self.castle.leaderboard(10)]
+        podium=[]
+        for r in self.castle.leaderboard(10):
+            profile=self.discord_profile(r['user_id'])
+            podium.append(dict(name=profile['display_name'] if profile else names.get(r['user_id'],'Aventurier'),total=r['total'],avatar_url=('/api/avatar?podium='+avatar_revision(profile)) if profile else None))
         discord=self.discord_profile(uid)
         if discord:name=discord['display_name']
         public_discord=None if not discord else dict(username=discord['username'],display_name=discord['display_name'],avatar_url='/api/avatar?v='+avatar_revision(discord))

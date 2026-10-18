@@ -1,16 +1,16 @@
 import type {Snapshot} from '../activity';
 import {bankMarkup} from './bank-markup';
-import {sizeMenu,watchMenuSize} from './menu-layout';
 import {trapMenu} from './menu-kit';
 import {validAmount,withdrawalQuote} from './service-model';
-import './bank-menu.css';
+
+import './realm-menu.css';
 
 type BankMode='deposit'|'withdraw';
 type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;close:()=>void;route:(key:string)=>void};
 /** Bank components keep their original artwork; balances and actions belong to the server. */
 export function openBankMenu(panel:HTMLElement,host:Host){
  let busy=false,dead=false;
- panel.hidden=false;panel.className='bank-menu';panel.dataset.kind='bank';panel.setAttribute('aria-label','Banque de IV');panel.innerHTML=bankMarkup;
+ panel.hidden=false;panel.className='realm-menu';panel.dataset.kind='bank';panel.setAttribute('aria-label','Banque de IV');panel.innerHTML=bankMarkup;
  const root=panel.querySelector<HTMLElement>('#bank-polished')!,status=root.querySelector<HTMLElement>('.status')!;
  const forms=Array.from(root.querySelectorAll<HTMLFormElement>('form'));
  const returnButton=root.querySelector<HTMLButtonElement>('.back')!;
@@ -34,7 +34,7 @@ export function openBankMenu(panel:HTMLElement,host:Host){
     feeNote.textContent=max===0?'Banque vide':!validAmount(amount,max)?'Indiquez un montant valide':balance.free_withdrawal_available?'Premier retrait gratuit':`Frais : ${format(quote.fee)} · Reçu : ${format(quote.received)}`;
    }
   }
-  sizeMenu(panel,0,1020);
+
  }
  for(const form of forms){
   const mode=form.dataset.mode as BankMode,input=form.querySelector<HTMLInputElement>('input')!;
@@ -58,8 +58,8 @@ export function openBankMenu(panel:HTMLElement,host:Host){
  returnButton.addEventListener('click',()=>{if(!busy&&!dead)host.route('hub');});
  document.body.classList.add('illustrated-open');
  trapMenu(panel,()=>busy,host.close);
- const stop=watchMenuSize(panel,update);update();
- for(const img of Array.from(root.querySelectorAll<HTMLImageElement>('img')))img.addEventListener('load',()=>{if(!dead)sizeMenu(panel,0,1020);},{once:true});
+ const stop=()=>{};update();
+ for(const img of Array.from(root.querySelectorAll<HTMLImageElement>('img')))img.addEventListener('load',()=>{if(!dead)update();},{once:true});
  forms[0].querySelector<HTMLInputElement>('input')?.focus({preventScroll:true});
  return{update,destroy(){dead=true;stop();panel.onkeydown=null;document.body.classList.remove('illustrated-open');}};
 }
