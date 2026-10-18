@@ -1,17 +1,15 @@
-/** Subtle effects anchored to the unchanged 1672×941 authored illustration. */
-export const hubArt={width:1672,height:941};
+/** Effects anchored to the approved 1536×1024 predator city illustration. */
+export const hubArt={width:1536,height:1024};
 export const hubLanterns=[
- {x:79,y:89,r:42,power:.15},{x:143,y:109,r:29,power:.11},
- {x:55,y:359,r:35,power:.14},{x:53,y:490,r:44,power:.16},{x:103,y:551,r:24,power:.11},
- {x:338,y:325,r:24,power:.12},{x:367,y:329,r:26,power:.13},
- {x:554,y:405,r:39,power:.13},{x:1296,y:777,r:26,power:.15},
- {x:1408,y:696,r:33,power:.15},{x:1408,y:553,r:26,power:.12},{x:1550,y:557,r:26,power:.12},
- {x:1650,y:393,r:29,power:.11}
+ {x:110,y:179,r:25,power:.11},{x:114,y:377,r:28,power:.13},
+ {x:186,y:394,r:22,power:.12},{x:329,y:466,r:26,power:.12},
+ {x:600,y:538,r:22,power:.11},{x:1028,y:637,r:25,power:.13},
+ {x:1137,y:622,r:29,power:.14},{x:1251,y:584,r:24,power:.12},
+ {x:1493,y:600,r:24,power:.12}
 ] as const;
 export const hubJets=[
- {x0:773,y0:591,cx:803,cy:480,x1:825,y1:575},
- {x0:813,y0:578,cx:830,cy:543,x1:843,y1:579},
- {x0:911,y0:580,cx:934,cy:504,x1:953,y1:586}
+ {x0:708,y0:744,cx:736,cy:656,x1:761,y1:745},
+ {x0:939,y0:742,cx:958,cy:667,x1:975,y1:748}
 ] as const;
 type Jet=typeof hubJets[number];
 export function jetPoint(jet:Jet,u:number){const v=1-u;return{x:v*v*jet.x0+2*v*u*jet.cx+u*u*jet.x1,y:v*v*jet.y0+2*v*u*jet.cy+u*u*jet.y1};}
@@ -21,7 +19,7 @@ export function paintHubLife(ctx:CanvasRenderingContext2D,time:number){
  for(const [i,lamp] of hubLanterns.entries()){const pulse=.7+Math.sin(time*2.3+i*2)*.18+Math.sin(time*.85+i)*.12;glow(ctx,lamp.x,lamp.y,lamp.r,lamp.power*pulse*2.3);}
  ctx.restore();
  // Match the existing grey chimney plume, without hiding roofs or castle details.
- ctx.save();for(let i=0;i<12;i++){const life=(time*.13+i/12)%1,x=486-20*life+Math.sin(life*4+i*.1)*8,y=156-life*112,r=5+life*16,alpha=Math.sin(life*Math.PI)*.13;const smoke=ctx.createRadialGradient(x,y,0,x,y,r);smoke.addColorStop(0,`rgba(106,109,117,${alpha})`);smoke.addColorStop(1,'rgba(106,109,117,0)');ctx.fillStyle=smoke;ctx.fillRect(x-r,y-r,r*2,r*2);}ctx.restore();
+ ctx.save();for(let i=0;i<12;i++){const life=(time*.13+i/12)%1,x=1140-20*life+Math.sin(life*4+i*.1)*8,y=435-life*112,r=5+life*16,alpha=Math.sin(life*Math.PI)*.13;const smoke=ctx.createRadialGradient(x,y,0,x,y,r);smoke.addColorStop(0,`rgba(106,109,117,${alpha})`);smoke.addColorStop(1,'rgba(106,109,117,0)');ctx.fillStyle=smoke;ctx.fillRect(x-r,y-r,r*2,r*2);}ctx.restore();
  // Small travelling highlights follow the jets already painted in the fountain.
  ctx.save();ctx.lineCap='round';for(const [index,jet] of hubJets.entries()){
   ctx.strokeStyle='rgba(189,235,255,.24)';ctx.lineWidth=1.1;ctx.beginPath();ctx.moveTo(jet.x0,jet.y0);ctx.quadraticCurveTo(jet.cx,jet.cy,jet.x1,jet.y1);ctx.stroke();
