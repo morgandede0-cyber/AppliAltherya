@@ -1,0 +1,92 @@
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank){width:min(1500px,98vw,calc(96dvh * 1.777))!important;height:min(94dvh,calc(98vw / 1.777))!important;background:url('/assets/predator-venues/forge-workshop.png') center/100% 100% no-repeat!important;overflow:hidden!important;color:#f3dbac!important}
+#panel#panel.realm-menu.predator-bank{background-image:url('/assets/predator-venues/bank-counter.png')!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-inner{inset:4% 5% 4% 44%!important;width:auto!important;height:auto!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-header{position:relative!important;isolation:isolate;min-height:45px;display:grid;place-items:center;padding:7px 13%!important;margin:0 0 7px!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-header>.predator-frame{position:absolute!important;inset:0;width:100%;height:100%;z-index:0}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-header h2{position:relative!important;z-index:1;font:normal clamp(19px,2.3vw,34px)/1.15 Georgia,serif!important;text-transform:none!important;letter-spacing:0!important;margin:0!important;color:#f3d29c!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-body{padding:0 3px 5px!important;overflow:auto!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-footer{padding:5px 0 0!important;border:0!important;gap:10px!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-footer>button{flex:1;min-width:0!important;min-height:43px!important;font:normal 16px Georgia,serif!important;padding:8px 16px!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) button.predator-button{font-family:Georgia,serif!important;color:#f3dcaf!important;clip-path:none!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .workshop-field{position:relative;isolation:isolate;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .workshop-field>.predator-frame,#panel#panel.realm-menu.predator-forge .realm-card>.predator-frame{position:absolute!important;inset:0;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;z-index:-1}
+#panel#panel.realm-menu.predator-forge .approved-wallet{font:17px Georgia!important;margin:0 0 7px!important;color:#f5d9a7!important;text-shadow:0 2px 3px #000;text-align:center}
+#panel#panel.realm-menu.predator-forge .realm-tabs{gap:6px!important;margin:0 0 10px!important}
+#panel#panel.realm-menu.predator-forge .realm-tabs>button{flex:1;min-width:0!important;min-height:40px!important;padding:8px 12px!important;font:16px Georgia!important}
+#panel#panel.realm-menu.predator-forge .realm-forge-compare{grid-template-columns:1fr 1fr!important;gap:10px!important}
+#panel#panel.realm-menu.predator-forge .realm-card{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:0;background:none!important;border:0!important;padding:17px 16px!important}
+#panel#panel.realm-menu.predator-forge .realm-card>h3{font:18px Georgia!important;margin:4px 0!important;color:#f1d29a!important}
+#panel#panel.realm-menu.predator-forge .realm-card>p{font:15px/1.3 Georgia!important;margin:7px 0!important;color:#efdebb!important}
+#panel#panel.realm-menu.predator-forge .realm-card>svg:not(.predator-frame){height:130px!important;width:140px!important;max-width:100%!important}
+#panel#panel.realm-menu.predator-forge .realm-card small{font:13px Georgia;color:#dfcda5}
+#panel#panel.realm-menu.predator-forge .realm-materials{padding:18px!important;margin:10px 0 0!important;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#panel#panel.realm-menu.predator-forge .approved-materials-title{grid-column:1/-1;font:20px Georgia!important;color:#f2d49b;margin:0 0 3px}
+#panel#panel.realm-menu.predator-forge .realm-material{padding:0!important;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:start;gap:4px;font:13px/1.25 Georgia!important;color:#e8d6b5}
+#panel#panel.realm-menu.predator-forge .realm-material svg{width:38px;height:38px}
+#panel#panel.realm-menu.predator-forge .approved-forge-cost{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;border-top:1px solid #af8b4e70;padding-top:9px;font:15px Georgia!important}
+#panel#panel.realm-menu.predator-forge .approved-forge-cost strong{font-size:20px;color:#f4d49a}
+#panel#panel.realm-menu.predator-forge .realm-notice{font:14px Georgia!important;background:#1d110ce8;color:#f1ddb6;padding:8px}
+#panel#panel.realm-menu.predator-bank #bank-polished .bank-accounts{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin:0 0 10px!important}
+#panel#panel.realm-menu.predator-bank #bank-polished .bank-account{padding:15px 12px!important;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#panel#panel.realm-menu.predator-bank .bank-account::before,#panel#panel.realm-menu.predator-bank .bank-account::after{display:none!important}
+#panel#panel.realm-menu.predator-bank #bank-polished .bank-account h3{font:18px Georgia!important;text-transform:none!important;letter-spacing:0!important;color:#f4d7a1!important;margin:0 0 4px!important}
+#panel#panel.realm-menu.predator-bank #bank-polished .bank-account-art{width:65px!important;height:65px!important;margin:0 auto 5px}
+#panel#panel.realm-menu.predator-bank #bank-polished .bank-account output{font:25px Georgia!important;margin:0!important;padding:0!important;border:0!important;color:#f3daaa!important;overflow-wrap:anywhere;white-space:normal}
+#panel#panel.realm-menu.predator-bank .bank-transfer{padding:18px!important}
+#panel#panel.realm-menu.predator-bank .bank-transfer>h3{font:20px Georgia!important;letter-spacing:0!important;text-transform:none!important;color:#edce95!important;margin:0 0 9px!important}
+#panel#panel.realm-menu.predator-bank .bank-mode-tabs{margin:0 0 9px!important;gap:10px!important}
+#panel#panel.realm-menu.predator-bank .bank-mode-tabs button{min-height:40px!important;font:16px Georgia!important;width:44%!important;max-width:190px!important;padding:8px 12px!important}
+#panel#panel.realm-menu.predator-bank .bank-transfer-form{gap:8px!important;max-width:420px!important}
+#panel#panel.realm-menu.predator-bank #bank-polished input{position:static!important;width:200px!important;height:44px!important;border:1px solid #b18b4c!important;background:#102b2c!important;color:#f4dfb6!important;font:24px Georgia!important;padding:4px!important;text-align:center}
+#panel#panel.realm-menu.predator-bank .bank-amount-label{font:15px Georgia!important;color:#f1d9ab!important;gap:5px}
+#panel#panel.realm-menu.predator-bank #bank-polished .presets{gap:7px!important}
+#panel#panel.realm-menu.predator-bank #bank-polished .presets button{min-height:36px!important;width:31%!important;min-width:0!important;font:14px Georgia!important;padding:6px 12px!important}
+#panel#panel.realm-menu.predator-bank #bank-polished button.confirm{min-height:43px!important;padding:10px 14px!important;font:17px Georgia!important;margin:0!important}
+#panel#panel.realm-menu.predator-bank .bank-preview{font:14px Georgia!important;color:#eedab5!important;padding:7px 0 0!important;margin:0!important}
+#panel#panel.realm-menu.predator-bank #bank-polished .fee-note{font:13px Georgia!important;color:#e4cda2!important}
+#panel#panel.realm-menu.predator-bank #bank-polished .status{font:14px Georgia!important;color:#f3daad!important;min-height:0!important;margin:6px 0 0!important;padding:0!important;text-align:center}
+#panel#panel.realm-menu.predator-bank [hidden]{display:none!important}
+@media(max-height:650px) and (min-width:701px){#panel#panel.realm-menu.predator-forge .realm-card>svg:not(.predator-frame){height:68px!important}#panel#panel.realm-menu.predator-forge .realm-card{padding:12px!important}#panel#panel.realm-menu.predator-forge .realm-card>h3{font-size:14px!important}#panel#panel.realm-menu.predator-forge .realm-card>p{font-size:12px!important}#panel#panel.realm-menu.predator-forge .realm-materials{padding:12px!important}#panel#panel.realm-menu.predator-forge .realm-material{font-size:11px!important}#panel#panel.realm-menu.predator-forge .realm-material svg{width:27px;height:27px}#panel#panel.realm-menu.predator-bank #bank-polished .bank-account-art{width:40px!important;height:40px!important}#panel#panel.realm-menu.predator-bank #bank-polished .bank-account{padding:10px!important}#panel#panel.realm-menu.predator-bank #bank-polished .bank-account output{font-size:20px!important}#panel#panel.realm-menu.predator-bank .bank-transfer{padding:12px!important}#panel#panel.realm-menu.predator-bank .bank-transfer>h3{display:none}#panel#panel.realm-menu.predator-bank .bank-transfer-form{gap:5px!important}}
+@media(max-width:700px) and (orientation:portrait){#panel#panel.realm-menu:is(.predator-forge,.predator-bank){width:98vw!important;height:94dvh!important;background-size:auto 225px!important;background-position:center top!important;background-color:#1c110b!important}#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-inner{inset:160px 8px 8px!important;background:#1c110bf2!important;border-radius:5px;padding:3px!important}#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-header{min-height:40px!important}#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-header h2{font-size:22px!important}#panel#panel.realm-menu.predator-forge .realm-tabs>button{font-size:13px!important;min-height:40px!important}#panel#panel.realm-menu.predator-forge .realm-card{padding:12px 10px!important}#panel#panel.realm-menu.predator-forge .realm-card>h3{font-size:14px!important}#panel#panel.realm-menu.predator-forge .realm-card>p{font-size:12px!important}#panel#panel.realm-menu.predator-forge .realm-card>svg:not(.predator-frame){height:90px!important;width:100px!important}#panel#panel.realm-menu.predator-forge .realm-materials{grid-template-columns:1fr 1fr;padding:15px!important}#panel#panel.realm-menu.predator-forge .approved-materials-title{font-size:18px!important}#panel#panel.realm-menu.predator-bank #bank-polished .bank-account{padding:12px 8px!important}#panel#panel.realm-menu.predator-bank #bank-polished .bank-account h3{font-size:15px!important}#panel#panel.realm-menu.predator-bank #bank-polished .bank-account output{font-size:19px!important}#panel#panel.realm-menu.predator-bank #bank-polished .bank-account-art{width:55px!important;height:55px!important}#panel#panel.realm-menu.predator-bank .bank-transfer{padding:14px!important}#panel#panel.realm-menu.predator-bank .bank-transfer>h3{font-size:18px!important}#panel#panel.realm-menu.predator-bank .bank-mode-tabs button{font-size:14px!important;min-height:42px!important}#panel#panel.realm-menu.predator-bank #bank-polished .presets button{min-height:42px!important}#panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-footer>button{min-height:44px!important;font-size:14px!important}}
+body:has(#panel.predator-bank:not([hidden])) #hud{visibility:hidden}
+/* Compact portrait windows keep the banking form visible below the balances. */
+@media(max-width:700px) and (max-height:700px) and (orientation:portrait){
+ #panel#panel.realm-menu:is(.predator-forge,.predator-bank){background-size:auto 145px!important}
+ #panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-inner{top:85px!important}
+ #panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-header{min-height:34px!important;margin-bottom:4px!important}
+ #panel#panel.realm-menu:is(.predator-forge,.predator-bank) .realm-header h2{font-size:19px!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished .bank-account{padding:9px 8px!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished .bank-account h3{font-size:13px!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished .bank-account-art{width:30px!important;height:30px!important;margin:3px auto!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished .bank-account output{font-size:16px!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished .bank-accounts{margin-bottom:6px!important}
+ #panel#panel.realm-menu.predator-bank .bank-transfer{padding:12px!important}
+ #panel#panel.realm-menu.predator-bank .bank-transfer>h3{display:none!important}
+ #panel#panel.realm-menu.predator-bank .bank-mode-tabs{margin-bottom:6px!important}
+ #panel#panel.realm-menu.predator-bank .bank-mode-tabs button{min-height:34px!important;padding:6px!important;font-size:13px!important}
+ #panel#panel.realm-menu.predator-bank .bank-transfer-form{gap:4px!important}
+ #panel#panel.realm-menu.predator-bank .bank-amount-label{flex-direction:row!important;gap:8px!important;font-size:13px!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished input{width:135px!important;height:36px!important;font-size:20px!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished .presets button{min-height:34px!important;font-size:13px!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished button.confirm{min-height:38px!important;font-size:14px!important;padding:7px!important}
+ #panel#panel.realm-menu.predator-bank .bank-preview{font-size:12px!important;padding-top:4px!important}
+ #panel#panel.realm-menu.predator-bank #bank-polished .fee-note{font-size:11px!important}
+ #panel#panel.realm-menu.predator-forge .realm-card>svg:not(.predator-frame){height:62px!important}
+ #panel#panel.realm-menu.predator-forge .realm-card>h3{font-size:12px!important}
+ #panel#panel.realm-menu.predator-forge .realm-card>p{font-size:11px!important}
+ #panel#panel.realm-menu.predator-forge .realm-materials{grid-template-columns:repeat(3,minmax(0,1fr));padding:14px!important;gap:6px}
+ #panel#panel.realm-menu.predator-forge .realm-material{font-size:11px!important}
+ #panel#panel.realm-menu.predator-forge .realm-material svg{height:26px;width:26px}
+ #panel#panel.realm-menu.predator-forge .approved-materials-title{font-size:15px!important}
+}
+@media(max-width:700px) and (max-height:700px) and (orientation:portrait){
+ #panel#panel.realm-menu.predator-forge .realm-forge-compare{margin-top:0!important;gap:7px!important}
+ #panel#panel.realm-menu.predator-forge .realm-forge-compare .realm-card{min-height:0!important;padding:11px 9px!important;gap:0!important}
+ #panel#panel.realm-menu.predator-forge .realm-card>h3{font:12px/1.15 Georgia!important;margin:3px 0!important;padding:0!important;border:0!important}
+ #panel#panel.realm-menu.predator-forge .realm-card>p{font:11px/1.15 Georgia!important;margin:3px 0!important}
+ #panel#panel.realm-menu.predator-forge .realm-card>small{font:10px Georgia!important}
+ #panel#panel.realm-menu.predator-forge .realm-card>svg:not(.predator-frame){margin:3px auto!important}
+ #panel#panel.realm-menu.predator-forge .realm-tabs{margin-bottom:5px!important}
+}
+#panel#panel.realm-menu.predator-forge .forge-button-cost{display:block;font:12px/1.2 Georgia,serif!important;color:#e9c991;margin-top:1px}
+#panel#panel.realm-menu.predator-forge .realm-footer>button[aria-label="Améliorer"]{padding-top:5px!important;padding-bottom:5px!important}
