@@ -1,3 +1,4 @@
+import {decorateApproved,approvedCard} from './approved-art';
 import {mountArena,arenaButton} from './arena-skin';
 import type {Snapshot,ArenaSkill} from '../activity';
 import {node} from './menu-framework';
@@ -18,12 +19,12 @@ export function openArenaTechniqueBook(panel:HTMLElement,host:Host){
   const base:ArenaSkill={...s.arena.base_skills![slot],id:'base_'+slot,unlocked:true,source:'Apprentissage par niveau',description:slot==='defend'?'Réduction du prochain impact : 40 %.':slot==='ultimate'?'Recharge : 2 actions.':'Technique de base évoluant avec votre niveau.',limit:'Toujours disponible ; peut être rééquipée gratuitement.'};
   const list=node('section','arena-book-cards');list.setAttribute('aria-label','Techniques disponibles');
   for(const skill of [base,...(s.arena.techniques??[]).filter(t=>t.slot===slot)]){
-   const card=node('article','arena-book-card'+(!skill.unlocked?' is-locked':''));card.append(node('span','arena-eyebrow',skill.source??''),node('h3','',skill.name),node('p','arena-book-power',info(skill)),node('p','',skill.description??''),node('p','arena-book-limit',skill.limit??''));
+   const card=node('article','arena-book-card'+(!skill.unlocked?' is-locked':''));approvedCard(card);card.append(node('span','arena-eyebrow',skill.source??''),node('h3','',skill.name),node('p','arena-book-power',info(skill)),node('p','',skill.description??''),node('p','arena-book-limit',skill.limit??''));
    const equipped=current.id===skill.id;
    const b=btn(equipped?'Équipée':!skill.unlocked?`Vaincre le champion ${skill.champion}`:`Équiper ${skill.name}`,()=>{pending=skill;draw();panel.querySelector('.arena-book-confirm')?.scrollIntoView({block:'nearest'});},equipped||!skill.unlocked||active);b.setAttribute('aria-label',equipped?`${skill.name} · équipée`:!skill.unlocked?`${skill.name} · verrouillée`:`Équiper ${skill.name}`);card.append(b);list.append(card);
   }body.append(list);
   if(pending){const box=node('section','arena-book-confirm');box.setAttribute('aria-label','Confirmer le remplacement');box.append(node('h3','',`Remplacer ${current.name} par ${pending.name} ?`),node('p','',`${info(current)} → ${info(pending)}`),node('p','','L’ancienne technique reste disponible. Aucun Gold demandé.'),btn('Confirmer le remplacement',()=>void equip(),active),btn('Annuler le remplacement',()=>{pending=undefined;draw();}));body.append(box);}
-  const status=node('p','arena-combat-notice',locked?'Enregistrement…':notice);status.setAttribute('role','status');body.append(status);footer.append(btn('Retour à l’arène',()=>host.route('arena')));
+  const status=node('p','arena-combat-notice',locked?'Enregistrement…':notice);status.setAttribute('role','status');body.append(status);footer.append(btn('Retour à l’arène',()=>host.route('arena')));decorateApproved(panel);
  }
  const stop=()=>{};draw();panel.scrollTop=0;
  return {update(){if(!locked&&!dead)draw();},destroy(){dead=true;stop();panel.classList.remove('arena-technique-book');document.body.classList.remove('illustrated-open');}};

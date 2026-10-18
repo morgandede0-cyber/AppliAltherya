@@ -1,3 +1,4 @@
+import {approvedCard,decorateApproved} from './approved-art';
 import {mountRealm,realmButton} from './realm-menu';
 import {generatedItemArt} from './generated-item-art';
 import {watchMenuSize} from './menu-layout';
@@ -27,23 +28,23 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
   const {body,footer:realmFooter}=mountRealm(root,'market-'+mode,mode==='sell'?'Vendre au marché':mode==='story'?'Objets d’histoire':'Le marchand',busy);
   const stage=el('section','realm-commerce-stage');body.append(stage);const productGrid=el('div','realm-commerce-grid');
   const place=(node:HTMLElement,_x:number,_y:number,_w:number,_h:number)=>{stage.append(node);return node;};
-  const wallet=el('div','realm-muted',`${host.state().balance.wallet} Gold`);wallet.setAttribute('aria-label','Portefeuille');stage.append(wallet);
+  const wallet=el('div','realm-muted approved-wallet',`Portefeuille : ${host.state().balance.wallet} Gold`);wallet.setAttribute('aria-label','Portefeuille');stage.append(wallet);
   const tabs=el('nav','realm-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label',mode==='sell'?'Métiers':'Rayons');stage.append(tabs);
   categories(mode).forEach((c,i)=>{
    const b=document.createElement('button');b.type='button';b.className='native-tab';b.disabled=busy;b.setAttribute('role','tab');b.setAttribute('aria-label',c);b.setAttribute('aria-selected',String(c===category));b.classList.toggle('selected',c===category);b.onclick=()=>{category=c;page=0;selected=undefined;message='';draw();};
    b.textContent=c;
    tabs.append(b);
   });
-  const all=products(host.state(),mode).filter(p=>p.category===category),slice=pageItems(all,page);page=slice.page;
+  const all=products(host.state(),mode).filter(p=>p.category===category||(mode==='buy'&&category==='Outils'&&p.icon==='bag')).sort((a,b)=>mode==='buy'&&category==='Outils'?['axe','pickaxe','spear','bag'].indexOf(a.icon)-['axe','pickaxe','spear','bag'].indexOf(b.icon):0),slice=pageItems(all,page);page=slice.page;
   stage.append(productGrid);
   for(let i=0;i<4;i++){
-   const product=slice.items[i],card=el('article','realm-product'+(!product?' empty-product':''));productGrid.append(card);
+   const product=slice.items[i],card=el('article','realm-product'+(!product?' empty-product':''));productGrid.append(card);approvedCard(card);
    if(!product){card.append(el('span','native-empty',slice.items.length?'Emplacement libre':mode==='sell'?'Aucune ressource':category==='Consommables'?'Aucun consommable':'Aucun objet'));continue;}
    const icon=el('div','realm-item-icon');icon.append(art(product));card.append(icon);
    const info=el('div','realm-item-info');info.append(el('h3','',product.name.replace(/^[^\p{L}\p{N}]+/u,'')));
    if(product.chapter)info.append(el('span','merchant-chapter',`Chapitre ${product.chapter}`));
    info.append(el('p','merchant-price',`${product.price} Gold${mode==='sell'?' / unité':''}`));
-   if(mode==='sell')info.append(el('small','',`Stock : ${product.stock}`));card.append(info);
+   if(mode==='sell')info.append(el('small','',`Stock : ${product.stock}`));else info.append(el('small','approved-item-description',({axe:'Pour le bûcheronnage',pickaxe:'Pour le minage',spear:'Pour la chasse',bag:'Pour vos expéditions'} as Record<string,string>)[product.icon]??(product.chapter?'Objet du chapitre '+product.chapter:'')));card.append(info);
    const block=tradeBlock(product,mode,host.state().balance.wallet,1),label=block||(mode==='sell'?'Vendre':'Acheter');
    const trade=document.createElement('button');trade.type='button';trade.className='native-trade-button';trade.textContent=label;trade.setAttribute('aria-label',label);trade.title=label+' '+product.name;trade.disabled=busy||!!block;trade.onclick=()=>{selected=product;quantity=1;draw();};card.append(trade);
   }
@@ -52,7 +53,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
   pager.append(el('span','native-page-label',`Page ${page+1} / ${slice.last+1}`));
   const footer=realmFooter;
   const switcher=document.createElement('button');switcher.className='native-market-switch';switcher.textContent=mode==='sell'?'Acheter':'Vendre';switcher.setAttribute('aria-label',switcher.textContent);switcher.disabled=busy;switcher.onclick=()=>host.switchMode(mode==='sell'?'buy':'sell');
-  const back=document.createElement('button');back.className='native-market-back';back.setAttribute('aria-label','Retour au marché');back.textContent='Retour au marché';back.disabled=busy;back.onclick=host.back;footer.append(switcher,back);
+  const back=document.createElement('button');back.className='native-market-back';back.setAttribute('aria-label','Retour au hub');back.textContent='Retour au hub';back.disabled=busy;back.onclick=host.back;footer.append(switcher,button(mode==='story'?'Acheter':'Histoire',()=>host.switchMode(mode==='story'?'buy':'story')),back);
 
   if(message){const status=el('p','merchant-status',message);status.setAttribute('role','status');root.append(status);}
   if(selected){
@@ -67,7 +68,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
    const actions=el('div','realm-trade-actions');actions.append(button(busy?'En cours…':'Confirmer',()=>void submit(),!!tradeBlock(selected,mode,host.state().balance.wallet,quantity)),button('Annuler',()=>{selected=undefined;draw();}));dialog.append(actions);backdrop.append(dialog);root.append(backdrop);stage.inert=true;
    requestAnimationFrame(()=>dialog.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus({preventScroll:true}));
   }else if(focused)Array.from(root.querySelectorAll<HTMLElement>('[aria-label]')).find(n=>n.getAttribute('aria-label')===focused)?.focus({preventScroll:true});
-  body.scrollTop=scroll;
+  decorateApproved(root);body.scrollTop=scroll;
  }
  const stopSize=watchMenuSize(root,draw);
  root.onkeydown=e=>{
