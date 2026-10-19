@@ -22,4 +22,4 @@ Remplacer dans le projet les fichiers contenus dans le dossier Altherya_V0_8_10 
 
 `apps/game/src/ui/tavern-rps.ts`, `tavern-rps.css`, `rps-model.ts` et branche de routage dans `live-games.ts`.
 
-Assets dans `apps/game/public/assets/rps/` : `table.png`, `player.png`, `fox.png`. Les atlas comportent trois cellules horizontales, dans l’ordre Pierre / Feuille / Ciseaux. L’atlas de boutons existant `assets/blackjack/controls-atlas.png` est inclus comme dépendance du correctif. Les montants, le résultat et la sélection sont des éléments natifs interactifs.
+Assets dans `apps/game/public/assets/rps/` : `table.png`, `player.png`, `fox-v2.png`. Les atlas comportent trois cellules horizontales, dans l’ordre Pierre / Feuille / Ciseaux. L’atlas de boutons existant `assets/blackjack/controls-atlas.png` est inclus comme dépendance du correctif. Les montants, le résultat et la sélection sont des éléments natifs interactifs.
