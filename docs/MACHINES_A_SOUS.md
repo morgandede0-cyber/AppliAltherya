@@ -1,0 +1,11 @@
+# Machines à sous mécaniques
+
+Le meuble validé est intégré dans le jeu réel. Les éléments indépendants sont : `assets/slots/cabinet-clean.png` (meuble sans symboles ni données), `symbols.png` (cerises, cloche, diamant, couronne et sept détourés) et `lever-source.png` (source du levier découpé par masque SVG). Les jetons utilisent la texture commune du blackjack. Le meuble et l’atlas de symboles ont été créés avec le générateur d’images intégré, à partir du modèle validé ; les découpes, commandes, données et bandes animées sont du code natif.
+
+Les rouleaux commencent à tourner pendant la requête au serveur. Ils accélèrent, puis ralentissent et s’arrêtent de gauche à droite, avec un petit rebond. Les symboles arrêtés sont ceux retournés par le serveur ; les symboles intermédiaires ne déterminent pas les gains. Une ligne centrale est active. Le levier et le bouton partagent le même verrou de mise. Aucune nouvelle mise ni sortie par Échap n’est possible pendant la résolution. Les mouvements réduits sont respectés.
+
+Les règles et probabilités existantes sont conservées. Le serveur fournit la table des gains à l’interface : trois cerises ×2, trois cloches ×3, trois diamants ×5, trois couronnes ×8, trois sept ×12. Deux sept rendent la mise ; les autres combinaisons ne paient pas. Les multiplicateurs désignent le retour total incluant la mise. Les éventuels bonus d’événements restent gérés par le moteur existant. Le résultat n’apparaît qu’après l’arrêt du dernier rouleau et seules les combinaisons payées sont encadrées.
+
+La mise peut être saisie ou choisie avec les jetons de 1, 5, 10, 25 et 50 Gold. Le solde, le plafond et l’accès à la salle sont actualisés depuis le serveur. Le menu des règles s’utilise au clavier. La composition mobile conserve les trois fenêtres et les commandes tactiles en bas ; les textes restent indépendants du décor.
+
+Pour déployer : appliquer la mise à jour à la version contenant la roulette et le blackjack, ou utiliser le projet complet. Envoyer sur GitHub puis reconstruire/redéployer dans Coolify. Aucune variable supplémentaire ni migration manuelle. Ne pas supprimer la base de données. Le décor et le lion sont fixes ; seuls le levier et les rouleaux sont animés.

@@ -148,6 +148,23 @@ class CasinoStore:
             conn.commit()
         return {"ok": True, "session_id": session_id, "wager": wager, "wallet_after": wallet - wager}
 
+    def double_blackjack(self, session_id: str, user_id: int, expected_wager: int) -> dict:
+        """Debit one extra stake once; the session owns refund and settlement totals."""
+        limit = VIP_MAX_BET if self.loyalty(user_id).get("vip") else MAX_BET
+        with self._connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
+            row = conn.execute("SELECT * FROM casino_sessions WHERE session_id=? AND user_id=?", (session_id, user_id)).fetchone()
+            if not row or row["status"] != "active" or row["game_type"] != "blackjack" or int(row["wager"]) != expected_wager:
+                raise ValueError("Cette mise ne peut plus être doublée.")
+            if expected_wager * 2 > limit:
+                raise ValueError("La mise doublée dépasse votre plafond.")
+            updated = conn.execute("UPDATE players SET wallet_gold=wallet_gold-? WHERE user_id=? AND wallet_gold>=?", (expected_wager, user_id, expected_wager))
+            if updated.rowcount != 1:
+                raise ValueError("Solde insuffisant pour doubler.")
+            conn.execute("UPDATE casino_sessions SET wager=wager*2 WHERE session_id=?", (session_id,))
+            conn.commit()
+        return {"ok": True, "wager": expected_wager * 2}
+
     def settle(self, session_id: str, payout: int, status: str = "finished") -> dict:
         payout = max(0, int(payout))
         now = int(time.time())

@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {coinMotion,coinTransform,visibleCoinSide,COIN_DURATION,type CoinSide} from '../src/ui/coin-model';
+test('both server outcomes stop on their actual visible face',()=>{for(const side of ['pile','face'] as CoinSide[]){const m=coinMotion(COIN_DURATION,side);assert.equal(visibleCoinSide(m.rx),side);assert.equal(m.height,0);assert.equal(m.rz,0);assert.ok(m.stopped);assert.equal(m.contacts,3);assert.equal(coinTransform(10,side),coinTransform(COIN_DURATION,side));}});
+test('toss rises then falls with three contacts and no underground positions',()=>{for(const side of ['pile','face'] as CoinSide[]){let highest=0;const visible=new Set();for(let t=0;t<=4;t+=.01){const m=coinMotion(t,side);assert.ok(m.height>=0&&m.height<=196);assert.ok(Number.isFinite(m.rx));highest=Math.max(highest,m.height);visible.add(visibleCoinSide(m.rx));}assert.ok(highest>190);assert.equal(visible.size,2);assert.equal(coinMotion(2.61,side).contacts,1);assert.equal(coinMotion(3.13,side).contacts,2);assert.equal(coinMotion(3.5,side).contacts,3);}});
+
+import {coinTap,enabled} from '../src/audio/sound';
+test('muted coin contact creates no audio context',()=>{assert.equal(enabled,false);assert.doesNotThrow(()=>coinTap());});

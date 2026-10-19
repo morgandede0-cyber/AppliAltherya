@@ -1,9 +1,7 @@
-import {nineSliceFrame} from './nine-slice';
 import {assetSlice} from './assets';
 import './predator-venues.css';
 export function predatorFrame(tavern=false,kind:'title'|'action'|'back'|'card'='action'){
  const r: [number,number,number,number]=tavern?(kind==='title'?[24,224,490,140]:kind==='back'?[1045,235,470,130]:kind==='card'?[20,520,505,390]:[542,235,474,130]):(kind==='title'?[22,88,536,174]:kind==='back'?[1090,114,430,148]:kind==='card'?[40,338,502,595]:[572,115,506,146]);
- if(kind==='card')return nineSliceFrame('/assets/predator-venues/'+(tavern?'tavern':'merchant')+'-ui.png',r);
  const svg=assetSlice('/assets/predator-venues/'+(tavern?'tavern':'merchant')+'-ui.png',...r);svg.classList.add('predator-frame');svg.setAttribute('preserveAspectRatio','none');return svg;
 }
 export function predatorButton(label:string,fn:()=>void,tavern=false,back=false){const b=document.createElement('button');b.type='button';b.className='predator-button';b.setAttribute('aria-label',label);b.append(predatorFrame(tavern,back?'back':'action'));const text=document.createElement('span');text.textContent=label;b.append(text);b.onclick=()=>{if(!b.disabled)fn();};return b;}

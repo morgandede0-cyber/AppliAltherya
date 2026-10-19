@@ -24,7 +24,6 @@ import {openService} from './ui/services';
 import {openIllustrated,illustratedKinds} from './ui/illustrated';
 import {skinButton} from './ui/assets';
 import type {CommerceMode} from './ui/commerce-model';
-import './ui/frame-containment.css';
 const $=(id:string)=>document.getElementById(id)!;
 const panel=$('panel');let commerce:ReturnType<typeof openCommerce>|undefined;let service:ReturnType<typeof openService>|undefined;let state!:Snapshot,current:SceneId='hub',busy=false,timer:number,stateVersion=0;
 function notify(message:string){$('toast').textContent=message;clearTimeout(timer);timer=window.setTimeout(()=>$('toast').textContent='',6000);}

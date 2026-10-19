@@ -1,8 +1,9 @@
 """Activity game orchestration: source engines, server-owned outcomes, isolated SQLite."""
 import json,random,time
+from roulette_rules import normalise_bets, winnings
 import arena_combat,arena_techniques
 from dataclasses import asdict
-from casino_engine import CasinoStore,draw_slot,slot_multiplier,roulette_spin,MAX_BET,VIP_MAX_BET
+from casino_engine import CasinoStore,draw_slot,slot_multiplier,roulette_spin,MAX_BET,VIP_MAX_BET,SLOT_SYMBOLS,SLOT_WEIGHTS,SLOT_TRIPLE_MULTIPLIERS
 from tavern_engine import TavernGameStore,roll_die,flip_coin,rps_bot,rps_result
 from dark_alley import DarkAlleyStore,NPC_THEFT_TARGETS,GUARD_ENTRY_FEE,HEIST_CODE_LENGTH,HEIST_ATTEMPTS
 from arena_engine import ArenaStore,Fighter,BattleState,CHAMPION_PROFILES,arena_player_skills
@@ -43,6 +44,7 @@ class Play:
   if profile and isinstance(p.get('fighters'),list) and p['fighters']:
    p['fighters']=[{**p['fighters'][0],'name':profile['display_name']},*p['fighters'][1:]]
   p.pop('deck',None);p.pop('danger',None);p.pop('battle',None)
+  if p.get('kind')=='russian':p.update(chambers_remaining=max(0,6-p.get('step',0)),cartridges_remaining=1 if p.get('status')=='active' else 0)
   if p.get('kind')=='blackjack' and p.get('status')=='active':p['dealer']=[p['dealer'][0],{'hidden':True}];p['dealer_total']=total([p['dealer'][0]])
   return {**p,'revision':rev}
  def horse_odds(self,uid,renew=False):
@@ -56,7 +58,7 @@ class Play:
   with self.a.conn() as c:return arena_techniques.book(c,uid,self.a.castle.current_level(uid),self.arena.progress(uid)["champion_wins"])
  def snapshot(self,uid):
   rep=self.tavern.tavern_reputation(uid);dr=self.tavern.drink_status(uid);heist=self.dark.active_heist(uid)
-  return dict(play=self.public(uid),tavern={**rep,**dr,'drinks_catalog':[dict(key=k,name=n,required=t,available=rep['tier']>=t) for k,n,t in DRINKS]},alley=dict(reputation=self.dark.criminal_reputation(uid),access=self.dark.clandestine_access_info(uid),vip=self.casino.loyalty(uid)['vip'],fee=GUARD_ENTRY_FEE,invitations=self.dark.invitation_count(uid),larceny_remaining=self.dark.cooldown_remaining(uid,'larceny'),ban_remaining=self.dark.ban_remaining(uid),npc_targets=[dict(key=k,name=v[0]) for k,v in NPC_THEFT_TARGETS.items()],record=self.dark.criminal_record(uid),heist=None if not heist else dict(attempts_left=heist.attempts_left,code_length=HEIST_CODE_LENGTH)),arena={**self.arena.progress(uid),'remaining':self.arena.champion_remaining_seconds(uid),**self.technique_book(uid),'champion':arena_combat.champion(self.arena.progress(uid)['champion_level']),'recent':self.recent(uid)},casino=dict(max_bet=VIP_MAX_BET if self.casino.loyalty(uid)['vip'] else MAX_BET,horses=HORSES,odds=self.horse_odds(uid)))
+  return dict(play=self.public(uid),tavern={**rep,**dr,'drinks_catalog':[dict(key=k,name=n,required=t,available=rep['tier']>=t) for k,n,t in DRINKS]},alley=dict(reputation=self.dark.criminal_reputation(uid),access=self.dark.clandestine_access_info(uid),vip=self.casino.loyalty(uid)['vip'],fee=GUARD_ENTRY_FEE,invitations=self.dark.invitation_count(uid),larceny_remaining=self.dark.cooldown_remaining(uid,'larceny'),ban_remaining=self.dark.ban_remaining(uid),npc_targets=[dict(key=k,name=v[0]) for k,v in NPC_THEFT_TARGETS.items()],record=self.dark.criminal_record(uid),heist=None if not heist else dict(attempts_left=heist.attempts_left,code_length=HEIST_CODE_LENGTH)),arena={**self.arena.progress(uid),'remaining':self.arena.champion_remaining_seconds(uid),**self.technique_book(uid),'champion':arena_combat.champion(self.arena.progress(uid)['champion_level']),'recent':self.recent(uid)},casino=dict(slots=dict(symbols=[dict(key=k,weight=w,multiplier=SLOT_TRIPLE_MULTIPLIERS[k]) for k,w in zip(SLOT_SYMBOLS,SLOT_WEIGHTS)],two_sevens_multiplier=1),max_bet=VIP_MAX_BET if self.casino.loyalty(uid)['vip'] else MAX_BET,horses=HORSES,odds=self.horse_odds(uid)))
  def finish_casino(self,uid,p,payout,message):
   result=self.casino.settle(p['session'],payout);p.update(status='finished',payout=result.get('payout',payout),message=message)
   if result.get('ok'):
@@ -146,25 +148,32 @@ class Play:
    tavern=key in ('dice','coin','rps')
    if not tavern and not self.dark.has_clandestine_access(uid):raise ValueError('Accès à la salle clandestine requis.')
    choice=body.get('choice','')
-   if key=='roulette' and choice not in ('red','black','even','odd','low','high','number'):raise ValueError('Pari invalide.')
-   if key=='roulette' and choice=='number' and (type(body.get('number')) is not int or not 0<=body['number']<=36):raise ValueError('Numéro entre 0 et 36 requis.')
+   if key=='roulette' and 'bets' not in body and choice not in ('red','black','even','odd','low','high','number'):raise ValueError('Pari invalide.')
+   if key=='roulette' and 'bets' not in body and choice=='number' and (type(body.get('number')) is not int or not 0<=body['number']<=36):raise ValueError('Numéro entre 0 et 36 requis.')
    if key=='horses' and (type(choice) is not int or not 0<=choice<4):raise ValueError('Choisissez un cheval.')
    if key=='rps' and choice not in ('rock','paper','scissors'):raise ValueError('Choisissez pierre, feuille ou ciseaux.')
    if key=='coin' and choice not in ('pile','face'):raise ValueError('Choisissez pile ou face.')
+   roulette_bets=normalise_bets(body['bets'] if 'bets' in body else [dict(type=choice,amount=wager,numbers=[body.get('number')])],wager) if key=='roulette' else None
+   if key=='horses' and 'odds' in body and body['odds']!=self.horse_odds(uid):raise ValueError('Les cotes ont changé. Vérifiez les nouvelles cotes avant de miser.')
    r=(self.tavern if tavern else self.casino).start(uid,key,wager)
    if not r.get('ok'):raise ValueError(r['message'])
    p=dict(kind=key,status='active',session=r['session_id'],wager=wager,message='À votre tour.')
    if key=='blackjack':
     deck=[dict(rank=str(rank),suit=suit) for suit in ('♠','♥','♦','♣') for rank in list(range(2,11))+['J','Q','K','A']];random.shuffle(deck);p.update(deck=deck,player=[deck.pop(),deck.pop()],dealer=[deck.pop(),deck.pop()]);p['player_total']=total(p['player'])
     if total(p['player'])==21 or total(p['dealer'])==21:self.blackjack_finish(uid,p)
-   elif key=='russian':p.update(danger=random.randint(1,6),step=0)
+   elif key=='russian':p.update(danger=random.randint(1,6),step=0,events=[])
    elif key=='slots':
     reels=draw_slot();p['reels']=reels;self.finish_casino(uid,p,wager*slot_multiplier(reels),'Résultat des rouleaux.')
    elif key=='roulette':
-    number,color=roulette_spin();won={'red':color=='red','black':color=='black','even':number!=0 and number%2==0,'odd':number%2==1,'low':1<=number<=18,'high':19<=number<=36,'number':number==body.get('number')}[choice];p.update(number=number,color=color,choice=choice);self.finish_casino(uid,p,wager*(36 if choice=='number' else 2) if won else 0,f'Numéro {number} · {color}.')
+    number,color=roulette_spin();p.update(number=number,color=color,choice=choice,bets=roulette_bets);self.finish_casino(uid,p,winnings(roulette_bets,number),f'Numéro {number} · {dict(red="rouge",black="noir",green="vert")[color]}.')
    elif key=='horses':
     # Cotes générées côté serveur, mêmes fourchettes et pondérations que le bot.
-    odds=self.horse_odds(uid);winner=random.choices(range(4),weights=[1/max(1.01,o) for o in odds])[0];p.update(winner=winner,choice=choice,odds=odds);self.finish_casino(uid,p,round(wager*odds[winner]) if winner==choice else 0,f'{HORSES[winner]} remporte la course.');self.horse_odds(uid,renew=True)
+    odds=self.horse_odds(uid);winner=random.choices(range(4),weights=[1/max(1.01,o) for o in odds])[0];rng=random.Random(p['session']);order=[winner];remaining=[i for i in range(4) if i!=winner]
+    while remaining:
+     runner=rng.choices(remaining,weights=[1/max(1.01,odds[i]) for i in remaining])[0];order.append(runner);remaining.remove(runner)
+    clock=11.0;finish_times=[0.0]*4
+    for runner in order:finish_times[runner]=round(clock,3);clock+=rng.uniform(.28,.58)
+    p.update(winner=winner,choice=choice,odds=odds,order=order,finish_times=finish_times);self.finish_casino(uid,p,round(wager*odds[winner]) if winner==choice else 0,f'{HORSES[winner]} remporte la course.');self.horse_odds(uid,renew=True)
    else:
     if key=='dice':player,bot=roll_die(),roll_die();won=player>bot;tie=player==bot
     elif key=='coin':player,bot=choice,flip_coin();won=player==bot;tie=False
@@ -176,14 +185,20 @@ class Play:
    if not self.dark.has_clandestine_access(uid):self.casino.refund(p['session']);p.update(status='refunded',message='Accès expiré : mise remboursée.');self.save(uid,p);return p['message']
    if p['kind']=='blackjack':
     if key=='hit':p['player'].append(p['deck'].pop());p['player_total']=total(p['player'])
+    elif key=='double':
+     if len(p['player'])!=2:raise ValueError('Doubler est disponible uniquement avec deux cartes.')
+     self.casino.double_blackjack(p['session'],uid,p['wager']);p['wager']*=2;p['doubled']=True
+     p['player'].append(p['deck'].pop());p['player_total']=total(p['player'])
     elif key!='stand':raise ValueError('Action invalide.')
-    if key=='stand' or total(p['player'])>=21:self.blackjack_finish(uid,p)
+    if key in ('stand','double') or total(p['player'])>=21:self.blackjack_finish(uid,p)
    else:
     if key!='try':raise ValueError('Action invalide.')
     p['step']+=1
+    p.setdefault('events',[]).append(dict(chamber=p['step'],actor='player',spent=p['step']==p['danger']))
     if p['step']==p['danger']:self.finish_casino(uid,p,0,'BANG : vous perdez la manche.')
     else:
      p['step']+=1
+     p.setdefault('events',[]).append(dict(chamber=p['step'],actor='opponent',spent=p['step']==p['danger']))
      if p['step']==p['danger']:self.finish_casino(uid,p,p['wager']*2,'La hyène perd la manche : vous gagnez !')
      else:p['message']='CLIC. La hyène s’en sort aussi. À votre tour.'
    self.save(uid,p);return p['message']

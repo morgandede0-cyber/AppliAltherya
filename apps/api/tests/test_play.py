@@ -14,6 +14,31 @@ class GameTests(unittest.TestCase):
  def s(self):return self.a.snapshot(self.uid,self.name)
  def act(self,**b):return self.a.action(self.uid,{'revision':self.s()['play']['revision'],**b})
  def access(self):self.act(action='guard',key='pay')
+ def blackjack_hand(self, player, dealer, deck):
+  self.access()
+  with patch('play.random.shuffle',side_effect=lambda d:d.sort(key=lambda c:c['rank']=='A',reverse=True)):
+   self.act(action='game_start',key='blackjack',wager=10)
+  _,p=self.a.play.read(self.uid)
+  p.update(player=[dict(rank=str(v),suit='♠') for v in player],dealer=[dict(rank=str(v),suit='♥') for v in dealer],deck=[dict(rank=str(v),suit='♣') for v in deck],player_total=total([dict(rank=str(v)) for v in player]))
+  self.a.play.save(self.uid,p)
+ def test_blackjack_double_one_card_and_exact_stake(self):
+  self.blackjack_hand([5,6],[10,7],[10]);before=self.s()['balance']['wallet']
+  self.act(action='game_step',key='double');p=self.s()['play']
+  self.assertEqual(p['wager'],20);self.assertEqual(len(p['player']),3);self.assertEqual(p['status'],'finished');self.assertEqual(p['payout'],40)
+  self.assertEqual(self.s()['balance']['wallet'],before-10+40)
+  with self.assertRaises(ValueError):self.act(action='game_step',key='double')
+ def test_blackjack_double_rejects_extra_cards_and_insufficient_gold(self):
+  self.blackjack_hand([2,3,4],[10,7],[10]);before=self.s()['balance']['wallet']
+  with self.assertRaises(ValueError):self.act(action='game_step',key='double')
+  self.assertEqual(self.s()['balance']['wallet'],before)
+  _,p=self.a.play.read(self.uid);p['player']=p['player'][:2];self.a.play.save(self.uid,p)
+  with self.a.conn() as c:c.execute('UPDATE players SET wallet_gold=0 WHERE user_id=?',(self.uid,))
+  with self.assertRaises(ValueError):self.act(action='game_step',key='double')
+  self.assertEqual(self.s()['balance']['wallet'],0);self.assertEqual(self.s()['play']['wager'],10)
+ def test_blackjack_double_bust_loses_only_doubled_stake(self):
+  self.blackjack_hand([10,6],[10,7],[10]);before=self.s()['balance']['wallet']
+  self.act(action='game_step',key='double');self.assertEqual(self.s()['play']['payout'],0);self.assertEqual(self.s()['balance']['wallet'],before-10)
+
  def test_access_atomic_and_no_second_charge(self):
   self.access();self.access();self.assertEqual(self.s()['balance']['wallet'],9970);self.assertTrue(self.s()['alley']['access']['valid'])
  def test_no_bets_without_access_or_invalid_wager(self):
