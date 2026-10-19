@@ -1,0 +1,116 @@
+{
+  "TIER_ORDER": [
+    "commun",
+    "rare",
+    "epique",
+    "mythique",
+    "legendaire"
+  ],
+  "TIER_LABELS": {
+    "commun": "Commun",
+    "rare": "Rare",
+    "epique": "Épique",
+    "mythique": "Mythique",
+    "legendaire": "Légendaire"
+  },
+  "SET_NAMES": {
+    "atk": {
+      "commun": "Barbarian",
+      "rare": "Soldier",
+      "epique": "Royal Guard",
+      "mythique": "Almaty",
+      "legendaire": "Spirit Fyra"
+    },
+    "def": {
+      "commun": "Journeyman",
+      "rare": "Adventurer",
+      "epique": "Knight",
+      "mythique": "Snake",
+      "legendaire": "Spirit Vanna"
+    },
+    "speed": {
+      "commun": "Bard",
+      "rare": "Hunter",
+      "epique": "Royal Archer",
+      "mythique": "Owl",
+      "legendaire": "Spirit Zephyr"
+    }
+  },
+  "SLOTS": [
+    "weapon",
+    "helmet",
+    "ring",
+    "shield",
+    "belt",
+    "amulet",
+    "bracelet",
+    "gauntlets",
+    "boots"
+  ],
+  "SLOT_LABELS": {
+    "weapon": "Arme",
+    "helmet": "Casque",
+    "ring": "Anneau",
+    "shield": "Bouclier",
+    "belt": "Ceinture",
+    "amulet": "Amulette",
+    "bracelet": "Bracelet",
+    "gauntlets": "Gantelets",
+    "boots": "Bottes"
+  },
+  "BASE_SLOTS": [
+    "weapon",
+    "shield",
+    "belt",
+    "ring",
+    "bracelet",
+    "amulet"
+  ],
+  "ADVANCED_SLOTS": [
+    "helmet",
+    "gauntlets",
+    "boots"
+  ],
+  "COMMON_GOLD_PRICES": {
+    "weapon": 300,
+    "shield": 300,
+    "belt": 200,
+    "bracelet": 200,
+    "ring": 250,
+    "amulet": 250
+  },
+  "POUCIEL_UPGRADE_COST": {
+    "rare": 20,
+    "epique": 45,
+    "mythique": 90,
+    "legendaire": 160
+  },
+  "NEW_MYTHIC_COST": 70,
+  "BRANCH_LABELS": {
+    "atk": "Attaque",
+    "def": "Défense",
+    "speed": "Vitesse"
+  },
+  "SPEC_PIECE": {
+    "commun": {
+      "base": 0.3333333333333333,
+      "advanced": 0
+    },
+    "rare": {
+      "base": 0.6666666666666666,
+      "advanced": 0
+    },
+    "epique": {
+      "base": 1,
+      "advanced": 0
+    },
+    "mythique": {
+      "base": 1.05,
+      "advanced": 0.5666666666666664
+    },
+    "legendaire": {
+      "base": 1.2,
+      "advanced": 0.9333333333333336
+    }
+  }
+}

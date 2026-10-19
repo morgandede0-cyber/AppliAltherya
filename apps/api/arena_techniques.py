@@ -1,5 +1,6 @@
 """Server-owned champion collection and four-slot loadout, Activity only."""
 from arena_engine import Fighter, arena_player_skills, CHAMPION_PROFILES
+from tower_techniques import TOWER_CATALOG,FLOORS
 SLOTS=('light','heavy','ultimate','defend')
 # Power scales with the corresponding level-learned base technique.
 CATALOG={
@@ -21,6 +22,7 @@ class ArenaFighter(Fighter):
   return {**cfg,'skills':getattr(self,'loadout',cfg['skills'])} if self.class_key=='arena_fighter' else cfg
 
 def setup(c):
+ c.execute('CREATE TABLE IF NOT EXISTS activity_ashkar_techniques(user_id INTEGER NOT NULL,floor INTEGER NOT NULL,PRIMARY KEY(user_id,floor))')
  c.execute('CREATE TABLE IF NOT EXISTS activity_arena_migrations(key TEXT PRIMARY KEY)')
  c.execute('CREATE TABLE IF NOT EXISTS activity_arena_techniques(user_id INTEGER NOT NULL,champion INTEGER NOT NULL,PRIMARY KEY(user_id,champion))')
  c.execute('CREATE TABLE IF NOT EXISTS activity_arena_loadout(user_id INTEGER NOT NULL,slot TEXT NOT NULL,technique TEXT NOT NULL,PRIMARY KEY(user_id,slot))')
@@ -49,16 +51,24 @@ def grant(c,uid,champion):
   return {**CATALOG[champion],'champion':champion,'source':CHAMPION_PROFILES[champion]['name']}
  return None
 
+def grant_tower(c,uid,floor):
+ if c.execute('INSERT OR IGNORE INTO activity_ashkar_techniques VALUES(?,?)',(uid,floor)).rowcount:
+  return {**TOWER_CATALOG[floor],'floor':floor,'source_kind':'tower','source':FLOORS[floor]['name']}
+ return None
+
 def book(c,uid,level,wins):
  c.execute('INSERT OR IGNORE INTO activity_arena_loadout_version(user_id) VALUES(?)',(uid,))
  owned={r[0] for r in c.execute('SELECT champion FROM activity_arena_techniques WHERE user_id=?',(uid,))}
+ tower_owned={r[0] for r in c.execute('SELECT floor FROM activity_ashkar_techniques WHERE user_id=?',(uid,))}
  selected=dict(c.execute('SELECT slot,technique FROM activity_arena_loadout WHERE user_id=?',(uid,)))
  base=arena_player_skills(level);skills={k:{**v,'id':'base_'+k} for k,v in base.items()};cards=[]
- for n,t in CATALOG.items():
-  card={**t,'champion':n,'source':CHAMPION_PROFILES[n]['name'],'unlocked':n in owned,'emoji':base[t['slot']]['emoji']}
+ entries=[(t,dict(champion=n,source_kind='arena',source=CHAMPION_PROFILES[n]['name'],unlocked=n in owned)) for n,t in CATALOG.items()]
+ entries += [(t,dict(floor=n,source_kind='tower',source=FLOORS[n]['name'],unlocked=n in tower_owned)) for n,t in TOWER_CATALOG.items()]
+ for t,origin in entries:
+  card={**t,**origin,'emoji':base[t['slot']]['emoji']}
   if 'power' in t:card['power']=round(t['power']*base[t['slot']]['power']/arena_player_skills(1)[t['slot']]['power'])
   cards.append(card)
-  if n in owned and selected.get(t['slot'])==t['id']:skills[t['slot']]=card
+  if card['unlocked'] and selected.get(t['slot'])==t['id']:skills[t['slot']]=card
  return dict(skills=skills,base_skills=base,techniques=cards,loadout_revision=c.execute('SELECT revision FROM activity_arena_loadout_version WHERE user_id=?',(uid,)).fetchone()[0])
 
 def equip(c,uid,level,wins,slot,technique,revision):
@@ -87,13 +97,13 @@ def resolve(b,action,engine):
   if target.defending:target.defend_reduction=reduction
  if not actor.alive:return lines
  hit=target.hp<before
- if effect=='fortress':actor.defend_reduction=.55;actor.shaken=True;lines=lines[:-1]+[f'{actor.name} utilise Forteresse : garde 55 %, prochaine attaque −10 %.']
- elif effect=='counter':actor.defend_reduction=.35;lines=lines[:-1]+[f'{actor.name} prépare Riposte du rempart : garde 35 %, riposte après un impact bloqué.']
- elif effect=='shadow':actor.defend_reduction=.25;actor.temp_evade=.10;lines=lines[:-1]+[f'{actor.name} utilise Pas de l’Ombre : garde 25 %, esquive renforcée.']
- elif hit and effect=='bleed':target.bleed_pending=max(target.bleed_pending,4);lines.append('Lacération : saignement de 4 préparé.')
- elif hit and effect=='evade':actor.temp_evade=max(actor.temp_evade,.10);lines.append('Croc éclair : esquive renforcée jusqu’à la prochaine action.')
- elif hit and effect=='charge':actor.next_damage_bonus=max(actor.next_damage_bonus,.20);lines.append('Griffes enchaînées : prochaine attaque +20 %.')
- elif hit and effect=='shake':target.shaken=True;lines.append('Fracas du Bastion : cible ébranlée, prochaine attaque −10 %.')
- if effect=='king':actor.bleed_pending=max(actor.bleed_pending,3);lines.append('Défi du Roi : contrecoup de 3 au prochain tour.')
+ if effect=='fortress':actor.defend_reduction=.55;actor.shaken=True;lines=lines[:-1]+[f"{actor.name} utilise {skill['name']} : garde 55 %, prochaine attaque −10 %."]
+ elif effect=='counter':actor.defend_reduction=.35;lines=lines[:-1]+[f"{actor.name} prépare {skill['name']} : garde 35 %, riposte après un impact bloqué."]
+ elif effect=='shadow':actor.defend_reduction=.25;actor.temp_evade=.10;lines=lines[:-1]+[f"{actor.name} utilise {skill['name']} : garde 25 %, esquive renforcée."]
+ elif hit and effect=='bleed':target.bleed_pending=max(target.bleed_pending,4);lines.append(f"{skill['name']} : saignement de 4 préparé.")
+ elif hit and effect=='evade':actor.temp_evade=max(actor.temp_evade,.10);lines.append(f"{skill['name']} : esquive renforcée jusqu’à la prochaine action.")
+ elif hit and effect=='charge':actor.next_damage_bonus=max(actor.next_damage_bonus,.20);lines.append(f"{skill['name']} : prochaine attaque +20 %.")
+ elif hit and effect=='shake':target.shaken=True;lines.append(f"{skill['name']} : cible ébranlée, prochaine attaque −10 %.")
+ if effect=='king':actor.bleed_pending=max(actor.bleed_pending,3);lines.append(f"{skill['name']} : contrecoup de 3 au prochain tour.")
  if guarded and hit and target.cfg['skills']['defend'].get('effect')=='counter':target.counter_ready=True;lines.append('Riposte du rempart : prochaine attaque +15 %.')
  return lines

@@ -38,7 +38,7 @@ export function createQuestTracker(host:{route:(key:string)=>void;claimDaily?:()
    else if(q){content.append(node('h3',q.title),node('p',`Saison ${q.season} · Niveau ${q.min_level}`,'quest-note'));
     if(!c.accepted)content.append(node('p',c.level_allowed?'Quête disponible · ouvrez le journal pour l’accepter.':`Atteignez le niveau ${q.min_level} pour poursuivre.`));
     else{const list=document.createElement('ul');list.className='quest-story-steps';for(const [i,step] of q.steps.entries()){const li=node('li','',i<c.stage?'quest-done':i===c.stage?'quest-active':'quest-pending');li.append(questIcon(i<c.stage?5:i===c.stage?6:7),node('span',step.label));if(i===c.stage)li.prepend(questComponent(3));list.append(li);}content.append(list);if(c.stage===q.steps.length)content.append(node('p','Objectifs terminés · remettez la quête dans le journal.','quest-ready'));}
-    content.append(questReward(q.gold,q.xp,'Récompense de la quête'));
+    const active=q.steps[c.stage];if(c.accepted&&active?.kind==='explore'){const found=(c.evidence??[]).filter(e=>e.quest_id===q.id&&e.step_id===active.id).length;content.append(node('p',`${active.place} · ${found}/${active.clues?.length??0} indices`,'quest-note'));}content.append(questReward(q.gold,q.xp,'Récompense de la quête')); 
    }
   }else if(tab==='story'||tab==='chronicles'){
    const q=storyObjective(s);content.append(node('p','Chroniques · Saison 1','quest-kicker'),node('h3',q.title));

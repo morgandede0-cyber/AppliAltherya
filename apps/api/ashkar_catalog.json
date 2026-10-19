@@ -1,0 +1,93 @@
+{
+  "1": {
+    "name": "Rat des Profondeurs",
+    "hp": 650,
+    "atk": 70,
+    "defense": 35,
+    "speed": 94,
+    "gold": 10,
+    "pouciel": 0
+  },
+  "2": {
+    "name": "Gobelin Pillard",
+    "hp": 740,
+    "atk": 76,
+    "defense": 39,
+    "speed": 102,
+    "gold": 15,
+    "pouciel": 0
+  },
+  "3": {
+    "name": "Squelette Errant",
+    "hp": 830,
+    "atk": 82,
+    "defense": 44,
+    "speed": 96,
+    "gold": 20,
+    "pouciel": 0
+  },
+  "4": {
+    "name": "Garde Déchu",
+    "hp": 930,
+    "atk": 88,
+    "defense": 50,
+    "speed": 98,
+    "gold": 25,
+    "pouciel": 0
+  },
+  "5": {
+    "name": "Orc des Cavernes",
+    "hp": 1040,
+    "atk": 94,
+    "defense": 54,
+    "speed": 96,
+    "gold": 30,
+    "pouciel": 1
+  },
+  "6": {
+    "name": "Berserker Orc",
+    "hp": 1160,
+    "atk": 101,
+    "defense": 58,
+    "speed": 101,
+    "gold": 40,
+    "pouciel": 0
+  },
+  "7": {
+    "name": "Chevalier Corrompu",
+    "hp": 1290,
+    "atk": 108,
+    "defense": 64,
+    "speed": 103,
+    "gold": 50,
+    "pouciel": 0
+  },
+  "8": {
+    "name": "Golem d'Obsidienne",
+    "hp": 1460,
+    "atk": 115,
+    "defense": 76,
+    "speed": 88,
+    "gold": 65,
+    "pouciel": 0
+  },
+  "9": {
+    "name": "Exécuteur des Abysses",
+    "hp": 1630,
+    "atk": 124,
+    "defense": 72,
+    "speed": 108,
+    "gold": 85,
+    "pouciel": 0
+  },
+  "10": {
+    "name": "Varkhaz, Gardien d'Ashkar",
+    "hp": 1900,
+    "atk": 138,
+    "defense": 82,
+    "speed": 110,
+    "gold": 120,
+    "pouciel": 3,
+    "boss": true
+  }
+}

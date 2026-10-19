@@ -1,0 +1,18 @@
+{
+  "mode": "built-in generate",
+  "assets": [
+    {
+      "id": "hall",
+      "prompt": "Use case: stylized-concept. Premium Altherya medieval fantasy RPG environment asset, cinematic painterly realism. ONE complete 16:9 wide atmospheric view of the Tower of Ashkar: immense ancient black basalt tower rising above stormy jagged mountains, its entrance foreground a monumental circular stone stairway and engraved metal doors opening into a shadowy spiral staircase. Restrained antique brass carvings, blue crystalline Pouciel lights in stone niches, cold mist and small orange braziers, powerful depth. Same polished dark iron, cool slate and aged brass aesthetic as a high quality medieval RPG forge UI. No characters, no text, no interface, no borders, no letters, no watermarks. Detailed immersive believable architecture."
+    },
+    {
+      "id": "enemies",
+      "prompt": "Use case: stylized-concept. Production character portrait atlas for Altherya Tower of Ashkar. ONE tall image with EXACTLY TWO columns and FIVE rows, TEN equal square cells. Each cell one centered waist-up enemy portrait on dark slate vignette background. Detailed painterly realistic dark medieval fantasy, consistent lighting and restrained black iron/brass, no text, no labels, no UI frames. Row1: giant sinister sewer rat, goblin marauder with weathered dagger. Row2: wandering armored skeleton, fallen black-armored guard. Row3: cave orc bruiser, berserker orc with axe. Row4: corrupted armored knight, basalt obsidian golem with crystalline blue seams. Row5: menacing abyss executioner in dark armor, Varkhaz legendary Ashkar guardian in massive ornate obsidian armor and blue crystal crown, formidable final boss. Each portrait fully inside its own equal cell, no overlap, no gore. Recognizably ten distinct opponents, excellent anatomy, no modern objects."
+    }
+  ],
+  "paths": [
+    "apps/game/public/assets/ashkar/hall.png",
+    "apps/game/public/assets/ashkar/enemies.png"
+  ],
+  "regions": "apps/game/src/ui/ashkar-art.json"
+}

@@ -35,7 +35,7 @@ class CampaignTests(unittest.TestCase):
   with self.a.conn() as c:c.execute('UPDATE castle_profiles SET xp=0 WHERE user_id=?',(self.uid,));c.execute('UPDATE campaign_progress SET accepted_at=NULL WHERE user_id=?',(self.uid,))
   with self.assertRaises(ValueError):self.act('campaign_accept')
  def test_clock_and_hidden_answers(self):
-  self.act('campaign_accept');self.act('campaign_step');self.act('campaign_step')
+  self.position(0);self.act('campaign_step');self.act('campaign_step')
   with self.assertRaises(ValueError):self.act('campaign_step')
   self.fast_time();self.act('campaign_step');self.act('campaign_step');self.act('campaign_claim')
   self.position(1,1);s=self.s();self.assertNotIn('answer',s['quest']['steps'][1]);self.act('campaign_step',option=1)
@@ -75,6 +75,10 @@ class CampaignTests(unittest.TestCase):
     kind=step['kind']
     if kind in ('inspect','mission'):self.act('campaign_step');self.fast_time();self.act('campaign_step')
     elif kind in ('puzzle','choice'):self.act('campaign_step',option=step.get('answer',0))
+    elif kind=='explore':
+     self.act('campaign_enter',place_id=step['place_id'])
+     for clue in step['clues']:self.act('campaign_explore',clue_id=clue['id'])
+     self.act('campaign_step')
     elif kind=='deliver':self.a.expeditions.add_resources(self.uid,{step['resource']:step['quantity']});self.act('campaign_step')
     elif kind=='expedition':
      # A completed real run is checked separately; here seed a matching run from its schema.
@@ -124,3 +128,74 @@ class CampaignTests(unittest.TestCase):
   self.position(0,3)
   with self.assertRaises(ValueError):self.act('campaign_claim')
   self.assertEqual(self.a.economy.get_balance(self.uid).wallet,115)
+
+ def explore_first(self):
+  self.act('campaign_accept');self.act('campaign_step');self.act('campaign_enter',place_id='convois');return self.s()['quest']['steps'][1]
+ def test_exploration_requires_each_real_clue_and_preserves_journal(self):
+  step=self.explore_first();self.assertEqual(step['kind'],'explore');self.assertNotIn('text',step['clues'][0])
+  before=self.a.economy.get_balance(self.uid).wallet
+  with self.assertRaises(ValueError):self.act('campaign_step')
+  with self.assertRaises(ValueError):self.act('campaign_explore',clue_id='S4-Q02-O1-I1')
+  for clue in step['clues']:self.act('campaign_explore',clue_id=clue['id'])
+  self.assertEqual(len(self.s()['evidence']),3);self.assertEqual(self.s()['stage'],1)
+  with self.assertRaises(ValueError):self.act('campaign_explore',clue_id=step['clues'][0]['id'])
+  self.a=Activity(self.a.path);self.assertEqual(len(self.s()['evidence']),3);self.act('campaign_step');self.act('campaign_step')
+  with self.assertRaises(ValueError):self.act('campaign_claim')
+  self.fast_time()
+  xp=self.a.castle.profile(self.uid)['xp'];self.act('campaign_claim');self.assertEqual(self.a.castle.profile(self.uid)['xp']-xp,20)
+  self.assertEqual(self.a.economy.get_balance(self.uid).wallet-before,10);self.assertEqual(len(self.s()['evidence']),3)
+  other,_=self.a.session('');self.a.snapshot(*other);self.assertEqual(self.a.campaign.snapshot(other[0])['evidence'],[])
+ def test_clue_double_click_and_concurrent_claim_are_idempotent(self):
+  step=self.explore_first();state=self.s();body=dict(action='campaign_explore',quest_id=state['quest']['id'],revision=state['revision'],clue_id=step['clues'][0]['id'])
+  def run(_):
+   try:self.a.action(self.uid,body);return True
+   except ValueError:return False
+  with ThreadPoolExecutor(2) as pool:self.assertEqual(sum(pool.map(run,range(2))),1)
+  self.assertEqual(len(self.s()['evidence']),1)
+ def test_new_level_gate_is_server_owned_and_old_accepted_mission_is_preserved(self):
+  self.position(4,1);old=self.s();self.assertEqual(old['edition'],1);self.assertEqual(old['quest']['min_level'],1);self.assertEqual(old['quest']['steps'][0]['kind'],'mission')
+  self.a=Activity(self.a.path);self.assertEqual(self.s()['stage'],1);self.assertEqual(self.s()['quest']['min_level'],1)
+  with self.a.conn() as c:c.execute('UPDATE campaign_progress SET accepted_at=NULL,payload="{}" WHERE user_id=?',(self.uid,));c.execute('UPDATE castle_profiles SET xp=0 WHERE user_id=?',(self.uid,))
+  self.assertEqual(self.s()['quest']['min_level'],3);self.assertFalse(self.s()['level_allowed'])
+  with self.assertRaises(ValueError):self.act('campaign_accept')
+ def test_campaign_rewards_and_step_ids_are_stable_and_every_quest_has_xp(self):
+  from campaign import LEGACY_QUESTS,CATALOG
+  levels=[q['min_level'] for q in QUESTS];self.assertEqual(levels,sorted(levels));self.assertEqual(levels[-1],15)
+  for old,new in zip(LEGACY_QUESTS,QUESTS):
+   self.assertEqual((old['id'],old['gold'],old['xp']),(new['id'],new['gold'],new['xp']));self.assertGreater(new['xp'],0)
+   self.assertEqual([s['id'] for s in old['steps']],[s['id'] for s in new['steps']])
+   for ns,os in zip(new['steps'],old['steps']):
+    if ns['kind']=='explore':self.assertGreaterEqual(new['min_duration'],os.get('duration',0))
+  self.assertEqual(len(CATALOG['locations']),6);self.assertEqual(sum(s['kind']=='explore' for q in QUESTS for s in q['steps']),12)
+
+ def test_new_places_have_assets_and_are_not_above_their_quest_level(self):
+  from campaign import CATALOG
+  locations={p['id']:p for p in CATALOG['locations']}
+  self.assertEqual(len({p['scene_image'] for p in locations.values()}),6)
+  assets=Path(__file__).parents[2]/'game/public/assets/scenes'
+  for loc in locations.values():self.assertTrue((assets/loc['scene_image']).is_file(),loc['name'])
+  for q in QUESTS:
+   for step in q['steps']:
+    if step['kind']=='explore':
+     self.assertGreaterEqual(q['min_level'],locations[step['place_id']]['min_level']);self.assertEqual(len({c['id'] for c in step['clues']}),3)
+
+ def test_place_entry_needs_story_and_level_and_cannot_be_guessed(self):
+  before=self.a.castle.profile(self.uid)['xp'];wallet=self.a.economy.get_balance(self.uid).wallet
+  for place in ('convois','archives','inconnu'):
+   with self.assertRaises(ValueError):self.a.action(self.uid,dict(action='campaign_enter',place_id=place))
+  self.act('campaign_accept');self.act('campaign_step');state=self.s();place=next(p for p in state['locations'] if p['id']=='convois');self.assertTrue(place['can_enter']);self.assertFalse(place['visited'])
+  with self.assertRaises(ValueError):self.act('campaign_explore',clue_id=state['quest']['steps'][1]['clues'][0]['id'])
+  self.act('campaign_enter',place_id='convois');self.act('campaign_enter',place_id='convois');self.assertEqual(self.a.castle.profile(self.uid)['xp'],before);self.assertEqual(self.a.economy.get_balance(self.uid).wallet,wallet)
+  with self.a.conn() as c:self.assertEqual(c.execute('SELECT COUNT(*) FROM campaign_visits WHERE user_id=?',(self.uid,)).fetchone()[0],1)
+  self.a=Activity(self.a.path);self.assertTrue(next(p for p in self.s()['locations'] if p['id']=='convois')['visited'])
+ def test_level_alone_does_not_unlock_places_but_completed_story_does(self):
+  self.position(1)
+  with self.assertRaises(ValueError):self.act('campaign_enter',place_id='sceaux')
+  with self.a.conn() as c:c.execute('INSERT INTO campaign_receipts VALUES(?,?,?,?,?)',(self.uid,'S1-Q01',10,20,time.time()))
+  self.act('campaign_enter',place_id='convois');self.assertTrue(next(p for p in self.s()['locations'] if p['id']=='convois')['can_enter'])
+  with self.a.conn() as c:c.execute('INSERT INTO campaign_receipts VALUES(?,?,?,?,?)',(self.uid,'S2-Q01',18,35,time.time()));c.execute('UPDATE castle_profiles SET xp=0 WHERE user_id=?',(self.uid,))
+  with self.assertRaises(ValueError):self.act('campaign_enter',place_id='sceaux')
+ def test_completed_campaign_can_revisit_unlocked_places_without_reopening_rewards(self):
+  self.position(len(QUESTS));before=self.a.economy.get_balance(self.uid).wallet
+  with self.a.conn() as c:c.execute('INSERT INTO campaign_receipts VALUES(?,?,?,?,?)',(self.uid,'S1-Q01',10,20,time.time()))
+  self.a.action(self.uid,dict(action='campaign_enter',place_id='convois'));self.assertTrue(self.s()['complete']);self.assertEqual(self.a.economy.get_balance(self.uid).wallet,before)

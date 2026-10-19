@@ -11,7 +11,7 @@ from aiohttp import ClientSession, ClientTimeout, ClientError
 
 LOG = logging.getLogger('altherya.discord_events')
 CHANNELS = {'gazette': '1551927433475788880', 'hall': '1551927559925538957', 'logs': '1551928091046314117'}
-LABELS = {'daily':'Récompense quotidienne','deposit':'Dépôt bancaire','withdraw':'Retrait bancaire',
+LABELS = {'ashkar_start':'Tour d’Ashkar · Combat lancé','ashkar_step':'Tour d’Ashkar','daily':'Récompense quotidienne','deposit':'Dépôt bancaire','withdraw':'Retrait bancaire',
  'buy':'Achat','sell':'Vente','story_buy':'Objet de chapitre acheté','story_unlock':'Chapitre débloqué',
  'job_accept':'Contrat accepté','job_claim':'Contrat terminé','upgrade':'Forge','quests_claim':'Quêtes quotidiennes',
  'start':'Expédition lancée','drink':'Taverne','guard':'Salle clandestine','larceny':'Petit larcin',
@@ -52,7 +52,7 @@ class DiscordEvents:
     @staticmethod
     def watched(s):
         return {k:s[k] for k in ('balance','level','gear','resources','owned','owned_story_items') } | {
-          'xp':s['stats']['xp'], 'tutorial':s['tutorial']['completed'], 'play':{k:v for k,v in s['play'].items() if k in ('kind','status','session','outcome','payout','wager','revision')},
+          'ashkar':{k:v for k,v in s.get('ashkar',{}).items() if k in ('status','progress','floor')}, 'pouciel':s.get('khaz',{}).get('pouciel',0), 'xp':s['stats']['xp'], 'tutorial':s['tutorial']['completed'], 'play':{k:v for k,v in s['play'].items() if k in ('kind','status','session','outcome','payout','wager','revision')},
           'active':None if not s['active'] else [s['active']['name'],s['active']['ends_at']], 'expeditions':s['stats'].get('expeditions',0), 'pending':s['pending'],
           'chapters':[(r['chapter'],r.get('unlocked'),r.get('read')) for r in s['chapters']],
           'tavern':s['tavern'].get('drinks'), 'alley':s['alley']['record'], 'access':{k:v for k,v in s['alley']['access'].items() if k!='seconds_left'}, 'heist':s['alley']['heist']}
@@ -81,6 +81,8 @@ class DiscordEvents:
                 details=f'{who}\n{safe(message) if action else "Mise à jour enregistrée par le serveur."}'
                 details+=f'\nPoche : {delta["wallet"]:+d} Gold · Banque : {delta["bank"]:+d} Gold · XP : {xp:+d}'
                 self.enqueue(c,key,'logs',title,details)
+            if current.get('ashkar',{}).get('progress',0)>=10 and old.get('ashkar',{}).get('progress',0)<10:
+                self.enqueue(c,key+':ashkar','hall','Tour d’Ashkar conquise',f'{who}\nLes dix étages et Varkhaz sont vaincus.')
             if not old['tutorial'] and current['tutorial']:
                 self.enqueue(c,key+':welcome','hall','📜 Bienvenue dans Legacy',f'{who}\nTutoriel terminé — bienvenue dans le royaume !')
             if current['level']>old['level']:

@@ -15,7 +15,7 @@
       "difficulty": 1,
       "gold": 10,
       "xp": 20,
-      "min_duration": 300,
+      "min_duration": 900,
       "steps": [
         {
           "id": "S1-Q01-O1",
@@ -28,10 +28,28 @@
         {
           "id": "S1-Q01-O2",
           "label": "Présenter le reçu au marchand",
-          "kind": "inspect",
-          "duration": 900,
-          "place": "Marché · Le marchand",
-          "scene_image": "market.webp"
+          "kind": "explore",
+          "place": "Bureau des convois",
+          "place_id": "convois",
+          "scene_image": "quest-place-convois-v1.png",
+          "text": "Sous la halle, les commis gardent les doubles des contrats et les marques de départ. Ici, une date et une signature valent davantage qu’une rumeur.",
+          "clues": [
+            {
+              "id": "S1-Q01-O2-I1",
+              "label": "Lire le double du contrat",
+              "text": "Le numéro du reçu figure sur un feuillet ajouté au registre, sans la marque de validation du marchand."
+            },
+            {
+              "id": "S1-Q01-O2-I2",
+              "label": "Examiner la signature",
+              "text": "La boucle de la signature est reproduite à l’identique jusque dans une tache d’encre : c’est une copie, pas une seconde signature."
+            },
+            {
+              "id": "S1-Q01-O2-I3",
+              "label": "Interroger le commis",
+              "text": "Le commis a vu un porteur demander un départ urgent. Aucun chargement correspondant n’a quitté la halle."
+            }
+          ]
         },
         {
           "id": "S1-Q01-O3",
@@ -57,15 +75,33 @@
       "difficulty": 1,
       "gold": 10,
       "xp": 20,
-      "min_duration": 300,
+      "min_duration": 900,
       "steps": [
         {
           "id": "S1-Q02-O1",
           "label": "Demander la vérification de la référence du reçu",
-          "kind": "inspect",
-          "duration": 900,
-          "place": "Banque de Legacy",
-          "scene_image": "bank.webp"
+          "kind": "explore",
+          "place": "Archives de la banque",
+          "place_id": "archives",
+          "scene_image": "quest-place-archives-v1.png",
+          "text": "Derrière le comptoir, les grands livres retracent chaque autorisation. Le registre ne promet pas de trésor : il permet de distinguer les dettes réelles des dettes inventées.",
+          "clues": [
+            {
+              "id": "S1-Q02-O1-I1",
+              "label": "Chercher la référence du reçu",
+              "text": "Le grand livre ne contient aucun versement pour cette référence. Une somme écrite sur un reçu n’est pas une preuve de paiement."
+            },
+            {
+              "id": "S1-Q02-O1-I2",
+              "label": "Comparer les cachets",
+              "text": "Le sceau dessiné est plausible, mais il manque le numéro d’enregistrement apposé par la banque."
+            },
+            {
+              "id": "S1-Q02-O1-I3",
+              "label": "Écouter la greffière",
+              "text": "La greffière vous remet une attestation d’absence de paiement, sans déclarer le marchand coupable de quoi que ce soit."
+            }
+          ]
         },
         {
           "id": "S1-Q02-O2",
@@ -101,7 +137,7 @@
       "scene": "Les fausses commandes visent des voyageurs de passage. Le tavernier a entendu leur destination.",
       "dialogue": "Tavernier : « Ils demandaient tous la route d’Elarwyn. Aucun ne parlait de la même livraison. »",
       "resolution": "Les témoignages convergent : les caisses portaient toutes la même marque et prenaient la route d’Elarwyn.",
-      "min_level": 1,
+      "min_level": 2,
       "difficulty": 1,
       "gold": 10,
       "xp": 20,
@@ -149,11 +185,11 @@
       "scene": "Le voleur reconnaît une marque servant à faire circuler du matériel sans nommer le destinataire.",
       "dialogue": "Voleur : « Tu cherches un nom. Moi, je chercherais qui a changé l’étiquette. »",
       "resolution": "Le voleur identifie un chargement abandonné à la Lisière des Chênes. La piste sort enfin de Legacy.",
-      "min_level": 1,
+      "min_level": 2,
       "difficulty": 1,
       "gold": 10,
       "xp": 20,
-      "min_duration": 300,
+      "min_duration": 900,
       "steps": [
         {
           "id": "S1-Q04-O1",
@@ -177,10 +213,28 @@
         {
           "id": "S1-Q04-O3",
           "label": "Obtenir la localisation d’un chargement",
-          "kind": "inspect",
-          "duration": 900,
-          "place": "Forêt d’Elarwyn",
-          "scene_image": "elarwyn.webp"
+          "kind": "explore",
+          "place": "Halte de la Lisière",
+          "place_id": "lisiere",
+          "scene_image": "quest-place-lisiere-v1.png",
+          "text": "Une aire de déchargement s’ouvre entre les racines. Les roues ont creusé deux ornières ; une vieille borne porte la marque des convois de Legacy.",
+          "clues": [
+            {
+              "id": "S1-Q04-O3-I1",
+              "label": "Suivre les ornières",
+              "text": "Les roues quittent la route principale juste après la borne. Les marques décrites par le voleur conduisent vers la halte."
+            },
+            {
+              "id": "S1-Q04-O3-I2",
+              "label": "Observer la borne",
+              "text": "Une peinture récente recouvre un ancien repère. La même marque apparaît sur les caisses signalées à Legacy."
+            },
+            {
+              "id": "S1-Q04-O3-I3",
+              "label": "Lire le billet oublié",
+              "text": "Un billet demande de remplacer les plaques des caisses avant leur retour. Il ne porte ni nom ni signature vérifiable."
+            }
+          ]
         }
       ]
     },
@@ -194,19 +248,37 @@
       "scene": "Une mission d’enquête dédiée retrouve du matériel abandonné près des sentiers de départ.",
       "dialogue": "Rapport : « Les caisses ont été ouvertes proprement. Quelqu’un connaissait leur contenu. »",
       "resolution": "Vous récupérez la plaque du convoi. Ses fixations semblent plus récentes que la caisse qui la portait.",
-      "min_level": 1,
+      "min_level": 3,
       "difficulty": 1,
       "gold": 10,
       "xp": 20,
-      "min_duration": 300,
+      "min_duration": 1800,
       "steps": [
         {
           "id": "S1-Q05-O1",
           "label": "Explorer les abords des caisses à la Lisière des Chênes",
-          "kind": "mission",
-          "duration": 1800,
-          "place": "Forêt d’Elarwyn",
-          "scene_image": "elarwyn.webp"
+          "kind": "explore",
+          "place": "Halte de la Lisière",
+          "place_id": "lisiere",
+          "scene_image": "quest-place-lisiere-v1.png",
+          "text": "Une aire de déchargement s’ouvre entre les racines. Les roues ont creusé deux ornières ; une vieille borne porte la marque des convois de Legacy.",
+          "clues": [
+            {
+              "id": "S1-Q05-O1-I1",
+              "label": "Examiner les attaches",
+              "text": "Les attaches sont intactes : les caisses n’ont pas été ouvertes de force à cet endroit."
+            },
+            {
+              "id": "S1-Q05-O1-I2",
+              "label": "Relever la plaque",
+              "text": "La plaque de destination brille encore. Ses rivets sont plus récents que les planches du chargement."
+            },
+            {
+              "id": "S1-Q05-O1-I3",
+              "label": "Observer les copeaux",
+              "text": "Des copeaux métalliques restent au pied d’une caisse. Conserver la plaque et ses fixations permettra une comparaison à la forge."
+            }
+          ]
         },
         {
           "id": "S1-Q05-O2",
@@ -242,7 +314,7 @@
       "scene": "Le forgeron constate que la plaque a été remise sur une autre caisse.",
       "dialogue": "Forgeron : « Ce rivet est neuf. L’usure autour, elle, ne ment pas. »",
       "resolution": "Le forgeron confirme que la plaque a été remontée. Le détournement avait été préparé avant la publication des annonces.",
-      "min_level": 2,
+      "min_level": 3,
       "difficulty": 1,
       "gold": 10,
       "xp": 20,
@@ -290,7 +362,7 @@
       "scene": "Les éléments réunis permettent de protéger un vrai convoi plutôt que de suivre une autre fausse livraison.",
       "dialogue": "Mandat : « Protéger les voyageurs. Les marchandises viennent ensuite. »",
       "resolution": "Le château vous confie la protection d’un véritable convoi. Le marchand rassemble les porteurs et les fournitures.",
-      "min_level": 2,
+      "min_level": 4,
       "difficulty": 1,
       "gold": 10,
       "xp": 20,
@@ -332,7 +404,7 @@
       "scene": "Un intermédiaire tente de détourner le convoi avec un second reçu.",
       "dialogue": "Intermédiaire : « Vous avez arrêté une caisse. Pas la route qu’elle devait ouvrir. »",
       "resolution": "L’intermédiaire est arrêté. Sur son itinéraire figure un nom de commanditaire : le Faussaire. La piste mène à Vorak.",
-      "min_level": 3,
+      "min_level": 4,
       "difficulty": 2,
       "gold": 30,
       "xp": 50,
@@ -375,11 +447,11 @@
       "scene": "La pièce saisie sur le convoi porte un assemblage ancien hors du savoir-faire de l’atelier local.",
       "dialogue": "Thorgar : « Ce n’est pas sa valeur qui m’intéresse. C’est ce qu’on voulait transporter avec. »",
       "resolution": "Thorgar reconnaît le travail d’un ancien équipement de convoi. Il vous demande de confronter cette découverte aux récits du troubadour.",
-      "min_level": 3,
+      "min_level": 5,
       "difficulty": 2,
       "gold": 18,
       "xp": 35,
-      "min_duration": 600,
+      "min_duration": 1200,
       "steps": [
         {
           "id": "S2-Q01-O1",
@@ -392,10 +464,28 @@
         {
           "id": "S2-Q01-O2",
           "label": "Laisser Thorgar examiner l’assemblage ancien",
-          "kind": "inspect",
-          "duration": 1200,
-          "place": "KHAZ’GORAM · Thorgar",
-          "scene_image": ""
+          "kind": "explore",
+          "place": "Atelier des sceaux",
+          "place_id": "sceaux",
+          "scene_image": "quest-place-sceaux-v1.png",
+          "text": "Dans une alcôve de la forge, Thorgar conserve poinçons, rivets et matrices retirées du service. Il peut reconnaître une fabrication sans accuser son propriétaire.",
+          "clues": [
+            {
+              "id": "S2-Q01-O2-I1",
+              "label": "Présenter la pièce à Thorgar",
+              "text": "Thorgar reconnaît une forme de poinçon ancienne de KHAZ’GORAM, qui n’est plus utilisée à Legacy."
+            },
+            {
+              "id": "S2-Q01-O2-I2",
+              "label": "Comparer les matrices",
+              "text": "Les matrices retirées laissent une encoche particulière, visible sur votre pièce. L’origine de l’outil est probable, son utilisateur reste inconnu."
+            },
+            {
+              "id": "S2-Q01-O2-I3",
+              "label": "Lire le registre d’atelier",
+              "text": "Le registre mentionne un lot destiné à une ancienne route de Vorak ; il ne contient aucun ordre de réparation récent."
+            }
+          ]
         },
         {
           "id": "S2-Q01-O3",
@@ -417,7 +507,7 @@
       "scene": "Le troubadour retrouve un parallèle avec les expéditions de Seraph, déjà racontées dans la chronique.",
       "dialogue": "Troubadour : « Une chronique dit ce qu’un homme a trouvé. Ses notes disent où il a cherché. »",
       "resolution": "Les récits des expéditions de Seraph mentionnent une halte dans les Galeries de Khar. Vous emportez les indications utiles.",
-      "min_level": 3,
+      "min_level": 5,
       "difficulty": 2,
       "gold": 18,
       "xp": 35,
@@ -465,7 +555,7 @@
       "scene": "Les accès de l’ancienne halte ont besoin d’un étayage préparé à la forge.",
       "dialogue": "Thorgar : « La bravoure ne tient pas un plafond. Ça, oui. »",
       "resolution": "Thorgar prépare les étais avec le bois livré. Ils permettront de travailler sans mettre les convoyeurs en danger.",
-      "min_level": 3,
+      "min_level": 5,
       "difficulty": 2,
       "gold": 18,
       "xp": 35,
@@ -508,7 +598,7 @@
       "scene": "Le joueur prépare une inspection, pas une extraction de minerai avancé.",
       "dialogue": "Note : « Ce passage n’exige pas la meilleure pioche. Il exige de revenir avec tout le monde. »",
       "resolution": "La reconnaissance révèle un passage praticable vers les anciennes galeries. Le matériel est prêt pour la recherche du dépôt.",
-      "min_level": 3,
+      "min_level": 6,
       "difficulty": 2,
       "gold": 18,
       "xp": 35,
@@ -550,19 +640,37 @@
       "scene": "Une poche latérale des galeries conserve les traces d’une ancienne expédition.",
       "dialogue": "Rapport : « Le dépôt a été vidé autrefois. Son passage a été utilisé récemment. »",
       "resolution": "Les marques du dépôt sont anciennes, mais des hommes ont emprunté récemment son passage de service.",
-      "min_level": 5,
+      "min_level": 6,
       "difficulty": 2,
       "gold": 18,
       "xp": 35,
-      "min_duration": 600,
+      "min_duration": 2700,
       "steps": [
         {
           "id": "S2-Q05-O1",
           "label": "Accéder aux Galeries de Khar selon les règles normales",
-          "kind": "mission",
-          "duration": 2700,
-          "place": "Mont Vorak",
-          "scene_image": "vorak.webp"
+          "kind": "explore",
+          "place": "Relais de la Pierre Fendue",
+          "place_id": "relais",
+          "scene_image": "quest-place-relais-v1.png",
+          "text": "Un ancien abri de convoyeurs domine le passage. Des traces fraîches traversent les gravats ; les voyageurs l’ont utilisé bien après son abandon officiel.",
+          "clues": [
+            {
+              "id": "S2-Q05-O1-I1",
+              "label": "Examiner le foyer",
+              "text": "Des cendres fraîches recouvrent un foyer ancien. Le relais a accueilli des voyageurs récemment."
+            },
+            {
+              "id": "S2-Q05-O1-I2",
+              "label": "Comparer les marques de paroi",
+              "text": "Les marques du dépôt ancien restent visibles sous des traces fraîches. Il faut suivre le passage récemment utilisé."
+            },
+            {
+              "id": "S2-Q05-O1-I3",
+              "label": "Observer les empreintes",
+              "text": "Des bottes de convoyeurs et des traces de caisses se mêlent près d’une sortie latérale. Rien ne permet encore de compter les voyageurs."
+            }
+          ]
         },
         {
           "id": "S2-Q05-O2",
@@ -598,19 +706,37 @@
       "scene": "Un journal de convoi contient un relevé de route et des annotations attribuées à l’entourage de Seraph.",
       "dialogue": "Troubadour : « Une signature ressemble à la sienne. Ce serait une mauvaise histoire de transformer une ressemblance en preuve. »",
       "resolution": "Le journal rassemble un relevé de route et des annotations anciennes. Leur lien avec Seraph mérite d’être étudié, sans certitude prématurée.",
-      "min_level": 5,
+      "min_level": 7,
       "difficulty": 2,
       "gold": 18,
       "xp": 35,
-      "min_duration": 600,
+      "min_duration": 1200,
       "steps": [
         {
           "id": "S2-Q06-O1",
           "label": "Récupérer le journal dans la rencontre dédiée",
-          "kind": "inspect",
-          "duration": 1200,
-          "place": "Mont Vorak",
-          "scene_image": "vorak.webp"
+          "kind": "explore",
+          "place": "Relais de la Pierre Fendue",
+          "place_id": "relais",
+          "scene_image": "quest-place-relais-v1.png",
+          "text": "Un ancien abri de convoyeurs domine le passage. Des traces fraîches traversent les gravats ; les voyageurs l’ont utilisé bien après son abandon officiel.",
+          "clues": [
+            {
+              "id": "S2-Q06-O1-I1",
+              "label": "Rassembler les pages",
+              "text": "Des pages arrachées évoquent un ancien relevé de Seraph. Les dates de copie sont bien plus récentes."
+            },
+            {
+              "id": "S2-Q06-O1-I2",
+              "label": "Comparer les écritures",
+              "text": "La signature ressemble à celle des chroniques, mais plusieurs traits ont été repassés. L’attribution doit être vérifiée."
+            },
+            {
+              "id": "S2-Q06-O1-I3",
+              "label": "Protéger la carte",
+              "text": "Le croquis représente trois sommets. Vous mettez les fragments à l’abri pour les présenter au troubadour."
+            }
+          ]
         },
         {
           "id": "S2-Q06-O2",
@@ -646,7 +772,7 @@
       "scene": "Un effondrement piège les convoyeurs pendant que les voleurs emportent une copie.",
       "dialogue": "Convoyeur : « Je ne sais pas qui a pris les pages. Je sais qui est revenu nous chercher. »",
       "resolution": "Les convoyeurs sont évacués et les secours prennent le relais. Les voleurs ont emporté une copie incomplète du relevé.",
-      "min_level": 5,
+      "min_level": 7,
       "difficulty": 2,
       "gold": 18,
       "xp": 35,
@@ -697,7 +823,7 @@
       "scene": "Le relevé décrit des repères qui ne peuvent être lus depuis Vorak.",
       "dialogue": "Thorgar : « Lui a volé un trajet. Nous devons comprendre pourquoi il était fermé. »",
       "resolution": "Les repères métalliques et la copie du journal désignent Ashkar. Le château autorise la poursuite de l’enquête.",
-      "min_level": 5,
+      "min_level": 8,
       "difficulty": 2,
       "gold": 33,
       "xp": 55,
@@ -739,11 +865,11 @@
       "scene": "La tour permet d’observer les lignes du relief tracées sur le relevé.",
       "dialogue": "Inscription proposée : « Regarder plus loin n’abrège pas le chemin. »",
       "resolution": "Les premiers repères d’Ashkar correspondent au relevé. Une observation depuis le belvédère permettra de l’orienter.",
-      "min_level": 5,
+      "min_level": 8,
       "difficulty": 3,
       "gold": 26,
       "xp": 50,
-      "min_duration": 900,
+      "min_duration": 3600,
       "steps": [
         {
           "id": "S3-Q01-O1",
@@ -756,10 +882,28 @@
         {
           "id": "S3-Q01-O2",
           "label": "Relever les premiers repères du belvédère",
-          "kind": "mission",
-          "duration": 3600,
-          "place": "Tour d’Ashkar",
-          "scene_image": ""
+          "kind": "explore",
+          "place": "Belvédère des Veilleurs",
+          "place_id": "veille",
+          "scene_image": "quest-place-veille-v1.png",
+          "text": "La galerie haute offre un point de vue sur les trois terres. Les Veilleurs y confrontaient leurs relevés aux silhouettes des montagnes, sans jamais se fier à une carte seule.",
+          "clues": [
+            {
+              "id": "S3-Q01-O2-I1",
+              "label": "Observer les trois sommets",
+              "text": "Le panorama confirme trois reliefs distincts. Leur silhouette fournit un repère indépendant pour orienter le relevé."
+            },
+            {
+              "id": "S3-Q01-O2-I2",
+              "label": "Lire la borne des Veilleurs",
+              "text": "La borne donne la direction du nord, à confronter aux montagnes plutôt qu’au bord du parchemin."
+            },
+            {
+              "id": "S3-Q01-O2-I3",
+              "label": "Comparer le tracé",
+              "text": "Une ligne prise pour un cours d’eau rejoint les hauteurs. Il faudra observer le relief avant de conclure."
+            }
+          ]
         },
         {
           "id": "S3-Q01-O3",
@@ -787,11 +931,11 @@
       "scene": "Le joueur doit atteindre une hauteur suffisante pour comparer les reliefs.",
       "dialogue": "Journal : « La ligne prise pour une rivière est une crête. La copie volée conduit au mauvais versant. »",
       "resolution": "La ligne prise pour une rivière représente une crête. Vous corrigez le relevé avant qu’une nouvelle erreur ne coûte des vies.",
-      "min_level": 5,
+      "min_level": 8,
       "difficulty": 3,
       "gold": 26,
       "xp": 50,
-      "min_duration": 900,
+      "min_duration": 1500,
       "steps": [
         {
           "id": "S3-Q02-O1",
@@ -804,10 +948,28 @@
         {
           "id": "S3-Q02-O2",
           "label": "Comparer les trois silhouettes de relief",
-          "kind": "inspect",
-          "duration": 1500,
-          "place": "Tour d’Ashkar",
-          "scene_image": ""
+          "kind": "explore",
+          "place": "Belvédère des Veilleurs",
+          "place_id": "veille",
+          "scene_image": "quest-place-veille-v1.png",
+          "text": "La galerie haute offre un point de vue sur les trois terres. Les Veilleurs y confrontaient leurs relevés aux silhouettes des montagnes, sans jamais se fier à une carte seule.",
+          "clues": [
+            {
+              "id": "S3-Q02-O2-I1",
+              "label": "Observer les crêtes",
+              "text": "Le tracé épouse la crête qui relie les deux sommets. Il ne descend pas vers la rivière."
+            },
+            {
+              "id": "S3-Q02-O2-I2",
+              "label": "Retourner la copie du relevé",
+              "text": "En réorientant la copie selon la borne, les trois sommets retrouvent leur place dans le panorama."
+            },
+            {
+              "id": "S3-Q02-O2-I3",
+              "label": "Dicter le relevé corrigé",
+              "text": "Le Veilleur note votre méthode et les points de comparaison. Le rapport précise ce qui a été observé et ce qui reste à vérifier."
+            }
+          ]
         },
         {
           "id": "S3-Q02-O3",
@@ -835,7 +997,7 @@
       "scene": "Les repères de la tour sont confrontés à deux observations au sol.",
       "dialogue": "Rapport : « Deux témoins éloignés décrivent la même colonne de chariots. »",
       "resolution": "Les deux reconnaissances suivent la même colonne de chariots. Le convoi du Faussaire se prépare à quitter les routes sûres.",
-      "min_level": 5,
+      "min_level": 9,
       "difficulty": 3,
       "gold": 26,
       "xp": 50,
@@ -883,7 +1045,7 @@
       "scene": "Le Faussaire utilise un intermédiaire qui fréquente la salle clandestine.",
       "dialogue": "Vigile : « Mes conditions sont les mêmes pour tous. Ton enquête ne change pas ma porte. »",
       "resolution": "Un intermédiaire accepte de transmettre un message. Il propose une rencontre sous l’autorité du château.",
-      "min_level": 5,
+      "min_level": 9,
       "difficulty": 3,
       "gold": 26,
       "xp": 50,
@@ -928,7 +1090,7 @@
       "scene": "Un message présente sa justification : ouvrir la route malgré les autorités.",
       "dialogue": "Faussaire : « Ils appellent prudence ce qui leur permet de garder les routes. Moi, je les ouvrirai. »",
       "resolution": "Le Faussaire promet d’ouvrir les anciennes routes. Les témoignages recueillis contredisent pourtant ce qu’il raconte sur les risques.",
-      "min_level": 6,
+      "min_level": 10,
       "difficulty": 3,
       "gold": 26,
       "xp": 50,
@@ -979,7 +1141,7 @@
       "scene": "La copie volée mène à un passage fragilisé, privé de ses ouvrages de protection.",
       "dialogue": "Thorgar : « Une route oubliée peut être retrouvée. Une route brisée doit être réparée. »",
       "resolution": "Thorgar confirme que les ouvrages du passage ont cessé d’être entretenus. Vous adressez un avertissement documenté au château.",
-      "min_level": 6,
+      "min_level": 10,
       "difficulty": 3,
       "gold": 26,
       "xp": 50,
@@ -1027,19 +1189,37 @@
       "scene": "Une série de fausses urgences disperse les porteurs et détourne l’attention de la forge.",
       "dialogue": "Marchand : « Ils ne cherchent plus à nous voler du temps. Ils cherchent à nous faire regarder ailleurs. »",
       "resolution": "Les fausses urgences portent la signature déjà repérée. Vous prévenez la forge avant que la diversion ne disperse ses défenseurs.",
-      "min_level": 7,
+      "min_level": 11,
       "difficulty": 3,
       "gold": 26,
       "xp": 50,
-      "min_duration": 900,
+      "min_duration": 1500,
       "steps": [
         {
           "id": "S3-Q07-O1",
           "label": "Repérer la signature déjà reconnue en S1",
-          "kind": "inspect",
-          "duration": 1500,
-          "place": "Place centrale de Legacy",
-          "scene_image": "hub-clean.webp"
+          "kind": "explore",
+          "place": "Bureau des convois",
+          "place_id": "convois",
+          "scene_image": "quest-place-convois-v1.png",
+          "text": "Sous la halle, les commis gardent les doubles des contrats et les marques de départ. Ici, une date et une signature valent davantage qu’une rumeur.",
+          "clues": [
+            {
+              "id": "S3-Q07-O1-I1",
+              "label": "Comparer les annonces",
+              "text": "Plusieurs annonces urgentes portent la signature copiée reconnue sur les faux reçus."
+            },
+            {
+              "id": "S3-Q07-O1-I2",
+              "label": "Vérifier les départs",
+              "text": "Le registre ne prévoit aucun des départs annoncés. Mobiliser les convoyeurs sur ces ordres dégarnirait la route de la forge."
+            },
+            {
+              "id": "S3-Q07-O1-I3",
+              "label": "Interroger les porteurs",
+              "text": "Les porteurs ont reçu leurs feuillets d’un intermédiaire anonyme. Vous pouvez avertir la forge sans accuser des habitants au hasard."
+            }
+          ]
         },
         {
           "id": "S3-Q07-O2",
@@ -1075,7 +1255,7 @@
       "scene": "Des hommes tentent d’emporter les pièces destinées à sécuriser le passage.",
       "dialogue": "Thorgar : « Ils ont pris assez pour s’avancer. Pas assez pour revenir. »",
       "resolution": "Les travailleurs sont à l’abri et une partie des pièces est sauvée. Le Faussaire fuit avec le reste du chargement.",
-      "min_level": 7,
+      "min_level": 12,
       "difficulty": 4,
       "gold": 46,
       "xp": 80,
@@ -1118,7 +1298,7 @@
       "scene": "Legacy prépare un secours pour les voyageurs entraînés dans le projet.",
       "dialogue": "Tavernier : « Ils ont peut-être suivi le mauvais homme. Ça ne les rend pas moins attendus chez eux. »",
       "resolution": "Les derniers départs sont identifiés. Le château donne priorité à l’évacuation des voyageurs entraînés dans le projet.",
-      "min_level": 8,
+      "min_level": 12,
       "difficulty": 4,
       "gold": 34,
       "xp": 65,
@@ -1166,19 +1346,37 @@
       "scene": "Une avance de fiction doit payer les travailleurs de l’opération et être traçable.",
       "dialogue": "Banque : « Cette fois, chaque ligne aura un responsable. »",
       "resolution": "La banque enregistre un mandat vérifiable. Chaque fourniture et chaque bénéficiaire possèdent désormais une référence claire.",
-      "min_level": 8,
+      "min_level": 12,
       "difficulty": 4,
       "gold": 34,
       "xp": 65,
-      "min_duration": 1200,
+      "min_duration": 1800,
       "steps": [
         {
           "id": "S4-Q02-O1",
           "label": "Faire ouvrir un dossier de mandat narratif",
-          "kind": "inspect",
-          "duration": 1800,
-          "place": "Banque de Legacy",
-          "scene_image": "bank.webp"
+          "kind": "explore",
+          "place": "Archives de la banque",
+          "place_id": "archives",
+          "scene_image": "quest-place-archives-v1.png",
+          "text": "Derrière le comptoir, les grands livres retracent chaque autorisation. Le registre ne promet pas de trésor : il permet de distinguer les dettes réelles des dettes inventées.",
+          "clues": [
+            {
+              "id": "S4-Q02-O1-I1",
+              "label": "Vérifier les bénéficiaires",
+              "text": "Chaque ligne doit correspondre à un bénéficiaire identifié et à une référence d’autorisation."
+            },
+            {
+              "id": "S4-Q02-O1-I2",
+              "label": "Comparer les mandats",
+              "text": "Un nom de bénéficiaire a été recopié sur deux lignes, sans seconde autorisation. La banque isole cette anomalie."
+            },
+            {
+              "id": "S4-Q02-O1-I3",
+              "label": "Faire consigner les garanties",
+              "text": "La greffière accepte de garantir uniquement les lignes vérifiées. Elle conserve une copie du mandat pour éviter un nouveau détournement."
+            }
+          ]
         },
         {
           "id": "S4-Q02-O2",
@@ -1214,7 +1412,7 @@
       "scene": "Le braqueur connaît l’organisation d’un convoi. Le joueur lui demande un plan d’interception des pièces volées.",
       "dialogue": "Braqueur : « Tu veux le chargement sans toucher aux voyageurs ? C’est plus difficile. Donc plus intéressant. »",
       "resolution": "Le plan d’interception est approuvé. Le chargement volé doit être récupéré sans confondre les voyageurs avec les hommes armés.",
-      "min_level": 8,
+      "min_level": 13,
       "difficulty": 4,
       "gold": 34,
       "xp": 65,
@@ -1259,11 +1457,11 @@
       "scene": "Depuis la Faille Rouge, les équipes recherchent un accès au passage emprunté par le convoi. La route vers la Cime reste trop dangereuse : le mandat prévoit un point de repli sur ce versant.",
       "dialogue": "Rapport : « Le retour est prêt. Reste à convaincre ceux qui montent de l’emprunter. »",
       "resolution": "La reconnaissance de la Faille Rouge est achevée. Les équipes installent un point de repli avant le segment instable du passage.",
-      "min_level": 10,
+      "min_level": 13,
       "difficulty": 4,
       "gold": 34,
       "xp": 65,
-      "min_duration": 1200,
+      "min_duration": 4500,
       "steps": [
         {
           "id": "S4-Q04-O1",
@@ -1284,10 +1482,28 @@
         {
           "id": "S4-Q04-O3",
           "label": "Établir un point de repli",
-          "kind": "mission",
-          "duration": 4500,
-          "place": "Mont Vorak",
-          "scene_image": "vorak.webp"
+          "kind": "explore",
+          "place": "Relais de la Pierre Fendue",
+          "place_id": "relais",
+          "scene_image": "quest-place-relais-v1.png",
+          "text": "Un ancien abri de convoyeurs domine le passage. Des traces fraîches traversent les gravats ; les voyageurs l’ont utilisé bien après son abandon officiel.",
+          "clues": [
+            {
+              "id": "S4-Q04-O3-I1",
+              "label": "Observer le passage haut",
+              "text": "La route de la Cime reste praticable par petits groupes, mais un convoi chargé serait exposé au goulet."
+            },
+            {
+              "id": "S4-Q04-O3-I2",
+              "label": "Préparer le point de secours",
+              "text": "Vous repérez un abri et un accès de repli pour les voyageurs avant toute interception."
+            },
+            {
+              "id": "S4-Q04-O3-I3",
+              "label": "Tracer le passage du convoi",
+              "text": "Le trajet recoupe les témoignages et les relevés corrigés d’Ashkar. Vous pouvez transmettre un itinéraire documenté au groupe de secours."
+            }
+          ]
         }
       ]
     },
@@ -1301,7 +1517,7 @@
       "scene": "Le joueur rattrape les hommes du Faussaire avant le segment instable.",
       "dialogue": "Convoyeur : « On nous avait promis une route. Pas une marche sans retour. »",
       "resolution": "Les voyageurs sont séparés de l’escorte et les pièces récupérées. Le Faussaire continue seul avec ses derniers hommes.",
-      "min_level": 10,
+      "min_level": 14,
       "difficulty": 5,
       "gold": 39,
       "xp": 75,
@@ -1350,7 +1566,7 @@
       "scene": "Son plan découvert, le Faussaire refuse de reconnaître les personnes mises en danger.",
       "dialogue": "Faussaire : « Tu crois avoir sauvé leur avenir ? Tu les ramènes seulement attendre une permission. »",
       "resolution": "Le Faussaire est vaincu. Le passage menace de céder : il faut organiser le retour et choisir ce qui peut encore être sauvé.",
-      "min_level": 10,
+      "min_level": 15,
       "difficulty": 5,
       "gold": 75,
       "xp": 100,
@@ -1394,7 +1610,7 @@
       "scene": "Une rupture du passage impose de choisir entre poursuivre les derniers relevés et secourir le Faussaire.",
       "dialogue": "Joueur, réponse proposée : « Ouvrir une route ne donne pas le droit d’y sacrifier ceux qui te suivent. »",
       "resolution": "Les témoins sont évacués et les preuves conservées sont remises au château. Votre dernier choix pèsera sur le récit des événements.",
-      "min_level": 10,
+      "min_level": 15,
       "difficulty": 4,
       "gold": 34,
       "xp": 65,
@@ -1439,7 +1655,7 @@
       "scene": "Le château statue sur le mandat. La Gazette et le troubadour donnent deux regards sur les événements.",
       "dialogue": "Troubadour : « Les chroniques retiennent les départs. Ceux qui attendent se souviennent surtout des retours. »",
       "resolution": "Le premier relais est sécurisé. La Gazette relate le retour des convois, tandis que le troubadour ajoute votre aventure aux récits de Legacy.",
-      "min_level": 10,
+      "min_level": 15,
       "difficulty": 4,
       "gold": 49,
       "xp": 85,
@@ -1470,6 +1686,57 @@
           "text": "Le premier relais est sécurisé. La Gazette relate le retour des convois, tandis que le troubadour ajoute votre aventure aux récits de Legacy."
         }
       ]
+    }
+  ],
+  "edition": 2,
+  "locations": [
+    {
+      "id": "convois",
+      "name": "Bureau des convois",
+      "region": "Marché de Legacy",
+      "scene_image": "quest-place-convois-v1.png",
+      "min_level": 1,
+      "description": "Sous la halle, les commis gardent les doubles des contrats et les marques de départ. Ici, une date et une signature valent davantage qu’une rumeur."
+    },
+    {
+      "id": "archives",
+      "name": "Archives de la banque",
+      "region": "Banque de Legacy",
+      "scene_image": "quest-place-archives-v1.png",
+      "min_level": 1,
+      "description": "Derrière le comptoir, les grands livres retracent chaque autorisation. Le registre ne promet pas de trésor : il permet de distinguer les dettes réelles des dettes inventées."
+    },
+    {
+      "id": "lisiere",
+      "name": "Halte de la Lisière",
+      "region": "Forêt d’Elarwyn",
+      "scene_image": "quest-place-lisiere-v1.png",
+      "min_level": 2,
+      "description": "Une aire de déchargement s’ouvre entre les racines. Les roues ont creusé deux ornières ; une vieille borne porte la marque des convois de Legacy."
+    },
+    {
+      "id": "sceaux",
+      "name": "Atelier des sceaux",
+      "region": "KHAZ’GORAM · Thorgar",
+      "scene_image": "quest-place-sceaux-v1.png",
+      "min_level": 5,
+      "description": "Dans une alcôve de la forge, Thorgar conserve poinçons, rivets et matrices retirées du service. Il peut reconnaître une fabrication sans accuser son propriétaire."
+    },
+    {
+      "id": "relais",
+      "name": "Relais de la Pierre Fendue",
+      "region": "Mont Vorak",
+      "scene_image": "quest-place-relais-v1.png",
+      "min_level": 6,
+      "description": "Un ancien abri de convoyeurs domine le passage. Des traces fraîches traversent les gravats ; les voyageurs l’ont utilisé bien après son abandon officiel."
+    },
+    {
+      "id": "veille",
+      "name": "Belvédère des Veilleurs",
+      "region": "Tour d’Ashkar",
+      "scene_image": "quest-place-veille-v1.png",
+      "min_level": 8,
+      "description": "La galerie haute offre un point de vue sur les trois terres. Les Veilleurs y confrontaient leurs relevés aux silhouettes des montagnes, sans jamais se fier à une carte seule."
     }
   ]
 }

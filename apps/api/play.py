@@ -210,7 +210,7 @@ class Play:
    if not ok:raise ValueError(msg)
    level=self.a.castle.current_level(uid);champ=self.arena.progress(uid)['champion_level'];cfg=CHAMPION_PROFILES[champ]
    with self.a.conn() as c:name=c.execute('SELECT name FROM activity_sessions WHERE user_id=?',(uid,)).fetchone()[0]
-   b=BattleState(bid,'champion',wager,[arena_techniques.ArenaFighter(uid,name,'arena_fighter',max_hp=100+10*(level-1),player_level=level),Fighter(None,cfg['name'],cfg['class_key'],champion_level=champ)],0)
+   b=BattleState(bid,'champion',wager,[arena_techniques.ArenaFighter(uid,name,'arena_fighter',max_hp=100+10*(level-1),player_level=level,**self.a.khaz.bonuses(uid)),Fighter(None,cfg['name'],cfg['class_key'],champion_level=champ)],0)
    b.fighters[0].loadout=self.technique_book(uid)['skills']
    p=dict(kind='combat',status='active',wager=wager,message='À votre tour.');arena_combat.init(p,b);self.battle_public(p,b);self.save(uid,p);return p['message']
   if action=='battle_step':

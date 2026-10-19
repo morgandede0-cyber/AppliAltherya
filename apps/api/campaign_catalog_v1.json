@@ -1,0 +1,1475 @@
+{
+  "title": "Les routes des Trois Terres",
+  "quests": [
+    {
+      "id": "S1-Q01",
+      "season": 1,
+      "chapter": 1,
+      "title": "Une commande qui n’existe pas",
+      "giver": "Panneau des petites annonces",
+      "locations": "Legacy → Marché",
+      "scene": "Le joueur accepte une livraison présentée comme urgente. Le marchand conteste la signature portée sur le reçu.",
+      "dialogue": "Marchand : « Je connais mes dettes. Celle-ci n’est pas la mienne. »",
+      "resolution": "Le marchand ne reconnaît ni la commande ni sa signature. Vous conservez une copie du reçu suspect.",
+      "min_level": 1,
+      "difficulty": 1,
+      "gold": 10,
+      "xp": 20,
+      "min_duration": 300,
+      "steps": [
+        {
+          "id": "S1-Q01-O1",
+          "label": "Lire le contrat et relever sa référence",
+          "kind": "talk",
+          "place": "Place centrale de Legacy",
+          "scene_image": "hub-clean.webp",
+          "text": "Marchand : « Je connais mes dettes. Celle-ci n’est pas la mienne. »"
+        },
+        {
+          "id": "S1-Q01-O2",
+          "label": "Présenter le reçu au marchand",
+          "kind": "inspect",
+          "duration": 900,
+          "place": "Marché · Le marchand",
+          "scene_image": "market.webp"
+        },
+        {
+          "id": "S1-Q01-O3",
+          "label": "Comparer le numéro avec son registre de commandes",
+          "kind": "talk",
+          "place": "Marché · Le marchand",
+          "scene_image": "market.webp",
+          "text": "Le marchand ne reconnaît ni la commande ni sa signature. Vous conservez une copie du reçu suspect."
+        }
+      ]
+    },
+    {
+      "id": "S1-Q02",
+      "season": 1,
+      "chapter": 1,
+      "title": "Le prix inscrit deux fois",
+      "giver": "Marchand",
+      "locations": "Marché → Banque → Marché",
+      "scene": "Une avance fictive a été portée sur le reçu pour pousser les livreurs à payer.",
+      "dialogue": "Banque : « Un sceau se copie. Une écriture se vérifie. »",
+      "resolution": "La banque ne retrouve aucune trace du paiement annoncé. L’attestation rejoint le dossier du marchand.",
+      "min_level": 1,
+      "difficulty": 1,
+      "gold": 10,
+      "xp": 20,
+      "min_duration": 300,
+      "steps": [
+        {
+          "id": "S1-Q02-O1",
+          "label": "Demander la vérification de la référence du reçu",
+          "kind": "inspect",
+          "duration": 900,
+          "place": "Banque de Legacy",
+          "scene_image": "bank.webp"
+        },
+        {
+          "id": "S1-Q02-O2",
+          "label": "Constater que le paiement annoncé n’existe pas",
+          "kind": "puzzle",
+          "question": "Le registre ne contient aucun paiement pour le numéro du reçu. Quelle conclusion est justifiée ?",
+          "options": [
+            "Le reçu ne prouve pas le paiement",
+            "Le marchand a forcément volé les fonds",
+            "La banque doit payer une seconde fois"
+          ],
+          "answer": 0,
+          "place": "Banque de Legacy",
+          "scene_image": "bank.webp"
+        },
+        {
+          "id": "S1-Q02-O3",
+          "label": "Rapporter l’attestation au marchand",
+          "kind": "talk",
+          "place": "Marché · Le marchand",
+          "scene_image": "market.webp",
+          "text": "La banque ne retrouve aucune trace du paiement annoncé. L’attestation rejoint le dossier du marchand."
+        }
+      ]
+    },
+    {
+      "id": "S1-Q03",
+      "season": 1,
+      "chapter": 2,
+      "title": "Ceux qui prenaient la route",
+      "giver": "Marchand",
+      "locations": "Marché → Taverne, comptoir",
+      "scene": "Les fausses commandes visent des voyageurs de passage. Le tavernier a entendu leur destination.",
+      "dialogue": "Tavernier : « Ils demandaient tous la route d’Elarwyn. Aucun ne parlait de la même livraison. »",
+      "resolution": "Les témoignages convergent : les caisses portaient toutes la même marque et prenaient la route d’Elarwyn.",
+      "min_level": 1,
+      "difficulty": 1,
+      "gold": 10,
+      "xp": 20,
+      "min_duration": 300,
+      "steps": [
+        {
+          "id": "S1-Q03-O1",
+          "label": "Montrer le reçu au tavernier",
+          "kind": "talk",
+          "place": "Taverne · Le tavernier",
+          "scene_image": "tavern_barman.webp",
+          "text": "Tavernier : « Ils demandaient tous la route d’Elarwyn. Aucun ne parlait de la même livraison. »"
+        },
+        {
+          "id": "S1-Q03-O2",
+          "label": "Recouper deux témoignages de voyageurs",
+          "kind": "mission",
+          "duration": 1800,
+          "place": "Taverne · Le tavernier",
+          "scene_image": "tavern_barman.webp"
+        },
+        {
+          "id": "S1-Q03-O3",
+          "label": "Identifier la marque peinte sur leurs caisses",
+          "kind": "puzzle",
+          "question": "Les témoins décrivent des destinations identiques mais des commandes différentes. Que recouper ?",
+          "options": [
+            "Le nombre de boissons",
+            "La marque commune sur les caisses",
+            "La tenue des clients"
+          ],
+          "answer": 1,
+          "place": "Ruelle · Le voleur",
+          "scene_image": "alley_thief.webp"
+        }
+      ]
+    },
+    {
+      "id": "S1-Q04",
+      "season": 1,
+      "chapter": 2,
+      "title": "Le voleur sait lire les marques",
+      "giver": "Tavernier",
+      "locations": "Taverne → Ruelle, voleur",
+      "scene": "Le voleur reconnaît une marque servant à faire circuler du matériel sans nommer le destinataire.",
+      "dialogue": "Voleur : « Tu cherches un nom. Moi, je chercherais qui a changé l’étiquette. »",
+      "resolution": "Le voleur identifie un chargement abandonné à la Lisière des Chênes. La piste sort enfin de Legacy.",
+      "min_level": 1,
+      "difficulty": 1,
+      "gold": 10,
+      "xp": 20,
+      "min_duration": 300,
+      "steps": [
+        {
+          "id": "S1-Q04-O1",
+          "label": "Présenter la marque au voleur",
+          "kind": "talk",
+          "place": "Ruelle · Le voleur",
+          "scene_image": "alley_thief.webp",
+          "text": "Voleur : « Tu cherches un nom. Moi, je chercherais qui a changé l’étiquette. »"
+        },
+        {
+          "id": "S1-Q04-O2",
+          "label": "Choisir une faveur de renseignement ou un paiement clairement annoncé",
+          "kind": "choice",
+          "options": [
+            "Rendre un service de renseignement",
+            "Payer 25 Gold pour le renseignement"
+          ],
+          "place": "Ruelle · Le voleur",
+          "scene_image": "alley_thief.webp"
+        },
+        {
+          "id": "S1-Q04-O3",
+          "label": "Obtenir la localisation d’un chargement",
+          "kind": "inspect",
+          "duration": 900,
+          "place": "Forêt d’Elarwyn",
+          "scene_image": "elarwyn.webp"
+        }
+      ]
+    },
+    {
+      "id": "S1-Q05",
+      "season": 1,
+      "chapter": 3,
+      "title": "Les caisses d’Elarwyn",
+      "giver": "Voleur",
+      "locations": "Elarwyn — Lisière des Chênes",
+      "scene": "Une mission d’enquête dédiée retrouve du matériel abandonné près des sentiers de départ.",
+      "dialogue": "Rapport : « Les caisses ont été ouvertes proprement. Quelqu’un connaissait leur contenu. »",
+      "resolution": "Vous récupérez la plaque du convoi. Ses fixations semblent plus récentes que la caisse qui la portait.",
+      "min_level": 1,
+      "difficulty": 1,
+      "gold": 10,
+      "xp": 20,
+      "min_duration": 300,
+      "steps": [
+        {
+          "id": "S1-Q05-O1",
+          "label": "Explorer les abords des caisses à la Lisière des Chênes",
+          "kind": "mission",
+          "duration": 1800,
+          "place": "Forêt d’Elarwyn",
+          "scene_image": "elarwyn.webp"
+        },
+        {
+          "id": "S1-Q05-O2",
+          "label": "Examiner les attaches des caisses",
+          "kind": "puzzle",
+          "question": "Les attaches sont intactes, la plaque est récente. Quel indice préserver ?",
+          "options": [
+            "Brûler les caisses",
+            "Le nom du dernier passant",
+            "La plaque et ses fixations"
+          ],
+          "answer": 2,
+          "place": "Forêt d’Elarwyn",
+          "scene_image": "elarwyn.webp"
+        },
+        {
+          "id": "S1-Q05-O3",
+          "label": "Récupérer la plaque de transport",
+          "kind": "inspect",
+          "duration": 900,
+          "place": "Forge de Legacy",
+          "scene_image": "forge.webp"
+        }
+      ]
+    },
+    {
+      "id": "S1-Q06",
+      "season": 1,
+      "chapter": 3,
+      "title": "Une réparation trop récente",
+      "giver": "Joueur, au retour d’expédition",
+      "locations": "Forge de Legacy",
+      "scene": "Le forgeron constate que la plaque a été remise sur une autre caisse.",
+      "dialogue": "Forgeron : « Ce rivet est neuf. L’usure autour, elle, ne ment pas. »",
+      "resolution": "Le forgeron confirme que la plaque a été remontée. Le détournement avait été préparé avant la publication des annonces.",
+      "min_level": 2,
+      "difficulty": 1,
+      "gold": 10,
+      "xp": 20,
+      "min_duration": 300,
+      "steps": [
+        {
+          "id": "S1-Q06-O1",
+          "label": "Présenter la plaque au forgeron",
+          "kind": "talk",
+          "place": "Forge de Legacy",
+          "scene_image": "forge.webp",
+          "text": "Forgeron : « Ce rivet est neuf. L’usure autour, elle, ne ment pas. »"
+        },
+        {
+          "id": "S1-Q06-O2",
+          "label": "Laisser examiner les rivets",
+          "kind": "inspect",
+          "duration": 900,
+          "place": "Forge de Legacy",
+          "scene_image": "forge.webp"
+        },
+        {
+          "id": "S1-Q06-O3",
+          "label": "Comparer la date avec le faux contrat",
+          "kind": "puzzle",
+          "question": "Le rivet est neuf mais la caisse est ancienne. Que peut-on établir ?",
+          "options": [
+            "La plaque a été remontée",
+            "La caisse sort de la forge",
+            "Tout le chargement est faux"
+          ],
+          "answer": 0,
+          "place": "Forge de Legacy",
+          "scene_image": "forge.webp"
+        }
+      ]
+    },
+    {
+      "id": "S1-Q07",
+      "season": 1,
+      "chapter": 4,
+      "title": "Le contrat de protection",
+      "giver": "Marchand",
+      "locations": "Marché → Château → départ Elarwyn",
+      "scene": "Les éléments réunis permettent de protéger un vrai convoi plutôt que de suivre une autre fausse livraison.",
+      "dialogue": "Mandat : « Protéger les voyageurs. Les marchandises viennent ensuite. »",
+      "resolution": "Le château vous confie la protection d’un véritable convoi. Le marchand rassemble les porteurs et les fournitures.",
+      "min_level": 2,
+      "difficulty": 1,
+      "gold": 10,
+      "xp": 20,
+      "min_duration": 300,
+      "steps": [
+        {
+          "id": "S1-Q07-O1",
+          "label": "Remettre les trois preuves au château",
+          "kind": "talk",
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp",
+          "text": "Mandat : « Protéger les voyageurs. Les marchandises viennent ensuite. »"
+        },
+        {
+          "id": "S1-Q07-O2",
+          "label": "Reconnaître la lisière : terminer une cueillette après le début de cet objectif",
+          "kind": "expedition",
+          "destination": "elarwyn_foraging",
+          "place": "Forêt d’Elarwyn",
+          "scene_image": "elarwyn.webp"
+        },
+        {
+          "id": "S1-Q07-O3",
+          "label": "Préparer le départ avec le marchand",
+          "kind": "inspect",
+          "duration": 900,
+          "place": "Marché · Le marchand",
+          "scene_image": "market.webp"
+        }
+      ]
+    },
+    {
+      "id": "S1-Q08",
+      "season": 1,
+      "chapter": 4,
+      "title": "L’homme au double reçu",
+      "giver": "Mandat du château",
+      "locations": "Elarwyn — Lisière des Chênes → Château",
+      "scene": "Un intermédiaire tente de détourner le convoi avec un second reçu.",
+      "dialogue": "Intermédiaire : « Vous avez arrêté une caisse. Pas la route qu’elle devait ouvrir. »",
+      "resolution": "L’intermédiaire est arrêté. Sur son itinéraire figure un nom de commanditaire : le Faussaire. La piste mène à Vorak.",
+      "min_level": 3,
+      "difficulty": 2,
+      "gold": 30,
+      "xp": 50,
+      "min_duration": 300,
+      "steps": [
+        {
+          "id": "S1-Q08-O1",
+          "label": "Identifier la contradiction du reçu",
+          "kind": "mission",
+          "duration": 1800,
+          "place": "Forêt d’Elarwyn",
+          "scene_image": "elarwyn.webp"
+        },
+        {
+          "id": "S1-Q08-O2",
+          "label": "Protéger les convoyeurs lors d’un combat scénarisé",
+          "kind": "battle",
+          "enemy": "Pillard du convoi",
+          "boss": false,
+          "place": "Forêt d’Elarwyn",
+          "scene_image": "elarwyn.webp"
+        },
+        {
+          "id": "S1-Q08-O3",
+          "label": "Rapporter l’itinéraire saisi au château",
+          "kind": "talk",
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp",
+          "text": "L’intermédiaire est arrêté. Sur son itinéraire figure un nom de commanditaire : le Faussaire. La piste mène à Vorak."
+        }
+      ]
+    },
+    {
+      "id": "S2-Q01",
+      "season": 2,
+      "chapter": 1,
+      "title": "La pièce que Legacy ne forge pas",
+      "giver": "Château",
+      "locations": "Forge de Legacy → KHAZ’GORAM",
+      "scene": "La pièce saisie sur le convoi porte un assemblage ancien hors du savoir-faire de l’atelier local.",
+      "dialogue": "Thorgar : « Ce n’est pas sa valeur qui m’intéresse. C’est ce qu’on voulait transporter avec. »",
+      "resolution": "Thorgar reconnaît le travail d’un ancien équipement de convoi. Il vous demande de confronter cette découverte aux récits du troubadour.",
+      "min_level": 3,
+      "difficulty": 2,
+      "gold": 18,
+      "xp": 35,
+      "min_duration": 600,
+      "steps": [
+        {
+          "id": "S2-Q01-O1",
+          "label": "Faire confirmer la provenance par la forge de Legacy",
+          "kind": "talk",
+          "place": "Forge de Legacy",
+          "scene_image": "forge.webp",
+          "text": "Thorgar : « Ce n’est pas sa valeur qui m’intéresse. C’est ce qu’on voulait transporter avec. »"
+        },
+        {
+          "id": "S2-Q01-O2",
+          "label": "Laisser Thorgar examiner l’assemblage ancien",
+          "kind": "inspect",
+          "duration": 1200,
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": ""
+        },
+        {
+          "id": "S2-Q01-O3",
+          "label": "Écouter le diagnostic de Thorgar",
+          "kind": "talk",
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": "",
+          "text": "Thorgar reconnaît le travail d’un ancien équipement de convoi. Il vous demande de confronter cette découverte aux récits du troubadour."
+        }
+      ]
+    },
+    {
+      "id": "S2-Q02",
+      "season": 2,
+      "chapter": 1,
+      "title": "Une trace dans les chroniques",
+      "giver": "Thorgar",
+      "locations": "KHAZ’GORAM → Troubadour",
+      "scene": "Le troubadour retrouve un parallèle avec les expéditions de Seraph, déjà racontées dans la chronique.",
+      "dialogue": "Troubadour : « Une chronique dit ce qu’un homme a trouvé. Ses notes disent où il a cherché. »",
+      "resolution": "Les récits des expéditions de Seraph mentionnent une halte dans les Galeries de Khar. Vous emportez les indications utiles.",
+      "min_level": 3,
+      "difficulty": 2,
+      "gold": 18,
+      "xp": 35,
+      "min_duration": 600,
+      "steps": [
+        {
+          "id": "S2-Q02-O1",
+          "label": "Présenter le dessin de l’assemblage",
+          "kind": "talk",
+          "place": "Taverne · Le troubadour",
+          "scene_image": "tavern_troubadour.webp",
+          "text": "Troubadour : « Une chronique dit ce qu’un homme a trouvé. Ses notes disent où il a cherché. »"
+        },
+        {
+          "id": "S2-Q02-O2",
+          "label": "Écouter le témoignage complémentaire sur Seraph",
+          "kind": "inspect",
+          "duration": 1200,
+          "place": "Taverne · Le troubadour",
+          "scene_image": "tavern_troubadour.webp"
+        },
+        {
+          "id": "S2-Q02-O3",
+          "label": "Relever la mention des Galeries de Khar",
+          "kind": "puzzle",
+          "question": "La chronique évoque les expéditions de Seraph, sans dater cette pièce. Que faut-il éviter ?",
+          "options": [
+            "Comparer les marques",
+            "Affirmer sans preuve que Seraph est présent à Legacy",
+            "Conserver une copie"
+          ],
+          "answer": 1,
+          "place": "Taverne · Le troubadour",
+          "scene_image": "tavern_troubadour.webp"
+        }
+      ]
+    },
+    {
+      "id": "S2-Q03",
+      "season": 2,
+      "chapter": 2,
+      "title": "Rendre le chemin praticable",
+      "giver": "Thorgar",
+      "locations": "Elarwyn — Lisière des Chênes → KHAZ’GORAM",
+      "scene": "Les accès de l’ancienne halte ont besoin d’un étayage préparé à la forge.",
+      "dialogue": "Thorgar : « La bravoure ne tient pas un plafond. Ça, oui. »",
+      "resolution": "Thorgar prépare les étais avec le bois livré. Ils permettront de travailler sans mettre les convoyeurs en danger.",
+      "min_level": 3,
+      "difficulty": 2,
+      "gold": 18,
+      "xp": 35,
+      "min_duration": 600,
+      "steps": [
+        {
+          "id": "S2-Q03-O1",
+          "label": "Réunir 5 Bois de chêne avec une hache compatible",
+          "kind": "deliver",
+          "resource": "Bois de chêne",
+          "quantity": 5,
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": ""
+        },
+        {
+          "id": "S2-Q03-O2",
+          "label": "Réserver ces 5 unités dans le contrat",
+          "kind": "inspect",
+          "duration": 1200,
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": ""
+        },
+        {
+          "id": "S2-Q03-O3",
+          "label": "Les remettre à Thorgar une seule fois",
+          "kind": "talk",
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": "",
+          "text": "Thorgar prépare les étais avec le bois livré. Ils permettront de travailler sans mettre les convoyeurs en danger."
+        }
+      ]
+    },
+    {
+      "id": "S2-Q04",
+      "season": 2,
+      "chapter": 2,
+      "title": "L’outil avant le filon",
+      "giver": "Thorgar",
+      "locations": "Forge de Legacy → Vorak — Pied de Vorak",
+      "scene": "Le joueur prépare une inspection, pas une extraction de minerai avancé.",
+      "dialogue": "Note : « Ce passage n’exige pas la meilleure pioche. Il exige de revenir avec tout le monde. »",
+      "resolution": "La reconnaissance révèle un passage praticable vers les anciennes galeries. Le matériel est prêt pour la recherche du dépôt.",
+      "min_level": 3,
+      "difficulty": 2,
+      "gold": 18,
+      "xp": 35,
+      "min_duration": 600,
+      "steps": [
+        {
+          "id": "S2-Q04-O1",
+          "label": "Préparer l’inspection et choisir un outil adapté",
+          "kind": "talk",
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": "",
+          "text": "Note : « Ce passage n’exige pas la meilleure pioche. Il exige de revenir avec tout le monde. »"
+        },
+        {
+          "id": "S2-Q04-O2",
+          "label": "Terminer une expédition au Pied de Vorak après cette étape",
+          "kind": "expedition",
+          "destination": "vorak_1",
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S2-Q04-O3",
+          "label": "Faire examiner les relevés de l’entrée des galeries",
+          "kind": "inspect",
+          "duration": 1200,
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": ""
+        }
+      ]
+    },
+    {
+      "id": "S2-Q05",
+      "season": 2,
+      "chapter": 3,
+      "title": "L’ancienne halte",
+      "giver": "Thorgar",
+      "locations": "Vorak — Galeries de Khar",
+      "scene": "Une poche latérale des galeries conserve les traces d’une ancienne expédition.",
+      "dialogue": "Rapport : « Le dépôt a été vidé autrefois. Son passage a été utilisé récemment. »",
+      "resolution": "Les marques du dépôt sont anciennes, mais des hommes ont emprunté récemment son passage de service.",
+      "min_level": 5,
+      "difficulty": 2,
+      "gold": 18,
+      "xp": 35,
+      "min_duration": 600,
+      "steps": [
+        {
+          "id": "S2-Q05-O1",
+          "label": "Accéder aux Galeries de Khar selon les règles normales",
+          "kind": "mission",
+          "duration": 2700,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S2-Q05-O2",
+          "label": "Installer les étais de mission",
+          "kind": "inspect",
+          "duration": 1200,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S2-Q05-O3",
+          "label": "Relever les marques d’un dépôt ancien",
+          "kind": "puzzle",
+          "question": "Les marques anciennes sont couvertes par des traces fraîches. Quelle zone examiner ?",
+          "options": [
+            "La route de retour seulement",
+            "La paroi intacte",
+            "Le passage récemment utilisé"
+          ],
+          "answer": 2,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        }
+      ]
+    },
+    {
+      "id": "S2-Q06",
+      "season": 2,
+      "chapter": 3,
+      "title": "Le journal incomplet",
+      "giver": "Joueur",
+      "locations": "Galeries de Khar → Troubadour",
+      "scene": "Un journal de convoi contient un relevé de route et des annotations attribuées à l’entourage de Seraph.",
+      "dialogue": "Troubadour : « Une signature ressemble à la sienne. Ce serait une mauvaise histoire de transformer une ressemblance en preuve. »",
+      "resolution": "Le journal rassemble un relevé de route et des annotations anciennes. Leur lien avec Seraph mérite d’être étudié, sans certitude prématurée.",
+      "min_level": 5,
+      "difficulty": 2,
+      "gold": 18,
+      "xp": 35,
+      "min_duration": 600,
+      "steps": [
+        {
+          "id": "S2-Q06-O1",
+          "label": "Récupérer le journal dans la rencontre dédiée",
+          "kind": "inspect",
+          "duration": 1200,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S2-Q06-O2",
+          "label": "Conserver les pages fragiles",
+          "kind": "talk",
+          "place": "Taverne · Le troubadour",
+          "scene_image": "tavern_troubadour.webp",
+          "text": "Un journal de convoi contient un relevé de route et des annotations attribuées à l’entourage de Seraph."
+        },
+        {
+          "id": "S2-Q06-O3",
+          "label": "Faire confronter les annotations à la chronique",
+          "kind": "puzzle",
+          "question": "Une signature ressemble à celle de Seraph. Comment rédiger le rapport ?",
+          "options": [
+            "Attribution possible à vérifier",
+            "Preuve certaine de son retour",
+            "Aucune pièce ne mérite conservation"
+          ],
+          "answer": 0,
+          "place": "Taverne · Le troubadour",
+          "scene_image": "tavern_troubadour.webp"
+        }
+      ]
+    },
+    {
+      "id": "S2-Q07",
+      "season": 2,
+      "chapter": 4,
+      "title": "Les hommes sous la pierre",
+      "giver": "Mission des galeries",
+      "locations": "Galeries de Khar",
+      "scene": "Un effondrement piège les convoyeurs pendant que les voleurs emportent une copie.",
+      "dialogue": "Convoyeur : « Je ne sais pas qui a pris les pages. Je sais qui est revenu nous chercher. »",
+      "resolution": "Les convoyeurs sont évacués et les secours prennent le relais. Les voleurs ont emporté une copie incomplète du relevé.",
+      "min_level": 5,
+      "difficulty": 2,
+      "gold": 18,
+      "xp": 35,
+      "min_duration": 600,
+      "steps": [
+        {
+          "id": "S2-Q07-O1",
+          "label": "Choisir entre poursuivre les voleurs et rejoindre les coincés",
+          "kind": "choice",
+          "options": [
+            "Secourir directement les convoyeurs",
+            "Appeler du renfort puis poursuivre la piste"
+          ],
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S2-Q07-O2",
+          "label": "Dégager le passage par une séquence narrative",
+          "kind": "mission",
+          "duration": 2700,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S2-Q07-O3",
+          "label": "Rassembler les survivants ou appeler les secours avant de poursuivre",
+          "kind": "puzzle",
+          "question": "Le plafond gronde, des convoyeurs sont coincés. Quelle première mesure protège le secours ?",
+          "options": [
+            "Se disperser sans plan",
+            "Stabiliser le passage et garder une sortie",
+            "Courir sous la voûte instable"
+          ],
+          "answer": 1,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        }
+      ]
+    },
+    {
+      "id": "S2-Q08",
+      "season": 2,
+      "chapter": 4,
+      "title": "Une route tournée vers Ashkar",
+      "giver": "Thorgar",
+      "locations": "KHAZ’GORAM → Château",
+      "scene": "Le relevé décrit des repères qui ne peuvent être lus depuis Vorak.",
+      "dialogue": "Thorgar : « Lui a volé un trajet. Nous devons comprendre pourquoi il était fermé. »",
+      "resolution": "Les repères métalliques et la copie du journal désignent Ashkar. Le château autorise la poursuite de l’enquête.",
+      "min_level": 5,
+      "difficulty": 2,
+      "gold": 33,
+      "xp": 55,
+      "min_duration": 600,
+      "steps": [
+        {
+          "id": "S2-Q08-O1",
+          "label": "Comparer la copie et les repères métalliques",
+          "kind": "talk",
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": "",
+          "text": "Thorgar : « Lui a volé un trajet. Nous devons comprendre pourquoi il était fermé. »"
+        },
+        {
+          "id": "S2-Q08-O2",
+          "label": "Remettre le rapport au château",
+          "kind": "inspect",
+          "duration": 1200,
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": ""
+        },
+        {
+          "id": "S2-Q08-O3",
+          "label": "Obtenir l’autorisation d’étudier les repères d’Ashkar",
+          "kind": "talk",
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp",
+          "text": "Les repères métalliques et la copie du journal désignent Ashkar. Le château autorise la poursuite de l’enquête."
+        }
+      ]
+    },
+    {
+      "id": "S3-Q01",
+      "season": 3,
+      "chapter": 1,
+      "title": "Au pied d’Ashkar",
+      "giver": "Château",
+      "locations": "Monde → Tour d’Ashkar",
+      "scene": "La tour permet d’observer les lignes du relief tracées sur le relevé.",
+      "dialogue": "Inscription proposée : « Regarder plus loin n’abrège pas le chemin. »",
+      "resolution": "Les premiers repères d’Ashkar correspondent au relevé. Une observation depuis le belvédère permettra de l’orienter.",
+      "min_level": 5,
+      "difficulty": 3,
+      "gold": 26,
+      "xp": 50,
+      "min_duration": 900,
+      "steps": [
+        {
+          "id": "S3-Q01-O1",
+          "label": "Présenter l’autorisation à l’entrée d’Ashkar",
+          "kind": "talk",
+          "place": "Tour d’Ashkar",
+          "scene_image": "",
+          "text": "Inscription proposée : « Regarder plus loin n’abrège pas le chemin. »"
+        },
+        {
+          "id": "S3-Q01-O2",
+          "label": "Relever les premiers repères du belvédère",
+          "kind": "mission",
+          "duration": 3600,
+          "place": "Tour d’Ashkar",
+          "scene_image": ""
+        },
+        {
+          "id": "S3-Q01-O3",
+          "label": "Comparer ces repères avec le relevé ancien",
+          "kind": "puzzle",
+          "question": "Le relevé représente trois sommets. Quel repère permettra de vérifier son orientation ?",
+          "options": [
+            "Le prix du parchemin",
+            "La couleur du sceau",
+            "La silhouette du relief depuis Ashkar"
+          ],
+          "answer": 2,
+          "place": "Tour d’Ashkar",
+          "scene_image": ""
+        }
+      ]
+    },
+    {
+      "id": "S3-Q02",
+      "season": 3,
+      "chapter": 1,
+      "title": "La première hauteur",
+      "giver": "Dossier Ashkar",
+      "locations": "Tour d’Ashkar — palier narratif proposé",
+      "scene": "Le joueur doit atteindre une hauteur suffisante pour comparer les reliefs.",
+      "dialogue": "Journal : « La ligne prise pour une rivière est une crête. La copie volée conduit au mauvais versant. »",
+      "resolution": "La ligne prise pour une rivière représente une crête. Vous corrigez le relevé avant qu’une nouvelle erreur ne coûte des vies.",
+      "min_level": 5,
+      "difficulty": 3,
+      "gold": 26,
+      "xp": 50,
+      "min_duration": 900,
+      "steps": [
+        {
+          "id": "S3-Q02-O1",
+          "label": "Mener une observation depuis le belvédère d’Ashkar",
+          "kind": "mission",
+          "duration": 3600,
+          "place": "Tour d’Ashkar",
+          "scene_image": ""
+        },
+        {
+          "id": "S3-Q02-O2",
+          "label": "Comparer les trois silhouettes de relief",
+          "kind": "inspect",
+          "duration": 1500,
+          "place": "Tour d’Ashkar",
+          "scene_image": ""
+        },
+        {
+          "id": "S3-Q02-O3",
+          "label": "Corriger l’orientation du relevé",
+          "kind": "puzzle",
+          "question": "Le tracé suit une crête et non une rivière. Que corriger ?",
+          "options": [
+            "L’orientation du relevé",
+            "Le nom du convoyeur",
+            "Les comptes de la banque"
+          ],
+          "answer": 0,
+          "place": "Tour d’Ashkar",
+          "scene_image": ""
+        }
+      ]
+    },
+    {
+      "id": "S3-Q03",
+      "season": 3,
+      "chapter": 2,
+      "title": "Deux rapports pour une vérité",
+      "giver": "Château",
+      "locations": "Elarwyn — Lisière des Chênes ; Vorak — Pied de Vorak",
+      "scene": "Les repères de la tour sont confrontés à deux observations au sol.",
+      "dialogue": "Rapport : « Deux témoins éloignés décrivent la même colonne de chariots. »",
+      "resolution": "Les deux reconnaissances suivent la même colonne de chariots. Le convoi du Faussaire se prépare à quitter les routes sûres.",
+      "min_level": 5,
+      "difficulty": 3,
+      "gold": 26,
+      "xp": 50,
+      "min_duration": 900,
+      "steps": [
+        {
+          "id": "S3-Q03-O1",
+          "label": "Reconnaître les balises à la lisière d’Elarwyn",
+          "kind": "mission",
+          "duration": 3600,
+          "place": "Forêt d’Elarwyn",
+          "scene_image": "elarwyn.webp"
+        },
+        {
+          "id": "S3-Q03-O2",
+          "label": "Reconnaître les balises au Pied de Vorak",
+          "kind": "mission",
+          "duration": 3600,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S3-Q03-O3",
+          "label": "Confronter les deux rapports au château",
+          "kind": "puzzle",
+          "question": "Deux reconnaissances signalent la même colonne de chariots. Que faire ?",
+          "options": [
+            "Ignorer un rapport",
+            "Confronter leurs horaires et directions",
+            "Doubler leur nombre sans vérifier"
+          ],
+          "answer": 1,
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp"
+        }
+      ]
+    },
+    {
+      "id": "S3-Q04",
+      "season": 3,
+      "chapter": 2,
+      "title": "La porte et son prix",
+      "giver": "Voleur",
+      "locations": "Ruelle → Vigile ou voie publique au Château",
+      "scene": "Le Faussaire utilise un intermédiaire qui fréquente la salle clandestine.",
+      "dialogue": "Vigile : « Mes conditions sont les mêmes pour tous. Ton enquête ne change pas ma porte. »",
+      "resolution": "Un intermédiaire accepte de transmettre un message. Il propose une rencontre sous l’autorité du château.",
+      "min_level": 5,
+      "difficulty": 3,
+      "gold": 26,
+      "xp": 50,
+      "min_duration": 900,
+      "steps": [
+        {
+          "id": "S3-Q04-O1",
+          "label": "Identifier l’intermédiaire grâce au voleur",
+          "kind": "talk",
+          "place": "Ruelle · Le voleur",
+          "scene_image": "alley_thief.webp",
+          "text": "Vigile : « Mes conditions sont les mêmes pour tous. Ton enquête ne change pas ma porte. »"
+        },
+        {
+          "id": "S3-Q04-O2",
+          "label": "Choisir un accès légalement disponible au vigile ou demander une audition au château",
+          "kind": "choice",
+          "options": [
+            "Passer par une audition publique au château",
+            "Demander au vigile de transmettre un message"
+          ],
+          "place": "Ruelle · Le vigile",
+          "scene_image": "alley_guard.webp"
+        },
+        {
+          "id": "S3-Q04-O3",
+          "label": "Recueillir le même témoignage par l’une des voies",
+          "kind": "talk",
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp",
+          "text": "Un intermédiaire accepte de transmettre un message. Il propose une rencontre sous l’autorité du château."
+        }
+      ]
+    },
+    {
+      "id": "S3-Q05",
+      "season": 3,
+      "chapter": 3,
+      "title": "La proposition du Faussaire",
+      "giver": "Intermédiaire",
+      "locations": "Salle clandestine si accessible ; sinon audition au château",
+      "scene": "Un message présente sa justification : ouvrir la route malgré les autorités.",
+      "dialogue": "Faussaire : « Ils appellent prudence ce qui leur permet de garder les routes. Moi, je les ouvrirai. »",
+      "resolution": "Le Faussaire promet d’ouvrir les anciennes routes. Les témoignages recueillis contredisent pourtant ce qu’il raconte sur les risques.",
+      "min_level": 6,
+      "difficulty": 3,
+      "gold": 26,
+      "xp": 50,
+      "min_duration": 900,
+      "steps": [
+        {
+          "id": "S3-Q05-O1",
+          "label": "Lire le message",
+          "kind": "talk",
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp",
+          "text": "Faussaire : « Ils appellent prudence ce qui leur permet de garder les routes. Moi, je les ouvrirai. »"
+        },
+        {
+          "id": "S3-Q05-O2",
+          "label": "Comparer la promesse aux pertes constatées",
+          "kind": "choice",
+          "options": [
+            "Rendre l’enquête publique",
+            "Préserver la discrétion de l’enquête"
+          ],
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp"
+        },
+        {
+          "id": "S3-Q05-O3",
+          "label": "Choisir de dénoncer immédiatement le projet ou de préserver la discrétion",
+          "kind": "puzzle",
+          "question": "Le Faussaire promet une route ouverte mais dissimule ses pertes. Quelle pièce confronter à son récit ?",
+          "options": [
+            "Une rumeur sans source",
+            "Un classement d’arène",
+            "Les témoignages et le relevé vérifié"
+          ],
+          "answer": 2,
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp"
+        }
+      ]
+    },
+    {
+      "id": "S3-Q06",
+      "season": 3,
+      "chapter": 3,
+      "title": "Le mauvais versant",
+      "giver": "Thorgar",
+      "locations": "KHAZ’GORAM → Tour d’Ashkar",
+      "scene": "La copie volée mène à un passage fragilisé, privé de ses ouvrages de protection.",
+      "dialogue": "Thorgar : « Une route oubliée peut être retrouvée. Une route brisée doit être réparée. »",
+      "resolution": "Thorgar confirme que les ouvrages du passage ont cessé d’être entretenus. Vous adressez un avertissement documenté au château.",
+      "min_level": 6,
+      "difficulty": 3,
+      "gold": 26,
+      "xp": 50,
+      "min_duration": 900,
+      "steps": [
+        {
+          "id": "S3-Q06-O1",
+          "label": "Faire analyser les fixations décrites",
+          "kind": "talk",
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": "",
+          "text": "Thorgar : « Une route oubliée peut être retrouvée. Une route brisée doit être réparée. »"
+        },
+        {
+          "id": "S3-Q06-O2",
+          "label": "Comparer avec le relevé d’Ashkar",
+          "kind": "inspect",
+          "duration": 1500,
+          "place": "Tour d’Ashkar",
+          "scene_image": ""
+        },
+        {
+          "id": "S3-Q06-O3",
+          "label": "Produire un avertissement documenté",
+          "kind": "puzzle",
+          "question": "Les ouvrages de protection manquent. Quelle conclusion transmettre ?",
+          "options": [
+            "Le passage exige des réparations avant le départ",
+            "Le trajet est sûr puisque la carte existe",
+            "Une pioche suffit à protéger tout le convoi"
+          ],
+          "answer": 0,
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": ""
+        }
+      ]
+    },
+    {
+      "id": "S3-Q07",
+      "season": 3,
+      "chapter": 4,
+      "title": "Les annonces de diversion",
+      "giver": "Château",
+      "locations": "Panneau → Marché → Banque",
+      "scene": "Une série de fausses urgences disperse les porteurs et détourne l’attention de la forge.",
+      "dialogue": "Marchand : « Ils ne cherchent plus à nous voler du temps. Ils cherchent à nous faire regarder ailleurs. »",
+      "resolution": "Les fausses urgences portent la signature déjà repérée. Vous prévenez la forge avant que la diversion ne disperse ses défenseurs.",
+      "min_level": 7,
+      "difficulty": 3,
+      "gold": 26,
+      "xp": 50,
+      "min_duration": 900,
+      "steps": [
+        {
+          "id": "S3-Q07-O1",
+          "label": "Repérer la signature déjà reconnue en S1",
+          "kind": "inspect",
+          "duration": 1500,
+          "place": "Place centrale de Legacy",
+          "scene_image": "hub-clean.webp"
+        },
+        {
+          "id": "S3-Q07-O2",
+          "label": "Faire retirer les contrats de fiction falsifiés",
+          "kind": "puzzle",
+          "question": "Les annonces portent la signature déjà reconnue sur les faux reçus. Que faire avant de déplacer des hommes ?",
+          "options": [
+            "Suivre toutes les annonces",
+            "Vérifier l’origine et prévenir la forge",
+            "Publier des noms d’habitants au hasard"
+          ],
+          "answer": 1,
+          "place": "Marché · Le marchand",
+          "scene_image": "market.webp"
+        },
+        {
+          "id": "S3-Q07-O3",
+          "label": "Prévenir la forge",
+          "kind": "talk",
+          "place": "Forge de Legacy",
+          "scene_image": "forge.webp",
+          "text": "Les fausses urgences portent la signature déjà repérée. Vous prévenez la forge avant que la diversion ne disperse ses défenseurs."
+        }
+      ]
+    },
+    {
+      "id": "S3-Q08",
+      "season": 3,
+      "chapter": 4,
+      "title": "La forge prise pour cible",
+      "giver": "Thorgar",
+      "locations": "KHAZ’GORAM",
+      "scene": "Des hommes tentent d’emporter les pièces destinées à sécuriser le passage.",
+      "dialogue": "Thorgar : « Ils ont pris assez pour s’avancer. Pas assez pour revenir. »",
+      "resolution": "Les travailleurs sont à l’abri et une partie des pièces est sauvée. Le Faussaire fuit avec le reste du chargement.",
+      "min_level": 7,
+      "difficulty": 4,
+      "gold": 46,
+      "xp": 80,
+      "min_duration": 900,
+      "steps": [
+        {
+          "id": "S3-Q08-O1",
+          "label": "Mettre les travailleurs à l’abri",
+          "kind": "mission",
+          "duration": 3600,
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": ""
+        },
+        {
+          "id": "S3-Q08-O2",
+          "label": "Défendre les pièces dans un combat de scénario",
+          "kind": "battle",
+          "enemy": "Assaillant de la forge",
+          "boss": false,
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": ""
+        },
+        {
+          "id": "S3-Q08-O3",
+          "label": "Identifier la direction du convoi fuyard",
+          "kind": "talk",
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": "",
+          "text": "Les travailleurs sont à l’abri et une partie des pièces est sauvée. Le Faussaire fuit avec le reste du chargement."
+        }
+      ]
+    },
+    {
+      "id": "S4-Q01",
+      "season": 4,
+      "chapter": 1,
+      "title": "Préparer le retour des convois",
+      "giver": "Château",
+      "locations": "Marché → Taverne → Château",
+      "scene": "Legacy prépare un secours pour les voyageurs entraînés dans le projet.",
+      "dialogue": "Tavernier : « Ils ont peut-être suivi le mauvais homme. Ça ne les rend pas moins attendus chez eux. »",
+      "resolution": "Les derniers départs sont identifiés. Le château donne priorité à l’évacuation des voyageurs entraînés dans le projet.",
+      "min_level": 8,
+      "difficulty": 4,
+      "gold": 34,
+      "xp": 65,
+      "min_duration": 1200,
+      "steps": [
+        {
+          "id": "S4-Q01-O1",
+          "label": "Faire établir la liste des fournitures au marché",
+          "kind": "talk",
+          "place": "Marché · Le marchand",
+          "scene_image": "market.webp",
+          "text": "Tavernier : « Ils ont peut-être suivi le mauvais homme. Ça ne les rend pas moins attendus chez eux. »"
+        },
+        {
+          "id": "S4-Q01-O2",
+          "label": "Retrouver les derniers départs au comptoir",
+          "kind": "mission",
+          "duration": 4500,
+          "place": "Taverne · Le tavernier",
+          "scene_image": "tavern_barman.webp"
+        },
+        {
+          "id": "S4-Q01-O3",
+          "label": "Valider le mandat de secours",
+          "kind": "puzzle",
+          "question": "Le mandat privilégie le secours des voyageurs. Que charger d’abord ?",
+          "options": [
+            "Des trophées",
+            "Des marchandises de luxe",
+            "Le matériel d’évacuation et de soutien"
+          ],
+          "answer": 2,
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp"
+        }
+      ]
+    },
+    {
+      "id": "S4-Q02",
+      "season": 4,
+      "chapter": 1,
+      "title": "Ce que la banque peut garantir",
+      "giver": "Château",
+      "locations": "Banque",
+      "scene": "Une avance de fiction doit payer les travailleurs de l’opération et être traçable.",
+      "dialogue": "Banque : « Cette fois, chaque ligne aura un responsable. »",
+      "resolution": "La banque enregistre un mandat vérifiable. Chaque fourniture et chaque bénéficiaire possèdent désormais une référence claire.",
+      "min_level": 8,
+      "difficulty": 4,
+      "gold": 34,
+      "xp": 65,
+      "min_duration": 1200,
+      "steps": [
+        {
+          "id": "S4-Q02-O1",
+          "label": "Faire ouvrir un dossier de mandat narratif",
+          "kind": "inspect",
+          "duration": 1800,
+          "place": "Banque de Legacy",
+          "scene_image": "bank.webp"
+        },
+        {
+          "id": "S4-Q02-O2",
+          "label": "Vérifier l’identité des bénéficiaires fictifs",
+          "kind": "puzzle",
+          "question": "Chaque ligne du mandat doit avoir un responsable. Quelle vérification est utile ?",
+          "options": [
+            "Identité des bénéficiaires et référence de l’autorisation",
+            "Les comptes d’un étranger",
+            "La somme souhaitée par le porteur"
+          ],
+          "answer": 0,
+          "place": "Banque de Legacy",
+          "scene_image": "bank.webp"
+        },
+        {
+          "id": "S4-Q02-O3",
+          "label": "Faire enregistrer la garantie du château",
+          "kind": "talk",
+          "place": "Banque de Legacy",
+          "scene_image": "bank.webp",
+          "text": "La banque enregistre un mandat vérifiable. Chaque fourniture et chaque bénéficiaire possèdent désormais une référence claire."
+        }
+      ]
+    },
+    {
+      "id": "S4-Q03",
+      "season": 4,
+      "chapter": 2,
+      "title": "Une interception, pas un braquage",
+      "giver": "Château",
+      "locations": "Ruelle — braqueur → Château",
+      "scene": "Le braqueur connaît l’organisation d’un convoi. Le joueur lui demande un plan d’interception des pièces volées.",
+      "dialogue": "Braqueur : « Tu veux le chargement sans toucher aux voyageurs ? C’est plus difficile. Donc plus intéressant. »",
+      "resolution": "Le plan d’interception est approuvé. Le chargement volé doit être récupéré sans confondre les voyageurs avec les hommes armés.",
+      "min_level": 8,
+      "difficulty": 4,
+      "gold": 34,
+      "xp": 65,
+      "min_duration": 1200,
+      "steps": [
+        {
+          "id": "S4-Q03-O1",
+          "label": "Obtenir son analyse des trajets",
+          "kind": "talk",
+          "place": "Ruelle · Le braqueur",
+          "scene_image": "alley_robber.webp",
+          "text": "Braqueur : « Tu veux le chargement sans toucher aux voyageurs ? C’est plus difficile. Donc plus intéressant. »"
+        },
+        {
+          "id": "S4-Q03-O2",
+          "label": "Choisir la voie du leurre ou du barrage autorisé",
+          "kind": "choice",
+          "options": [
+            "Préparer un leurre",
+            "Préparer un barrage autorisé"
+          ],
+          "place": "Ruelle · Le braqueur",
+          "scene_image": "alley_robber.webp"
+        },
+        {
+          "id": "S4-Q03-O3",
+          "label": "Faire approuver le plan de protection",
+          "kind": "inspect",
+          "duration": 1800,
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp"
+        }
+      ]
+    },
+    {
+      "id": "S4-Q04",
+      "season": 4,
+      "chapter": 2,
+      "title": "La route vers la Cime",
+      "giver": "Thorgar",
+      "locations": "Vorak — accès avancé vers la Cime",
+      "scene": "Depuis la Faille Rouge, les équipes recherchent un accès au passage emprunté par le convoi. La route vers la Cime reste trop dangereuse : le mandat prévoit un point de repli sur ce versant.",
+      "dialogue": "Rapport : « Le retour est prêt. Reste à convaincre ceux qui montent de l’emprunter. »",
+      "resolution": "La reconnaissance de la Faille Rouge est achevée. Les équipes installent un point de repli avant le segment instable du passage.",
+      "min_level": 10,
+      "difficulty": 4,
+      "gold": 34,
+      "xp": 65,
+      "min_duration": 1200,
+      "steps": [
+        {
+          "id": "S4-Q04-O1",
+          "label": "Préparer la reconnaissance de la Faille Rouge avec Thorgar",
+          "kind": "talk",
+          "place": "KHAZ’GORAM · Thorgar",
+          "scene_image": "",
+          "text": "Rapport : « Le retour est prêt. Reste à convaincre ceux qui montent de l’emprunter. »"
+        },
+        {
+          "id": "S4-Q04-O2",
+          "label": "Terminer une expédition dans la Faille Rouge après cette étape",
+          "kind": "expedition",
+          "destination": "vorak_3",
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S4-Q04-O3",
+          "label": "Établir un point de repli",
+          "kind": "mission",
+          "duration": 4500,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        }
+      ]
+    },
+    {
+      "id": "S4-Q05",
+      "season": 4,
+      "chapter": 3,
+      "title": "Le dernier convoi",
+      "giver": "Mandat de secours",
+      "locations": "Vorak — passage du convoi",
+      "scene": "Le joueur rattrape les hommes du Faussaire avant le segment instable.",
+      "dialogue": "Convoyeur : « On nous avait promis une route. Pas une marche sans retour. »",
+      "resolution": "Les voyageurs sont séparés de l’escorte et les pièces récupérées. Le Faussaire continue seul avec ses derniers hommes.",
+      "min_level": 10,
+      "difficulty": 5,
+      "gold": 39,
+      "xp": 75,
+      "min_duration": 1200,
+      "steps": [
+        {
+          "id": "S4-Q05-O1",
+          "label": "Exécuter le plan choisi",
+          "kind": "mission",
+          "duration": 4500,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S4-Q05-O2",
+          "label": "Séparer les voyageurs des hommes armés",
+          "kind": "battle",
+          "enemy": "Escorte du Faussaire",
+          "boss": false,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S4-Q05-O3",
+          "label": "Récupérer les pièces volées",
+          "kind": "puzzle",
+          "question": "Les pièces volées sont mêlées aux voyageurs. Quelle priorité respecte le mandat ?",
+          "options": [
+            "Charger sans distinction",
+            "Séparer les personnes à protéger avant l’interception",
+            "Abandonner les témoins"
+          ],
+          "answer": 1,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        }
+      ]
+    },
+    {
+      "id": "S4-Q06",
+      "season": 4,
+      "chapter": 3,
+      "title": "Le Faussaire",
+      "giver": "Mission finale",
+      "locations": "Vorak — passage du convoi",
+      "scene": "Son plan découvert, le Faussaire refuse de reconnaître les personnes mises en danger.",
+      "dialogue": "Faussaire : « Tu crois avoir sauvé leur avenir ? Tu les ramènes seulement attendre une permission. »",
+      "resolution": "Le Faussaire est vaincu. Le passage menace de céder : il faut organiser le retour et choisir ce qui peut encore être sauvé.",
+      "min_level": 10,
+      "difficulty": 5,
+      "gold": 75,
+      "xp": 100,
+      "min_duration": 1200,
+      "steps": [
+        {
+          "id": "S4-Q06-O1",
+          "label": "Repousser l’escorte du Faussaire",
+          "kind": "battle",
+          "enemy": "Escorte du Faussaire",
+          "boss": false,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S4-Q06-O2",
+          "label": "Vaincre le Faussaire",
+          "kind": "battle",
+          "enemy": "Le Faussaire",
+          "boss": true,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S4-Q06-O3",
+          "label": "Sécuriser le passage et présenter les preuves",
+          "kind": "talk",
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp",
+          "text": "Le Faussaire est vaincu. Le passage menace de céder : il faut organiser le retour et choisir ce qui peut encore être sauvé."
+        }
+      ]
+    },
+    {
+      "id": "S4-Q07",
+      "season": 4,
+      "chapter": 4,
+      "title": "Le poids d’un dernier choix",
+      "giver": "Joueur",
+      "locations": "Passage de Vorak → Château",
+      "scene": "Une rupture du passage impose de choisir entre poursuivre les derniers relevés et secourir le Faussaire.",
+      "dialogue": "Joueur, réponse proposée : « Ouvrir une route ne donne pas le droit d’y sacrifier ceux qui te suivent. »",
+      "resolution": "Les témoins sont évacués et les preuves conservées sont remises au château. Votre dernier choix pèsera sur le récit des événements.",
+      "min_level": 10,
+      "difficulty": 4,
+      "gold": 34,
+      "xp": 65,
+      "min_duration": 1200,
+      "steps": [
+        {
+          "id": "S4-Q07-O1",
+          "label": "Choisir le sauvetage ou la récupération des relevés",
+          "kind": "choice",
+          "options": [
+            "Secourir le Faussaire : il sera jugé",
+            "Récupérer les relevés : le Faussaire disparaît"
+          ],
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S4-Q07-O2",
+          "label": "Évacuer les personnes présentes",
+          "kind": "mission",
+          "duration": 4500,
+          "place": "Mont Vorak",
+          "scene_image": "vorak.webp"
+        },
+        {
+          "id": "S4-Q07-O3",
+          "label": "Remettre les preuves conservées au château",
+          "kind": "talk",
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp",
+          "text": "Les témoins sont évacués et les preuves conservées sont remises au château. Votre dernier choix pèsera sur le récit des événements."
+        }
+      ]
+    },
+    {
+      "id": "S4-Q08",
+      "season": 4,
+      "chapter": 4,
+      "title": "Ceux qui écrivent la suite",
+      "giver": "Troubadour",
+      "locations": "Château → Panneau → Taverne",
+      "scene": "Le château statue sur le mandat. La Gazette et le troubadour donnent deux regards sur les événements.",
+      "dialogue": "Troubadour : « Les chroniques retiennent les départs. Ceux qui attendent se souviennent surtout des retours. »",
+      "resolution": "Le premier relais est sécurisé. La Gazette relate le retour des convois, tandis que le troubadour ajoute votre aventure aux récits de Legacy.",
+      "min_level": 10,
+      "difficulty": 4,
+      "gold": 49,
+      "xp": 85,
+      "min_duration": 1200,
+      "steps": [
+        {
+          "id": "S4-Q08-O1",
+          "label": "Consulter le bilan au château",
+          "kind": "talk",
+          "place": "Château de Legacy",
+          "scene_image": "castle.webp",
+          "text": "Troubadour : « Les chroniques retiennent les départs. Ceux qui attendent se souviennent surtout des retours. »"
+        },
+        {
+          "id": "S4-Q08-O2",
+          "label": "Lire l’édition narrative de la Gazette",
+          "kind": "inspect",
+          "duration": 1800,
+          "place": "Place centrale de Legacy",
+          "scene_image": "hub-clean.webp"
+        },
+        {
+          "id": "S4-Q08-O3",
+          "label": "Écouter l’épilogue adapté chez le troubadour",
+          "kind": "talk",
+          "place": "Taverne · Le troubadour",
+          "scene_image": "tavern_troubadour.webp",
+          "text": "Le premier relais est sécurisé. La Gazette relate le retour des convois, tandis que le troubadour ajoute votre aventure aux récits de Legacy."
+        }
+      ]
+    }
+  ]
+}

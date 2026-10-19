@@ -134,3 +134,13 @@
 .arena-book-confirm{border:1px solid #d1aa63;padding:18px;text-align:center;background:#142e3d;color:#f0d3a1}.arena-book-confirm h3{font:20px Georgia,serif}.arena-book-confirm p{font:14px/1.5 Georgia,serif}.arena-book-confirm .gm-button{margin:5px auto!important;max-width:100%;white-space:normal!important}
 .arena-unlocked{padding:14px;border:1px solid #c4a25c;background:#b6993912;color:#f2d69e;font:14px/1.5 Georgia,serif;text-align:center}
 @media(max-width:700px){.arena-book-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.arena-book-cards{grid-template-columns:1fr}.arena-book-card{padding:13px}.arena-book-intro{font-size:12px}#panel.arena-technique-book .arena-book-slots .gm-button{font-size:10px!important;height:64px;padding:16px 20px!important}.arena-book-heading{font-size:17px}}
+/* Shared arena/tower combat: keep health visible and technique labels readable. */
+@media(max-width:600px){
+ #panel.game-menu.arena-surface:not(.arena-lobby):not(.arena-technique-book) .arena-heading{font:normal 18px/1.15 Georgia!important;letter-spacing:0!important}
+ #panel.game-menu.arena-surface:not(.arena-result-mode) .arena-duel{position:sticky;top:0;z-index:3;background:#0c292d;padding:5px 0;margin-top:0}
+ #panel.game-menu.arena-surface:not(.arena-lobby):not(.arena-result-mode) .arena-portrait{width:60px;height:60px}
+ #panel.game-menu.arena-surface .arena-technique .arena-button{display:block!important;min-height:54px!important;height:auto!important;padding:10px 12px!important}
+ #panel.game-menu.arena-surface .arena-technique .arena-button>.arena-skin-icon{display:none!important}
+ #panel.game-menu.arena-surface .arena-technique-name{display:block;font:600 11px/1.25 Georgia!important;white-space:normal;word-break:normal;overflow-wrap:normal;hyphens:none}
+ #panel.game-menu.arena-surface .arena-log-list{max-height:100px}
+}

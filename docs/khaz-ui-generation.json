@@ -1,0 +1,6 @@
+{
+  "mode": "built-in edit",
+  "source": "upload/image-edit-target-afdee4ede07b149c.png",
+  "output": "apps/game/public/assets/khaz/ui-kit-v1.png",
+  "prompt": "Derive reusable transparent UI assets from the exact approved KHAZ’GORAM reference: outer metal frame, dark button, selected bronze tab, equipment frame, blue Pouciel crystal, transformation arrow, blank title plaque, left and right navigation controls. Preserve dark iron, black slate and fine worn brass design; no text or baked balances. See khaz-skin.json for inspected regions."
+}
