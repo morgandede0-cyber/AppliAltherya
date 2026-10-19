@@ -1,3 +1,11 @@
+import {openTavernRps} from './tavern-rps';
+import {openTavernCoin} from './tavern-coin';
+import {openTavernDice} from './tavern-dice';
+import {openRussian} from './russian';
+import {openHorseRacing} from './horse-racing';
+import {openSlots} from './slots';
+import {openRoulette} from './roulette';
+import {openBlackjack} from './blackjack';
 import {sizeMenu,watchMenuSize} from './menu-layout';
 import {composeBlankGame} from './blank-compose';
 import {chime} from '../audio/sound';
@@ -20,6 +28,14 @@ function cylinder(step:number){return svg('<defs><radialGradient id="barrel-meta
 function wheel(){return svg('<defs><radialGradient id="wheel-red"><stop stop-color="#451e0e"/><stop offset=".85" stop-color="#98292a"/><stop offset="1" stop-color="#c94b35"/></radialGradient><radialGradient id="wheel-black"><stop stop-color="#322619"/><stop offset="1" stop-color="#141b21"/></radialGradient></defs>'+WHEEL.map((v,i)=>{const a=(i*360/37-90-180/37)*Math.PI/180,b=((i+1)*360/37-90-180/37)*Math.PI/180,m=(a+b)/2;return `<path d="M${110+99*Math.cos(a)} ${110+99*Math.sin(a)}A99 99 0 0 1 ${110+99*Math.cos(b)} ${110+99*Math.sin(b)}L${110+70*Math.cos(b)} ${110+70*Math.sin(b)}A70 70 0 0 0 ${110+70*Math.cos(a)} ${110+70*Math.sin(a)}Z" fill="${v===0?'#216b46':RED.has(v)?'url(#wheel-red)':'url(#wheel-black)'}" stroke="#d4ac61" stroke-width=".6"/><text x="${110+87*Math.cos(m)}" y="${113+87*Math.sin(m)}" font-family="Georgia,serif" font-size="8" fill="#fff0c7" text-anchor="middle">${v}</text>`;}).join('')+'<circle cx="110" cy="110" r="100" fill="none" stroke="#e3bf76"/><circle cx="110" cy="110" r="70" fill="none" stroke="#dab574"/>','10 10 200 200');}
 function horse(i:number){const boxes=[[150,185,220,175],[145,277,220,175],[145,374,220,175],[140,479,225,175]], [x,y,w,h]=boxes[i];return svg(`<defs><clipPath id="horse-live-${i}"><polygon points="${x+14},${y+78} ${x+55},${y+62} ${x+87},${y+30} ${x+111},${y+10} ${x+134},${y+22} ${x+135},${y+45} ${x+153},${y+55} ${x+189},${y+34} ${x+203},${y+48} ${x+215},${y+83} ${x+185},${y+91} ${x+174},${y+108} ${x+160},${y+135} ${x+162},${y+171} ${x+143},${y+171} ${x+134},${y+116} ${x+100},${y+112} ${x+68},${y+154} ${x+65},${y+174} ${x+44},${y+174} ${x+41},${y+132} ${x+17},${y+149} ${x+3},${y+133}"/></clipPath></defs><image href="/assets/sprites/menus/horses.webp" width="1536" height="1024" clip-path="url(#horse-live-${i})"/>`,`${x} ${y} ${w} ${h}`);}
 export function openLiveGame(panel:HTMLElement,kind:string,host:Host){
+ if(kind==='horses')return openHorseRacing(panel,host);
+ if(kind==='russian')return openRussian(panel,host);
+ if(kind==='rps')return openTavernRps(panel,host);
+ if(kind==='coin')return openTavernCoin(panel,host);
+ if(kind==='dice')return openTavernDice(panel,host);
+ if(kind==='blackjack')return openBlackjack(panel,host);
+ if(kind==='roulette')return openRoulette(panel,host);
+ if(kind==='slots')return openSlots(panel,host);
  let wager=10,choice:string|number=kind==='coin'?'pile':kind==='rps'?'rock':kind==='horses'?0:'red',number=0,busy=false,dead=false,notice='',rotation=0,shownRevision=-1;
  let table:HTMLElement,stage:HTMLElement,actions:HTMLElement,result:HTMLElement,stake:HTMLInputElement;
  const runningAnimations=new Set<Animation>();let frame=0,finishTimeline:(()=>void)|undefined;const receipts:{revision:number;message:string;wager:number;payout:number}[]=[];
@@ -52,8 +68,11 @@ export function openLiveGame(panel:HTMLElement,kind:string,host:Host){
   else if(kind==='slots')drawSlots(p);
   else if(kind==='horses')drawHorses(p,s);
   else if(kind==='russian'){const opponent=el('div','casino-opponent');opponent.append(casinoOpponent(),el('strong','','La hyène'));stage.append(art('game-cylinder',cylinder(p?.step??0)),opponent,el('p','cylinder-count',`${p?.step??0} / 6 chambres`));}
-  else if(kind==='dice'){const a=art('game-die player-die',die(Number(p?.player)||1)),b=art('game-die opponent-die',die(Number(p?.opponent)||1));for(const [name,face] of [['Vous',a],['Adversaire',b]] as const){const card=el('section','tavern-dice-card');card.append(diceFrame(),face,el('p','side-name',name));stage.append(card);}}
-  else if(kind==='coin'){const coin=art('game-coin-token',coinArt(p?.opponent==='face'?'Face':'Pile'));stage.append(coin);choices(stage,['pile','face']);}
+  else if(kind==='rps')return openTavernRps(panel,host);
+ if(kind==='coin')return openTavernCoin(panel,host);
+ if(kind==='dice'){const a=art('game-die player-die',die(Number(p?.player)||1)),b=art('game-die opponent-die',die(Number(p?.opponent)||1));for(const [name,face] of [['Vous',a],['Adversaire',b]] as const){const card=el('section','tavern-dice-card');card.append(diceFrame(),face,el('p','side-name',name));stage.append(card);}}
+  else if(kind==='rps')return openTavernRps(panel,host);
+ if(kind==='coin'){const coin=art('game-coin-token',coinArt(p?.opponent==='face'?'Face':'Pile'));stage.append(coin);choices(stage,['pile','face']);}
   else{const choicesBox=el('div','rps-choices');choices(choicesBox,['rock','paper','scissors']);stage.append(choicesBox);const duel=el('div','rps-duel');if(p){for(const [name,key] of [['Vous',String(p.player)],['Adversaire',String(p.opponent)]]){const side=el('div','rps-side');side.append(el('p','',name),gestureImage(key),el('span','',labels[gestureKey(key)]??key));duel.append(side);}}else duel.textContent='Choisissez votre geste.';stage.append(duel);}
   if(p?.status==='active'&&kind==='blackjack')actions.append(btn('Tirer une carte',()=>void play('hit')),btn('Rester',()=>void play('stand')));
   else if(p?.status==='active'&&kind==='russian')actions.append(btn('Tenter',()=>void play('try')));
@@ -79,8 +98,11 @@ export function openLiveGame(panel:HTMLElement,kind:string,host:Host){
   }else if(kind==='horses'){
    const runners=Array.from(stage.querySelectorAll<HTMLElement>('[data-runner]'));runners.forEach(n=>n.classList.add('galloping'));await timeline(4500,t=>{const values=raceProgress(t,p.winner??0);runners.forEach((n,i)=>n.style.left=values[i]*78+'%');stage.querySelectorAll<HTMLElement>('.live-lane').forEach(n=>n.style.backgroundPosition=`${-t*700}px 0`);});
   }else if(kind==='russian'){const drum=stage.querySelector<HTMLElement>('.game-cylinder')!;await motion(drum,[{transform:'rotate(0deg)'},{transform:'rotate(1080deg)'}],1400,'cubic-bezier(.15,.7,.2,1)');}
-  else if(kind==='dice'){const faces=Array.from(stage.querySelectorAll<HTMLElement>('.game-die'));let last=-1;await Promise.all([timeline(1700,t=>{const beat=Math.floor(t*18);if(beat!==last){last=beat;faces.forEach((n,i)=>n.innerHTML=die(t===1?Number(i?p.opponent:p.player):1+(beat+i*3)%6));}}),...faces.map((n,i)=>motion(n,[{transform:'rotateX(0) rotateZ(0) translateY(0)'},{transform:`rotateX(${i?210:-210}deg) rotateZ(145deg) translateY(-40px)`,offset:.35},{transform:'rotateX(340deg) rotateZ(300deg) translateY(-12px)',offset:.75},{transform:'rotateX(360deg) rotateZ(360deg) translateY(0)'}],1700))]);}
-  else if(kind==='coin'){const token=stage.querySelector<HTMLElement>('.game-coin-token')!;token.innerHTML=`<div class="coin-face coin-front">${coinImage('Pile')}</div><div class="coin-face coin-back">${coinImage('Face')}</div>`;await motion(token,[{transform:'translateY(0) rotateY(0deg) rotateZ(0)'},{transform:'translateY(-60px) rotateY(1260deg) rotateZ(-8deg)',offset:.5},{transform:`translateY(0) rotateY(${coinRotation(String(p.opponent))}deg) rotateZ(0)`}],2200,'cubic-bezier(.2,.7,.15,1)');}
+  else if(kind==='rps')return openTavernRps(panel,host);
+ if(kind==='coin')return openTavernCoin(panel,host);
+ if(kind==='dice'){const faces=Array.from(stage.querySelectorAll<HTMLElement>('.game-die'));let last=-1;await Promise.all([timeline(1700,t=>{const beat=Math.floor(t*18);if(beat!==last){last=beat;faces.forEach((n,i)=>n.innerHTML=die(t===1?Number(i?p.opponent:p.player):1+(beat+i*3)%6));}}),...faces.map((n,i)=>motion(n,[{transform:'rotateX(0) rotateZ(0) translateY(0)'},{transform:`rotateX(${i?210:-210}deg) rotateZ(145deg) translateY(-40px)`,offset:.35},{transform:'rotateX(340deg) rotateZ(300deg) translateY(-12px)',offset:.75},{transform:'rotateX(360deg) rotateZ(360deg) translateY(0)'}],1700))]);}
+  else if(kind==='rps')return openTavernRps(panel,host);
+ if(kind==='coin'){const token=stage.querySelector<HTMLElement>('.game-coin-token')!;token.innerHTML=`<div class="coin-face coin-front">${coinImage('Pile')}</div><div class="coin-face coin-back">${coinImage('Face')}</div>`;await motion(token,[{transform:'translateY(0) rotateY(0deg) rotateZ(0)'},{transform:'translateY(-60px) rotateY(1260deg) rotateZ(-8deg)',offset:.5},{transform:`translateY(0) rotateY(${coinRotation(String(p.opponent))}deg) rotateZ(0)`}],2200,'cubic-bezier(.2,.7,.15,1)');}
   else{const reveal=stage.querySelector<HTMLElement>('.rps-duel')!;let beat=-1;await Promise.all([timeline(1800,t=>{const phase=Math.min(2,Math.floor(t*3));if(phase!==beat){beat=phase;reveal.replaceChildren(gestureImage(['rock','paper','scissors'][phase]),el('strong','', ['Pierre…','Feuille…','Ciseaux !'][phase]));}}),motion(reveal,[{transform:'scale(.85)',opacity:.4},{transform:'scale(1.04)',opacity:1,offset:.7},{transform:'scale(1)',opacity:1}],1800)]);}
 
  }catch(e){notice=String(e);}finally{busy=false;if(!dead){render();panel.setAttribute('aria-busy','false');const finished=matching();if(!notice&&finished?.status==='finished')chime((finished.payout??0)>(finished.wager??0));}}}
