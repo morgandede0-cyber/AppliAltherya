@@ -5,12 +5,14 @@ export function viewDirection(dx:number,dy:number){const left=dx<0,r=Math.abs(dy
 export function gaitFrame(distance:number){return Math.floor(Math.max(0,distance)/12.5)%8;}
 export function raceOrder(winner:number){return[winner,...[0,1,2,3].filter(i=>i!==winner)];}
 
-export const RACE_COUNTDOWN_SECONDS=3;
-export const RACE_WINNER_SECONDS=60;
-/** Stretch the authoritative finish gaps together, preserving the exact finishing order. */
+export const RACE_COUNTDOWN_SECONDS=1;
+export const RACE_WINNER_SECONDS=6.5;
+export const RACE_LAST_SECONDS=8;
+export const RACE_SETTLE_SECONDS=.4;
+/** Fit all arrivals between 6.5 and 8 seconds, preserving order and relative gaps. */
 export function presentationTimes(times:number[]){
- if(times.length!==4||times.some(t=>!Number.isFinite(t)||t<=0))return [60,62,64,66];
- const scale=RACE_WINNER_SECONDS/Math.min(...times);return times.map(t=>t*scale);
+ if(times.length!==4||times.some(t=>!Number.isFinite(t)||t<=0))return [6.5,7,7.5,8];
+ const first=Math.min(...times),span=Math.max(...times)-first;return times.map(t=>RACE_WINNER_SECONDS+(span===0?0:(t-first)/span*(RACE_LAST_SECONDS-RACE_WINNER_SECONDS)));
 }
 /** A gallop keeps its cadence independently of the miniature track scale. */
 export function gallopFrame(clock:number,runner:number){return Math.floor(Math.max(0,clock)*12+runner*2)%8;}
