@@ -27,6 +27,39 @@ def setup(c):
  c.execute('CREATE TABLE IF NOT EXISTS activity_arena_techniques(user_id INTEGER NOT NULL,champion INTEGER NOT NULL,PRIMARY KEY(user_id,champion))')
  c.execute('CREATE TABLE IF NOT EXISTS activity_arena_loadout(user_id INTEGER NOT NULL,slot TEXT NOT NULL,technique TEXT NOT NULL,PRIMARY KEY(user_id,slot))')
  c.execute('CREATE TABLE IF NOT EXISTS activity_arena_loadout_version(user_id INTEGER PRIMARY KEY,revision INTEGER NOT NULL DEFAULT 0)')
+ retire_intermediate_tower_skills(c)
+
+def retire_intermediate_tower_skills(c):
+ """Remove retired intermediate-floor rewards; keep all other progress intact."""
+ removed={}
+ for row in c.execute('SELECT user_id,slot,technique FROM activity_arena_loadout'):
+  uid,slot,technique=row
+  if technique.startswith('ashkar_') and technique[7:].isdigit() and int(technique[7:])%10:
+   removed.setdefault(uid,[]).append(slot)
+ for uid,slots in removed.items():
+  for slot in slots:c.execute('DELETE FROM activity_arena_loadout WHERE user_id=? AND slot=?',(uid,slot))
+  c.execute('UPDATE activity_arena_loadout_version SET revision=revision+1 WHERE user_id=?',(uid,))
+ c.execute('DELETE FROM activity_ashkar_techniques WHERE floor%10<>0')
+ # Strip retired moves from saved active loadouts without resetting HP or cooldowns.
+ for table in ('activity_play','activity_ashkar'):
+  if not c.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",(table,)).fetchone():continue
+  for uid,raw in c.execute('SELECT user_id,payload FROM '+table).fetchall():
+   import json
+   state=json.loads(raw);changed=False;fighters=(state.get('arena_battle') or state.get('battle') or {}).get('fighters',[])
+   level=fighters[0].get('player_level',1) if fighters else (state.get('battle') or {}).get('player_level',1);base=arena_player_skills(level)
+   for slot,skill in list(state.get('skills',{}).items()):
+    key=skill.get('id','')
+    if key.startswith('ashkar_') and key[7:].isdigit() and int(key[7:])%10:
+     state['skills'][slot]={**base[slot],'id':'base_'+slot};changed=True
+   if table=='activity_ashkar' and state.get('floor',0)%10 and 'enemy_skills' in state and len(fighters)>1:
+    from arena_engine import CLASSES
+    original=CLASSES[fighters[1]['class_key']]['skills']
+    if state['enemy_skills']!=original:state['enemy_skills']=original;changed=True
+   for key in ('result','combat_result'):
+    gift=(state.get(key) or {}).get('technique_unlocked')
+    if gift and gift.get('id','').startswith('ashkar_') and gift['id'][7:].isdigit() and int(gift['id'][7:])%10:
+     state[key]['technique_unlocked']=None;changed=True
+   if changed:c.execute('UPDATE '+table+' SET payload=?,revision=revision+1 WHERE user_id=?',(json.dumps(state,ensure_ascii=False),uid))
 
 RESET_KEY='champion_techniques_fresh_start_20261017'
 
@@ -52,6 +85,7 @@ def grant(c,uid,champion):
  return None
 
 def grant_tower(c,uid,floor):
+ if floor%10 or floor not in TOWER_CATALOG:return None
  if c.execute('INSERT OR IGNORE INTO activity_ashkar_techniques VALUES(?,?)',(uid,floor)).rowcount:
   return {**TOWER_CATALOG[floor],'floor':floor,'source_kind':'tower','source':FLOORS[floor]['name']}
  return None

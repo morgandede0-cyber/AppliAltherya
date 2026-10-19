@@ -21,11 +21,11 @@ Trois **nouveaux étages validés** par jour, réinitialisation à minuit à Par
 | 9 | 85 | 45 | 0 |
 | 10 | 120 | 75 | 3 |
 
-Les Pouciels arrivent dans le même `legacy_wallet` que celui utilisé à KHAZ’GORAM. Les dix premières validations offrent quatre Pouciels au total. Les revanches restent jouables pour apprendre une technique, avec zéro Gold, XP et Pouciel. Aucun tarif d’équipement ou bonus de tutoriel n’a été modifié.
+Les Pouciels arrivent dans le même `legacy_wallet` que celui utilisé à KHAZ’GORAM. Les dix premières validations offrent quatre Pouciels au total. Les revanches restent jouables ; seul le boss du dixième étage permet d’apprendre une technique, avec zéro Gold, XP et Pouciel. Le bonus de tutoriel est conservé. Le tarif actuel des pièces communes de KHAZ’GORAM est de 1 000 Gold par pièce.
 
 ## Combats et interface
 
-Les techniques communes progressent avec le niveau, sans choix de classe. Chaque gardien vaincu donne une technique unique, conservée dans le même grimoire que les techniques de champions. Le remplacement est gratuit et limité au même emplacement. Les dégâts, esquives, gardes, recharges et effets des techniques utilisent désormais le même moteur `arena_combat` / `arena_techniques` / `arena_engine` que l’arène. La tour réutilise aussi son écran de combat et son grimoire. Le module Discord historique n’est pas importé. Les bonus d’équipement sont fixés au début du combat.
+Les techniques communes progressent avec le niveau, sans choix de classe. Seuls les boss tous les dix étages donnent une technique unique, conservée dans le même grimoire que les techniques de champions. La tour actuelle contient uniquement le boss de l’étage 10. Le remplacement est gratuit et limité au même emplacement. Les dégâts, esquives, gardes, recharges et effets des techniques utilisent désormais le même moteur `arena_combat` / `arena_techniques` / `arena_engine` que l’arène. La tour réutilise aussi son écran de combat et son grimoire. Le module Discord historique n’est pas importé. Les bonus d’équipement sont fixés au début du combat.
 
 Le menu propose la préparation, les dix étages en pages de quatre, le combat avec PV et journal, puis le résultat. Le nom et la photo serveur sont repris quand l’identité Discord est disponible ; le mode local utilise un portrait neutre. Les barres et nouvelles lignes du journal sont animées et respectent la réduction des mouvements. Mobile : attaques sur deux colonnes, cadre défilant, résultat compact.
 

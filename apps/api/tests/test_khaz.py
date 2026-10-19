@@ -13,9 +13,18 @@ class KhazTests(unittest.TestCase):
  def s(self):return self.a.snapshot(self.uid,self.name)['khaz']
  def act(self,action='khaz_buy',slot='weapon',branch='atk',**extra):
   s=self.s();body=dict(action=action,slot=slot,branch=branch,revision=s['revision'],expected_tier=s['equipment'].get(slot,{}).get('tier'));body.update(extra);return self.a.action(self.uid,body)
+ def test_uniform_price_for_all_common_slots_and_server_catalog(self):
+  import ast
+  original=Path(__file__).resolve().parents[3]/'apps/bot/tourwork/legacy_world_forge.py'
+  tree=ast.parse(original.read_text());prices=next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='COMMON_GOLD_PRICES' for t in n.targets))
+  self.assertEqual(prices,CFG['COMMON_GOLD_PRICES']);self.assertTrue(all(v==1000 for v in prices.values()))
+  for item in self.s()['items']:
+   if item['slot'] in CFG['BASE_SLOTS']:self.assertEqual(item['price'],1000)
+  for slot in CFG['BASE_SLOTS']:self.act(slot=slot,price=1)
+  with self.a.conn() as c:self.assertEqual(c.execute('SELECT wallet_gold FROM players WHERE user_id=?',(self.uid,)).fetchone()[0],10000-1000*len(CFG['BASE_SLOTS']))
  def test_buy_server_price_auto_equips_and_persists(self):
   self.act(price=1);s=self.s();self.assertEqual(s['equipment']['weapon'],dict(branch='atk',tier='commun'))
-  with self.a.conn() as c:self.assertEqual(c.execute('SELECT wallet_gold FROM players WHERE user_id=?',(self.uid,)).fetchone()[0],9700)
+  with self.a.conn() as c:self.assertEqual(c.execute('SELECT wallet_gold FROM players WHERE user_id=?',(self.uid,)).fetchone()[0],9000)
   self.a=Activity(self.a.path);self.assertEqual(self.s()['equipment'],s['equipment'])
   with self.assertRaises(ValueError):self.act(branch='def')
  def test_upgrade_costs_and_advanced_unlock(self):
@@ -45,7 +54,7 @@ class KhazTests(unittest.TestCase):
    except ValueError:return False
   with ThreadPoolExecutor(max_workers=2) as p:self.assertEqual(sum(p.map(invoke,range(2))),1)
   with self.a.conn() as c:
-   self.assertEqual(c.execute('SELECT wallet_gold FROM players WHERE user_id=?',(self.uid,)).fetchone()[0],9700);self.assertEqual(c.execute('SELECT COUNT(*) FROM activity_khaz_receipts').fetchone()[0],1)
+   self.assertEqual(c.execute('SELECT wallet_gold FROM players WHERE user_id=?',(self.uid,)).fetchone()[0],9000);self.assertEqual(c.execute('SELECT COUNT(*) FROM activity_khaz_receipts').fetchone()[0],1)
  def test_insufficient_gold_atomic_and_invalid_inputs(self):
   with self.a.conn() as c:c.execute('UPDATE players SET wallet_gold=1 WHERE user_id=?',(self.uid,))
   with self.assertRaises(ValueError):self.act()

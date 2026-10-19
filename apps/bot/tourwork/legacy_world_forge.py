@@ -103,12 +103,12 @@ BASE_SLOTS = ["weapon", "shield", "belt", "ring", "bracelet", "amulet"]
 ADVANCED_SLOTS = ["helmet", "gauntlets", "boots"]
 
 COMMON_GOLD_PRICES = {
-    "weapon": 300,
-    "shield": 300,
-    "belt": 200,
-    "bracelet": 200,
-    "ring": 250,
-    "amulet": 250,
+    "weapon": 1000,
+    "shield": 1000,
+    "belt": 1000,
+    "bracelet": 1000,
+    "ring": 1000,
+    "amulet": 1000,
 }
 
 POUCIEL_UPGRADE_COST = {

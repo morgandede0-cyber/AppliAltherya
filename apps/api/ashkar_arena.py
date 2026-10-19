@@ -13,14 +13,16 @@ class TowerFighter(ArenaFighter):
 CLASSES={1:'traqueur',2:'ravageur',3:'traqueur',4:'gardien',5:'gardien',6:'ravageur',7:'gardien',8:'gardien',9:'traqueur',10:'ravageur'}
 def opponent(floor):
  data=arena_combat.champion(floor)
- return {**data,'name':FLOORS[floor]['name'],'role':'Gardien final d’Ashkar' if floor==10 else 'Gardien d’étage','style':TOWER_CATALOG[floor]['description']}
+ return {**data,'name':FLOORS[floor]['name'],'role':'Gardien final d’Ashkar' if floor==10 else 'Gardien d’étage','style':TOWER_CATALOG.get(floor,{}).get('description',data['style'])}
 def create(uid,name,level,gear,floor,skills,legacy=None):
  player=TowerFighter(uid,name,'arena_fighter',max_hp=100+10*(level-1),player_level=level,**gear);player.loadout=skills
  # Fixed tower HP are expressed in the arena's damage scale (six times smaller).
  hp=round(FLOORS[floor]['hp']/6);enemy=TowerFighter(None,FLOORS[floor]['name'],CLASSES[floor],max_hp=hp,champion_level=floor);enemy.max_hp=enemy.hp=hp
- t=TOWER_CATALOG[floor];skill={**t,'emoji':enemy.cfg['skills'][t['slot']]['emoji']}
- if 'power' in t:skill['power']=round(t['power']*enemy.cfg['skills'][t['slot']]['power']/arena_player_skills(1)[t['slot']]['power'])
- enemy.loadout={**enemy.cfg['skills'],t['slot']:skill}
+ t=TOWER_CATALOG.get(floor);enemy.loadout=dict(enemy.cfg['skills'])
+ if t:
+  skill={**t,'emoji':enemy.cfg['skills'][t['slot']]['emoji']}
+  if 'power' in t:skill['power']=round(t['power']*enemy.cfg['skills'][t['slot']]['power']/arena_player_skills(1)[t['slot']]['power'])
+  enemy.loadout={**enemy.cfg['skills'],t['slot']:skill}
  battle=BattleState(uuid.uuid4().hex,'tower',0,[player,enemy],0);battle.log.append('Le combat commence.');p=dict(engine=2,status='active',floor=floor,turn=0,logs=['Le combat commence.'],skills=skills,enemy_skills=enemy.loadout)
  arena_combat.init(p,battle);p['champion']=opponent(floor)
  if legacy:

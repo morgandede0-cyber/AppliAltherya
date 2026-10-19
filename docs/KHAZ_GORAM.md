@@ -4,7 +4,7 @@ Accès depuis Monde → Forge de Khaz’goram, au niveau 3.
 
 Quatre écrans : accueil de Thorgar, achat, amélioration, équipement. L'achat et l'amélioration proposent les voies Attaque, Défense et Vitesse, avec quatre pièces au maximum par page, confirmation du coût et soldes actualisés après l'opération. Les pièces sont automatiquement équipées. Les menus défilent sur les petits écrans.
 
-Les règles proviennent de `apps/bot/tourwork/legacy_world_forge.py`, sans importer ce module et ses initialisations globales. Les six pièces communes coûtent les Gold d'origine ; les améliorations coûtent respectivement 20, 45, 90 et 160 Pouciel. Après une première pièce Mythique, casque, gantelets et bottes peuvent être créés directement en Mythique pour 70 Pouciel chacun. Chaque emplacement conserve sa voie. Les pièces légendaires ne peuvent plus être améliorées.
+Les règles proviennent de `apps/bot/tourwork/legacy_world_forge.py`, sans importer ce module et ses initialisations globales. Les six pièces communes coûtent désormais 1 000 Gold chacune ; les améliorations coûtent respectivement 20, 45, 90 et 160 Pouciel. Après une première pièce Mythique, casque, gantelets et bottes peuvent être créés directement en Mythique pour 70 Pouciel chacun. Chaque emplacement conserve sa voie. Les pièces légendaires ne peuvent plus être améliorées.
 
 Les tables existantes `legacy_wallet` et `legacy_equipment` sont conservées. Aucune réinitialisation, aucun Pouciel offert, aucun changement du bonus de tutoriel ou des prix des outils. Les bonus d'équipement sont pris en compte au début des prochains combats d'arène et de campagne. Les modifications d'équipement sont interdites pendant une partie ou un combat actif. Les transactions sont atomiques ; une révision et un reçu empêchent les dépenses répétées d'une même confirmation.
 
@@ -25,3 +25,9 @@ Le kit raster a été généré avec l’outil intégré en mode édition, à pa
 Les achats restent en Gold et les améliorations en Pouciels, suivant les règles existantes. Le visuel d’aperçu présentait le mot Pouciels côté achats sans tarif : cette mise à jour n’invente pas de conversion ni de prix.
 
 Validation de cette passe : 157 tests client réussis, build TypeScript/Vite réussi ; parcours navigateur réel avec API temporaire sur ordinateur et mobile, achats et amélioration confirmés, sauvegarde après rechargement et contrôle des limites horizontales. Captures inspectées. Aucun changement du serveur, des coûts, des récompenses ou des sauvegardes. La connexion réelle Discord et la production restent hors de ces tests.
+
+## Tarif des pièces communes
+
+Arme, bouclier, ceinture, anneau, bracelet et amulette : **1 000 Gold par pièce**, dans les trois voies. Même prix dans l’Activity et le bot historique. Les menus affichent les tarifs du serveur. Les prix des outils, les coûts en Pouciels, les soldes et les équipements déjà possédés restent inchangés. Aucun remboursement ou prélèvement rétroactif.
+
+Validation : tests Khaz côté serveur, incluant le tarif des trois voies, la concordance des deux catalogues et le débit exact pour les six emplacements ; compilation Python. Aucun code d’interface ni infrastructure modifié.
