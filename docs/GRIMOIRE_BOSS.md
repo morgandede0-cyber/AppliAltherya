@@ -1,6 +1,6 @@
 # Grimoire des techniques et boss de palier
 
-Le menu des techniques est un grimoire ancien, illustré sur fond transparent. Une page par technique : bases, dix champions de l’arène et boss de tour. Statistiques calculées par le serveur, description, limites, origine et condition de déblocage restent consultables pour les techniques scellées. Sommaire, filtres, navigation clavier et retour au lieu d’origine. La lecture défile dans le parchemin sur les petits écrans.
+Le menu des techniques est un livre ancien avec couverture illustrée, ouverture, sommaire en première page et pages numérotées. Le bouton « Techniques équipées » permet de gérer les quatre emplacements. Voir `GRIMOIRE_LIVRE_AUDIT.md` pour le fonctionnement et les vérifications actuels. Une page par technique : bases, dix champions de l’arène et boss de tour. Statistiques calculées par le serveur, description, limites, origine et condition de déblocage restent consultables pour les techniques scellées. Sommaire, filtres, navigation clavier et retour au lieu d’origine. La lecture défile dans le parchemin sur les petits écrans.
 
 Équipement gratuit avec confirmation de l’ancien et du nouveau choix ; l’ancienne technique reste apprise. Le serveur vérifie l’emplacement, l’acquisition, l’absence de combat actif et la révision de l’équipement. Les doubles clics sont bloqués pendant l’envoi.
 

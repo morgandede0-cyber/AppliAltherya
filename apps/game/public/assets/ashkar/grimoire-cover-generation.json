@@ -1,0 +1,7 @@
+{
+  "mode": "built-in image_gen",
+  "asset": "grimoire-cover-v1.png",
+  "reference": "technique-grimoire-v1.png",
+  "transparent_background": true,
+  "prompt": "Use case: stylized-concept. Asset type: production game UI sprite, not a mockup. Create the CLOSED FRONT COVER of the ancient grimoire in the reference image. Reference image role: matching material, binding, silhouette and style. Orthographic front view, portrait 3:4, book fills canvas with very small transparent margin. Same black aged leather, gothic cylindrical spine on LEFT, tarnished brass corners and tiny blue crystals, thick page edges at right. The parchment surface is now entirely replaced by a closed dark midnight blue-black leather cover, richly embossed gilded filigree, central round seal with a fine tower silhouette and subtle icy blue crystal in its center. Leave an unobstructed dark leather area above the central seal for live title text, and an unobstructed lower area for a live opening button. Do not render any text, letters, labels, interface buttons, hands, scenery or table. Exact style of a lavish hand-painted fantasy RPG inventory asset, beautifully weathered, crisp detailed craftsmanship, restrained blue light, no neon. Whole book intact, no crop. Transparent background outside the book."
+}

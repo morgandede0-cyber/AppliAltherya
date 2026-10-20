@@ -52,3 +52,49 @@
 @keyframes grimoire-ink-reveal{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:600px){.grimoire-sheet{gap:8px}.grimoire-collection{font-size:9px;margin-top:6px}.grimoire-title{grid-template-columns:47px minmax(0,1fr);gap:0 9px;padding:12px 10px;margin-bottom:11px}.grimoire-sigil{width:47px}#panel.grimoire-menu .grimoire-title h3{font-size:19px!important}.grimoire-type{font-size:8px;letter-spacing:1px}.grimoire-origin{font-size:9px}.grimoire-title .grimoire-seal{font-size:8px}.grimoire-stat{padding:8px}.grimoire-stats .grimoire-stat dd{font-size:15px}.grimoire-stats .grimoire-stat dt{font-size:9px;letter-spacing:.6px}.grimoire-description{font-size:13px}.grimoire-index .grimoire-index-entry{font-size:11px!important}.grimoire-index-glyph{width:29px;height:29px}#panel.grimoire-menu .grimoire-filters .grimoire-button{padding:6px 10px!important}.grimoire-footer{gap:5px}}
 @media(prefers-reduced-motion:reduce){.grimoire-title{animation:none}#panel.grimoire-menu .grimoire-button{transition:none}}
+
+/* A bound volume: closed cover, contents leaf, numbered pages and loadout. */
+#panel.grimoire-menu{perspective:1500px}
+#panel.grimoire-menu[data-book=cover]{overflow:visible!important}
+.grimoire-cover-content{position:absolute;inset:14% 11% 11% 20%;display:flex;align-items:center;flex-direction:column;text-align:center;color:#e6c48c}
+.grimoire-cover-kicker{font-size:11px;text-transform:uppercase;letter-spacing:3px;margin:5px 0 14px;color:#c5a66d;text-shadow:0 2px 3px #000}
+#panel.grimoire-menu h2.grimoire-cover-title{font:small-caps 600 35px/1.15 Georgia,serif!important;color:#efdbad!important;text-shadow:0 2px 6px #000!important;letter-spacing:2px!important;margin:0!important}
+.grimoire-cover-subtitle{max-width:240px;font:italic 13px/1.6 Georgia,serif;margin:14px 0;color:#cbb78d;text-shadow:0 2px 3px #000}
+.grimoire-cover-actions{margin-top:auto;display:flex;flex-direction:column;gap:9px;width:100%;max-width:280px}
+#panel.grimoire-menu .grimoire-cover-actions .grimoire-button{min-height:40px!important;background:linear-gradient(110deg,#233f47eF,#0c202cef)!important;border-color:#b69156!important;color:#f1d59e!important;font-size:12px!important;box-shadow:0 2px 8px #0009,inset 0 0 0 2px #93774b33!important;text-transform:uppercase;letter-spacing:1px}
+#panel.grimoire-menu .grimoire-cover-actions .grimoire-cover-open{min-height:48px!important;color:#fff1c9!important;border-color:#e4c58c!important}
+.grimoire-footer>.grimoire-button{flex-basis:calc(50% - 7px)}
+.grimoire-reading>.grimoire-filters{margin:10px 0 15px}
+.grimoire-reading:focus-visible{outline:1px solid #94734e;outline-offset:2px}
+.grimoire-loadout{display:grid;gap:10px;margin:12px 0}
+.grimoire-loadout-card{display:grid;grid-template-columns:40px minmax(0,1fr);gap:4px 10px;padding:12px;border:1px solid #927049;background:linear-gradient(135deg,#f3e7caaa,#b38b5922);box-shadow:inset 0 0 0 2px #f1e0b64d}
+.grimoire-loadout-card>img{grid-column:1;grid-row:1 / span 3;width:40px;height:40px;align-self:center}
+.grimoire-loadout-card>*:not(img){grid-column:2}
+#panel.grimoire-menu .grimoire-loadout-card h4{margin:2px 0 5px!important;font-size:14px!important;color:#253d43!important;text-transform:none;letter-spacing:0}
+.grimoire-loadout-card h4:before,.grimoire-loadout-card h4:after{display:none!important}
+.grimoire-loadout-card>p{font-size:12px;line-height:1.5;margin:3px 0 8px}
+#panel.grimoire-menu .grimoire-loadout-card>.grimoire-button{justify-self:start;min-height:35px!important}
+.grimoire-paper-leaf{position:absolute;inset:18% 11% 12% 19%;background:linear-gradient(90deg,#a77f4d,#f4e4be 7%,#e6cea1 90%,#b38a55);box-shadow:8px 0 20px #25180e66;border:1px solid #a5804f;transform-origin:0 50%;pointer-events:none;z-index:5;animation:grimoire-leaf-next .6s ease-in-out both;backface-visibility:hidden}
+.grimoire-paper-leaf[data-direction=previous]{animation-name:grimoire-leaf-previous}
+.grimoire-paper-leaf:after{content:'';position:absolute;inset:8px;border:1px solid #a37e494d}
+.grimoire-leaf-caption{display:block;text-align:center;margin:24px;color:#8d6b44;font:italic 18px Georgia,serif}
+.grimoire-cover-leaf{position:absolute;inset:0;z-index:6;pointer-events:none;transform-origin:10% 50%;animation:grimoire-cover-open .6s ease-in-out both;backface-visibility:hidden}
+.grimoire-cover-leaf>img{width:100%;height:100%;object-fit:fill}
+.grimoire-cover-leaf[data-direction=close]{animation-name:grimoire-cover-close}
+@keyframes grimoire-cover-open{from{transform:rotateY(0)}to{transform:rotateY(-175deg)}}
+@keyframes grimoire-cover-close{from{transform:rotateY(-175deg)}to{transform:rotateY(0)}}
+@keyframes grimoire-leaf-next{0%{transform:rotateY(0);opacity:1}85%{opacity:1}100%{transform:rotateY(-170deg);opacity:0}}
+@keyframes grimoire-leaf-previous{0%{transform:rotateY(-170deg);opacity:0}15%{opacity:1}100%{transform:rotateY(0);opacity:1}}
+@media(max-width:600px){.grimoire-cover-content{inset:15% 11% 12% 20%}#panel.grimoire-menu h2.grimoire-cover-title{font-size:26px!important;letter-spacing:1px!important}.grimoire-cover-kicker{font-size:9px;letter-spacing:1.5px}.grimoire-cover-subtitle{font-size:11px}.grimoire-cover-actions{gap:8px}#panel.grimoire-menu .grimoire-cover-actions .grimoire-button{font-size:10px!important;min-height:38px!important}.grimoire-paper-leaf{inset:17% 10% 11% 18%}.grimoire-loadout-card{padding:10px;grid-template-columns:32px minmax(0,1fr);gap:4px 8px}.grimoire-loadout-card>img{width:32px;height:32px}#panel.grimoire-menu .grimoire-loadout-card h4{font-size:13px!important}}
+@media(prefers-reduced-motion:reduce){.grimoire-cover-leaf,.grimoire-paper-leaf{animation:none!important}}
+/* Keep the book's controls in its own layout, independent of the game's footer. */
+#panel.grimoire-menu .grimoire-heading{position:relative!important;inset:auto!important;width:auto!important;margin:0!important;padding:0 0 5px!important;background:transparent!important;transform:none!important;border-radius:0!important}
+#panel.grimoire-menu .grimoire-footer{position:static!important;inset:auto!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;padding:9px 0 0!important;background:transparent!important;transform:none!important;z-index:auto!important;border-radius:0!important;box-shadow:none!important}
+#panel.grimoire-menu .grimoire-heading{display:block!important;align-self:stretch!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;box-sizing:border-box!important;border:0!important;border-bottom:1px solid #966e3e80!important;text-align:center!important}
+#panel.grimoire-menu .grimoire-footer{min-width:0!important;max-width:none!important;border:0!important;border-top:1px solid #77552d99!important;box-sizing:border-box!important}
+.grimoire-loadout.is-overview{gap:8px}
+.grimoire-loadout.is-overview .grimoire-loadout-card{grid-template-columns:32px minmax(0,1fr) 74px;align-items:center;padding:9px;column-gap:8px;row-gap:1px}
+.grimoire-loadout.is-overview .grimoire-loadout-card>img{width:32px;height:32px;grid-row:1 / span 2}
+.grimoire-loadout.is-overview .grimoire-loadout-card>.grimoire-type{grid-column:2;grid-row:1;font-size:8px;letter-spacing:.7px}
+#panel.grimoire-menu .grimoire-loadout.is-overview .grimoire-loadout-card>h4{grid-column:2;grid-row:2;margin:2px 0!important;font-size:13px!important;line-height:1.25!important}
+#panel.grimoire-menu .grimoire-loadout.is-overview .grimoire-loadout-card>.grimoire-button{grid-column:3;grid-row:1 / span 2;justify-self:stretch;min-height:35px!important;padding:7px 5px!important;font-size:11px!important}
