@@ -21,6 +21,11 @@ class ActivityAdmin:
  def handle(self,actor,body):
   self.require(actor)
   action=body.get('action')
+  if action=='catalogue':return self.a.admin_commands.catalogue()
+  if action=='command_preview':return self.a.admin_commands.preview(actor,body)
+  if action=='command_confirm':return self.a.admin_commands.confirm(actor,body.get('token'))
+  if action=='command_cancel':return self.a.admin_commands.cancel(actor,body.get('token'))
+  if action=='command_history':return self.a.admin_commands.history()
   if action=='list':
    q=body.get('query','');page=body.get('page',0)
    if not isinstance(q,str) or len(q)>80 or type(page) is not int or page<0 or page>100000:raise ValueError('Recherche invalide.')

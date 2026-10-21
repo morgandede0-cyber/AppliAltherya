@@ -2,7 +2,7 @@ import unittest,tempfile,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).parents[1]))
 from activity import Activity
-from tutorial import TUTORIAL_REVISION
+
 USER={'id':'666805849011912705','username':'nom_discord','global_name':'Nom Discord 🦁','avatar':None,'discriminator':'0'}
 class TutorialRevisionTests(unittest.TestCase):
  def setUp(self):

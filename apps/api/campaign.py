@@ -33,7 +33,7 @@ class Campaign:
  def row(self,c,uid):
   c.execute('INSERT OR IGNORE INTO campaign_progress(user_id) VALUES(?)',(uid,));return dict(c.execute('SELECT * FROM campaign_progress WHERE user_id=?',(uid,)).fetchone())
  def _expedition_done(self,c,uid,step,since):
-  return bool(c.execute('SELECT 1 FROM expedition_runs WHERE user_id=? AND expedition_key=? AND claimed=1 AND started_at>=? LIMIT 1',(uid,step['destination'],int(since))).fetchone())
+  return bool(c.execute('SELECT 1 FROM expedition_runs WHERE user_id=? AND expedition_key=? AND claimed=1 AND NOT EXISTS (SELECT 1 FROM activity_admin_cancelled_expeditions x WHERE x.run_id=expedition_runs.run_id) AND started_at>=? LIMIT 1',(uid,step['destination'],int(since))).fetchone())
  def snapshot(self,uid):
   with self.a.conn() as c:
    row=self.row(c,uid);idx=row['quest_index'];payload=json.loads(row['payload']);done=c.execute('SELECT COUNT(*) FROM campaign_receipts WHERE user_id=?',(uid,)).fetchone()[0]
@@ -75,12 +75,15 @@ class Campaign:
    elif action=='campaign_claim':
     if accepted is None or stage!=len(q['steps']):raise ValueError('Terminez tous les objectifs avant de remettre la quête.')
     if now<accepted+q['min_duration']:raise ValueError('La mission est encore en cours. Consultez le délai du journal.')
-    if c.execute('SELECT 1 FROM campaign_receipts WHERE user_id=? AND quest_id=?',(uid,q['id'])).fetchone():raise ValueError('Récompense déjà récupérée.')
+    if c.execute('SELECT 1 FROM campaign_receipts WHERE user_id=? AND quest_id=?',(uid,q['id'])).fetchone():
+     if not payload.get('admin_replay'):raise ValueError('Récompense déjà récupérée.')
+     c.execute('UPDATE campaign_progress SET quest_index=quest_index+1,stage=0,accepted_at=NULL,entered_at=?,revision=revision+1,payload=? WHERE user_id=?',(now,json.dumps({'choices':payload.get('choices',{}),'admin_replay':True}),uid))
+     return 'Quête rejouée : récompense déjà versée, progression restaurée sans nouveau paiement.'
     c.execute('INSERT INTO campaign_receipts VALUES(?,?,?,?,?)',(uid,q['id'],q['gold'],q['xp'],now))
     c.execute('UPDATE players SET wallet_gold=wallet_gold+? WHERE user_id=?',(q['gold'],uid))
     before=c.execute('SELECT xp FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()[0]
     c.execute('UPDATE castle_profiles SET xp=xp+?,quests_completed=quests_completed+1 WHERE user_id=?',(q['xp'],uid));self.a.castle._queue_levelups(c,uid,before,before+q['xp']);self.a.castle._sync_level(c,uid)
-    idx+=1;stage=0;accepted=None;entered=now;payload={'choices':payload.get('choices',{})};message=f"{q['resolution']} +{q['gold']} Gold et +{q['xp']} XP."
+    idx+=1;stage=0;accepted=None;entered=now;payload={**{'choices':payload.get('choices',{})},**({'admin_replay':True} if payload.get('admin_replay') else {})};message=f"{q['resolution']} +{q['gold']} Gold et +{q['xp']} XP."
    else:
     if accepted is None or stage>=len(q['steps']):raise ValueError('Aucun objectif actif.')
     step=q['steps'][stage];kind=step['kind'];advance=False;message=''
@@ -156,6 +159,6 @@ class Campaign:
       else:message='Tour résolu.'
     else:raise ValueError('Action de campagne inconnue.')
     if advance:
-     stage+=1;entered=now;payload={k:v for k,v in payload.items() if k in ('choices','edition')}
+     stage+=1;entered=now;payload={k:v for k,v in payload.items() if k in ('choices','edition','admin_replay')}
    c.execute('UPDATE campaign_progress SET quest_index=?,stage=?,accepted_at=?,entered_at=?,revision=revision+1,payload=? WHERE user_id=?',(idx,stage,accepted,entered,json.dumps(payload,ensure_ascii=False),uid))
    c.commit();return message

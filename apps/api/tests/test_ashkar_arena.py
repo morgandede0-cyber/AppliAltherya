@@ -3,8 +3,8 @@ from pathlib import Path
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).parents[1]));sys.path.insert(0,str(Path(__file__).parent))
 import test_ashkar as harness
-import arena_techniques,arena_combat,ashkar_arena
-from arena_engine import arena_player_skills
+import arena_combat
+
 class SharedTowerTests(unittest.TestCase):
  def boss_win(self):
   with self.a.conn() as c:c.execute('UPDATE ashkar_progress SET max_floor=9 WHERE user_id=?',(self.uid,))

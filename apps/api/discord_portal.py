@@ -141,6 +141,12 @@ class PortalClient(discord.Client):
 
     async def on_ready(self):
         await self.check_portal()
+        if self.validated and not getattr(self,'admin_commands_ready',False):
+            try:
+                from discord_admin_commands import register
+                await register(self);self.admin_commands_ready=True
+            except discord.HTTPException:
+                LOG.warning('Commandes admin non synchronisées : vérifier le scope applications.commands.')
 
     async def check_portal(self):
         if not self.validated:return
@@ -215,6 +221,9 @@ class PortalClient(discord.Client):
                     await interaction.response.send_message('Discord n’a pas pu ouvrir Altherya. Réessayez dans quelques instants.',ephemeral=True,allowed_mentions=discord.AllowedMentions.none())
 
     async def on_interaction(self, interaction):
+        if interaction.type==discord.InteractionType.application_command and interaction.data.get('name')=='altherya-admin':
+            from discord_admin_commands import handle
+            await handle(self,interaction);return
         if interaction.type==discord.InteractionType.application_command and str(interaction.data.get('id'))==self.entry_point_id:
             await self.launch(interaction)
 

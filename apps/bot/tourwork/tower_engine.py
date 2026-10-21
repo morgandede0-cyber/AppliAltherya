@@ -329,7 +329,6 @@ async def render_battle(state: BattleState, avatar_bytes: bytes | None) -> Path:
     img = bg.convert("RGBA")
     draw = ImageDraw.Draw(img)
     f26 = _font(26, True)
-    f22 = _font(22)
     f18 = _font(18)
     f16 = _font(16)
 

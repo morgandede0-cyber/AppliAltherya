@@ -6,7 +6,7 @@ import {openHorseRacing} from './horse-racing';
 import {openSlots} from './slots';
 import {openRoulette} from './roulette';
 import {openBlackjack} from './blackjack';
-import {sizeMenu,watchMenuSize} from './menu-layout';
+import {watchMenuSize} from './menu-layout';
 import {composeBlankGame} from './blank-compose';
 import {chime} from '../audio/sound';
 import {coinImage,gestureImage,diceFrame,reelImage,blankDie,hiddenCardImage,casinoOpponent} from './game-art';

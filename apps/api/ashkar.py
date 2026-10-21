@@ -32,7 +32,8 @@ class Ashkar:
  def snapshot(self,uid):
   with self.a.conn() as c:
    r=self.row(c,uid);p=json.loads(r['payload']);floor=c.execute('SELECT max_floor FROM ashkar_progress WHERE user_id=?',(uid,)).fetchone()[0];cleared=c.execute('SELECT cleared FROM ashkar_daily WHERE user_id=? AND day=?',(uid,today())).fetchone()[0];level=level_from_xp(c.execute('SELECT xp FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()[0])[0];busy=self.elsewhere(c,uid)
-   reason='Niveau 5 requis' if level<5 else 'Les dix étages sont terminés' if floor>=10 else 'Trois étages validés aujourd’hui' if cleared>=3 else 'Terminez votre autre partie ou combat' if busy else 'Reprenez votre combat en cours' if p.get('status')=='active' else ''
+   paid_next=c.execute('SELECT 1 FROM activity_ashkar_receipts WHERE user_id=? AND floor=?',(uid,floor+1)).fetchone()
+   reason='Niveau 5 requis' if level<5 else 'Les dix étages sont terminés' if floor>=10 else 'Trois étages validés aujourd’hui' if cleared>=3 and not paid_next else 'Terminez votre autre partie ou combat' if busy else 'Reprenez votre combat en cours' if p.get('status')=='active' else ''
    battle=None
    if p.get('battle'):
     b=p['battle'];battle={k:b[k] for k in ('floor','player_name','player_level','player_hp','player_max_hp','enemy_hp','enemy_max_hp','ultimate_cd','enemy_enraged')}
@@ -50,11 +51,12 @@ class Ashkar:
     if p.get('status')=='active':raise ValueError('Reprenez votre combat en cours.')
     requested=body.get('floor')
     if type(requested) is not int or not 1<=requested<=10 or requested>floor:raise ValueError('Cet étage est verrouillé.')
-    replay=requested<floor;floor=requested
+    paid=c.execute('SELECT 1 FROM activity_ashkar_receipts WHERE user_id=? AND floor=?',(uid,requested)).fetchone()
+    restore_progress=bool(paid and requested==floor);replay=requested<floor or bool(paid);floor=requested
     if not replay and c.execute('SELECT cleared FROM ashkar_daily WHERE user_id=? AND day=?',(uid,today())).fetchone()[0]>=3:raise ValueError('Vous avez validé trois étages aujourd’hui.')
     if self.elsewhere(c,uid):raise ValueError('Terminez votre autre partie ou combat avant d’entrer.')
     name=c.execute('SELECT name FROM activity_sessions WHERE user_id=?',(uid,)).fetchone()[0];skills=arena_techniques.book(c,uid,level,0)['skills']
-    p=ashkar_arena.create(uid,name,level,self.a.khaz.bonuses_in(c,uid),floor,skills);p['replay']=replay;message='Vous affrontez '+FLOORS[floor]['name']+'.'
+    p=ashkar_arena.create(uid,name,level,self.a.khaz.bonuses_in(c,uid),floor,skills);p['replay']=replay;p['restore_progress']=restore_progress;message='Vous affrontez '+FLOORS[floor]['name']+'.'
    else:
     if p.get('status')!='active':raise ValueError('Aucun combat de tour en cours.')
     key=body.get('key')
@@ -69,6 +71,7 @@ class Ashkar:
       if current!=floor-1:raise ValueError('Cet étage a déjà été validé.')
       if not c.execute('UPDATE ashkar_daily SET cleared=cleared+1 WHERE user_id=? AND day=? AND cleared<3',(uid,today())).rowcount:raise ValueError('Limite quotidienne atteinte.')
       c.execute('INSERT INTO activity_ashkar_receipts VALUES(?,?,?,?,?,?)',(uid,floor,e['gold'],xp,e['pouciel'],time.time()));c.execute('UPDATE ashkar_progress SET max_floor=? WHERE user_id=?',(floor,uid));c.execute('UPDATE players SET wallet_gold=wallet_gold+? WHERE user_id=?',(e['gold'],uid));c.execute('UPDATE legacy_wallet SET pouciel=pouciel+? WHERE user_id=?',(e['pouciel'],uid));self.a.castle.add_xp(uid,xp);self.a.castle.record(uid,'tower_clear',1)
+     if replay and p.get('restore_progress') and current==floor-1:c.execute('UPDATE ashkar_progress SET max_floor=? WHERE user_id=?',(floor,uid));current=floor
      technique=arena_techniques.grant_tower(c,uid,floor);p['status']='won';p['result']=dict(won=True,gold=0 if replay else e['gold'],xp=0 if replay else xp,pouciel=0 if replay else e['pouciel'],floor=floor,replay=replay,technique_unlocked=technique);ashkar_arena.report(p,p['result'],current if replay else floor);message='Victoire !'+(' Technique dérobée : '+technique['name'] if technique else '')
     elif lost:
      p['status']='lost';p['result']=dict(won=False,abandoned=key=='abandon',gold=0,xp=0,pouciel=0,floor=floor);ashkar_arena.report(p,p['result'],c.execute('SELECT max_floor FROM ashkar_progress WHERE user_id=?',(uid,)).fetchone()[0]);message='Repli.' if key=='abandon' else 'Défaite. Vos étages acquis sont conservés.'

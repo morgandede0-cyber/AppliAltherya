@@ -1,4 +1,4 @@
-import os,sqlite3,unittest,tempfile,sys
+import os, unittest, tempfile, sys
 from pathlib import Path
 from unittest.mock import patch
 from concurrent.futures import ThreadPoolExecutor

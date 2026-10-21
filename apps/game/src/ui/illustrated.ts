@@ -13,7 +13,6 @@ import type {Snapshot} from '../activity';
 import {withdrawalQuote,validAmount,pageSlice} from './service-model';
 import {timeLabel} from './game-model';
 import './illustrated.css';
-import {itemArt} from './item-art';
 import {equipmentArt} from './catalog-art';
 import {assetSlice} from './menu-kit';
 type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;close:()=>void;route:(key:string)=>void;refresh:()=>Promise<void>};
@@ -22,7 +21,7 @@ export function openIllustrated(panel:HTMLElement,initial:string,host:Host,locat
  if(initial==='arena')return openArenaLobby(panel,host);
  if(initial==='bank')return openBankMenu(panel,host);
  if(['combat','techniques','arena-result'].includes(initial))return openArenaCombat(panel,host,initial==='techniques',initial==='arena-result');
- let kind=initial,selected='beer',amount=Math.min(100,host.state().balance.wallet),withdraw=Math.min(100,host.state().balance.bank),page=0,tool='axe',tier=1,destination='',wager=Math.min(10,host.state().balance.wallet),choice:string|number='red',number=0,locked=false,notice='',destroyed=false,animationUntil=0,animationStarted=0,rotation=0,spinRevision=-1,dialog='',offset=host.state().server_now*1000-Date.now();
+ let kind=initial,selected='beer',amount=Math.min(100,host.state().balance.wallet),withdraw=Math.min(100,host.state().balance.bank),page=0,tool='axe',tier=1,destination='',wager=Math.min(10,host.state().balance.wallet),number=0,locked=false,notice='',destroyed=false,animationUntil=0,animationStarted=0,dialog='',offset=host.state().server_now*1000-Date.now();
  const el=(tag:string,text='',cls='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};let stage:HTMLElement,dock:HTMLElement;let live:ReturnType<typeof openLiveGame>|undefined,liveKind='';
  const box=(x:number,y:number,w:number,h:number,text='',cls='art-mask')=>{const n=el('div',text,'art-overlay '+cls);Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});if(cls.includes('art-mask')||cls==='bank-amount')materialField(n,kind,cls.includes('job-rarity')?'seal':cls==='bank-amount'||cls.includes('art-blue')?'blue':cls.includes('art-paper')?'paper':cls.includes('art-wood')||kind==='bank'||kind==='tools'||kind==='destinations'?'wood':'blue');stage.append(n);return n;};
  const button=(label:string,fn:()=>void,disabled=false)=>{const n=el('button',label,'art-button') as HTMLButtonElement;n.disabled=disabled||locked||Date.now()<animationUntil;n.onclick=fn;decorateButton(n,label);return n;};
@@ -55,10 +54,10 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
    castle:{title:'Château de IV',items:[['Tableau de bord',()=>route('dashboard')],['Podium',()=>route('podium')],[s.daily_available?'Récompense quotidienne':'Déjà récupérée',()=>void run({action:'daily'}),!s.daily_available],['Retour en ville',()=>route('hub')]]},
    alley:{title:'Ruelle sombre',items:[['Le voleur',()=>route('thief')],['Le braqueur',()=>route('robber')],['Le vigile',()=>route('guard')],['Panneau de la ruelle',()=>{dialog='record';draw();}],['Retour en ville',()=>route('hub')]]},
    arena:{title:'Arène de IV',items:[['Affronter le champion',()=>{if(p.kind==='combat'&&p.status==='active')change('combat');else{dialog='champion';draw();}},s.arena.remaining>0&&!(p.kind==='combat'&&p.status==='active')],['Affronter un ami',()=>{},true],['Retour en ville',()=>route('hub')]]},
-   games:{title:'Les jeux de la taverne',items:[['Lancer de dés',()=>{choice='red';change('dice');}],['Pile ou face',()=>{choice='pile';change('coin');}],['Pierre feuille ciseaux',()=>{choice='rock';change('rps');}],['Retour à la taverne',()=>route('tavern')]]},
+   games:{title:'Les jeux de la taverne',items:[['Lancer de dés',()=>{change('dice');}],['Pile ou face',()=>{change('coin');}],['Pierre feuille ciseaux',()=>{change('rps');}],['Retour à la taverne',()=>route('tavern')]]},
    thief:{title:'Le voleur',items:[['Petit larcin',()=>void run({action:'larceny'}),s.alley.larceny_remaining>0||s.alley.ban_remaining>0],['Voler un PNJ',()=>{dialog='npc';draw();},s.alley.ban_remaining>0],['Voler un joueur',()=>{},true],['Commettre un crime',()=>void run({action:'crime'}),s.alley.ban_remaining>0],['Retour à la ruelle',()=>route('alley')]]},
    expedition:{title:'Préparer une expédition',items:[...(['axe','pickaxe','spear'] as const).map((key):[string,()=>void]=>[key==='axe'?'Bûcheron':key==='pickaxe'?'Mineur':'Chasseur',()=>{tool=key;tier=s.gear[key+'_level']||1;change('tools');}]),['Cueillette',()=>{tool='hands';destination='elarwyn_foraging';change('departure');}],['Retour au monde',()=>route('world')]]},
-   casino:{title:'Salle clandestine',items:[...(['blackjack','roulette','russian','slots','horses'] as const).map((k,i):[string,()=>void,boolean]=>[['Black Jack','Roulette','Roulette russe','Machine à sous','Courses'][i],()=>{choice=k==='horses'?0:'red';change(k);},!s.alley.access.valid]),['Quitter la salle',()=>route('guard')]]}
+   casino:{title:'Salle clandestine',items:[...(['blackjack','roulette','russian','slots','horses'] as const).map((k,i):[string,()=>void,boolean]=>[['Black Jack','Roulette','Roulette russe','Machine à sous','Courses'][i],()=>{change(k);},!s.alley.access.valid]),['Quitter la salle',()=>route('guard')]]}
   };
   if(navigation[kind]){
    const nav=navigation[kind];stage.setAttribute('aria-label',nav.title);

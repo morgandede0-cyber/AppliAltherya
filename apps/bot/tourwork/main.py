@@ -17,11 +17,7 @@ DATA = BASE / "data"
 # Ne jamais déclencher automatiquement l'ancien wipe bêta.
 from official_launch_reset import run_if_requested
 OFFICIAL_RESET_PERFORMED = run_if_requested(DATA)
-from shared_economy import (
-    migrate_legacy_wallets, pending_events, mark_event_processed,
-    enabled as shared_economy_enabled, diagnostics as shared_economy_diagnostics,
-    recover_known_legacy_wallet,
-)
+from shared_economy import migrate_legacy_wallets, pending_events, mark_event_processed, enabled as shared_economy_enabled, diagnostics as shared_economy_diagnostics
 MIGRATED_GOLD_PLAYERS = migrate_legacy_wallets(DATA / "legacy.sqlite3")
 # Recovery unique du solde Altherya historique constaté avant le passage au wallet partagé.
 RECOVERED_LEGACY_WALLET = False  # BETA V1: aucun ancien solde ne doit être réinjecté
@@ -30,22 +26,21 @@ import discord
 from discord.ext import commands, tasks
 from discord import app_commands
 from economy import Economy
-from arena_engine import ArenaStore, BattleState, Fighter, CLASSES, CHAMPION_PROFILES, class_line, choose_first, resolve_action, bot_choose_action, ARENA_PLAYER_SKILLS
-from expedition_engine import ExpeditionStore, EXPEDITIONS, LOCATION_META, TOOL_META, TOOL_LEVELS, BAG_LEVELS, UPGRADE_RECIPES, BAG_UPGRADE_RECIPES, STARTER_GEAR, RESOURCE_SELL_PRICES, EXPEDITION_OBJECTS, LOOT_TABLES, RARITY, RARITY_EMOJI, format_duration, loot_lines
-from dark_alley import (DarkAlleyStore, HEIST_ATTEMPTS, HEIST_CODE_LENGTH, GUARD_ENTRY_FEE,
-                        INVITATION_ITEM, ACTION_COOLDOWN, ALLEY_BAN_SECONDS, short_time)
+from arena_engine import ArenaStore, BattleState, Fighter, CLASSES, CHAMPION_PROFILES, choose_first, resolve_action, bot_choose_action
+from expedition_engine import ExpeditionStore, EXPEDITIONS, LOCATION_META, TOOL_META, TOOL_LEVELS, BAG_LEVELS, UPGRADE_RECIPES, BAG_UPGRADE_RECIPES, STARTER_GEAR, RESOURCE_SELL_PRICES, LOOT_TABLES, RARITY, RARITY_EMOJI, format_duration
+from dark_alley import DarkAlleyStore, HEIST_ATTEMPTS, HEIST_CODE_LENGTH, GUARD_ENTRY_FEE, INVITATION_ITEM, short_time
 from casino_engine import (CasinoStore, MAX_BET, VIP_MAX_BET, MIN_BET, SLOT_SYMBOLS, draw_slot, slot_multiplier, roulette_spin)
 from casino_render import render_blackjack, render_roulette_strip, render_slot_machine, render_horse_race, EUROPEAN_WHEEL
-from castle_engine import CastleStore, DAILY_REWARD, DAILY_XP, QUESTS, QUEST_GLOBAL_GOLD, QUEST_GLOBAL_XP, level_from_xp
+from castle_engine import CastleStore, DAILY_REWARD, DAILY_XP, level_from_xp
 from secure_random import random
-from progression import FORGE_LEVEL_REQUIREMENTS, FORGE_GOLD_COSTS, XP_REWARDS, EXPEDITION_XP, EXPEDITION_TIER_XP, JOB_RARITY_XP
+from progression import FORGE_LEVEL_REQUIREMENTS, FORGE_GOLD_COSTS, XP_REWARDS, EXPEDITION_TIER_XP, JOB_RARITY_XP
 from achievements import AchievementStore, ACHIEVEMENTS, RARITIES
-from admin_engine import AdminStore, EVENTS
+from admin_engine import AdminStore
 from tavern_engine import TavernGameStore, MIN_TAVERN_BET, MAX_TAVERN_BET, TAVERN_ROUND_COST, roll_die, flip_coin, rps_bot, rps_result
 from tavern_render import render_dice, render_coin, render_rps
-from story_engine import StoryStore, SEASON_1_CHAPTERS, SEASON_1_TITLES, SEASON_1_TEXTS, STORY_REQUIREMENTS, ALL_STORY_ITEMS, STORY_ITEM_PRICES
+from story_engine import StoryStore, SEASON_1_CHAPTERS, SEASON_1_TITLES, SEASON_1_TEXTS, STORY_REQUIREMENTS, STORY_ITEM_PRICES
 from gazette_engine import GazetteStore
-from expedition_render import render_expedition_live_card
+
 from job_board_engine import JobBoardStore, RARITIES as JOB_RARITIES
 import legacy_world_forge as WORLD_FORGE
 import tower_engine as TOWER
@@ -432,106 +427,7 @@ async def announce_gold_activity(guild: discord.Guild | None, user, delta: int, 
     except (discord.NotFound, discord.Forbidden, discord.HTTPException, ValueError, TypeError):
         pass
 
-class WorldHubView(discord.ui.View):
-    """Carte du monde. Le premier clic public crée UNE session privée, puis elle s'auto-actualise."""
-    def __init__(self, private_session: bool = False):
-        super().__init__(timeout=None if not private_session else 1800)
-        self.private_session = bool(private_session)
-        legacy_btn = discord.ui.Button(label="Altherya", emoji="👑", style=discord.ButtonStyle.primary, custom_id="legacy:world:city", row=0)
-        forge_btn = discord.ui.Button(label="La Forge de KHAZ'GORAM", emoji="⚒️", style=discord.ButtonStyle.secondary, custom_id="legacy:world:khaz", row=0)
-        tower_btn = discord.ui.Button(label="La Tour d’Ashkar", emoji="🗼", style=discord.ButtonStyle.danger, custom_id="legacy:world:ashkar", row=0)
-        forest_btn = discord.ui.Button(label="Forêt d'Elarwyn", emoji="🌲", style=discord.ButtonStyle.success, custom_id="altherya:world:elarwyn", row=1)
-        mountain_btn = discord.ui.Button(label="Mont Vorak", emoji="🏔️", style=discord.ButtonStyle.secondary, custom_id="altherya:world:vorak", row=1)
 
-        async def legacy_cb(interaction: discord.Interaction):
-            file = discord.File(PLACES / "hub.png", filename="legacy.png")
-            if self.private_session:
-                await interaction.response.edit_message(
-                    content="🏙️ **Altherya**\nBienvenue dans la cité. Choisis ta destination.",
-                    attachments=[file], embeds=[], view=HubView(private_session=True)
-                )
-            else:
-                await interaction.response.send_message(
-                    content="🏙️ **Altherya**\nBienvenue dans la cité. Choisis ta destination.",
-                    file=file, view=HubView(private_session=True), ephemeral=True
-                )
-
-        async def forge_cb(interaction: discord.Interaction):
-            level = CASTLE_STORE.current_level(interaction.user.id)
-            if level < 3:
-                text = f"🔒 **La Forge de KHAZ'GORAM** se débloque au **niveau 3**.\nTon niveau actuel : **{level}**."
-                if self.private_session:
-                    await interaction.response.edit_message(content=text, attachments=[], embeds=[], view=WorldHubView(private_session=True))
-                else:
-                    await interaction.response.send_message(text, ephemeral=True)
-                return
-            file = discord.File(WORLD_FORGE.KHAZ_GORAM, filename="khaz_goram.png")
-            embed = discord.Embed(
-                title="⚒️ La Forge de KHAZ'GORAM",
-                description="Une forge gigantesque, perdue loin de Altherya. **Thorgar** y façonne les équipements des légendes.",
-                color=0xB67A2A,
-            )
-            embed.set_image(url="attachment://khaz_goram.png")
-            if self.private_session:
-                await interaction.response.edit_message(content=None, embed=embed, attachments=[file], view=WORLD_FORGE.KhazGoramView())
-            else:
-                await interaction.response.send_message(embed=embed, file=file, view=WORLD_FORGE.KhazGoramView(), ephemeral=True)
-
-        async def tower_cb(interaction: discord.Interaction):
-            await TOWER.show_lobby(interaction, edit=self.private_session)
-
-        async def forest_cb(interaction: discord.Interaction):
-            await open_exploration_location(interaction, "elarwyn", edit=self.private_session)
-
-        async def mountain_cb(interaction: discord.Interaction):
-            await open_exploration_location(interaction, "vorak", edit=self.private_session)
-
-        legacy_btn.callback = legacy_cb
-        forge_btn.callback = forge_cb
-        tower_btn.callback = tower_cb
-        forest_btn.callback = forest_cb
-        mountain_btn.callback = mountain_cb
-        self.add_item(legacy_btn); self.add_item(forge_btn); self.add_item(tower_btn)
-        self.add_item(forest_btn); self.add_item(mountain_btn)
-
-class HubView(discord.ui.View):
-    def __init__(self, private_session: bool = False):
-        super().__init__(timeout=None if not private_session else 1800)
-        self.private_session = bool(private_session)
-        for key, data in DESTINATIONS.items():
-            button = discord.ui.Button(
-                label=data["label"], emoji=data["emoji"],
-                style=discord.ButtonStyle.secondary,
-                custom_id=f"legacy:hub:{key}"
-            )
-            async def callback(interaction: discord.Interaction, destination=key):
-                await travel(interaction, destination, edit=self.private_session)
-            button.callback = callback
-            self.add_item(button)
-
-        board = discord.ui.Button(label="Panneau central", emoji="📋", style=discord.ButtonStyle.primary,
-                                  custom_id="legacy:hub:central_board")
-        async def board_cb(interaction: discord.Interaction):
-            # Public -> crée la session privée. Privé -> réutilise exactement la même fenêtre.
-            if self.private_session:
-                await safe_defer(interaction)
-                await show_central_board(interaction)
-            else:
-                await interaction.response.send_message("📋 **Tu consultes le panneau central...**", ephemeral=True)
-                await show_central_board(interaction)
-        board.callback = board_cb
-        self.add_item(board)
-        world = discord.ui.Button(label="Monde", emoji="🌍", style=discord.ButtonStyle.secondary, custom_id="legacy:hub:world")
-        async def world_cb(interaction: discord.Interaction):
-            file = discord.File(WORLD_FORGE.WORLD_MAP, filename="elyndor_map.png")
-            embed = discord.Embed(title="🌍 Le Monde d\'Elyndor", description="Le brouillard recouvre les destinations encore inconnues. **Altherya** et **KHAZ\'GORAM** sont accessibles.", color=0xB67A2A)
-            embed.set_image(url="attachment://elyndor_map.png")
-            if self.private_session:
-                await interaction.response.edit_message(content=None, embed=embed, attachments=[file], view=WorldHubView(private_session=True))
-            else:
-                await interaction.response.send_message(embed=embed, file=file, view=WorldHubView(private_session=True), ephemeral=True)
-        world.callback = world_cb
-        self.add_item(world)
 
 
 # ============================================================
@@ -1541,37 +1437,13 @@ class TavernDrinkSelect(discord.ui.Select):
                 await announce_achievement(interaction, str(event["achievement"]))
             if event.get("legendary"):
                 await announce_public_result(interaction.guild, interaction.user, "🍺 Une soirée dont Altherya se souviendra...",
-                                             f"vient de provoquer un événement d'ivresse **extrêmement rare** à la Taverne. Les détails restent entre lui et le Tavernier.", color=discord.Color.dark_gold())
+                                             "vient de provoquer un événement d'ivresse **extrêmement rare** à la Taverne. Les détails restent entre lui et le Tavernier.", color=discord.Color.dark_gold())
         drink_line = f"{emoji} Tu bois un verre de **{label}**.\n🍻 Réputation : **{rep['label']}** • **{rep['drinks']} verre(s)**\n🥴 État : **{rep.get('drunk_state','Sobre')}**" + extra
         if event and event.get("id") == "horse_judges":
             await show_horse_wakeup(interaction, drink_line)
             return
         await interaction_reply(interaction, drink_line + event_text, ephemeral=True)
 
-class TavernDrinksView(discord.ui.View):
-    def __init__(self, user_id: int | None = None):
-        super().__init__(timeout=None)
-        self.add_item(TavernDrinkSelect(user_id))
-
-        back = discord.ui.Button(
-            label="Retour au comptoir",
-            emoji="↩️",
-            style=discord.ButtonStyle.secondary,
-            custom_id="legacy:tavern:bar:drink:back"
-        )
-
-        async def back_cb(interaction: discord.Interaction):
-            await safe_defer(interaction)
-            await edit_with_asset(
-                interaction,
-                PLACES / "tavern_barman.png",
-                "barman.png",
-                TavernBarView(),
-                "🍺 **Le comptoir de Altherya**\n" + tavern_reputation_content(interaction.user.id)
-            )
-
-        back.callback = back_cb
-        self.add_item(back)
 
 class TavernGamesView(discord.ui.View):
     def __init__(self):
@@ -1633,10 +1505,6 @@ class TavernFriendSelect(discord.ui.UserSelect):
         await interaction.response.send_modal(TavernFriendBetModal(self.game_type, target.id))
 
 
-class TavernFriendSelectView(discord.ui.View):
-    def __init__(self, owner_id: int, game_type: str):
-        super().__init__(timeout=90)
-        self.add_item(TavernFriendSelect(owner_id, game_type))
 
 
 class TavernFriendBetModal(discord.ui.Modal):
@@ -1797,8 +1665,7 @@ async def play_tavern_dice_pvp(guild: discord.Guild, message: discord.Message, s
         await asyncio.sleep(.7)
         a = (roll_die(), roll_die()); b = (roll_die(), roll_die())
     winner = challenger if sum(a) > sum(b) else opponent
-    loser = opponent if winner.id == challenger.id else challenger
-    result = await settle_tavern_pvp(guild, session_id, winner.id, "Lancer de dés")
+    await settle_tavern_pvp(guild, session_id, winner.id, "Lancer de dés")
     status = f"🏆 {winner.display_name} remporte le pot de {wager*2} Gold !"
     render_dice(path, wager, a, b, status, left_label=left, right_label=right)
     await _edit_public_game(message, path, "des_duel.png",
@@ -2627,13 +2494,6 @@ class MarketSellSelect(discord.ui.Select):
         await interaction.response.send_modal(ResourceSellModal(self.owner_id,self.values[0]))
 
 
-class MarketSellView(discord.ui.View):
-    def __init__(self,owner_id:int):
-        super().__init__(timeout=300); self.owner_id=int(owner_id); self.add_item(MarketSellSelect(owner_id))
-        back=discord.ui.Button(label="Retour au marché",emoji="↩️",style=discord.ButtonStyle.secondary,row=1)
-        async def cb(i):
-            await safe_defer(i); await edit_with_asset(i,PLACES/"market.png","marche.png",MarketView(),"🛒 **Marché de Altherya**\nQue veux-tu faire ?" + npc_alcohol_reaction(i.user.id, "marchand"))
-        back.callback=cb; self.add_item(back)
 
 
 def market_sell_content(user_id:int)->str:
@@ -2874,18 +2734,6 @@ class ArenaFriendUserSelect(discord.ui.UserSelect):
         await interaction.response.send_modal(ArenaWagerModal("friend", self.owner_id, target.id))
 
 
-class ArenaFriendSelectView(discord.ui.View):
-    def __init__(self, owner_id: int):
-        super().__init__(timeout=300)
-        self.add_item(ArenaFriendUserSelect(owner_id))
-        back = discord.ui.Button(label="Retour à l'arène", emoji="↩️", style=discord.ButtonStyle.secondary)
-        async def back_cb(interaction: discord.Interaction):
-            if interaction.user.id != owner_id:
-                await interaction.response.send_message("Cette sélection appartient à un autre joueur.", ephemeral=True); return
-            await safe_defer(interaction)
-            await edit_with_asset(interaction, PLACES / "arena.png", "arene.png", ArenaView(), arena_home_content(interaction.user.id))
-        back.callback = back_cb
-        self.add_item(back)
 
 
 class ArenaWagerModal(discord.ui.Modal, title="Mise de l'Arène"):
@@ -3008,7 +2856,6 @@ class FriendLobbyView(discord.ui.View):
 
 def friend_lobby_content(v: FriendLobbyView) -> str:
     def status(uid):
-        ck=v.classes.get(uid)
         cls="⚔️ Combattant"
         rd="✅ PRÊT" if uid in v.ready else "⏳ Pas prêt"
         return f"<@{uid}> — {cls} — {rd}"
@@ -3297,7 +3144,7 @@ def forge_carousel_embed(user_id:int,index:int=0,notice:str|None=None)->discord.
             title=f"{emoji}  {label}",
             description=(
                 "*Équipement de forge*\n\n"
-                f"🔒 **Cet équipement n'est pas encore possédé.**\n"
+                "🔒 **Cet équipement n'est pas encore possédé.**\n"
                 "Achète d'abord sa version niveau 1 au Marché pour pouvoir l'améliorer."
             ),
             color=discord.Color.dark_grey(),
@@ -4165,7 +4012,6 @@ async def _get_expedition_status_message(run):
 
 async def finalize_expedition_run(run_id: str) -> bool:
     """Finalise une fois, crédite l'inventaire et les récompenses de progression."""
-    before = EXPEDITION_STORE.run_by_id(run_id)
     ok, _, loot, final_run = EXPEDITION_STORE.finalize_run(run_id)
     if not ok or final_run is None:
         return False
@@ -4299,7 +4145,6 @@ def robber_content(user_id: int) -> str:
 def guard_content(user_id: int) -> str:
     invitations = DARK_STORE.invitation_count(user_id)
     loyalty = CASINO_STORE.loyalty(user_id)
-    max_bet = VIP_MAX_BET if loyalty.get("vip") else MAX_BET
     return (
         "🐻 **Le Vigile**\n"
         "La salle de jeux clandestine est derrière lui.\n\n"
@@ -4754,7 +4599,7 @@ class GuardView(discord.ui.View):
             if not CASINO_STORE.loyalty(interaction.user.id)["vip"]:
                 await interaction.response.send_message("👑 Le Vigile ne te reconnaît pas encore comme VIP.", ephemeral=True)
                 return
-            result = DARK_STORE.enter_clandestine_room(interaction.user.id, False)
+            DARK_STORE.enter_clandestine_room(interaction.user.id, False)
             await safe_defer(interaction)
             await edit_with_asset(interaction, PLACES/"casino_room.png", "casino.png", CasinoMainView(),
                                   "👑 **Le Vigile te reconnaît et s'écarte. Entrée VIP gratuite.**\n\n" + casino_home_content(interaction.user.id))
@@ -6405,9 +6250,6 @@ class AdminAchievementSelect(discord.ui.Select):
                 await announce_player_log(i.guild, m, f"Succès retiré par {i.user.display_name}: {ach.title}", category="Administration")
             await i.response.send_message(("✅ Succès supprimé" if changed else "ℹ️ Ce succès n'était pas débloqué")+f" : **{ach.title}**.",ephemeral=True)
 
-class AdminAchievementView(discord.ui.View):
-    def __init__(self,target_id:int,mode:str):
-        super().__init__(timeout=180); self.add_item(AdminAchievementSelect(target_id,mode))
 
 class ResourceAdminModal(discord.ui.Modal):
     def __init__(self,target_id:int,mode:str):
@@ -6480,8 +6322,6 @@ class AdminTargetSelect(discord.ui.UserSelect):
         else: view=AdminItemView(tid); text=f"🎒 Gestion des items de {target.mention}"
         await i.response.edit_message(content=text,embed=None,view=view)
 
-class AdminTargetView(discord.ui.View):
-    def __init__(self,action:str): super().__init__(timeout=180); self.add_item(AdminTargetSelect(action))
 
 class AdminEventsView(discord.ui.View):
     def __init__(self):
@@ -6562,10 +6402,6 @@ class AdminAccessSelect(discord.ui.UserSelect):
         await announce_player_log(i.guild, target, f"Accès /admin {'accordé' if self.mode == 'grant' else 'retiré'} par {i.user.display_name}", category="Administration")
         await i.response.edit_message(content=text, view=AdminAccessView())
 
-class AdminAccessPickView(discord.ui.View):
-    def __init__(self, mode: str):
-        super().__init__(timeout=180)
-        self.add_item(AdminAccessSelect(mode))
 
 class AdminAccessView(discord.ui.View):
     def __init__(self):
@@ -7176,7 +7012,7 @@ async def succes(interaction: discord.Interaction):
         return
     ACHIEVEMENT_STORE.set_channel(interaction.guild.id, interaction.channel.id)
     await interaction.response.send_message(
-        f"✅ Ce salon devient le **salon officiel des succès et des résultats de jeux** de Altherya.",
+        "✅ Ce salon devient le **salon officiel des succès et des résultats de jeux** de Altherya.",
         ephemeral=True,
     )
     await interaction.channel.send(embed=achievements_setup_embed())

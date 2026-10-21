@@ -33,7 +33,7 @@ const woodSamples:Record<string,[string,number,number,number,number]>={
  forge:['forge',321,644,228,36],merchant:['forge',321,644,228,36],bank:['bank',355,365,108,6],robber:['robber',404,708,90,13]
 };
 export function materialTexture(kind:string,tone:'wood'|'blue'|'paper'|'seal',width=400,height=160){
- const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),defs=document.createElementNS(ns,'defs'),pattern=document.createElementNS(ns,'pattern'),im=document.createElementNS(ns,'image'),rect=document.createElementNS(ns,'rect');
+ const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),defs=document.createElementNS(ns,'defs'),pattern=document.createElementNS(ns,'pattern'),rect=document.createElementNS(ns,'rect');
  let sample:[string,number,number,number,number]=tone==='seal'?['jobs',...((kind==='seal:rare'?[861,263,38,8]:kind==='seal:uncommon'?[184,546,38,8]:kind==='seal:epic'||kind==='seal:legendary'?[861,546,38,8]:[184,263,38,8]) as [number,number,number,number])]:tone==='wood'?(woodSamples[kind]??woodSamples.tools):tone==='paper'?kind==='departure'?['departure',1090,500,95,18]:kind==='guard'?['guard',925,505,380,8]:kind==='robber'?['robber',960,609,305,7]:['jobs',465,345,150,5]:['podium',722,324,94,60];
  const [file,x,y,w,h]=sample,id='native-material-'+(++materialId);svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
  pattern.id=id;pattern.setAttribute('patternUnits','userSpaceOnUse');pattern.setAttribute('width',String(w*2));pattern.setAttribute('height',String(h*2));

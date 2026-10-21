@@ -1,0 +1,967 @@
+{
+  "apps/game/src/combat/engine.ts": {
+    "reason": "Ancien prototype/composant absent du graphe de dépendances de main.ts",
+    "bytes": 1636,
+    "sha256": "28f7b1042f2a1241709749500866a74a4039a2dcaba59da4d99dcfa975d040ae"
+  },
+  "apps/game/src/core/canvas.ts": {
+    "reason": "Ancien prototype/composant absent du graphe de dépendances de main.ts",
+    "bytes": 4518,
+    "sha256": "ef917ad2339890844e6fd47d4a866d1c07c020c3189331321297bb17e39a5e79"
+  },
+  "apps/game/src/data/rules.ts": {
+    "reason": "Ancien prototype/composant absent du graphe de dépendances de main.ts",
+    "bytes": 2815,
+    "sha256": "4bc743fa8a5cdde151e42142f27f46b969fc1e09ff51ea3dd6c316881f300616"
+  },
+  "apps/game/src/save/storage.ts": {
+    "reason": "Ancien prototype/composant absent du graphe de dépendances de main.ts",
+    "bytes": 948,
+    "sha256": "362b0d36ba4ab0bccd59df00131818fc7d8564c1a4a4837ec0c07a2e55b05401"
+  },
+  "apps/game/src/world/map.ts": {
+    "reason": "Ancien prototype/composant absent du graphe de dépendances de main.ts",
+    "bytes": 1902,
+    "sha256": "c1d1eb7f2f302edbc19d85b5c590a8eb6721d1caea95dba017fe5106a0767e8a"
+  },
+  "apps/game/src/ui/native-games.ts": {
+    "reason": "Ancien prototype/composant absent du graphe de dépendances de main.ts",
+    "bytes": 8157,
+    "sha256": "9ce8e7b825a73b59c4b6bf1465f46aa628c13d4bc843df196ecb5d7c6916ae3f"
+  },
+  "apps/game/src/ui/bank-menu.css": {
+    "reason": "Ancien prototype/composant absent du graphe de dépendances de main.ts",
+    "bytes": 5246,
+    "sha256": "dcd3e2dc07bcded8f81a34401d80c7e3cb664f0556879697ccc8876b5a3929c6"
+  },
+  "apps/game/src/ui/commerce-clean.css": {
+    "reason": "Ancien prototype/composant absent du graphe de dépendances de main.ts",
+    "bytes": 7052,
+    "sha256": "26cdcc3c324041b84732bc7fb184575b002b0dc331f4731751e84ec1ae9c680d"
+  },
+  "apps/game/tests/save.test.ts": {
+    "reason": "Test exclusif du prototype retiré ; tests de l’Activity conservés",
+    "bytes": 748,
+    "sha256": "8c69629bb2bf40f465a011321c9b6062dd5d6c47e04dd7e522010c7afae17aa4"
+  },
+  "apps/game/tests/renderer.test.ts": {
+    "reason": "Test exclusif du prototype retiré ; tests de l’Activity conservés",
+    "bytes": 1670,
+    "sha256": "c0863f0a896a3d907d2179b3259c3eb149c1b163990746df51e39e3150d2ace9"
+  },
+  "apps/game/tests/rules.test.ts": {
+    "reason": "Test exclusif du prototype retiré ; tests de l’Activity conservés",
+    "bytes": 2901,
+    "sha256": "3f229d2d3d3350924c0c353d92124e8743320dc45035cdd4d3d43764208121f9"
+  },
+  "apps/game/tests/browser-bank-components.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 4104,
+    "sha256": "14e93f931435ca412416dd2464628971d65c06432f6c1776bde995db31e2636d"
+  },
+  "apps/game/tests/browser-blank-menus.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 94,
+    "sha256": "8ff0da0cc23468d0500b9c36e2efac86bb1b640098e7cf21dacdf5ab7f73d49e"
+  },
+  "apps/game/tests/browser-item-assets.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 4877,
+    "sha256": "9d173bbf3cb9983bcd066c9efd359c4134468e5bebf78c43d3d0784f9c28b1af"
+  },
+  "apps/game/tests/browser-castle-approved.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 5119,
+    "sha256": "cd2666fbec0727e2c0c44c48e6bcfca86f2e41fc7b451d1b6b8aa65b4475d709"
+  },
+  "apps/game/tests/browser-layers.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 6505,
+    "sha256": "22ab48152e43ec2b9419db46a47cf684f9c3c305f12854dc2b0c1d8e79c770b4"
+  },
+  "apps/game/tests/browser-predator-venues.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 6174,
+    "sha256": "06f605371b206b0d0004a86fa7d0e62758c7b460be655cad4db4ad2e8871ea51"
+  },
+  "apps/game/tests/browser-menus.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 11962,
+    "sha256": "d462b5c2e2df974ca2c3507c1d17c20686fbdca736c93a8381af3876c18cda24"
+  },
+  "apps/game/tests/browser-placement.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 5927,
+    "sha256": "dfe31622da1cbc9168c244cfed5055c17ab1e17b7e4bec9b6f3f354fcfa5cdbc"
+  },
+  "apps/game/tests/browser-blank-placement.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 92,
+    "sha256": "a3eaddebb9ab91814d387f9821ffb18fda41ff1c99577bf5f77cedc28919bd14"
+  },
+  "apps/game/tests/browser-alley.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 2649,
+    "sha256": "241fa1334f1c801abdd4e249d80f49f175d27112d2fe653357643e2f98c9bdac"
+  },
+  "apps/game/tests/browser-games.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 7557,
+    "sha256": "bbd75f00d54580984e3fe5866762782a242f331c5f009b525cd74c4e5651b403"
+  },
+  "apps/game/tests/browser-arena-complete.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 9737,
+    "sha256": "4a1f643332be70c96726339049a2de81dfb2c59e0b36284425b2c895da45d7c8"
+  },
+  "apps/game/tests/browser-quest-assets.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 6817,
+    "sha256": "9ac45216f54462677c80643bd902e0f73cff315095fc92f86a6f4fdf62177e9c"
+  },
+  "apps/game/tests/browser-economy.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 4889,
+    "sha256": "9334552ba86852160b2587bb4b22f206a6f9a5a704df65755cba20fdad956db0"
+  },
+  "apps/game/tests/browser-navigation-layout.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 5347,
+    "sha256": "b89d94918350961583fbc2c29f04c489bafb126bda041a8b0203bc12308ea475"
+  },
+  "apps/game/tests/browser-campaign.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 3918,
+    "sha256": "d46808526ec705c03682388bb1e721dc80412fa3c0ce200195be8386375d9389"
+  },
+  "apps/game/tests/browser-blank-heist.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 88,
+    "sha256": "babd04efd1c579b1530e518db899d5d3e04727b2b4958ebfb96b4893e343576d"
+  },
+  "apps/game/tests/browser-menu-assets.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 11251,
+    "sha256": "aed34c49376df637e8b4f73c7084397bd999f26c7bb1ce47787b8a244ce613c9"
+  },
+  "apps/game/tests/browser-approved-visual.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 4048,
+    "sha256": "19ad5350f8bb39a3834a9a97f6b8ceb3980f924143b85b862e892b3c34fba2bf"
+  },
+  "apps/game/tests/browser-arena-reset.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 5268,
+    "sha256": "555e2f976917d23a3b28371c675398a13ecf8341a4d1a5f8453d5e64d0852808"
+  },
+  "apps/game/tests/browser-arena-layout.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 5916,
+    "sha256": "6c9d459dd384937d91c5fb1031dfb89c2af50a14c3ec1efe3a13bbb45b730d11"
+  },
+  "apps/game/tests/browser-arena-redesign.cjs": {
+    "reason": "Ancien parcours de menus remplacés ; parcours actuels conservés",
+    "bytes": 10753,
+    "sha256": "51e69ba48daa86cf8052410f1e515a5288934eca118418e6c8144ffd0b7b9103"
+  },
+  "AUDIT_TUTORIEL_ILLUSTRE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4368,
+    "sha256": "0770b170b90bca425dbbb99c454f4638fe08843bdddb16e98a311a7c82cd8ca4"
+  },
+  "AUDIT_RESTAURATION_PRIX.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1369,
+    "sha256": "4c3624ac7dc30c37b0131323ac08821af805cb2a3c9bed63dac96dcf7144e9df"
+  },
+  "AUDIT_V0_7_2.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3066,
+    "sha256": "97900fe29131dae519759d362b084b42582f2764ff05262e5dd636de640d2558"
+  },
+  "AUDIT_CONNEXION_DISCORD.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4243,
+    "sha256": "9198fc933b4d2e2eb652fefe2645b4871f21677e1a54d257aeafd13074bfe8fa"
+  },
+  "AUDIT_V0_8_0.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4086,
+    "sha256": "aa5eebfef6595cc83db037146d895325ed3ac151b8309e19029776b92f01244d"
+  },
+  "INSTALLATION_ARENE_COMPLETE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3061,
+    "sha256": "a51f3d414ef98ca1b5ba15d45503721caf2c53909a0f7dfb8ff4b9911fb1bbe9"
+  },
+  "AUDIT_V0_8_8.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1748,
+    "sha256": "9adf59afcb39dc3b21eee84487e53436cf8906deee7abd283bd277faec94278f"
+  },
+  "AUDIT_MENUS_TRANSPARENTS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1841,
+    "sha256": "df5f499dbdb0c227e2bab4b509e9dfdee26973bc702e210e8f6716758d859c23"
+  },
+  "AUDIT_TECHNIQUES_CHAMPIONS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2996,
+    "sha256": "896acab784ce3373081fb93bcc6ee53f88813e531c2d56f822f8c3f9f6dfc5b1"
+  },
+  "AUDIT_PLACEMENT_MENUS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1655,
+    "sha256": "b671036b8fe9156f0be6b3ad9806ea05a12d8a8bce59c7936d784ec1526c89ed"
+  },
+  "SUPPRESSION_BOUTON_JOURNAL.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 832,
+    "sha256": "992a6d6a0d91c23d8bea792c8c4691152f71da51ba03c8085d36112b2d9ef14c"
+  },
+  "AUDIT_PROFIL.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2439,
+    "sha256": "d214a0f5224d082bc922aee7d3baf5b039e069ada68e7e842dd84e106dd989bb"
+  },
+  "AUDIT_ADAPTATION_V0_3.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1806,
+    "sha256": "d89c7ed82f25511e52345fed3609557c83be70508e02144cbae52cc183296a27"
+  },
+  "CORRECTIF_PLACEMENT.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3127,
+    "sha256": "686d1638073f811ea7acbe512c74e17adbab6a6a4a207f5282a33edbbecb4100"
+  },
+  "ASSETS_ARENE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1254,
+    "sha256": "289835e2a4c7a9a7355dfeb05025466d46fad33fdcb8d4fb0d4cfc37af10469c"
+  },
+  "INSTALLATION_TUTORIEL_ILLUSTRE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1446,
+    "sha256": "50d474e3ddfd25f0fe40394643e643b100faf156030d93efdeb1358f36bf9c6b"
+  },
+  "INSTALLATION_REEQUILIBRAGE_GOLD.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1327,
+    "sha256": "037cf93836d0467c7443be756f688b04b38b6c470d9a1770860ec77065d347d0"
+  },
+  "AUDIT_V0_7_9.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2754,
+    "sha256": "bad23598067ff45b251e907dba5381c6218c8359fc182460805597be1f24e16a"
+  },
+  "MENUS_ROYAUME.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2327,
+    "sha256": "4ff3e92a0f3ac0d6cdc720d97818a9f84793d5274cc183494e9e9e4b35c6b709"
+  },
+  "INSTALLATION_JOURNAL_MAJ.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1632,
+    "sha256": "0fcc471af19a3d1e63994e28d49a6c80ac81f5f91abc7f04d221359482cf7eed"
+  },
+  "AUDIT_V0_8_2.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 854,
+    "sha256": "d65c5095617c54fb78397e179256e3908899974fc1aa3cf902d09dcb55253c48"
+  },
+  "AUDIT_ESTHETIQUE_ARENE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1776,
+    "sha256": "e3467dd1a68872a5c2a166e4daeb10e10df194756f9bbfc2652f3c303a4e93cd"
+  },
+  "INSTALLATION_CAMPAGNE_PRINCIPALE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4074,
+    "sha256": "5745edd49667bd5792d32973beb0546b42f24e1d450aa265f7e3cbc2023412b4"
+  },
+  "MENUS_V0_6.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1847,
+    "sha256": "fcd4b1960b7f6faaa12f69b548b5d43b0a4fa7bafc6c0c98cb0147a01053a3f1"
+  },
+  "INSTALLATION_QUOTIDIENNES_ALEATOIRES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2184,
+    "sha256": "b555c98e71860593755e0b435e63ef775fe6ee60733c8527c544b0a95c60dd83"
+  },
+  "AUDIT_MENUS_V0_4.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3168,
+    "sha256": "be729a77864617a97b906c903d6f25b79a9417b0fe1b0dc42214077a8f766014"
+  },
+  "INSTALLATION_LOGS_DISCORD.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 5467,
+    "sha256": "4fa335fc4b8e040f1fd02a11652b9bd2bf10734c0293548dd5a0262ba9132e91"
+  },
+  "AUDIT_V0_7_4.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 587,
+    "sha256": "8db21a9802dd686d76dee2d724eeda1ee48f06863bfa0deccdded81052406166"
+  },
+  "AUDIT_ARENE_COMPLETE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3117,
+    "sha256": "12602a1fd63386d04e97ffc1256821e085422b335eae114c0764188d5590a91e"
+  },
+  "INSTALLATION_SUIVI_QUETES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1797,
+    "sha256": "747d717aa1c44714c56d4bea0860029bbf7974aca02f86c7fe39f87ddf3c37db"
+  },
+  "ASSETS_MENUS_ROYAUME.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1864,
+    "sha256": "af8da888b431ac8a318fc6ecd78cb5426c18ee25e0edd2677bdd29adbd6854a5"
+  },
+  "INSTALLATION_RESET_CHAMPIONS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3109,
+    "sha256": "fb0e387fa3bfd5b2217bbb8db2928c7edaf552f384fdeee7498059cd121e0c8e"
+  },
+  "INSTALLATION_ANNONCES_ALEATOIRES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2943,
+    "sha256": "897dfc111c0dc8cabcbc2ac2c218774dcd97d82e39f0eeb3d4afe07bd21c74ab"
+  },
+  "AUDIT_ADMIN_ACTIVITY.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4502,
+    "sha256": "c8932c81d9007943f2438ec273defb78504902aee753c895969bb7aa94910c77"
+  },
+  "AUDIT_V0_7_7.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 498,
+    "sha256": "0c377c24dbb9a1ef982106da3be4c71d83cacde127d18b2451f2619aa35cc37f"
+  },
+  "AUDIT_LANCEMENT_PC_MOBILE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3337,
+    "sha256": "9d9a8c43bd63d2d5f373065fd8756f5e0d486eec1590530a795608ed8fb6cfe6"
+  },
+  "AUDIT_V0_8_1.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 6103,
+    "sha256": "bddb57c96f3c43c5c0f0a0958e1df4ed15b73808ad43416c059e98aaf8bea0b0"
+  },
+  "AUDIT_CHATEAU_FINAL.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1898,
+    "sha256": "f9fd4935ec71d6bdc6048d29b3467f124836d9bafbc616a6806693a4bf28b9e6"
+  },
+  "RESTAURATION_MENUS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1520,
+    "sha256": "a60794c9169e084fca20742b52d14f39e430d0febb3ea8620ac3b90a256298db"
+  },
+  "AUDIT_MODELES_VALIDES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3053,
+    "sha256": "3ad584322abd16e29755642b024bf8ec2f88cce9a34419d4e397946385e9aba0"
+  },
+  "MENUS_VIERGES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3009,
+    "sha256": "3c122c79c769009b92443ab1ae6466b4379d82d2a9383ec28dbca7f0e77ba906"
+  },
+  "AUDIT_PORTAIL_DISCORD.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 5202,
+    "sha256": "75d24c3d78ac485e69f5023d044fe716912d5f7b3800fe76375639de11d57578"
+  },
+  "AUDIT_ASSETS_OBJETS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3106,
+    "sha256": "701c72d060da462f6d1c0e2dbf801ae0ab8391da49169cc5a05d0e94c54afd56"
+  },
+  "ASSETS_OBJETS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2832,
+    "sha256": "4fdb513c314713158dd6b53d325d4d561e9f1b7e698b9c91ee2f476623e1cca5"
+  },
+  "AUDIT_QUETES_VALIDES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2497,
+    "sha256": "6a3282af8f2040307337f7b0ca00d7e202c7636f9987a56774a3b9649ef69b20"
+  },
+  "INSTALLATION_PORTAIL_DISCORD.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 9003,
+    "sha256": "089bfcd1cbb1b79cf9983f039df97b651c60f54be6c6c928e89ae27bcdf16c18"
+  },
+  "AUDIT_JOURNAL_MAJ.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2397,
+    "sha256": "e2ed749ff1e5fd92917051b14792666f5874f4348d0ac815ad97396db8dadc57"
+  },
+  "AUDIT_V0_8_6.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 685,
+    "sha256": "4a11e09f9316549a793d0c134821cce3c21895c11863fd082047508829fe13dc"
+  },
+  "AUDIT_MENUS_ROYAUME.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2665,
+    "sha256": "223b0c5d4b1852234a47058900e25fdc6bbbb77e934850757d511a80eb821cd5"
+  },
+  "AUDIT_MENU_PORTAIL_V2.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4335,
+    "sha256": "29600b674a8e615597fe9c5cd1f01847ae4fa2bc8ea8de74d07633026a36bec2"
+  },
+  "AUDIT_ARENE_BOUTONS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2345,
+    "sha256": "2601ab74d14fcafd76f32406bda2ca69ddf0bcc51c178daa1d281a9cd1711fe7"
+  },
+  "AUDIT_ECONOMIE_OBJECTIFS_SAUVEGARDES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4136,
+    "sha256": "51afcfbea94c9cefa23b72e181ec445a7dcc2a10608ce52db0de49ef6fa93605"
+  },
+  "ASSETS_QUETES_VALIDES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1711,
+    "sha256": "d9a9d5efd0dd28d87f2a2d65691d31021e813783dcbb3d76d573f89d4e8033fd"
+  },
+  "CORRECTIF_BANQUE_LIVRE_PARCHEMIN.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2241,
+    "sha256": "983483e69c4edde1ca35ae9fc9f4dc1e44bf0f68b658aac57d9c35ddff71c906"
+  },
+  "AUDIT_MENUS_VIERGES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3610,
+    "sha256": "d829262d3acfe82605b045a027bcd42597ec67ce1ec1483de1b33c150509d623"
+  },
+  "CAMPAGNE_RECOMPENSES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3661,
+    "sha256": "a842315c790084dec1b1b9f789e74aac0300e2ab44f0290e6af323494fcf39dd"
+  },
+  "MENUS_MODELES_VALIDES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2550,
+    "sha256": "daa1c854c834860e40b66ca328226d6db5355e8858b0a92a1f9691ca86ed8e9a"
+  },
+  "INSTALLATION_ECONOMIE_OBJECTIFS_SAUVEGARDES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 6153,
+    "sha256": "60da97881f88aaed69e42b9278a5b5b9943b103d4a93952a1e850ed492117aaa"
+  },
+  "INSTALLATION_QUOTIDIENNES_GAUCHE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1729,
+    "sha256": "adbdebfb493b5f2805f64cd0b6118be5dd7afbc75198487911a2cd29ca5d2951"
+  },
+  "AUDIT_V0_8_4.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 927,
+    "sha256": "548ab38c43fa82052381b84ce07d8eab1b0c9f9f4a1d5c8308c686f3b42d5c11"
+  },
+  "INTEGRATION_V0_7.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3910,
+    "sha256": "03a2b279944d7b5f6585b03e9cb6a0c7df63af1d9140276881ffe06e4c790643"
+  },
+  "INSTALLATION_MENUS_TRANSPARENTS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 861,
+    "sha256": "c5d06d5a2c2984934ab2def29950eb8f5b9e37f08ae5168590d29562c6476183"
+  },
+  "AUDIT_V0_8_7.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1170,
+    "sha256": "d49ab280a1cc07b4dc29fffe07b60c5e7c9dd53917bb63a0d2d635ea3cfc9373"
+  },
+  "INSTALLATION_PLACEMENT_MENUS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 501,
+    "sha256": "5e8d3bb12f09ff7ad3c4a51a07b6a01af1a2552496b32160aab20cd18e88046b"
+  },
+  "INSTALLATION_HUB_ANIME.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1798,
+    "sha256": "7dfe873360c839f725622e6363ed6b6ce0a22a683a61baa1972e85bd1f9c7c32"
+  },
+  "AUDIT_SUIVI_QUETES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1480,
+    "sha256": "c267744820fdf6b7465bbe35319684f9f050b1a9023931f3c63fa5f27f03a99a"
+  },
+  "INSTALLATION_CORRECTIF_DISCORD.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1603,
+    "sha256": "31c8f5aadc523c8fbd5b49ca53c98d6e13b1ba9891ee4ed152aa8b5627c0d9f7"
+  },
+  "AUDIT_V0_8_5.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 763,
+    "sha256": "78bbd7693d928070831b12bcb35a513efc089b48c4250894b22cf500641a35fb"
+  },
+  "AUDIT_TEST_BANQUE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3540,
+    "sha256": "8000f3abf750665c14866f2bcdb055fb9da16335019ffe55ded5387e0ab581ef"
+  },
+  "AUDIT_V0_7_3.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1634,
+    "sha256": "03a834399238234122ecd8f9f67a2eb79275d20c82781ef82d8d5a3158baf061"
+  },
+  "AUDIT_V0_8_3.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1678,
+    "sha256": "55d9973d01600bd501c4125669e2ac458e5a10bfb6beb5f57b9a47764ba9e1e8"
+  },
+  "ASSETS_MODELES_VALIDES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3397,
+    "sha256": "ede33a8796b05d462208de57327aa3add9e699daeb430e9332fbf32705020a1a"
+  },
+  "MENUS_PROPRES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1639,
+    "sha256": "fe01589e31c4e1cf6f5e9df04a7e7d6421ec80e794f9fb72e5b48bf532f470df"
+  },
+  "INSTALLATION_ADMIN_ACTIVITY.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1577,
+    "sha256": "4fceec5496559a837ddbde2467663b76ba0c3fbfb5848ccfd7b007b2adedb580"
+  },
+  "AUDIT_ASSETS_V0_5.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2601,
+    "sha256": "4ea5a05127769df50224e16b06aad281cce51ecf1ead0aaeee082880461264d0"
+  },
+  "AUDIT_V0_8_10.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 953,
+    "sha256": "5f8dd2212cd588f071a3663e24128579c33da9b1eda82004a9e4e2b52b8db109"
+  },
+  "INSTALLATION_LANCEMENT_PC_MOBILE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2069,
+    "sha256": "4eca22ca37e03bfe634e0bc87329422bd62163ea9a5c09d292c30cc9492e5f3c"
+  },
+  "AUDIT_RESTAURATION_BOUTONS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1886,
+    "sha256": "ee85ab21d7352d3209818418967304f9415b9abc7c87ecd4772566540b9d88dd"
+  },
+  "AUDIT_MARCHE_DIRECT_V0_5_1.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1066,
+    "sha256": "77121a24a6dad926071c37934958191ace11b3726974028a7b175517519ec361"
+  },
+  "AUDIT_SCENES_V0_2.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2859,
+    "sha256": "5b1f090f2a0315e859acb38ca774927a42f4796158564503300a832534f62a05"
+  },
+  "INSTALLATION_PSEUDOS_SERVEUR.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3619,
+    "sha256": "9fd7400121c76529ad7df961c7284b02f04ddfe8a4f8b7ecf2e813b61a52508f"
+  },
+  "AUDIT_REEQUILIBRAGE_GOLD.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 946,
+    "sha256": "5dc6952ffd0eaf8c169c690f391cb24ff62b9b1ffa4bde23fe202e1ee49a81c9"
+  },
+  "AUDIT_ARENE_DESIGN.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1206,
+    "sha256": "f426d8c56cc7112111a865df02a3258079d8eb737f52f1497f3eaf916d338929"
+  },
+  "INSTALLATION_ARENE_DESIGN.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1325,
+    "sha256": "5742e83b7dd1d90904bf8e8ce654d9d7c096f1d568f0fb170cc4bde8dc77a850"
+  },
+  "RESTAURATION_BOUTONS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 738,
+    "sha256": "30b579535acac5806ce89a238f72dd9a1e38fa39e8dad24a2571f376da21ee4c"
+  },
+  "INSTALLATION_TUTORIEL_ACTIVITY.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1781,
+    "sha256": "ff260b5470ea348315e0f0c4740c27b46e8cea94892be27160771ee370e1d70d"
+  },
+  "INTEGRATION_ASSETS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2327,
+    "sha256": "f076b252fd63dd54fd68fcd37b89ff2a487a42569355ce38035d00bb0cb9300f"
+  },
+  "AUDIT_QUOTIDIENNES_ALEATOIRES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1515,
+    "sha256": "13be19265fe107fc85b35ae1e60acdb377035c6198e0351eef8c5a0590fccf1e"
+  },
+  "AUDIT_V0_7_8.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2955,
+    "sha256": "8fd2157c10e78aebf079e598b250fb5ab4b3d56a69f9839c1d59ade4248191bd"
+  },
+  "AUDIT_V0_8_9.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1248,
+    "sha256": "446d88f4caeb4d680fa1d84b2c8f45cba00f79dcf09ef04c4f220e4fd34ab708"
+  },
+  "CHATEAU_FINAL.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1784,
+    "sha256": "5a1edcef2e82236683661cff56325bdd9076354d15ce4692629da609ed114752"
+  },
+  "INSTALLATION_PROFIL.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1608,
+    "sha256": "d7de00e6d0fb84b3ebd2daefad1be58adf7f6a5a572c1097f1f9b878ccad2bdb"
+  },
+  "AUDIT_TUTORIEL_ACTIVITY.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4948,
+    "sha256": "6fd4b2f36c085228c469b25c22d8868d1e3127cde3edf59a2531d5a94bee6c45"
+  },
+  "INSTALLATION_TECHNIQUES_CHAMPIONS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4799,
+    "sha256": "f17a88882df8e1ffa926bf936c2f31d87b2a8ae4039e6307c4a34503f9dc0d45"
+  },
+  "AUDIT_BRAVE_V0_1_1.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2193,
+    "sha256": "6f62f22460da1de047e2cfaf118a2e535760b123a548bd4297f7e0c3b36cde1e"
+  },
+  "INSTALLATION_ARENE_BOUTONS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 476,
+    "sha256": "59daf81a7828cfbc1cfb713475b58c1d2a9e8bac13e1a136a5b058b7b4554adb"
+  },
+  "AUDIT_CAMPAGNE_PRINCIPALE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3639,
+    "sha256": "7b7c81c2461dce0c37bb4ca265519b758077a35e6d9e9705d579b6d7d7d06baf"
+  },
+  "AUDIT_QUOTIDIENNES_GAUCHE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1346,
+    "sha256": "6fbe16ddd25bab4fc421c43c553a3e83acee2e7ca78c9661426d744400505f03"
+  },
+  "AUDIT_ANNONCES_ALEATOIRES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3000,
+    "sha256": "75043ca64b88f36950283bb4ba0c1568f224fbea80795ff95177983d05a545e9"
+  },
+  "QUETES_MENUS_VALIDES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1853,
+    "sha256": "27f4ed571df20152341879199d46a31c546e5cea9ca1f69ab5d03c252f698f84"
+  },
+  "AUDIT_HUB_ANIME.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3292,
+    "sha256": "4b3e444bd558650a4c4af0407f549ea03dfaaf28d8a308a6648a634183f464d5"
+  },
+  "ALIGNEMENT.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2831,
+    "sha256": "f9da120af14d0aa7f77447d15199f5b8bccc92eb536c2b029d66f94d105e606c"
+  },
+  "INSTALLATION_ANIMATIONS_VISIBLES.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 1637,
+    "sha256": "e53baa2c71296240f4b5f31ff1845b10c07a0b992bf7c57ee1b11d3ee4f46d53"
+  },
+  "ADAPTATION_MENUS.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3459,
+    "sha256": "88f259f90a13000344f2cd902ba783ed28c5b3bd8faa680e0d63f501b72c0e8e"
+  },
+  "AUDIT_V0_1.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3311,
+    "sha256": "c818d8acab9a8f0200d2bc1ff6362d28d60e1b3aedea07a9ae9984b12279ca0c"
+  },
+  "AUDIT_LOGS_DISCORD.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 3316,
+    "sha256": "033a64e120e5e70359765a6be933d19ad8eb821a3da2748dd25454c6cb37171c"
+  },
+  "INSTALLATION_ESTHETIQUE_ARENE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 483,
+    "sha256": "31daa2b4992a1555a43b3ea05fe47d1d84ca81603a7005041ce4897558589d8c"
+  },
+  "AUDIT_PSEUDOS_SERVEUR.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 4343,
+    "sha256": "e8397dd70e1093a64fe9981e2bbe0b17de48085d04116725bee768745edc98c1"
+  },
+  "AUDIT_V0_7_6.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 341,
+    "sha256": "8e9cd60fdf7fdfd8c2b7518865149f293316609f28e9b3e2e5cdccb86efc9d70"
+  },
+  "AUDIT_V0_7_5.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 578,
+    "sha256": "7e648d2ff870bdfa51a0234f0bebec8debede8850e3dec7ea173540bb39c6a84"
+  },
+  "CORRECTIF_MISE_ARENE.md": {
+    "reason": "Ancienne note de livraison remplacée par la documentation consolidée",
+    "bytes": 2494,
+    "sha256": "f5fb63fe51acc4e4a3607c7e612741864ffd7aa0b8f3b8b2cf0aa9c327331a9f"
+  },
+  "ASSETS_OBJETS_PROMPTS.json": {
+    "reason": "Ancien carnet de génération, sans usage à l’exécution",
+    "bytes": 18957,
+    "sha256": "1e834745e609d4bcd7a2afc43b58bb23b9664d90f8c4dfc0dc584f3471bf5305"
+  },
+  "apps/bot/tourwork/AUDIT_PV_V2_64_6.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 604,
+    "sha256": "6f0170c14dc24763e4943a64d3ec0e4c20c822f95ea7041a975f0a75090174e9"
+  },
+  "apps/bot/tourwork/AUDIT_TOUR_SANS_CLASSES.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 1337,
+    "sha256": "940bb50770ff75fadd3b1037ef34dd12bca701b0d2c75940469f4372a7e94c8f"
+  },
+  "apps/bot/tourwork/AUDIT_V2_64_9.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 739,
+    "sha256": "9c2c1e1f3e2b1e77d1fdb110ed732c81ad2258a57be1b9a36cd40b6f4283f0d2"
+  },
+  "apps/bot/tourwork/AUDIT_V2_64_11.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 4847,
+    "sha256": "501f1bbf71d01ea56d7cf8e71262ec6ef0e6357d003cfe3c476df3ca13f28504"
+  },
+  "apps/bot/tourwork/AUDIT_CORRECTIF_CHATEAU_QUETES.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 925,
+    "sha256": "8844f7bba70aa5f471489100d7b86dc0b0b05d1eea9dd9b401e42d39cbccd398"
+  },
+  "apps/bot/tourwork/AUDIT_V2_64_7.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 744,
+    "sha256": "ebcd054e30d844977bd0a2452465dca1580bf9e572bd5fcba40fefc31fe67e8b"
+  },
+  "apps/bot/tourwork/AUDIT_GAZETTE_V2_64_3.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 461,
+    "sha256": "d09fa5a7a648e212dd5197e2a79cca6cc496628f51d198589bc1f5f91a80ce8c"
+  },
+  "apps/bot/tourwork/AUDIT_ARENE_SANS_CLASSES.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 1026,
+    "sha256": "543cda6a8eeb634265866623199593e9bf821c1fda7456cf9e1d4c589ba7084c"
+  },
+  "apps/bot/tourwork/AUDIT_V2_63.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 2773,
+    "sha256": "f3ebc3e47dc17998aa2cb948b212e68160c4b399d97e8c9e349814688e02d5ba"
+  },
+  "apps/bot/tourwork/AUDIT_V2_64_12.md": {
+    "reason": "Rapport historique remplacé ; documentation opérationnelle conservée",
+    "bytes": 592,
+    "sha256": "5dd2fb2d94c988a91b688c847ab0ed7f7a6ffbc9e3061ae7574420c683c583f9"
+  },
+  "apps/game/public/assets/region.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 4170325,
+    "sha256": "aa474695d5134a72a9d704d49748896829f904fcee77b16b21a81ae019d43f0f"
+  },
+  "apps/game/public/assets/actors.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2532877,
+    "sha256": "238ba12edd82d9cb29e34e7f3381bc82de1538d1238859cc8175b3231079ac6f"
+  },
+  "apps/game/public/assets/rps/fox.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 1620368,
+    "sha256": "8791920dee3af89a323ffa2785d53b68ed37a9828c85db1331734e2abc7f0e71"
+  },
+  "apps/game/public/assets/roulette/wheel-bowl.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2862831,
+    "sha256": "01ea14f45881ef5a9f1dcc46d37c84cc71ffffcc647fd79fa1ad0eddce21c431"
+  },
+  "apps/game/public/assets/roulette/rotor-wood.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2803656,
+    "sha256": "241c54d1c2e448147462ebd54b4ca1cfc5bced7817694b9bbea079b1bfe31535"
+  },
+  "apps/game/public/assets/menus/jobs.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2670462,
+    "sha256": "c7d8f6afad3d1a500933ff0b623aacb5bf61e747e7a68978fb1ca45272dcc15e"
+  },
+  "apps/game/public/assets/menus/russian.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2529253,
+    "sha256": "19da41b024bfa439fb1b51be37766fee928c78f85f19e0be83bef6b11a5966c6"
+  },
+  "apps/game/public/assets/menus/techniques.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2506683,
+    "sha256": "29f361290050ca06fc13b45dcdd3c5325a1de4291709da752f7c88bde3edf4d8"
+  },
+  "apps/game/public/assets/menus/tools.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2177877,
+    "sha256": "6ccdacc23e4aff06d601be675855d86e3796c35344b2e5c667e1865734cda85a"
+  },
+  "apps/game/public/assets/menus/podium.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2371958,
+    "sha256": "f3d8f118b62dbc340e545cb1fefd25f10e013448dfd6ab5bff5474340cf5f266"
+  },
+  "apps/game/public/assets/menus/combat.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2794005,
+    "sha256": "06d9ea7c4e8c46e03f312e5b0be87f81b46bb9d2e234e896dc7269cfcaff77c5"
+  },
+  "apps/game/public/assets/menus/departure.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2190658,
+    "sha256": "97230b420c4162d880654428d7f1cde505bd48bc4be5e550232789deb2a01e1b"
+  },
+  "apps/game/public/assets/menus/accessories.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2158116,
+    "sha256": "f21641d955569180479863c9d3756e6268ab3b0d0a44e311f268c779035af89e"
+  },
+  "apps/game/public/assets/menus/dashboard.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2278448,
+    "sha256": "5f1b8f27afd726339c878d224ec5eb19e6b5cfd36407fa5b4f8182047ea773c3"
+  },
+  "apps/game/public/assets/menus/destinations.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2254930,
+    "sha256": "dfea815997f560d6190c66fb40a82078ca139de027433e8cbbfbb2eae0eb7a6f"
+  },
+  "apps/game/public/assets/scenes/alley-predateurs-live.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2716965,
+    "sha256": "beef15ad069e20c6e9f99d42d3ed6433078b3ee876a2a6cd1e8c64ec1da326a9"
+  },
+  "apps/game/public/assets/scenes/tavern_games.webp": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 437540,
+    "sha256": "acc59ab12d88d78b9bb6eba9f8586e38617aa22fd68734daeb9135a57091915c"
+  },
+  "apps/game/public/assets/scenes/hub-predateurs-v2.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2789668,
+    "sha256": "200a044dbfce9cb14471cabea3f4b6ff3f09d588def7b38038195802879fcb18"
+  },
+  "apps/game/public/assets/scenes/hub-predateurs-live.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2857776,
+    "sha256": "3b1d0e18f5520dc828479d54fdd13f867f393aeeb5312b885c5bcf72680b0307"
+  },
+  "apps/game/public/assets/scenes/casino_room.webp": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 525258,
+    "sha256": "c08a66e69a6f5b67dc3ddd5b38122b718ddfa0aa69b9e51c21e1841853dfcfc2"
+  },
+  "apps/game/public/assets/scenes/alley-predateurs-v2.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2707504,
+    "sha256": "f74f5d984a29d3dcfefb5e542f6be678403b6e583325a0aef3e432f23b36516b"
+  },
+  "apps/game/public/assets/scenes/quest-ashkar-belvedere-v1.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 2921593,
+    "sha256": "b395d0b23cefb256befe7937f4720b98a219d3141ede8c963a1d98bf1984a2e0"
+  },
+  "apps/game/public/assets/scenes/hub(2).webp": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 595032,
+    "sha256": "9d5875c8b31e67b1bccbd46d398777a8fc5486a7e8ed785f2c18135858e78dc1"
+  },
+  "apps/game/public/assets/blackjack/chip-0.svg": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 3188686,
+    "sha256": "6bc1332fb99af37bfb29ca4452ee7ab479649d05c6615d9a42ce1a9cf69df539"
+  },
+  "apps/game/public/assets/blackjack/chip-1.svg": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 3188687,
+    "sha256": "60d8ca6562acadbd9415e972c6c8c9802ef03716e3b00397f846520f33c16d14"
+  },
+  "apps/game/public/assets/blackjack/chip-2.svg": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 3188687,
+    "sha256": "b2d311ec67bd290483a134c7e78fdad5775dab031725bc23557547c0e37c6eb7"
+  },
+  "apps/game/public/assets/blackjack/chip-3.svg": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 3188688,
+    "sha256": "1f35fbe6c00806e96d761b5b326def1f69bdb49f77fd36dd3870a3bbbaf35968"
+  },
+  "apps/game/public/assets/blackjack/chip-4.svg": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 3188689,
+    "sha256": "4cd71b4a115d9ca32cf273f77bcf9d6fa2582e3c2a84dcaba05dca196040d9f3"
+  },
+  "apps/game/public/assets/blackjack/button.svg": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 3188737,
+    "sha256": "8606ccf54af16b7e9d5c22c2341051562d32c3c3a38acaf86694ce81775f4e20"
+  },
+  "apps/game/public/assets/ui/tab-woodcutter.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 1572399,
+    "sha256": "de9735062fd65d1e8f2fd533c71952be5450af24620fb678d070dcaca8ef7c6e"
+  },
+  "apps/game/public/assets/ui/action-sell.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 1836631,
+    "sha256": "1ac34ccc37d59342b22d331e1549dbd0aba54f61a52e47dc04a4ac9e6d1da6a0"
+  },
+  "apps/game/public/assets/ui/tab-miner.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 1869278,
+    "sha256": "b53a266cc2ab7442677429ce74ea36cf3b2f0b003a199fbb89c2f110bcf02c4e"
+  },
+  "apps/game/public/assets/ui/tab-misc.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 1316825,
+    "sha256": "91f5c87bfb7c6caff5380c8399291ff8da3d6dc86ccc8e0f5ded0be0b3a6ee3c"
+  },
+  "apps/game/public/assets/ui/tab-consumables.png": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 1313773,
+    "sha256": "7af92f7c845c1f6aa792f9f24d80c5e5cd6565d2315d7f5837bf397bdc25441f"
+  },
+  "apps/game/public/assets/ART_DIRECTION.md": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 975,
+    "sha256": "132f779b814403f7f8e2350cb4df7d1b63773751b3461e72e3c949ec0d441b56"
+  },
+  "apps/game/public/assets/ashkar/grimoire-cover-generation.json": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 1292,
+    "sha256": "fd6fe1d54f7563d96b9834e8f29cfb892d1571c45dd3f548ccd6fccd114f8ee4"
+  },
+  "apps/game/public/assets/menus/manifest.json": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 3569,
+    "sha256": "206da0d886616df03e8d642509b6bb3c24e373e84cf7c12787027714398d042c"
+  },
+  "apps/game/public/assets/world/manifest.json": {
+    "reason": "Ancien visuel/métadonnée remplacé, non chargé par le client actuel ; variantes dynamiques nécessaires conservées",
+    "bytes": 696,
+    "sha256": "25ce8a4492062cc252ef23cc981e1bc19312d3c7a7000ea82e57fe15a7d1432e"
+  }
+}

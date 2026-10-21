@@ -1,7 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
-import math
+
 
 W,H = 1000,560
 

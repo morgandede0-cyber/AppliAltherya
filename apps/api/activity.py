@@ -27,6 +27,8 @@ from discord_profile import avatar_revision
 from discord_events import DiscordEvents
 from guild_names import GuildNames
 
+from session_policy import SESSION_SECONDS
+
 class Activity:
     def __init__(self, path):
         if os.getenv('ECONOMY_DATABASE_URL','').strip():
@@ -39,6 +41,8 @@ class Activity:
         with self.conn() as c:
             c.execute('CREATE TABLE IF NOT EXISTS activity_sessions(token TEXT PRIMARY KEY,user_id INTEGER UNIQUE,name TEXT NOT NULL)')
             c.execute('CREATE TABLE IF NOT EXISTS activity_discord(user_id INTEGER PRIMARY KEY,discord_id TEXT NOT NULL,avatar TEXT NOT NULL,username TEXT NOT NULL,display_name TEXT NOT NULL,discriminator TEXT NOT NULL)')
+            c.execute('CREATE TABLE IF NOT EXISTS activity_session_expiry(token TEXT PRIMARY KEY,expires_at REAL NOT NULL)')
+            c.execute('INSERT OR IGNORE INTO activity_session_expiry SELECT token,? FROM activity_sessions',(time.time()+SESSION_SECONDS,))
             c.execute('CREATE TABLE IF NOT EXISTS activity_rewards(reference TEXT PRIMARY KEY)')
             c.execute('CREATE TABLE IF NOT EXISTS activity_operations(user_id INTEGER NOT NULL,request_id TEXT NOT NULL,fingerprint TEXT NOT NULL,message TEXT NOT NULL,created_at REAL NOT NULL,PRIMARY KEY(user_id,request_id))')
         self.play=Play(self)
@@ -50,14 +54,20 @@ class Activity:
         self.campaign=Campaign(self)
         self.khaz=Khaz(self)
         self.tower=Ashkar(self)
+        from maintenance import Maintenance
+        self.maintenance=Maintenance(self)
+        from admin_commands import AdminCommands
+        self.admin_commands=AdminCommands(self)
     def conn(self):
         return local_connect(self.path)
     def session(self, token):
         digest=hashlib.sha256(token.encode()).hexdigest() if token else ''
-        with self.conn() as c: row=c.execute('SELECT user_id,name FROM activity_sessions WHERE token=?',(digest,)).fetchone()
+        with self.conn() as c: row=c.execute('SELECT s.user_id,s.name FROM activity_sessions s JOIN activity_session_expiry e ON e.token=s.token WHERE s.token=? AND e.expires_at>?',(digest,time.time())).fetchone()
         if row:return row, None
         token=secrets.token_urlsafe(32); uid=secrets.randbelow(2**52)+1
-        with self.conn() as c:c.execute('INSERT INTO activity_sessions VALUES(?,?,?)',(hashlib.sha256(token.encode()).hexdigest(),uid,'Aventurier'))
+        with self.conn() as c:
+            c.execute('INSERT INTO activity_sessions VALUES(?,?,?)',(hashlib.sha256(token.encode()).hexdigest(),uid,'Aventurier'))
+            c.execute('INSERT INTO activity_session_expiry VALUES(?,?)',(hashlib.sha256(token.encode()).hexdigest(),time.time()+SESSION_SECONDS))
         return (uid,'Aventurier'),token
     def bind_discord(self, uid, user, token=None):
         return self.identities.bind(uid,user,token)
@@ -66,7 +76,7 @@ class Activity:
         return dict(row) if row else None
     def session_uid(self, token):
         if not token:return None
-        with self.conn() as c:row=c.execute('SELECT user_id FROM activity_sessions WHERE token=?',(hashlib.sha256(token.encode()).hexdigest(),)).fetchone()
+        with self.conn() as c:row=c.execute('SELECT s.user_id FROM activity_sessions s JOIN activity_session_expiry e ON e.token=s.token WHERE s.token=? AND e.expires_at>?',(hashlib.sha256(token.encode()).hexdigest(),time.time())).fetchone()
         return row[0] if row else None
     def reconcile(self, uid):
         run=self.expeditions.active_run(uid)
@@ -107,7 +117,7 @@ class Activity:
         public_discord=None if not discord else dict(username=discord['username'],display_name=discord['display_name'],avatar_url='/api/avatar?v='+avatar_revision(discord))
         history_inventory=self.story.inventory(uid)
         owned_story_items=[dict(name=n,quantity=q) for n,q in history_inventory.items() if n in STORY_ITEM_PRICES]
-        state=dict(save_owner=hashlib.sha256(f'activity:{uid}'.encode()).hexdigest()[:24],economy_version=BALANCE_VERSION,daily_reward={'gold':DAILY_GOLD,'xp':20},campaign=self.campaign.snapshot(uid),khaz=self.khaz.snapshot(uid),ashkar=self.tower.snapshot(uid),admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
+        state=dict(maintenance=self.maintenance.public(uid),save_owner=hashlib.sha256(f'activity:{uid}'.encode()).hexdigest()[:24],economy_version=BALANCE_VERSION,daily_reward={'gold':DAILY_GOLD,'xp':20},campaign=self.campaign.snapshot(uid),khaz=self.khaz.snapshot(uid),ashkar=self.tower.snapshot(uid),admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
         from objectives import objectives
         state['objectives']=objectives(state)
         return state
@@ -135,6 +145,7 @@ class Activity:
     def _action(self,uid,body):
         action=body.get('action'); key=body.get('key','')
         if not isinstance(action,str) or not isinstance(key,str):raise ValueError('Action invalide.')
+        self.maintenance.check(uid,body)
         if action in ('tutorial_next','tutorial_previous','tutorial_finish','tutorial_replay','tutorial_cancel'):return self.tutorial.action(uid,body)
         if action=='name':
             if self.discord_profile(uid):raise ValueError('Le nom est synchronisé automatiquement avec Discord.')
@@ -209,14 +220,20 @@ async def activity(request):
     global SERVICE
     if request.method=='POST' and request.headers.get('X-Altherya-Request')!='1':raise web.HTTPForbidden()
     if SERVICE is None:SERVICE=Activity(os.getenv('ACTIVITY_DB',str(Path(__file__).resolve().parents[2]/'data'/'activity.sqlite3')))
+    body=None
+    if request.method=='POST':
+        try:
+            body=await request.json()
+            if not isinstance(body,dict) or not isinstance(body.get('action'),str) or not isinstance(body.get('key',''),str):raise ValueError()
+        except (ValueError,TypeError):return web.json_response({'error':'Requête invalide.'},status=400,headers={'Cache-Control':'no-store'})
+        if SERVICE.session_uid(request.cookies.get('altherya_test','')) is None:
+            return web.json_response({'error':'Session expirée. Reconnectez-vous.'},status=401,headers={'Cache-Control':'no-store'})
     (uid,name),token=SERVICE.session(request.cookies.get('altherya_test',''))
     message=''
     if request.method=='POST':
         # Same-origin form submissions only; no balances or rewards from client.
         if request.headers.get('X-Altherya-Request')!='1':raise web.HTTPForbidden()
         try:
-            body=await request.json()
-            if not isinstance(body,dict):raise ValueError('Requête invalide.')
             SERVICE.snapshot(uid,name)
             message=SERVICE.action(uid,body)
             with SERVICE.conn() as c:name=c.execute('SELECT name FROM activity_sessions WHERE user_id=?',(uid,)).fetchone()[0]

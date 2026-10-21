@@ -1,4 +1,4 @@
-import asyncio,os,sys,tempfile,time,unittest
+import os, sys, tempfile, time, unittest
 from pathlib import Path
 from unittest.mock import patch,AsyncMock
 sys.path.insert(0,str(Path(__file__).parents[1]))

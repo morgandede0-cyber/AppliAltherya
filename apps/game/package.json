@@ -8,8 +8,7 @@
     "test": "node --import tsx --test tests/*.test.ts tests/bank-dom.test.cjs tests/native-components.test.cjs tests/quest-tracker-dom.test.cjs tests/campaign-menu-dom.test.cjs tests/activity-request.test.cjs tests/arena-combat-dom.test.cjs tests/update-journal.test.cjs tests/player-profile.test.cjs tests/generated-item-art.test.cjs tests/arena-skin-dom.test.cjs tests/realm-menu-dom.test.cjs tests/alley-npc-dom.test.cjs tests/casino-room-dom.test.cjs tests/city-navigation-dom.test.cjs"
   },
   "dependencies": {
-    "@discord/embedded-app-sdk": "^2.2.0",
-    "pixi.js": "^8.13.0"
+    "@discord/embedded-app-sdk": "^2.2.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",

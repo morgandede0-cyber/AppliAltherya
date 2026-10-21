@@ -105,7 +105,6 @@ def render_expedition_live_card(
     draw.text((info_x, 330), expedition_name.upper(), font=name_font, fill=(236, 205, 151, 255))
 
     label_font = _font(24, bold=True)
-    value_font = _font(24)
     y = 405
     rows = [
         ("Destination", expedition_name),

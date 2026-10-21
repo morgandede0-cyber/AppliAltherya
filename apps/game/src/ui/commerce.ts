@@ -31,7 +31,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
   const place=(node:HTMLElement,_x:number,_y:number,_w:number,_h:number)=>{stage.append(node);return node;};
   const wallet=el('div','realm-muted approved-wallet',`Portefeuille : ${host.state().balance.wallet} Gold`);wallet.setAttribute('aria-label','Portefeuille');stage.append(wallet);
   const tabs=el('nav','realm-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label',mode==='sell'?'Métiers':'Rayons');stage.append(tabs);
-  categories(mode).forEach((c,i)=>{
+  categories(mode).forEach(c=>{
    const b=document.createElement('button');b.type='button';b.className='native-tab';b.disabled=busy;b.setAttribute('role','tab');b.setAttribute('aria-label',c);b.setAttribute('aria-selected',String(c===category));b.classList.toggle('selected',c===category);b.onclick=()=>{category=c;page=0;selected=undefined;message='';draw();};
    b.textContent=c;
    tabs.append(b);

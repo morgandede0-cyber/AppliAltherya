@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0,str(Path(__file__).parents[1]))
 from activity import Activity
 from save_safety import backup
-from economy_balance import JOB_GOLD
+
 
 class EconomySaveTests(unittest.TestCase):
  def setUp(self):

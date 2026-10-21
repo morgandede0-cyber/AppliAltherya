@@ -4,7 +4,7 @@ from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).parents[1]))
 import test_arena_complete as harness
 from activity import Activity
-import arena_techniques as tech,arena_combat
+import arena_techniques as tech
 from arena_engine import Fighter,BattleState,resolve_action,arena_player_skills
 
 class ArenaTechniqueTests(unittest.TestCase):

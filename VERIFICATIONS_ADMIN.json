@@ -1,0 +1,62 @@
+{
+  "base_version": 7,
+  "admin_commands": 55,
+  "maintenance_scopes": 39,
+  "api_full_suite": {
+    "tests": 386,
+    "status": "PASS"
+  },
+  "admin_focused_suite": {
+    "tests": 27,
+    "status": "PASS",
+    "note": "24 déjà inclus dans la suite complète ; 3 tests HTTP supplémentaires."
+  },
+  "client": {
+    "tests": 162,
+    "status": "PASS"
+  },
+  "bot": {
+    "tests": 17,
+    "status": "PASS"
+  },
+  "browser_admin": {
+    "checks": 38,
+    "status": "PASS"
+  },
+  "browser_operations": {
+    "checks": 56,
+    "viewports": [
+      [
+        1440,
+        900
+      ],
+      [
+        1186,
+        570
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ]
+    ],
+    "status": "PASS"
+  },
+  "browser_https_iframe": {
+    "checks": 10,
+    "status": "PASS"
+  },
+  "build": "TypeScript strict et Vite : PASS ; avertissement de taille du bundle conservé.",
+  "static": "pyflakes : aucun avertissement",
+  "live_discord": "Non testé en production ; simulations uniquement.",
+  "data": "Tests sur bases temporaires, aucune modification de la base réelle.",
+  "unchanged": [
+    "bonus du tutoriel",
+    "prix des outils",
+    "assets existants",
+    "port production 10080"
+  ]
+}

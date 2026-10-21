@@ -1,6 +1,6 @@
 from __future__ import annotations
 import sqlite3, time
-from datetime import datetime
+
 from pathlib import Path
 
 # La Gazette ne fabrique jamais d'événement : toutes ses lignes viennent de la BDD Altherya.

@@ -8,7 +8,7 @@ import time
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, List, Tuple
 from progression import level_from_xp, FORGE_LEVEL_REQUIREMENTS, FORGE_GOLD_COSTS
 from world_engine import destination_name, destination_description
 

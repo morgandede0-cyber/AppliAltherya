@@ -12,6 +12,7 @@ if __name__=='__main__':
  async def probe(request):return web.Response(text='<p>Cookie test</p>',content_type='text/html')
  async def legacy(request):
   r=web.json_response(dict(present=bool(request.cookies.get('legacy_probe'))));r.set_cookie('legacy_probe','test',secure=True,httponly=True,samesite='Strict');return r
- app=web.Application();app.router.add_get('/parent',parent);app.router.add_get('/probe',probe);app.router.add_get('/legacy',legacy)
+ from request_security import api_security
+ app=web.Application(middlewares=[api_security(server.get_service)]);app.router.add_get('/parent',parent);app.router.add_get('/probe',probe);app.router.add_get('/legacy',legacy)
  app.router.add_get('/api/activity',adapter.activity);app.router.add_post('/api/activity',adapter.activity);app.router.add_post('/api/auth/discord',server.auth);app.router.add_post('/api/admin',server.admin)
  context=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER);context.load_cert_chain(sys.argv[2],sys.argv[3]);web.run_app(app,host='0.0.0.0',port=20599,ssl_context=context,print=None)

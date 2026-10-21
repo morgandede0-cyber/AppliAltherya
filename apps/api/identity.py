@@ -1,5 +1,6 @@
 """Bind opaque browser sessions to a canonical profile using verified OAuth only."""
-import hashlib,secrets
+import hashlib,secrets,time
+from session_policy import SESSION_SECONDS
 from discord_profile import verified_user
 from sqlite_store import atomic
 
@@ -38,7 +39,7 @@ class DiscordIdentity:
    name=p['display_name']
    if token:
     digest=hashlib.sha256(token.encode()).hexdigest()
-    if not c.execute('SELECT 1 FROM activity_sessions WHERE token=? AND user_id=?',(digest,uid)).fetchone():raise ValueError('Session Discord invalide.')
+    if not c.execute('SELECT 1 FROM activity_sessions s JOIN activity_session_expiry e ON e.token=s.token WHERE s.token=? AND s.user_id=? AND e.expires_at>?',(digest,uid,time.time())).fetchone():raise ValueError('Session Discord invalide.')
     c.execute('UPDATE activity_sessions SET user_id=?,name=? WHERE token=?',(target,name,digest))
    elif target!=uid:
     c.execute('UPDATE activity_sessions SET user_id=?,name=? WHERE user_id=?',(target,name,uid))
@@ -55,4 +56,6 @@ class DiscordIdentity:
    old=hashlib.sha256(token.encode()).hexdigest();new=hashlib.sha256(replacement.encode()).hexdigest()
    if c.execute('UPDATE activity_sessions SET token=? WHERE token=? AND user_id=?',(new,old,target)).rowcount!=1:
     raise ValueError('La session de connexion a changé.')
+   c.execute('DELETE FROM activity_session_expiry WHERE token=?',(old,))
+   c.execute('INSERT INTO activity_session_expiry VALUES(?,?)',(new,time.time()+SESSION_SECONDS))
   return target,replacement

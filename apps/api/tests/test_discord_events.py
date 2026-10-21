@@ -5,7 +5,7 @@ from unittest.mock import patch
 from zoneinfo import ZoneInfo
 sys.path.insert(0,str(Path(__file__).parents[1]))
 from activity import Activity
-from discord_events import DiscordEvents,CHANNELS,notification_worker
+from discord_events import CHANNELS, notification_worker
 
 class EventsTests(unittest.TestCase):
  def setUp(self):

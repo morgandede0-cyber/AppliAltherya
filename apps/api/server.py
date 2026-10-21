@@ -12,7 +12,9 @@ async def auth(request):
     if not client_id or not secret: return web.json_response({'error':'Discord OAuth non configuré'},status=503)
     if request.headers.get('X-Altherya-Request')!='1':return web.json_response({'error':'Requête de connexion refusée'},status=403,headers={'Cache-Control':'no-store'})
     try:
-        body=await request.json();code=body.get('code')
+        body=await request.json()
+        if not isinstance(body,dict):raise ValueError()
+        code=body.get('code')
         if not isinstance(code,str) or not 1<=len(code)<=2048: raise ValueError()
     except Exception: return web.json_response({'error':'code invalide'},status=400)
     try:
@@ -48,7 +50,8 @@ async def admin(request):
         data=service.admin.handle(uid,body)
         return web.json_response(data,headers={'Cache-Control':'no-store'})
     except PermissionError:return web.json_response({'error':'Accès administrateur refusé.'},status=403,headers={'Cache-Control':'no-store'})
-    except (ValueError,TypeError):return web.json_response({'error':'Requête invalide ou données modifiées. Actualisez la fiche.'},status=400,headers={'Cache-Control':'no-store'})
+    except ValueError as e:return web.json_response({'error':str(e)},status=400,headers={'Cache-Control':'no-store'})
+    except TypeError:return web.json_response({'error':'Requête invalide.'},status=400,headers={'Cache-Control':'no-store'})
 
 async def avatar(request):
     service=get_service();uid=service.session_uid(request.cookies.get('altherya_test',''))
@@ -84,7 +87,8 @@ async def static(request):
             if path.name=='index.html':response.headers['Cache-Control']='no-store'
             return response
     raise web.HTTPNotFound()
-app=web.Application(client_max_size=4096)
+from request_security import api_security
+app=web.Application(client_max_size=4096,middlewares=[api_security(get_service)])
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import activity as adapter

@@ -52,7 +52,7 @@ def step(p,key):
  sync(p,b);return b.finished,b.winner_index==0
 
 def report(p,reward,progress):
- b=restore(p);player=b.fighters[0];floor=p['floor'];next_floor=min(10,progress+1)
+ b=restore(p);player=b.fighters[0];next_floor=min(10,progress+1)
  p['combat_result']=dict(battle_id=b.battle_id,won=reward['won'],abandoned=p.get('abandoned',False),champion=p['champion'],next_champion=opponent(next_floor),wager=0,payout=reward['gold'],net_gold=reward['gold'],xp=reward['xp'],pouciel=reward['pouciel'],rating_delta=0,rating_before=0,rating_after=0,wins_before=progress if p.get('replay') or not reward['won'] else progress-1,wins_after=progress,circuit_complete=progress>=10,rounds=p['round'],duration=max(0,int(time.time()-p['started_at'])),hp=player.hp,max_hp=player.max_hp,stats=p['combat_stats'],events=p['events'],logs=p['logs'],skills=p['skills'],fighters=p['fighters'],technique_unlocked=reward.get('technique_unlocked'))
 
 def public(p,revision):

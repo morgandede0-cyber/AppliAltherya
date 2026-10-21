@@ -1,4 +1,4 @@
-import sys,unittest,tempfile,json,uuid
+import sys, unittest, tempfile, uuid
 from pathlib import Path
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).parents[1]))

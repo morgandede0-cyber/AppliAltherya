@@ -1,5 +1,5 @@
 """Extra adversarial coverage: restart, process death, malformed actions and buffs."""
-import copy,itertools,json,os,subprocess,sys,tempfile,unittest,uuid
+import copy, itertools, json, subprocess, sys, tempfile, unittest, uuid
 from dataclasses import asdict
 from pathlib import Path
 from unittest.mock import patch

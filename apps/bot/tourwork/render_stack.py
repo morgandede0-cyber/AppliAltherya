@@ -29,23 +29,18 @@ BACKENDS = (
 )
 
 def availability() -> dict[str, bool]:
+    # The import itself checks whether each optional renderer is available.
+    from importlib import import_module
+    modules = {"resvg": ("resvg_py",), "vips": ("pyvips", "pangocffi"),
+               "skia": ("skia",), "playwright": ("playwright",), "pillow": ("PIL.Image",)}
     out = {}
-    for b in BACKENDS:
+    for backend in BACKENDS:
         try:
-            if b.key == "resvg":
-                import resvg_py  # noqa
-            elif b.key == "vips":
-                import pyvips  # noqa
-                import pangocffi  # noqa
-            elif b.key == "skia":
-                import skia  # noqa
-            elif b.key == "playwright":
-                import playwright  # noqa
-            elif b.key == "pillow":
-                from PIL import Image  # noqa
-            out[b.key] = True
+            for module in modules[backend.key]:
+                import_module(module)
+            out[backend.key] = True
         except Exception:
-            out[b.key] = False
+            out[backend.key] = False
     return out
 
 def render_svg(svg: str, output: str | Path) -> Path:

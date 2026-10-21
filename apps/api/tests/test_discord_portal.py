@@ -1,5 +1,5 @@
 import asyncio
-import json
+
 import os
 import sys
 import tempfile
@@ -12,7 +12,7 @@ import discord
 from discord.webhook.async_ import async_context
 sys.path.insert(0,str(Path(__file__).parents[1]))
 from activity import Activity
-from discord_portal import (CUSTOM_ID,DEFAULT_APP,DEFAULT_CHANNEL,PortalClient,PortalStore,PortalView,PortalError,is_portal,portal_lifecycle,portal_supervisor,portal_art_url)
+from discord_portal import CUSTOM_ID, DEFAULT_APP, DEFAULT_CHANNEL, PortalClient, PortalStore, PortalView, PortalError, is_portal, portal_lifecycle, portal_art_url
 
 
 def http_error(cls,status):

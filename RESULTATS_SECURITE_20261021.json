@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-21",
+  "base_archive_version": 6,
+  "server_tests_passed": 362,
+  "new_security_tests": 16,
+  "client_tests_passed": 162,
+  "bot_tests_passed": 17,
+  "typescript_build": "passed",
+  "python_compile": "passed",
+  "pyflakes_warnings": 0,
+  "browser_scripts": [
+    {
+      "script": "browser-activity-cookie.cjs",
+      "status": "passed",
+      "checks": 10,
+      "thirdPartyIframe": true,
+      "https": true,
+      "partitioned": true
+    },
+    {
+      "script": "browser-admin.cjs",
+      "status": "passed",
+      "checks": 38,
+      "errors": []
+    },
+    {
+      "script": "browser-tutorial.cjs",
+      "status": "passed",
+      "checks": 24,
+      "errors": []
+    }
+  ],
+  "production_tested": false,
+  "production_deployed": false,
+  "python_dependencies": [
+    {
+      "name": "discord-py",
+      "version": "2.7.1",
+      "vulns": []
+    },
+    {
+      "name": "aiohttp",
+      "version": "3.14.4",
+      "vulns": []
+    },
+    {
+      "name": "multidict",
+      "version": "6.9.1",
+      "vulns": []
+    },
+    {
+      "name": "yarl",
+      "version": "1.25.1",
+      "vulns": []
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.5",
+      "vulns": []
+    },
+    {
+      "name": "aiohappyeyeballs",
+      "version": "2.7.1",
+      "vulns": []
+    },
+    {
+      "name": "aiosignal",
+      "version": "1.4.0",
+      "vulns": []
+    },
+    {
+      "name": "attrs",
+      "version": "26.1.0",
+      "vulns": []
+    },
+    {
+      "name": "frozenlist",
+      "version": "1.8.0",
+      "vulns": []
+    },
+    {
+      "name": "idna",
+      "version": "3.19",
+      "vulns": []
+    },
+    {
+      "name": "propcache",
+      "version": "0.5.2",
+      "vulns": []
+    },
+    {
+      "name": "typing-extensions",
+      "version": "4.16.0",
+      "vulns": []
+    }
+  ],
+  "npm_audit": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "dependencies": {
+      "prod": 11,
+      "dev": 78,
+      "optional": 53,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 88
+    }
+  },
+  "secret_pattern_scan": {
+    "text_files_scanned": 409,
+    "potential_matches": []
+  }
+}

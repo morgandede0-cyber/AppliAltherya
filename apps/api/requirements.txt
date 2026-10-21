@@ -1,3 +1,6 @@
 aiohttp>=3.12,<4
 discord.py==2.7.1
 tzdata
+
+# GHSA-54p9-h82j-f925: reject affected multidict releases.
+multidict>=6.9.1,<7

@@ -1,5 +1,5 @@
-import unittest,json
-from unittest.mock import patch
+import unittest
+
 import test_arena_complete as harness
 from activity import Activity
 import arena_techniques as tech

@@ -1,11 +1,11 @@
 """Altherya Sentinel V1 — deterministic real-time error detection and Discord DM alerts."""
 from __future__ import annotations
-import asyncio, hashlib, json, os, sqlite3, sys, time, traceback
-from collections import defaultdict, deque
+import asyncio, hashlib, json, os, sqlite3, time, traceback
+from collections import deque
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+
 
 @dataclass
 class ErrorBucket:
