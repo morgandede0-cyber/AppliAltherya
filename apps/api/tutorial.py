@@ -13,7 +13,7 @@ class ActivityTutorial:
    c.execute('CREATE TABLE IF NOT EXISTS activity_tutorial_steps(user_id INTEGER PRIMARY KEY,step INTEGER NOT NULL DEFAULT 0,replay INTEGER NOT NULL DEFAULT 0)')
  @staticmethod
  def discord_required():
-  return bool(os.getenv('DISCORD_CLIENT_ID','').strip() and os.getenv('DISCORD_CLIENT_SECRET','').strip())
+  return bool(os.getenv('DISCORD_CLIENT_ID','').strip() or os.getenv('DISCORD_CLIENT_SECRET','').strip())
  def identity(self, uid):
   p=self.a.discord_profile(uid);return ('discord:'+p['discord_id'],p['discord_id']) if p else ('local:'+str(uid),None)
  def state(self, uid):

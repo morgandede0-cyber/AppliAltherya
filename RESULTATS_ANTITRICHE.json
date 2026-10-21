@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-21",
+  "server_tests_passed": 320,
+  "client_tests_passed": 171,
+  "new_anticheat_cases": 27,
+  "browser_passes": [
+    {
+      "test": "browser-activity-cookie.cjs",
+      "status": "passed"
+    },
+    {
+      "test": "browser-arena-wager.cjs",
+      "status": "passed"
+    },
+    {
+      "test": "browser-coin.cjs",
+      "status": "passed"
+    },
+    {
+      "test": "browser-blackjack.cjs",
+      "status": "passed"
+    },
+    {
+      "test": "browser-slots.cjs",
+      "status": "passed"
+    },
+    {
+      "test": "browser-bank-book-parchment.cjs",
+      "status": "passed"
+    }
+  ],
+  "bank_model_operations": 2000,
+  "xp_before": {
+    "rounds": 1000,
+    "stake_per_round": 1,
+    "xp": 5000,
+    "gold_before": 10000,
+    "gold_after": 9998,
+    "local_service_seconds": 5.271,
+    "note": "Local service calls without browser animations, OAuth notifications or network; not a production throughput measurement."
+  },
+  "xp_after_same_window": {
+    "attempts": 1000,
+    "accepted": 1,
+    "blocked": 999,
+    "xp": 5,
+    "gold_after": 9999,
+    "local_service_seconds": 2.855,
+    "server_clock_frozen_for_reproducibility": true
+  },
+  "simulation": {
+    "slots_exact_return_per_gold": 0.224033,
+    "roulette_standard_exact_return_per_gold": 0.972972972972973,
+    "coin_exact_return_per_gold": 1,
+    "dice_with_tie_refund_exact_return_per_gold": 1,
+    "rps_with_tie_refund_exact_return_per_gold": 1,
+    "synthetic_draws_per_game": 200000,
+    "simulated_net_gold_at_one_gold_per_round": {
+      "coin": 560,
+      "dice": -776,
+      "rps": -412,
+      "slots": -155262,
+      "roulette_red": -4590
+    },
+    "horse_max_expected_return_in_enumerated_standard_odds": {
+      "return": 0.7407407407407407,
+      "odds": [
+        1.5,
+        2.5,
+        2.5,
+        3.0
+      ],
+      "chosen": 1.5,
+      "wager": 1
+    },
+    "gold_x2_event_coin_exact_return_per_gold": 1.5,
+    "xp_loop_theoretical_without_a_server_cadence": "Every valid tavern round awards XP, even when animation is skipped; this is not a duplicate payment."
+  },
+  "production_modified": false,
+  "shared_oddium_gold_validated": false
+}

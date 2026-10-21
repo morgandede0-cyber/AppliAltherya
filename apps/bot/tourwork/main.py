@@ -37,7 +37,7 @@ from dark_alley import (DarkAlleyStore, HEIST_ATTEMPTS, HEIST_CODE_LENGTH, GUARD
 from casino_engine import (CasinoStore, MAX_BET, VIP_MAX_BET, MIN_BET, SLOT_SYMBOLS, draw_slot, slot_multiplier, roulette_spin)
 from casino_render import render_blackjack, render_roulette_strip, render_slot_machine, render_horse_race, EUROPEAN_WHEEL
 from castle_engine import CastleStore, DAILY_REWARD, DAILY_XP, QUESTS, QUEST_GLOBAL_GOLD, QUEST_GLOBAL_XP, level_from_xp
-import random
+from secure_random import random
 from progression import FORGE_LEVEL_REQUIREMENTS, FORGE_GOLD_COSTS, XP_REWARDS, EXPEDITION_XP, EXPEDITION_TIER_XP, JOB_RARITY_XP
 from achievements import AchievementStore, ACHIEVEMENTS, RARITIES
 from admin_engine import AdminStore, EVENTS
@@ -4814,7 +4814,10 @@ async def eject_from_casino(interaction: discord.Interaction):
 async def casino_access_or_eject(interaction: discord.Interaction, session_id: str | None = None) -> bool:
     if DARK_STORE.has_clandestine_access(interaction.user.id):
         return True
-    # Si minuit coupe une partie en cours, la mise est rendue avant l'expulsion.
+    # A revealed round must settle; expiry is never a refund option.
+    if session_id and (session_id in globals().get("BLACKJACK_STATES", {}) or session_id in globals().get("RUSSIAN_STATES", {})):
+        return True
+    # Unrevealed choice screens can still be refunded before ejection.
     if session_id:
         CASINO_STORE.refund(session_id)
         BLACKJACK_STATES.pop(session_id, None) if "BLACKJACK_STATES" in globals() else None
@@ -5130,7 +5133,7 @@ class BlackjackView(discord.ui.View):
     async def on_timeout(self):
         if self.session_id in BLACKJACK_FINISHING:
             return
-        CASINO_STORE.refund(self.session_id)
+        CASINO_STORE.settle(self.session_id, 0)
         BLACKJACK_STATES.pop(self.session_id, None)
 
 
@@ -5277,10 +5280,6 @@ class RussianRouletteView(discord.ui.View):
                 return
             await edit_with_asset(interaction,PLACES/"casino_room.png","casino.png",discord.ui.View(),"😈 **CLIC — tu restes dans la partie.**\nLe hyène prend son tour...")
             await asyncio.sleep(1.0)
-            if not DARK_STORE.has_clandestine_access(interaction.user.id):
-                CASINO_STORE.refund(self.session_id); RUSSIAN_STATES.pop(self.session_id,None)
-                await edit_with_asset(interaction,PLACES/"alley_guard.png","vigile.png",GuardView(),"🐻 **Minuit. Le Vigile interrompt la partie, rend ta mise et te met dehors.**")
-                return
             st["step"]+=1
             if st["step"]==st["danger"]:
                 payout=st["wager"]*2; settled=CASINO_STORE.settle(self.session_id,payout); payout=int(settled.get("payout",payout)); CASTLE_STORE.record(interaction.user.id, "gold_earned", payout); RUSSIAN_STATES.pop(self.session_id,None)
@@ -5290,15 +5289,15 @@ class RussianRouletteView(discord.ui.View):
                                       f"💥 **Le mafieux tombe sur la mauvaise case !**\n🏆 Tu remportes **{payout} Gold**.\n💰 Solde : **{settled.get('wallet',0)} Gold**")
                 return
             await edit_with_asset(interaction,PLACES/"casino_room.png","casino.png",self,f"😏 **Le mafieux s'en sort.**\n\nCases déjà jouées : **{st['step']}/6**\nÀ toi de retenter.")
-        back=discord.ui.Button(label="Retour aux jeux",emoji="↩️",style=discord.ButtonStyle.secondary)
+        back=discord.ui.Button(label="Abandonner — mise perdue",emoji="↩️",style=discord.ButtonStyle.secondary)
         async def back_cb(interaction:discord.Interaction):
             if interaction.user.id!=self.owner_id: await interaction.response.send_message("Ce n'est pas ta partie.",ephemeral=True); return
-            CASINO_STORE.refund(self.session_id); RUSSIAN_STATES.pop(self.session_id,None)
+            CASINO_STORE.settle(self.session_id, 0); RUSSIAN_STATES.pop(self.session_id,None)
             await safe_defer(interaction); await edit_with_asset(interaction,PLACES/"casino_room.png","casino.png",CasinoMainView(),casino_home_content(interaction.user.id))
         go.callback=go_cb; back.callback=back_cb; self.add_item(go); self.add_item(back)
 
     async def on_timeout(self):
-        CASINO_STORE.refund(self.session_id)
+        CASINO_STORE.settle(self.session_id, 0)
         RUSSIAN_STATES.pop(self.session_id, None)
 
 
@@ -6235,6 +6234,7 @@ async def announce_achievement_for(guild: discord.Guild, user: discord.abc.User,
     try:
         channel = bot.get_channel(channel_id) or await bot.fetch_channel(channel_id)
         progress = ACHIEVEMENT_STORE.branch_progress(user.id, ach.branch)
+        branch_total = sum(1 for item in ACHIEVEMENTS.values() if item.branch == ach.branch)
         embed = discord.Embed(
             title="🏆 SUCCÈS DÉBLOQUÉ !",
             description=f"{user.mention} vient de débloquer un nouveau succès !\n\n### {ach.branch_emoji} {ach.title}\n{ach.description}",

@@ -83,12 +83,15 @@ class Activity:
                     self.castle._queue_levelups(c,uid,before,before+xp); self.castle._sync_level(c,uid)
                     c.execute('INSERT INTO castle_daily_progress(user_id,day,quest_key,progress) VALUES(?,?,?,1) ON CONFLICT(user_id,day,quest_key) DO UPDATE SET progress=progress+1',(uid,self.castle._today(),'expedition'))
     def snapshot(self, uid, name):
+        # One coherent read/reconciliation, one connection and one durable commit.
+        with atomic(self.path):return self._snapshot(uid,name)
+    def _snapshot(self, uid, name):
         self.economy.get_balance(uid); self.expeditions.ensure_profile(uid); self.castle.ensure(uid);self.reconcile(uid)
         level,xp,needed=level_from_xp(self.castle.profile(uid)['xp'])
         run=self.expeditions.active_run(uid)
         if run:self.expeditions.reveal_due_events(run.run_id)
         # Never expose precomputed future loot to the client.
-        active=None if not run else {'name':EXPEDITIONS[run.expedition_key]['name'],'ends_at':run.ends_at,'remaining':run.remaining_seconds,'capacity':run.capacity,'ends_at':run.ends_at,'started_at':run.started_at,'revealed_loot':self.expeditions.revealed_loot(run.run_id),'log':self.expeditions.drop_log(run.run_id)}
+        active=None if not run else {'name':EXPEDITIONS[run.expedition_key]['name'],'ends_at':run.ends_at,'remaining':run.remaining_seconds,'capacity':run.capacity,'started_at':run.started_at,'revealed_loot':self.expeditions.revealed_loot(run.run_id),'log':self.expeditions.drop_log(run.run_id)}
         self.story.unlock_chapter(uid,1,1)
         chapters=[dict(chapter=n,title=title,**self.story.chapter_state(uid,1,n)) for n,title in SEASON_1_TITLES.items()]
         board=asdict(self.jobs.get_board(uid));board['jobs']=[dict(job_id=j['job_id'],title=j['title']) for j in board['jobs']];pending=self.jobs.pending_reward(uid)
@@ -141,7 +144,16 @@ class Activity:
             return 'Nom enregistré.'
         if self.tutorial.discord_required() and not self.discord_profile(uid):raise ValueError('Connexion Discord requise pour jouer.')
         if not self.tutorial.state(uid)['completed']:raise ValueError('Terminez le tutoriel et récupérez votre récompense avant de jouer.')
-        if self.tower.active(uid) and (action in ('battle_start','game_start','arena_equip') or action=='campaign_battle' and key=='start'):raise ValueError('Terminez ou abandonnez votre combat de la Tour d’Ashkar.')
+        starts_round=action in ('battle_start','game_start') or action=='campaign_battle' and key=='start'
+        if starts_round or action=='arena_equip':
+            if self.tower.active(uid):raise ValueError('Terminez ou abandonnez votre combat de la Tour d’Ashkar.')
+            with self.conn() as c:
+                row=c.execute('SELECT payload FROM campaign_progress WHERE user_id=?',(uid,)).fetchone()
+                battle=json.loads(row[0]).get('battle') if row else None
+            if battle and not battle['finished']:raise ValueError('Terminez votre combat de quête avant de commencer une autre activité ou de changer de technique.')
+            if action=='campaign_battle':
+                _,current=self.play.read(uid)
+                if current.get('status')=='active':raise ValueError('Terminez votre partie ou votre combat avant de commencer le combat de quête.')
         if action.startswith('ashkar_'):return self.tower.action(uid,body)
         if action.startswith('khaz_'):return self.khaz.action(uid,body)
         if action.startswith('campaign_'):return self.campaign.action(uid,body)
@@ -150,7 +162,10 @@ class Activity:
             if type(amount) is not int or not 1<=amount<=1000000000:raise ValueError('Indiquez une quantité entière positive.')
         if action in ('deposit','withdraw'):return getattr(self.economy,action)(uid,amount).message
         if action=='story_buy':return self.story.buy_story_item(uid,key)[1]
-        if action=='story_unlock':return self.story.unlock_chapter(uid,1,int(body.get('chapter',0)))[1]
+        if action=='story_unlock':
+            chapter=body.get('chapter')
+            if type(chapter) is not int or chapter not in SEASON_1_TEXTS:raise ValueError('Chapitre invalide.')
+            return self.story.unlock_chapter(uid,1,chapter)[1]
         if action=='story_read':
             n=body.get('chapter')
             if type(n) is not int or n not in SEASON_1_TEXTS or not self.story.is_unlocked(uid,1,n):raise ValueError('Chapitre verrouillé.')
@@ -192,6 +207,7 @@ class Activity:
 SERVICE=None
 async def activity(request):
     global SERVICE
+    if request.method=='POST' and request.headers.get('X-Altherya-Request')!='1':raise web.HTTPForbidden()
     if SERVICE is None:SERVICE=Activity(os.getenv('ACTIVITY_DB',str(Path(__file__).resolve().parents[2]/'data'/'activity.sqlite3')))
     (uid,name),token=SERVICE.session(request.cookies.get('altherya_test',''))
     message=''

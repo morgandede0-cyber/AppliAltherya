@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import random
+from secure_random import random
 import sqlite3
 from shared_economy import connect_shared
 import uuid
@@ -563,12 +563,13 @@ class ArenaStore:
             conn.commit()
         return True, payout
 
-    def recover_unfinished(self) -> int:
-        """En cas de redémarrage du bot, rembourse les mises des combats interrompus."""
+    def recover_unfinished(self, preserve=()) -> int:
+        """Refund interrupted battles except durable Activity battles being resumed."""
         recovered = 0
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
             rows = conn.execute("SELECT * FROM arena_battles WHERE status='active'").fetchall()
+            rows = [row for row in rows if row["battle_id"] not in preserve]
             for row in rows:
                 wager = int(row["wager"])
                 if wager > 0:

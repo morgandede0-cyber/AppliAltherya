@@ -7,7 +7,7 @@ await p.locator('iframe').waitFor();let frame=await p.locator('iframe').contentF
 const api=async(body,endpoint='/api/activity')=>frame.evaluate(async({body,endpoint})=>{const r=await fetch(endpoint,body?{method:'POST',credentials:'include',headers:{'Content-Type':'application/json','X-Altherya-Request':'1'},body:JSON.stringify(body)}:{credentials:'include'});return {status:r.status,...await r.json()};},{body,endpoint});
 await api(null,'/legacy');assert.equal((await api(null,'/legacy')).present,false);checks++;
 assert.equal((await api()).state.discord,null);assert.equal((await api({action:'list'},'/api/admin')).status,403);checks+=2;
-assert.equal((await api({code:'fake-local-code'},'/api/auth/discord')).status,200);assert.ok((await api()).state.discord);checks++;
+const beforeLogin=(await ctx.cookies()).find(c=>c.name==='altherya_test').value;assert.equal((await api({code:'fake-local-code'},'/api/auth/discord')).status,200);assert.ok((await api()).state.discord);checks++;const afterLogin=(await ctx.cookies()).find(c=>c.name==='altherya_test').value;assert.notEqual(afterLogin,beforeLogin);checks++;
 for(let i=0;i<5;i++)assert.equal((await api({action:'tutorial_next',step:i})).status,200);assert.equal((await api({action:'tutorial_finish',step:5})).state.balance.wallet,100);checks++;
 const cookies=(await ctx.cookies()).filter(c=>c.name==='altherya_test');assert.equal(cookies.length,1);assert.equal(cookies[0].sameSite,'None');assert.ok(cookies[0].secure&&cookies[0].httpOnly&&cookies[0].partitionKey);checks++;
 await frame.goto('https://localhost:20599/probe');const state=(await api()).state;assert.ok(state.tutorial.completed);assert.equal(state.xp,25);assert.equal(state.balance.wallet,100);checks++;

@@ -11,7 +11,7 @@ export type CampaignEvidence={quest_id:string;step_id:string;clue_id:string;plac
 export type CampaignPlace={id:string;name:string;region:string;description:string;scene_image:string;min_level:number;level_allowed:boolean;discovered:boolean;active:boolean;can_enter?:boolean;visited?:boolean;story_allowed?:boolean};
 export type CampaignState={edition?:number;locations?:CampaignPlace[];evidence?:CampaignEvidence[];complete:boolean;title:string;completed:number;total:number;revision:number;accepted?:boolean;level_allowed?:boolean;stage:number;deadline:number;retry_at:number;claim_at:number;expedition_ready?:boolean;choices:Record<string,string>;quest?:{id:string;season:number;chapter:number;title:string;giver:string;locations:string;scene:string;dialogue:string;resolution:string;min_level:number;difficulty:number;gold:number;xp:number;steps:CampaignStep[]};battle?:null|{fighters:{name:string;hp:number;max_hp:number}[];log:string[];finished:boolean;won:boolean|null;turn:number;ultimate_cd:number}};
 export type Card={rank?:string;suit?:string;hidden?:boolean};
-export type PlayState={champion?:ArenaChampion;round?:number;phase?:number;events?:ArenaEvent[];combat_stats?:ArenaStat[];intent?:{key:string;name:string};result?:ArenaResult;skills?:Record<string,ArenaSkill>;revision:number;kind?:string;status?:string;outcome?:'victory'|'defeat';message?:string;wager?:number;payout?:number;player?:Card[]|string|number;dealer?:Card[];player_total?:number;dealer_total?:number;opponent?:string|number;reels?:string[];number?:number;color?:string;step?:number;winner?:number;odds?:number[];fighters?:ArenaFighter[];turn?:number;log?:string[];logs?:string[]};
+export type PlayState={next_round_at?:number;champion?:ArenaChampion;round?:number;phase?:number;events?:ArenaEvent[];combat_stats?:ArenaStat[];intent?:{key:string;name:string};result?:ArenaResult;skills?:Record<string,ArenaSkill>;revision:number;kind?:string;status?:string;outcome?:'victory'|'defeat';message?:string;wager?:number;payout?:number;player?:Card[]|string|number;dealer?:Card[];player_total?:number;dealer_total?:number;opponent?:string|number;reels?:string[];number?:number;color?:string;step?:number;winner?:number;odds?:number[];fighters?:ArenaFighter[];turn?:number;log?:string[];logs?:string[]};
 export type TutorialState={discord_required:boolean;discord_verified:boolean;completed:boolean;reward_claimed:boolean;step:number;replay:boolean;gold:number;xp:number};
 export type KhazItem={slot:string;label:string;branch:string;tier:string|null;set_name:string;owned:null|{branch:string;tier:string};price:number|null;can_buy:boolean;buy_reason:string;next_tier:string|null;next_set:string|null;upgrade_cost:number|null;can_upgrade:boolean;upgrade_reason:string};
 export type KhazState={available:boolean;level_required:number;busy:boolean;revision:number;pouciel:number;equipment:Record<string,{branch:string;tier:string}>;bonuses:Record<string,number>;items:KhazItem[];branches:Record<string,string>;tiers:Record<string,string>;slots:Record<string,string>};
@@ -21,14 +21,16 @@ let pending:Record<string,unknown>|undefined;
 try{const raw=localStorage.getItem(pendingKey);if(raw)pending=JSON.parse(raw);}catch{}
 let mutating=false,owner:string|undefined;
 function remember(value?:Record<string,unknown>){pending=value;try{if(value)localStorage.setItem(pendingKey,JSON.stringify(value));else localStorage.removeItem(pendingKey);}catch{}}
+let roundWaitUntil=0;
 async function send(body?:Record<string,unknown>):Promise<{state:Snapshot;message:string}>{
+ if(body?.action==='game_start'){const wait=roundWaitUntil-Date.now();if(wait>0)await new Promise<void>(resolve=>setTimeout(resolve,Math.min(wait+30,3030)));}
  for(let attempt=0;attempt<2;attempt++){
   let r:Response;
   try{r=await fetch('/api/activity',body?{credentials:'include',method:'POST',headers:{'Content-Type':'application/json','X-Altherya-Request':'1'},body:JSON.stringify(body),signal:AbortSignal.timeout(20000)}:{credentials:'include',signal:AbortSignal.timeout(20000)});}catch(e){if(attempt===0)continue;throw new Error(body?'Connexion interrompue. Votre opération sera vérifiée à la reconnexion ; ne la relancez pas.':'Connexion au serveur interrompue.');}
   if(r.status>=500){if(attempt===0)continue;throw new Error('Serveur indisponible. Vérification de la sauvegarde en attente.');}
   const data=await r.json();
   if(!r.ok){if(body)remember();throw new Error(data.error??'Opération refusée');}
-  owner=data.state?.save_owner;return data;
+  owner=data.state?.save_owner;const until=data.state?.play?.next_round_at,now=data.state?.server_now;roundWaitUntil=typeof until==='number'&&typeof now==='number'&&Number.isFinite(until)&&Number.isFinite(now)?Date.now()+Math.max(0,Math.min(3000,(until-now)*1000)):0;return data;
  }
  throw new Error('Serveur indisponible');
 }

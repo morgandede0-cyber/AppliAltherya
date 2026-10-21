@@ -1,6 +1,7 @@
 """Bind opaque browser sessions to a canonical profile using verified OAuth only."""
 import hashlib,secrets
 from discord_profile import verified_user
+from sqlite_store import atomic
 
 class DiscordIdentity:
  def __init__(self, activity):
@@ -44,3 +45,14 @@ class DiscordIdentity:
    c.execute('UPDATE activity_sessions SET name=? WHERE user_id=?',(name,target))
    c.execute('INSERT INTO activity_discord VALUES(?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET discord_id=excluded.discord_id,avatar=excluded.avatar,username=excluded.username,display_name=excluded.display_name,discriminator=excluded.discriminator',(target,p['discord_id'],p['avatar'],p['username'],p['display_name'],p['discriminator']))
   return target
+
+ def login(self, uid, user, token):
+  """Bind and rotate only the authenticating device, as one durable operation."""
+  if not token:raise ValueError('Session Discord requise.')
+  with atomic(self.a.path) as c:
+   target=self.bind(uid,user,token)
+   replacement=secrets.token_urlsafe(32)
+   old=hashlib.sha256(token.encode()).hexdigest();new=hashlib.sha256(replacement.encode()).hexdigest()
+   if c.execute('UPDATE activity_sessions SET token=? WHERE token=? AND user_id=?',(new,old,target)).rowcount!=1:
+    raise ValueError('La session de connexion a changé.')
+  return target,replacement

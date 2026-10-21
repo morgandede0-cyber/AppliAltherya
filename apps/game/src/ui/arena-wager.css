@@ -1,0 +1,27 @@
+/* Arena wager only: shared match-dialog rules must not position this control. */
+#panel.game-menu.arena-surface.approved-menu .arena-wager-v2{position:relative;isolation:isolate;box-sizing:border-box;width:min(100%,460px);margin:12px auto;padding:24px 24px 20px;color:#f8e7ba;background:transparent;border:0;}
+#panel .arena-wager-v2>.approved-card-fill{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
+#panel .arena-wager-v2 .wager-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;font:14px Georgia,serif;margin-bottom:10px;}
+#panel .arena-wager-v2 .wager-heading span{font-size:12px;color:#d4c49e;text-align:right;}
+#panel .arena-wager-v2 .wager-controls{display:grid;grid-template-columns:42px minmax(60px,1fr) 40px 42px;align-items:center;gap:8px;max-width:290px;margin:auto;}
+#panel.game-menu .arena-wager-v2 .wager-controls input{box-sizing:border-box;width:100%!important;min-width:0;height:40px!important;padding:4px!important;border:1px solid #ab8854!important;border-radius:4px;background:#092628!important;color:#fff1cc!important;text-align:center;font:24px Georgia,serif!important;}
+#panel.game-menu.arena-surface.approved-menu .arena-wager-v2 .wager-controls button.approved-button{width:42px!important;min-width:0!important;min-height:40px!important;padding:0!important;font-size:24px!important;}
+#panel.game-menu.arena-surface.approved-menu .arena-wager-v2 .wager-presets{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:10px 0 6px;}
+#panel.game-menu.arena-surface.approved-menu .arena-wager-v2 .wager-presets button.approved-button{min-width:0!important;width:100%!important;min-height:34px!important;padding:6px 4px!important;font-size:12px!important;line-height:1.1!important;}
+#panel .arena-wager-v2 .wager-presets button[aria-pressed=true]{filter:brightness(1.25);outline:1px solid #cda65e;outline-offset:-5px;}
+#panel .arena-wager-v2 .wager-status{display:block!important;min-height:30px;margin:4px 0 0;text-align:center;font:12px/1.3 Georgia,serif;color:#e6d5ae;}
+#panel .arena-wager-v2.is-invalid .wager-status{color:#ffb8a7;}
+#panel .arena-wager-v2 input:focus-visible{outline:2px solid #f0cd80;outline-offset:2px;}
+/* Leave room for the complete wager card above the fixed footer. */
+#panel.game-menu.arena-surface.approved-menu.arena-lobby .arena-portrait{width:clamp(90px,18vh,175px)!important;height:clamp(90px,18vh,175px)!important;}
+#panel.game-menu.arena-surface.approved-menu.arena-lobby .arena-lobby-versus{margin-top:60px;}
+@media(max-width:600px){
+ #panel.game-menu.arena-surface.approved-menu.arena-lobby .arena-portrait{width:clamp(70px,22vw,100px)!important;height:clamp(70px,22vw,100px)!important;}
+ #panel.game-menu.arena-surface.approved-menu.arena-lobby .arena-lobby-versus{margin-top:35px;}
+ #panel.game-menu.arena-surface.approved-menu .arena-wager-v2{padding:22px 14px 18px;margin:8px auto;}
+ #panel.game-menu.arena-surface.approved-menu .arena-wager-v2 .wager-heading{flex-direction:column;gap:2px;margin-bottom:7px;font-size:13px;}
+ #panel .arena-wager-v2 .wager-heading span{font-size:11px;}
+ #panel.game-menu.arena-surface.approved-menu .arena-wager-v2 .wager-controls{grid-template-columns:34px minmax(40px,1fr) 32px 34px;gap:5px;}
+ #panel.game-menu.arena-surface.approved-menu .arena-wager-v2 .wager-controls button.approved-button{width:34px!important;}
+ #panel.game-menu.arena-surface.approved-menu .arena-wager-v2 .wager-presets button.approved-button{font-size:11px!important;min-height:36px!important;}
+}

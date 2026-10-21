@@ -35,6 +35,9 @@ class CastleStore:
             c.execute('''CREATE TABLE IF NOT EXISTS castle_profiles(user_id INTEGER PRIMARY KEY, xp INTEGER NOT NULL DEFAULT 0, combats INTEGER NOT NULL DEFAULT 0, wins INTEGER NOT NULL DEFAULT 0, losses INTEGER NOT NULL DEFAULT 0, expeditions INTEGER NOT NULL DEFAULT 0, casino_games INTEGER NOT NULL DEFAULT 0, quests_completed INTEGER NOT NULL DEFAULT 0, member_since TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, last_daily TEXT)''')
             c.execute('''CREATE TABLE IF NOT EXISTS castle_daily_progress(user_id INTEGER NOT NULL, day TEXT NOT NULL, quest_key TEXT NOT NULL, progress INTEGER NOT NULL DEFAULT 0, claimed INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(user_id,day,quest_key))''')
             c.execute('CREATE TABLE IF NOT EXISTS castle_daily_plans(user_id INTEGER NOT NULL, day TEXT NOT NULL, plan_json TEXT NOT NULL, PRIMARY KEY(user_id,day))')
+            c.execute('CREATE TABLE IF NOT EXISTS castle_daily_receipts(user_id INTEGER NOT NULL,day TEXT NOT NULL,PRIMARY KEY(user_id,day))')
+            # Preserve the known last claim when upgrading an existing database.
+            c.execute("INSERT OR IGNORE INTO castle_daily_receipts(user_id,day) SELECT user_id,last_daily FROM castle_profiles WHERE last_daily IS NOT NULL AND last_daily!=''")
             c.execute('''CREATE TABLE IF NOT EXISTS castle_levelups(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
@@ -118,7 +121,7 @@ class CastleStore:
 
     def _sync_daily_bonus(self,c,uid,day):
         row=c.execute('SELECT last_daily FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()
-        if row and row['last_daily']==day:
+        if row and (row['last_daily']==day or c.execute('SELECT 1 FROM castle_daily_receipts WHERE user_id=? AND day=?',(uid,day)).fetchone()):
             c.execute("INSERT INTO castle_daily_progress(user_id,day,quest_key,progress) VALUES(?,?, 'daily_bonus',1) ON CONFLICT(user_id,day,quest_key) DO UPDATE SET progress=MAX(progress,1)",(uid,day))
 
     def record(self,user_id,event,amount=1):
@@ -193,6 +196,8 @@ class CastleStore:
         with self._c() as c:
             c.execute('BEGIN IMMEDIATE'); r=c.execute('SELECT last_daily FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()
             if r and r['last_daily']==day: c.rollback(); return False,0
+            if not c.execute('INSERT OR IGNORE INTO castle_daily_receipts(user_id,day) VALUES(?,?)',(uid,day)).rowcount:
+                c.rollback(); return False,0
             c.execute('INSERT OR IGNORE INTO players(user_id) VALUES(?)',(uid,))
             gold_reward=DAILY_REWARD*event_multiplier(self.db_path,'gold_x2')
             xp_reward=DAILY_XP*event_multiplier(self.db_path,'xp_x2')
@@ -202,7 +207,10 @@ class CastleStore:
             self._queue_levelups(c,uid,before_xp,before_xp+xp_reward)
             self._sync_level(c,uid); c.commit()
         return True,gold_reward
-    def daily_available(self,user_id): return self.profile(user_id)['last_daily'] != self._today()
+    def daily_available(self,user_id):
+        uid=int(user_id);day=self._today()
+        if self.profile(uid)['last_daily']==day:return False
+        with self._c() as c:return not bool(c.execute('SELECT 1 FROM castle_daily_receipts WHERE user_id=? AND day=?',(uid,day)).fetchone())
     def leaderboard(self,limit=10):
         with self._c() as c:
             return [dict(r) for r in c.execute('SELECT user_id,wallet_gold,bank_gold,(wallet_gold+bank_gold) total FROM players ORDER BY total DESC,user_id ASC LIMIT ?',(int(limit),))]

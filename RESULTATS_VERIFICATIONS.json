@@ -1,0 +1,270 @@
+{
+  "date": "2026-10-21",
+  "server_tests_passed": 346,
+  "new_server_tests": 26,
+  "legacy_bot_tests_passed": 17,
+  "client_tests_passed": 173,
+  "browser_scripts": [
+    {
+      "script": "browser-activity-cookie.cjs",
+      "status": "passed",
+      "checks": 10,
+      "thirdPartyIframe": true,
+      "https": true,
+      "partitioned": true
+    },
+    {
+      "script": "browser-admin.cjs",
+      "status": "passed",
+      "checks": 38,
+      "errors": []
+    },
+    {
+      "script": "browser-arena-wager.cjs",
+      "status": "passed",
+      "checks": 40,
+      "errors": []
+    },
+    {
+      "script": "browser-ashkar.cjs",
+      "status": "passed",
+      "viewports": 2
+    },
+    {
+      "script": "browser-bank-book-parchment.cjs",
+      "status": "passed",
+      "checks": 49,
+      "errors": []
+    },
+    {
+      "script": "browser-blackjack.cjs",
+      "status": "passed",
+      "checks": 32
+    },
+    {
+      "script": "browser-campaign-story.cjs",
+      "status": "passed",
+      "viewports": 2
+    },
+    {
+      "script": "browser-casino-room.cjs",
+      "status": "passed",
+      "checks": 32
+    },
+    {
+      "script": "browser-city-navigation.cjs",
+      "status": "passed",
+      "checks": 56
+    },
+    {
+      "script": "browser-coin.cjs",
+      "status": "passed",
+      "viewports": 4
+    },
+    {
+      "script": "browser-dice.cjs",
+      "status": "passed",
+      "viewports": 4
+    },
+    {
+      "script": "browser-forge-bank.cjs",
+      "status": "passed",
+      "checks": 48,
+      "errors": []
+    },
+    {
+      "script": "browser-guild-names.cjs",
+      "status": "passed",
+      "checks": 15,
+      "errors": []
+    },
+    {
+      "script": "browser-heist.cjs",
+      "status": "passed",
+      "checks": 10
+    },
+    {
+      "script": "browser-horses.cjs",
+      "status": "passed",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "elapsed": 10258,
+      "viewports": 4
+    },
+    {
+      "script": "browser-hub-life.cjs",
+      "status": "passed",
+      "checks": 49,
+      "errors": []
+    },
+    {
+      "script": "browser-jobs-blind.cjs",
+      "status": "passed",
+      "checks": 28,
+      "errors": []
+    },
+    {
+      "script": "browser-khaz.cjs",
+      "status": "passed",
+      "viewports": 2
+    },
+    {
+      "script": "browser-launch-responsive.cjs",
+      "status": "passed",
+      "checks": 27,
+      "errors": []
+    },
+    {
+      "script": "browser-player-profile.cjs",
+      "status": "passed",
+      "checks": 36,
+      "errors": []
+    },
+    {
+      "script": "browser-quest-tracker.cjs",
+      "status": "passed",
+      "checks": 27,
+      "errors": []
+    },
+    {
+      "script": "browser-realm-menus.cjs",
+      "status": "passed",
+      "checks": 104,
+      "errors": []
+    },
+    {
+      "script": "browser-roulette.cjs",
+      "status": "passed",
+      "viewports": 6
+    },
+    {
+      "script": "browser-rps.cjs",
+      "status": "passed",
+      "viewports": 4
+    },
+    {
+      "script": "browser-russian.cjs",
+      "status": "passed",
+      "viewports": 4
+    },
+    {
+      "script": "browser-slots.cjs",
+      "status": "passed",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "stops": [
+        {
+          "reel": 0,
+          "time": 3987.0999999996275
+        },
+        {
+          "reel": 1,
+          "time": 5571.199999999255
+        },
+        {
+          "reel": 2,
+          "time": 7170.199999999255
+        }
+      ],
+      "checks": 24
+    },
+    {
+      "script": "browser-tutorial.cjs",
+      "status": "passed",
+      "checks": 24,
+      "errors": []
+    },
+    {
+      "script": "browser-update-journal.cjs",
+      "status": "passed",
+      "checks": 32,
+      "errors": []
+    }
+  ],
+  "combat_scenarios": 10800,
+  "combat_configurations": {
+    "loadouts": 180,
+    "levels": [
+      1,
+      10,
+      30
+    ],
+    "champions": 10,
+    "gear": [
+      "none",
+      "all_attack_legendary"
+    ],
+    "actions_up_to_four_rounds": [
+      "light",
+      "heavy",
+      "defend",
+      "ultimate"
+    ]
+  },
+  "request_mutations": {
+    "balance_invariance": 180,
+    "uncaught_error_probe": 552
+  },
+  "local_http_before": {
+    "users": 16,
+    "posts": 320,
+    "gets": 320,
+    "success_responses": 640,
+    "elapsed_seconds": 163.313,
+    "post_latency_median_ms": 5250.44,
+    "post_latency_p95_ms": 7293.8,
+    "wallet_per_user": 991,
+    "bank_per_user": 0,
+    "sqlite_integrity": "ok",
+    "scope": "local HTTP only; concurrent browser suites share host; no production capacity claim"
+  },
+  "local_http_after": {
+    "users": 16,
+    "posts": 320,
+    "gets": 320,
+    "success_responses": 640,
+    "elapsed_seconds": 16.933,
+    "post_latency_median_ms": 559.69,
+    "post_latency_p95_ms": 957.42,
+    "wallet_per_user": 991,
+    "bank_per_user": 0,
+    "sqlite_integrity": "ok",
+    "scope": "local HTTP only; concurrent browser suites share host; no production capacity claim"
+  },
+  "simulation": {
+    "slots_exact_return_per_gold": 0.224033,
+    "roulette_standard_exact_return_per_gold": 0.972972972972973,
+    "coin_exact_return_per_gold": 1,
+    "dice_with_tie_refund_exact_return_per_gold": 1,
+    "rps_with_tie_refund_exact_return_per_gold": 1,
+    "synthetic_draws_per_game": 200000,
+    "simulated_net_gold_at_one_gold_per_round": {
+      "coin": 560,
+      "dice": -776,
+      "rps": -412,
+      "slots": -155262,
+      "roulette_red": -4590
+    },
+    "horse_max_expected_return_in_enumerated_standard_odds": {
+      "return": 0.7407407407407407,
+      "odds": [
+        1.5,
+        2.5,
+        2.5,
+        3.0
+      ],
+      "chosen": 1.5,
+      "wager": 1
+    },
+    "gold_x2_event_coin_exact_return_per_gold": 1.5,
+    "xp_loop_theoretical_without_a_server_cadence": "Every valid tavern round awards XP, even when animation is skipped; this is not a duplicate payment."
+  },
+  "compile_python": "passed",
+  "typescript_build": "passed",
+  "build_warning": "existing large bundle",
+  "scope": "isolated temporary SQLite and local Chromium; real Discord, production and Oddium not tested"
+}

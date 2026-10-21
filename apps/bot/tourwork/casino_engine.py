@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import random
+from secure_random import random
 import sqlite3
 from shared_economy import connect_shared
 import time
@@ -209,11 +209,12 @@ class CasinoStore:
             return {"ok": False}
         return self.settle(session_id, int(row["wager"]), status="refunded")
 
-    def recover_unfinished(self) -> int:
-        """Rembourse toutes les parties interrompues lors d'un redémarrage."""
+    def recover_unfinished(self, preserve=()) -> int:
+        """Refund interrupted rounds except durable Activity sessions being resumed."""
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
             rows = conn.execute("SELECT session_id,user_id,wager FROM casino_sessions WHERE status='active'").fetchall()
+            rows = [row for row in rows if row["session_id"] not in preserve]
             now = int(time.time())
             for row in rows:
                 self._ensure_player(conn, int(row["user_id"]))

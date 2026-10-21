@@ -27,11 +27,11 @@ async def auth(request):
         return web.json_response({'error':'Connexion Discord indisponible'},status=502)
     service=get_service()
     (uid,_),token=service.session(request.cookies.get('altherya_test',''))
-    try:target=service.bind_discord(uid,user,token or request.cookies.get('altherya_test',''))
+    try:target,session_token=service.identities.login(uid,user,token or request.cookies.get('altherya_test',''))
     except ValueError:return web.json_response({'error':'Profil Discord invalide'},status=502)
     await service.guild_names.login(target,user)
     response=web.json_response({'access_token':data['access_token']},headers={'Cache-Control':'no-store'})
-    set_activity_cookie(response,request,token or request.cookies.get('altherya_test',''))
+    set_activity_cookie(response,request,session_token)
     return response
 
 def get_service():

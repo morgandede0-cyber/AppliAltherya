@@ -1,11 +1,12 @@
 """Activity game orchestration: source engines, server-owned outcomes, isolated SQLite."""
-import json,random,time
+import json,time,math
+from secure_random import random
 from roulette_rules import normalise_bets, winnings
 import arena_combat,arena_techniques
 from dataclasses import asdict
 from casino_engine import CasinoStore,draw_slot,slot_multiplier,roulette_spin,MAX_BET,VIP_MAX_BET,SLOT_SYMBOLS,SLOT_WEIGHTS,SLOT_TRIPLE_MULTIPLIERS
 from tavern_engine import TavernGameStore,roll_die,flip_coin,rps_bot,rps_result
-from dark_alley import DarkAlleyStore,NPC_THEFT_TARGETS,GUARD_ENTRY_FEE,HEIST_CODE_LENGTH,HEIST_ATTEMPTS
+from dark_alley import DarkAlleyStore,NPC_THEFT_TARGETS,GUARD_ENTRY_FEE,HEIST_CODE_LENGTH
 from arena_engine import ArenaStore,Fighter,BattleState,CHAMPION_PROFILES,arena_player_skills
 from progression import XP_REWARDS
 DRINKS=[('beer','Bière',0),('cider','Cidre',1),('mead','Hydromel',2),('red_wine','Vin rouge',3),('spiced_rum','Rhum épicé',4),('whisky','Whisky des Trois Terres',5)]
@@ -24,14 +25,16 @@ class Play:
    c.execute('CREATE TABLE IF NOT EXISTS activity_arena_results(battle_id TEXT PRIMARY KEY,user_id INTEGER NOT NULL,payload TEXT NOT NULL,created_at REAL NOT NULL)')
    c.execute('CREATE INDEX IF NOT EXISTS idx_activity_arena_results_user ON activity_arena_results(user_id,created_at DESC)')
    c.execute('CREATE TABLE IF NOT EXISTS activity_horse_odds(user_id INTEGER PRIMARY KEY,payload TEXT NOT NULL)')
-  # Interrupted wagers are refunded by the original engines when this worker restarts.
-  self.casino.recover_unfinished();self.tavern.recover_unfinished();self.arena.recover_unfinished()
-  with self.a.conn() as c:
-   rows=c.execute('SELECT user_id,payload FROM activity_play').fetchall()
-   for uid,payload in rows:
-    p=json.loads(payload)
-    if p.get('status')=='active':c.execute('UPDATE activity_play SET revision=revision+1,payload=? WHERE user_id=?',(json.dumps({'status':'refunded','message':'Partie interrompue : mise remboursée au redémarrage.'}),uid))
+   c.execute('CREATE TABLE IF NOT EXISTS activity_game_cadence(user_id INTEGER PRIMARY KEY,next_round_at REAL NOT NULL)')
+  # Saved Activity rounds resume with the same hand, barrel and battle state.
+  # Only orphaned/unreadable engine sessions retain the legacy refund policy.
+  from play_recovery import recover
+  recover(self)
   arena_techniques.reset_once(self.a)
+ def round_clock(self):return time.time()
+ def next_round_at(self,uid):
+  with self.a.conn() as c:r=c.execute('SELECT next_round_at FROM activity_game_cadence WHERE user_id=?',(uid,)).fetchone()
+  return r[0] if r else 0
  def read(self,uid):
   with self.a.conn() as c:
    c.execute('INSERT OR IGNORE INTO activity_play(user_id) VALUES(?)',(uid,));r=c.execute('SELECT revision,payload FROM activity_play WHERE user_id=?',(uid,)).fetchone()
@@ -46,7 +49,7 @@ class Play:
   p.pop('deck',None);p.pop('danger',None);p.pop('battle',None)
   if p.get('kind')=='russian':p.update(chambers_remaining=max(0,6-p.get('step',0)),cartridges_remaining=1 if p.get('status')=='active' else 0)
   if p.get('kind')=='blackjack' and p.get('status')=='active':p['dealer']=[p['dealer'][0],{'hidden':True}];p['dealer_total']=total([p['dealer'][0]])
-  return {**p,'revision':rev}
+  return {**p,'revision':rev,'next_round_at':self.next_round_at(uid)}
  def horse_odds(self,uid,renew=False):
   with self.a.conn() as c:
    row=c.execute('SELECT payload FROM activity_horse_odds WHERE user_id=?',(uid,)).fetchone()
@@ -137,8 +140,7 @@ class Play:
    return r.get('message') or f"{r['well']} bien placé(s), {r['misplaced']} mal placé(s) · {r['attempts_left']} essais restants."
   if action=='game_cancel':
    if p.get('status')=='active' and p.get('kind')=='combat':raise ValueError('Utilisez Abandonner pour terminer le combat.')
-   if p.get('status')=='active':
-    (self.tavern if p.get('kind') in ('dice','coin','rps') else self.casino).refund(p['session']);p.update(status='refunded',message='Mise remboursée.');self.save(uid,p)
+   if p.get('status')=='active':raise ValueError('Une mise engagée ne peut pas être annulée après le début de la partie. Terminez votre manche.')
    return 'Retour aux jeux.'
   if action=='game_start':
    if p.get('status')=='active':raise ValueError('Terminez votre partie en cours.')
@@ -155,8 +157,11 @@ class Play:
    if key=='coin' and choice not in ('pile','face'):raise ValueError('Choisissez pile ou face.')
    roulette_bets=normalise_bets(body['bets'] if 'bets' in body else [dict(type=choice,amount=wager,numbers=[body.get('number')])],wager) if key=='roulette' else None
    if key=='horses' and 'odds' in body and body['odds']!=self.horse_odds(uid):raise ValueError('Les cotes ont changé. Vérifiez les nouvelles cotes avant de miser.')
+   now=self.round_clock();remaining=self.next_round_at(uid)-now
+   if remaining>0:raise ValueError(f'Attendez {math.ceil(remaining)} seconde(s) avant une nouvelle mise.')
    r=(self.tavern if tavern else self.casino).start(uid,key,wager)
    if not r.get('ok'):raise ValueError(r['message'])
+   with self.a.conn() as c:c.execute('INSERT INTO activity_game_cadence VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET next_round_at=excluded.next_round_at',(uid,now+3.0))
    p=dict(kind=key,status='active',session=r['session_id'],wager=wager,message='À votre tour.')
    if key=='blackjack':
     deck=[dict(rank=str(rank),suit=suit) for suit in ('♠','♥','♦','♣') for rank in list(range(2,11))+['J','Q','K','A']];random.shuffle(deck);p.update(deck=deck,player=[deck.pop(),deck.pop()],dealer=[deck.pop(),deck.pop()]);p['player_total']=total(p['player'])
@@ -182,7 +187,8 @@ class Play:
    self.save(uid,p);return p['message']
   if action=='game_step':
    if p.get('status')!='active' or p.get('kind') not in ('blackjack','russian'):raise ValueError('Aucune manche en cours.')
-   if not self.dark.has_clandestine_access(uid):self.casino.refund(p['session']);p.update(status='refunded',message='Accès expiré : mise remboursée.');self.save(uid,p);return p['message']
+   # Entry is checked before wagering; expiry cannot refund a revealed hand.
+   # An already paid round remains playable until settlement.
    if p['kind']=='blackjack':
     if key=='hit':p['player'].append(p['deck'].pop());p['player_total']=total(p['player'])
     elif key=='double':

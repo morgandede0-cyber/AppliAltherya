@@ -12,7 +12,7 @@ const {chromium}=require('@playwright/test'),assert=require('node:assert/strict'
    assert.ok((await context.request.get(url+'/api/activity')).ok());
    for(let step=0;step<=5;step++){const response=await context.request.post(url+'/api/activity',{headers:{'X-Altherya-Request':'1'},data:{action:step===5?'tutorial_finish':'tutorial_next',step}});assert.ok(response.ok(),await response.text());}
    const seed=spawnSync('python3',['-c','import sqlite3,sys;c=sqlite3.connect(sys.argv[1]);c.execute("UPDATE players SET wallet_gold=10000");c.commit()',db]);assert.equal(seed.status,0);
-   await p.goto(url);await p.locator('#panel').waitFor({state:'hidden'});
+   await p.goto(url);await p.locator('#panel').waitFor({state:'hidden'});await p.locator('#launch-screen').waitFor({state:'detached'});await p.locator('#scene-stage[aria-busy="false"]').waitFor();
    for(const label of ['Replier le suivi des quêtes','Replier les quêtes quotidiennes']){const b=p.getByRole('button',{name:label,exact:true});if(await b.isVisible())await b.click();}
    for(const name of ['Ruelle sombre','Le vigile'])await p.getByRole('button',{name,exact:true}).click();await p.getByRole('button',{name:/^Payer l’entrée/}).click();await p.getByRole('button',{name:'Roulette',exact:true}).click();
    await p.locator('.rou-background').evaluate(im=>im.decode());assert.equal(await p.locator('.rou-number').count(),37);assert.ok(await p.getByRole('button',{name:'Lancer',exact:true}).isDisabled());

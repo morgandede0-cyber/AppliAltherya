@@ -531,7 +531,11 @@ class IdentityView(discord.ui.LayoutView):
         lang = _lang(guild_id,user_id)
         back=discord.ui.Button(label="Back" if lang=="en" else "Retour",emoji="↩️",style=discord.ButtonStyle.secondary)
         upload=discord.ui.Button(label="UPLOAD MY SCREEN" if lang=="en" else "ENVOYER MON SCREEN",emoji="📷",style=discord.ButtonStyle.primary)
-        async def back_cb(interaction): await interaction.response.edit_message(view=WelcomePrivateView(guild_id,user_id))
+        async def back_cb(interaction):
+            if interaction.user.id != user_id:
+                await interaction.response.send_message("Cette identification ne t'appartient pas.", ephemeral=True)
+                return
+            await interaction.response.edit_message(view=WelcomePublicView(lang))
         async def upload_cb(interaction):
             if interaction.user.id != user_id:
                 await interaction.response.send_message("⛔ This identification is not yours." if lang=="en" else "⛔ Cette identification ne t'appartient pas.",ephemeral=True); return

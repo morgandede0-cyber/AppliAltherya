@@ -25,3 +25,9 @@ test('server outages retain the operation and prevent simultaneous mutations',as
  let release;const f=setup(async()=>{await new Promise(r=>release=r);return ok('saved');});
  const one=f.request({action:'deposit',amount:10});await assert.rejects(f.request({action:'deposit',amount:20}),/Patientez/);release();await one;
 });
+test('a new wager waits for the server cadence while retaining one operation id',async()=>{
+ let now=1000,scheduled,posts=0;const module={exports:{}};const storage=new Map();
+ const fetch=async(_,options)=>{if(options?.method==='POST')posts++;return{ok:true,status:200,json:async()=>({message:'ok',state:{save_owner:'owner',server_now:100,play:{next_round_at:103}}})};};
+ vm.runInNewContext(code,{module,exports:module.exports,fetch,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},AbortSignal,crypto:{randomUUID},Date:{now:()=>now},setTimeout:(fn,delay)=>{scheduled={fn,delay};}});
+ await module.exports.request();const pending=module.exports.request({action:'game_start',key:'coin',wager:1,revision:0});assert.equal(posts,0);assert.ok(scheduled.delay>=3000&&scheduled.delay<=3030);now+=scheduled.delay;scheduled.fn();await pending;assert.equal(posts,1);assert.equal(storage.size,0);
+});

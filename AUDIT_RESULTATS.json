@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-21",
+  "source_library_version": 2,
+  "server_regression_passed": 288,
+  "client_passed": 170,
+  "final_targeted_passed": 12,
+  "test_counts_overlap": true,
+  "browser_final_passes": [
+    "city-navigation",
+    "bank-book-parchment",
+    "arena-wager",
+    "blackjack",
+    "roulette",
+    "slots",
+    "horses",
+    "russian",
+    "dice",
+    "coin",
+    "rps"
+  ],
+  "literal_assets": {
+    "literal_assets_checked": 84,
+    "missing": {}
+  },
+  "archive_inventory": {
+    "python_modules": 60,
+    "archive_entries": 1034,
+    "non_example_env_files": [],
+    "private_key_files": [],
+    "database_files": [],
+    "credential_pattern_candidate_files": []
+  },
+  "npm_vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "python_dependency_audit": {
+    "dependencies": [
+      {
+        "name": "discord-py",
+        "version": "2.7.1",
+        "vulns": []
+      },
+      {
+        "name": "aiohttp",
+        "version": "3.14.5",
+        "vulns": []
+      },
+      {
+        "name": "multidict",
+        "version": "7.1.0",
+        "vulns": []
+      },
+      {
+        "name": "yarl",
+        "version": "1.25.1",
+        "vulns": []
+      },
+      {
+        "name": "tzdata",
+        "version": "2026.5",
+        "vulns": []
+      },
+      {
+        "name": "aiohappyeyeballs",
+        "version": "2.7.1",
+        "vulns": []
+      },
+      {
+        "name": "aiosignal",
+        "version": "1.4.0",
+        "vulns": []
+      },
+      {
+        "name": "attrs",
+        "version": "26.1.0",
+        "vulns": []
+      },
+      {
+        "name": "frozenlist",
+        "version": "1.8.0",
+        "vulns": []
+      },
+      {
+        "name": "idna",
+        "version": "3.20",
+        "vulns": []
+      },
+      {
+        "name": "propcache",
+        "version": "0.5.4",
+        "vulns": []
+      },
+      {
+        "name": "typing-extensions",
+        "version": "4.16.0",
+        "vulns": []
+      }
+    ],
+    "fixes": []
+  },
+  "production_deployed": false,
+  "live_discord_tested": false,
+  "oddium_shared_gold_supported_by_activity": false
+}

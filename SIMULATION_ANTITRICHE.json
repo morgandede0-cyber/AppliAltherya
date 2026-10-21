@@ -1,0 +1,28 @@
+{
+  "slots_exact_return_per_gold": 0.224033,
+  "roulette_standard_exact_return_per_gold": 0.972972972972973,
+  "coin_exact_return_per_gold": 1,
+  "dice_with_tie_refund_exact_return_per_gold": 1,
+  "rps_with_tie_refund_exact_return_per_gold": 1,
+  "synthetic_draws_per_game": 200000,
+  "simulated_net_gold_at_one_gold_per_round": {
+    "coin": 560,
+    "dice": -776,
+    "rps": -412,
+    "slots": -155262,
+    "roulette_red": -4590
+  },
+  "horse_max_expected_return_in_enumerated_standard_odds": {
+    "return": 0.7407407407407407,
+    "odds": [
+      1.5,
+      2.5,
+      2.5,
+      3.0
+    ],
+    "chosen": 1.5,
+    "wager": 1
+  },
+  "gold_x2_event_coin_exact_return_per_gold": 1.5,
+  "xp_loop_theoretical_without_a_server_cadence": "Every valid tavern round awards XP, even when animation is skipped; this is not a duplicate payment."
+}

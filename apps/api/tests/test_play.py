@@ -12,7 +12,10 @@ class GameTests(unittest.TestCase):
   with self.a.conn() as c:c.execute('UPDATE activity_tutorial_revision SET finished=1 WHERE user_id=?',(self.uid,))
  def tearDown(self):self.tmp.cleanup()
  def s(self):return self.a.snapshot(self.uid,self.name)
- def act(self,**b):return self.a.action(self.uid,{'revision':self.s()['play']['revision'],**b})
+ def act(self,**b):
+  self._round_time=getattr(self,'_round_time',time.time())+5
+  self.a.play.round_clock=lambda:self._round_time
+  return self.a.action(self.uid,{'revision':self.s()['play']['revision'],**b})
  def access(self):self.act(action='guard',key='pay')
  def blackjack_hand(self, player, dealer, deck):
   self.access()
@@ -67,10 +70,11 @@ class GameTests(unittest.TestCase):
   self.access()
   with patch('play.random.shuffle',side_effect=lambda d:d.sort(key=lambda c:c['rank']=='A',reverse=True)):self.act(action='game_start',key='blackjack',wager=10)
   p=self.s()['play'];self.assertEqual(p['status'],'active');self.assertNotIn('deck',p);self.assertEqual(p['dealer'][1],{'hidden':True})
-  self.act(action='game_cancel');self.act(action='game_start',key='russian',wager=10);self.assertNotIn('danger',self.s()['play'])
- def test_restart_refunds_only_once(self):
-  self.access();self.act(action='game_start',key='russian',wager=100);self.assertEqual(self.s()['balance']['wallet'],9870)
-  self.a=Activity(self.a.path);self.assertEqual(self.s()['balance']['wallet'],9970);self.assertEqual(self.s()['play']['status'],'refunded');self.a=Activity(self.a.path);self.assertEqual(self.s()['balance']['wallet'],9970)
+  self.act(action='game_step',key='stand');self.act(action='game_start',key='russian',wager=10);self.assertNotIn('danger',self.s()['play'])
+ def test_restart_preserves_paid_round_without_a_refund(self):
+  self.access();self.act(action='game_start',key='russian',wager=100);before=self.a.play.read(self.uid)
+  for _ in range(2):
+   self.a=Activity(self.a.path);self.assertEqual(self.s()['balance']['wallet'],9870);self.assertEqual(self.a.play.read(self.uid),before)
  def test_tavern_rps_uses_original_french_symbols(self):
   with patch('play.rps_bot',return_value='ciseaux'):self.act(action='game_start',key='rps',wager=10,choice='rock')
   self.assertEqual(self.s()['play']['payout'],20);self.assertEqual(self.s()['xp'],5)

@@ -1,5 +1,6 @@
 """Pure combat rules extracted from the historical Tower; no bot initialization."""
-import random,json
+import json
+from secure_random import random
 from pathlib import Path
 from dataclasses import dataclass
 from arena_engine import CLASSES,arena_player_skills

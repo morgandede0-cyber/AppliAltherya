@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import random
+from secure_random import random
 import sqlite3
 from shared_economy import connect_shared
 import time

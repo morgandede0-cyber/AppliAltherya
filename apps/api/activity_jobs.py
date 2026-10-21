@@ -1,5 +1,6 @@
 """Eight unranked offers; rank and reward are drawn only on commitment."""
-import json,random,time,uuid
+import json,time,uuid
+from secure_random import random
 from job_board_engine import JobBoardStore,BoardJob,JOBS,RARITIES,REFRESH_COOLDOWN_SECONDS
 BOARD_SIZE=8
 class ActivityJobBoard(JobBoardStore):
