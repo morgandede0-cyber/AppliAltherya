@@ -128,11 +128,11 @@ class CampaignTests(unittest.TestCase):
   with self.a.conn() as c:self.assertEqual(c.execute('SELECT SUM(gold) FROM campaign_receipts WHERE user_id=?',(self.uid,)).fetchone()[0],total)
   self.assertEqual([(c['chapter'],c['title'],c['unlocked']) for c in self.a.snapshot(self.uid,self.name)['chapters']],[(c['chapter'],c['title'],c['unlocked']) for c in original_chapters])
 
- def test_claim_race_and_minimum_duration(self):
+ def test_finished_quest_is_claimable_immediately_once_even_in_race(self):
   self.position(0,3)
   with self.a.conn() as c:c.execute('UPDATE campaign_progress SET accepted_at=? WHERE user_id=?',(time.time(),self.uid))
-  with self.assertRaises(ValueError):self.act('campaign_claim')
-  self.fast_time();s=self.s();body=dict(action='campaign_claim',quest_id=s['quest']['id'],revision=s['revision'],world_token=s['world']['token']);before=self.a.economy.get_balance(self.uid).wallet
+  self.a.action(self.uid,dict(action='campaign_world_enter',scene=self.s()['world']['target']))
+  s=self.s();self.assertEqual(s['claim_at'],0);body=dict(action='campaign_claim',quest_id=s['quest']['id'],revision=s['revision'],world_token=s['world']['token']);before=self.a.economy.get_balance(self.uid).wallet
   def invoke(_):
    try:self.a.action(self.uid,body);return True
    except ValueError:return False
@@ -165,8 +165,6 @@ class CampaignTests(unittest.TestCase):
   self.assertEqual(len(self.s()['evidence']),3);self.assertEqual(self.s()['stage'],1)
   with self.assertRaises(ValueError):self.act('campaign_explore',clue_id=step['clues'][0]['id'])
   self.a=Activity(self.a.path);self.assertEqual(len(self.s()['evidence']),3);self.act('campaign_step');self.act('campaign_step')
-  with self.assertRaises(ValueError):self.act('campaign_claim')
-  self.fast_time()
   xp=self.a.castle.profile(self.uid)['xp'];self.act('campaign_claim');self.assertEqual(self.a.castle.profile(self.uid)['xp']-xp,20)
   self.assertEqual(self.a.economy.get_balance(self.uid).wallet-before,10);self.assertEqual(len(self.s()['evidence']),3)
   other,_=self.a.session('');self.a.snapshot(*other);self.assertEqual(self.a.campaign.snapshot(other[0])['evidence'],[])

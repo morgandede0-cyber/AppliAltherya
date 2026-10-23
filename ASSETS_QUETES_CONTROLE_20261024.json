@@ -1,0 +1,92 @@
+[
+  {
+    "file": "apps/game/public/assets/quest-world/v1/attestation.png",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGBA",
+    "alpha_min": 0,
+    "alpha_max": 254,
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "61226ef0074a1b4dc2d6846d3e2159cf17aa0f25fd482d13eeed69bea44ed408"
+  },
+  {
+    "file": "apps/game/public/assets/quest-world/v1/balise.png",
+    "width": 1024,
+    "height": 1536,
+    "mode": "RGBA",
+    "alpha_min": 0,
+    "alpha_max": 254,
+    "corner_alpha": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "sha256": "10004e0ff72e6af0f86ddec15ce53a409be8383c98c043f893602115e6d40fe7"
+  },
+  {
+    "file": "apps/game/public/assets/quest-world/v1/etais.png",
+    "width": 1211,
+    "height": 1299,
+    "mode": "RGBA",
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "656802d3422a557259b551ab8a5926903a4a328bcb0d665589a421a734fa83c6"
+  },
+  {
+    "file": "apps/game/public/assets/quest-world/v1/journal.png",
+    "width": 1374,
+    "height": 1145,
+    "mode": "RGBA",
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "37a59322fd32e7fd32dbc2f54fb74b94e7294e9c7c75f106ba36c697c229b8fd"
+  },
+  {
+    "file": "apps/game/public/assets/quest-world/v1/plaque.png",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGBA",
+    "alpha_min": 0,
+    "alpha_max": 254,
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "6ad3880132c28a58c62cbcf8ba744c5494a9043e9a3d1cbf738b1fb047cfb55d"
+  },
+  {
+    "file": "apps/game/public/assets/quest-world/v1/recu.png",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGBA",
+    "alpha_min": 0,
+    "alpha_max": 254,
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "639866fa4f99e029ee92cc20546892a976ba31ad5266a8b96fb7b9e9c9fdd244"
+  }
+]

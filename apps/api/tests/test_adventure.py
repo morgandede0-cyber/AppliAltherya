@@ -69,7 +69,7 @@ class AdventureTests(unittest.TestCase):
   health=self.a.adventure.health();self.assertEqual(health['integrity'],'ok');self.assertGreaterEqual(health['total_gold'],0)
  def test_branch_keeps_accepted_previous_editions_and_catalog_immutable(self):
   idx=next(i for i,q in enumerate(QUESTS) if q['id']=='S2-Q08');original=json.dumps(QUESTS);choice={'S2-Q07':'Secourir directement les convoyeurs'};row=dict(accepted_at=time.time(),quest_index=idx)
-  self.assertEqual(effective_quest(row,dict(edition=2,choices=choice)),QUESTS[idx]);new=effective_quest(row,dict(edition=3,choices=choice));self.assertEqual(len(new['steps']),len(QUESTS[idx]['steps'])+1);self.assertIn('témoignages',new['steps'][0]['label']);self.assertEqual(json.dumps(QUESTS),original)
+  old=effective_quest(row,dict(edition=2,choices=choice));self.assertEqual({k:old[k] for k in QUESTS[idx] if k!='steps'},{k:v for k,v in QUESTS[idx].items() if k!='steps'});self.assertEqual([{k:step[k] for k in base} for step,base in zip(old['steps'],QUESTS[idx]['steps'])],QUESTS[idx]['steps']);new=effective_quest(row,dict(edition=3,choices=choice));self.assertEqual(len(new['steps']),len(QUESTS[idx]['steps'])+1);self.assertIn('témoignages',new['steps'][0]['label']);self.assertEqual(json.dumps(QUESTS),original)
  def test_diagnostics_store_no_sensitive_exception_text(self):
   import asyncio
   from types import SimpleNamespace

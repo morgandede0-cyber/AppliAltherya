@@ -96,7 +96,7 @@ class Campaign:
    level=level_from_xp(c.execute('SELECT xp FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()[0])[0]
    battle=payload.get('battle');public_battle=None
    if battle:public_battle={'skills':payload.get('skills'), 'fighters':[{'name':f['name'],'hp':f['hp'],'max_hp':f['max_hp']} for f in battle['fighters']],'log':battle['log'][-10:],'finished':battle['finished'],'won':battle['winner_index']==0 if battle['finished'] else None,'turn':battle['turn_no'],'ultimate_cd':battle['fighters'][0]['ultimate_cd']}
-   return dict(world=self.world_snapshot(c,uid,q,row),**self.journal(c,uid,level,step.get('place_id') if step and row['accepted_at'] is not None else None),edition=payload.get('edition',1) if row['accepted_at'] is not None else 6,work=payload.get('work',[]),complete=False,title=CATALOG['title'],completed=done,total=len(QUESTS),revision=row['revision'],quest={**{k:v for k,v in q.items() if k!='steps'},'steps':public_steps},stage=stage,accepted=row['accepted_at'] is not None,level_allowed=level>=q['min_level'],deadline=payload.get('deadline',0),retry_at=payload.get('retry_at',0),claim_at=(row['accepted_at'] or 0)+q['min_duration'],expedition_ready=exp_ready,battle=public_battle,choices=payload.get('choices',{}))
+   return dict(world=self.world_snapshot(c,uid,q,row),**self.journal(c,uid,level,step.get('place_id') if step and row['accepted_at'] is not None else None),edition=payload.get('edition',1) if row['accepted_at'] is not None else 6,work=payload.get('work',[]),complete=False,title=CATALOG['title'],completed=done,total=len(QUESTS),revision=row['revision'],quest={**{k:v for k,v in q.items() if k!='steps'},'steps':public_steps},stage=stage,accepted=row['accepted_at'] is not None,level_allowed=level>=q['min_level'],deadline=payload.get('deadline',0),retry_at=payload.get('retry_at',0),claim_at=0,expedition_ready=exp_ready,battle=public_battle,choices=payload.get('choices',{}))
  def action(self,uid,body):
   if body['action']=='campaign_world_enter':return self.world_enter(uid,body)
   if body['action']=='campaign_enter':return self.world_enter(uid,{**body,'scene':body.get('place_id')})
@@ -114,7 +114,6 @@ class Campaign:
     payload['edition']=6;payload['reward_quote']={k:q[k] for k in ('gold','xp')};payload['reward_version']=REWARD_VERSION;accepted=now;entered=now;message='Quête acceptée. Les objectifs se réalisent dans l’ordre.'
    elif action=='campaign_claim':
     if accepted is None or stage!=len(q['steps']):raise ValueError('Terminez tous les objectifs avant de remettre la quête.')
-    if now<accepted+q['min_duration']:raise ValueError('La mission est encore en cours. Consultez le délai du journal.')
     if c.execute('SELECT 1 FROM campaign_receipts WHERE user_id=? AND quest_id=?',(uid,q['id'])).fetchone():
      if not payload.get('admin_replay'):raise ValueError('Récompense déjà récupérée.')
      c.execute('UPDATE campaign_progress SET quest_index=quest_index+1,stage=0,accepted_at=NULL,entered_at=?,revision=revision+1,payload=? WHERE user_id=?',(now,json.dumps({'choices':payload.get('choices',{}),'admin_replay':True}),uid))

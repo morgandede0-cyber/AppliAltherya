@@ -113,7 +113,7 @@ class Walkthrough:
      elif kind=='port':self.investigate_port();self.campaign()
      elif kind=='battle':self.combat()
      else:raise AssertionError('Objectif non géré '+kind)
-    self.now=max(self.now,self.state()['claim_at']+1);self.call('campaign_world_enter',scene=self.state()['world']['target']);before=self.snapshot();old=self.state();body=dict(action='campaign_claim',quest_id=q['id'],revision=old['revision'],world_token=old['world']['token'],request_id='journey-'+str(self.branch)+'-'+q['id']+'-claim')
+    self.call('campaign_world_enter',scene=self.state()['world']['target']);before=self.snapshot();old=self.state();body=dict(action='campaign_claim',quest_id=q['id'],revision=old['revision'],world_token=old['world']['token'],request_id='journey-'+str(self.branch)+'-'+q['id']+'-claim')
     self.a.action(self.uid,body);after=self.snapshot();assert after['balance']['wallet']-before['balance']['wallet']==q['gold'];assert after['stats']['xp']-before['stats']['xp']==q['xp'];self.a.action(self.uid,body);assert self.snapshot()['balance']==after['balance']
     self.a=Activity(self.path);assert self.state()['completed']==len(self.rows)+1
     row['losses']=self.losses-row.pop('losses_before');row['duration_seconds']=round(self.now-row.pop('started'));self.rows.append(row)

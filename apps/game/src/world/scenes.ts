@@ -24,7 +24,7 @@ export const scenes:Record<SceneId,Scene>={
  arena:{name:'Arène de Legacy',image:'arena.webp',parent:'hub',caption:'La foule attend son champion.',spots:[]},
  champion:{name:'Champion de Legacy',image:'arena_champion.webp',parent:'arena',caption:'Le champion vous jauge.',spots:[]},
  bank:{name:'Banque de Legacy',image:'bank-predator.png',parent:'hub',caption:'Votre bourse et les coffres du royaume.',spots:[]},
- alley:{name:'Ruelle sombre',image:'alley-panels-clean-v1.png',parent:'hub',caption:'Des regards se tournent vers vous dans la ruelle.',spots:[spot('Le voleur',3,15,22,64,'scene:thief',true),spot('Le braqueur',41,24,22,51,'scene:robber',true),spot('Le vigile',68,10,28,66,'scene:guard',true),spot('Retour au hub',1,89,18,8,'scene:hub',true),spot('Smogo',0,0,10,10,'scene:smogo')]},
+ alley:{name:'Ruelle sombre',image:'alley-smogo-absent-v2.png',parent:'hub',caption:'Des regards se tournent vers vous dans la ruelle.',spots:[spot('Le voleur',3,15,22,64,'scene:thief',true),spot('Le braqueur',41,24,22,51,'scene:robber',true),spot('Le vigile',68,10,28,66,'scene:guard',true),spot('Retour au hub',1,89,18,8,'scene:hub',true),spot('Smogo',26,39,17,42,'scene:smogo')]},
  smogo:{name:'Smogo',image:'smogo-v1.png',parent:'alley',caption:'Smogo murmure une énigme au milieu des brumes violettes.',spots:[]},
  guard:{name:'Le vigile',image:'alley_guard.webp',parent:'alley',caption:'Le vigile surveille le passage.',spots:[]},
  thief:{name:'Le voleur',image:'alley_thief.webp',parent:'alley',caption:'Le voleur sait des choses.',spots:[]},

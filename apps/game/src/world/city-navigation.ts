@@ -5,7 +5,13 @@ import {citySignRects} from './city-panels';
 export function attachCityNavigation(stage:HTMLElement,id:'hub'|'alley',spots:Spot[],admin:boolean,action:(key:string)=>void){
  const nav=node('nav','city-navigation');nav.setAttribute('aria-label',id==='hub'?'Lieux de Legacy':'Personnages de la ruelle');const dock=node('div','city-utilities');
  for(const spot of spots){const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',spot.label);b.title=spot.label;b.onclick=()=>action(spot.action);
- if(spot.embedded){
+ if(id==='alley'&&spot.action==='scene:smogo'){
+ b.className='city-hit city-smogo-character';b.dataset.smogoCharacter='';b.hidden=true;b.disabled=true;
+ b.style.left=spot.x+'%';b.style.top=spot.y+'%';b.style.width=spot.w+'%';b.style.height=spot.h+'%';
+ b.append(node('span','city-smogo-label','Smogo'));nav.append(b);
+ const resume=document.createElement('button');resume.type='button';resume.className='city-control city-smogo-resume';resume.dataset.smogoResume='';resume.hidden=true;resume.disabled=true;resume.setAttribute('aria-label','Reprendre l’énigme');resume.append(assetSlice('/assets/alley-live/controls.png',32,606,760,169),node('span','','Reprendre l’énigme'));resume.onclick=()=>action(spot.action);dock.append(resume);
+ }
+ else if(spot.embedded){
  const rect=citySignRects[id][spot.action];
  b.className='city-hit city-panel-button';
  b.style.left=(rect[0]/1536*100)+'%';b.style.top=(rect[1]/1024*100)+'%';

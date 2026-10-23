@@ -13,3 +13,19 @@
 @media(max-width:700px){.world-quest-layer{font-size:12px}.world-quest-dock{gap:5px;left:2%;right:2%;bottom:1%;max-height:37%}.world-quest-dock button{padding:6px 9px;min-height:36px;font-size:12px}.world-search-caption{font-size:11px;padding:5px;top:1%}.world-object-mark{width:25px;height:25px}.world-object-name{font-size:11px}#panel.campaign-menu.campaign-encounter{padding:17px;max-height:calc(100dvh - 115px)}}
 body.menu-open .world-quest-layer{visibility:hidden}
 @media(min-width:701px){#scene-stage[data-scene=hub] .world-quest-dock{bottom:12%}}
+/* Props are real alpha cutouts; the click area has no decorative backing. */
+#scene-stage .world-quest-illustrated{border:0!important;background:none!important;box-shadow:none!important;border-radius:0!important}
+#scene-stage .world-quest-illustrated .world-prop-art,#scene-stage .world-quest-prop .world-prop-art{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;filter:drop-shadow(0 2px 2px #0005)}
+#scene-stage .world-quest-illustrated[data-art=recu],#scene-stage .world-quest-illustrated[data-art=attestation]{width:11%;height:15%}
+#scene-stage .world-quest-illustrated[data-art=journal]{width:12%;height:18%}
+#scene-stage .world-quest-terrain[data-art=balise]{width:7%;height:27%}
+#scene-stage .world-quest-terrain[data-art=etais]{width:20%;height:32%}
+#scene-stage .world-quest-terrain[data-found=true]{opacity:1}
+#scene-stage .world-quest-terrain .world-object-mark{position:absolute;right:0;bottom:0;width:22px;height:22px;font-size:13px}
+#scene-stage .world-quest-illustrated:hover .world-prop-art,#scene-stage .world-quest-prop:hover .world-prop-art{filter:brightness(1.07) drop-shadow(0 2px 3px #0006)}
+#panel.campaign-menu .campaign-quest-item{display:grid;grid-template-columns:90px minmax(0,1fr);align-items:center;gap:18px}
+#panel.campaign-menu .campaign-quest-item>.world-prop-art{width:90px;height:90px;object-fit:contain;background:none;border:0}
+#panel.campaign-menu .campaign-quest-item h3{margin:0 0 6px}#panel.campaign-menu .campaign-quest-item p{margin:0}
+@media(max-width:600px){#panel.campaign-menu .campaign-quest-item{grid-template-columns:64px minmax(0,1fr);gap:10px}#panel.campaign-menu .campaign-quest-item>.world-prop-art{width:64px;height:64px}}
+/* Upright stakes are planted at the interaction point, rather than centered over it. */
+#scene-stage .world-quest-terrain[data-art=balise]{transform:translate(-50%,-100%)}
