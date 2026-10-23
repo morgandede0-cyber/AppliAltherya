@@ -36,7 +36,7 @@ class PortTests(unittest.TestCase):
   with self.a.conn() as c:c.execute('UPDATE campaign_progress SET quest_index=0,stage=0 WHERE user_id=?',(self.buyer,))
   self.a=Activity(self.path);self.assertTrue(self.view()['unlocked'])
  def test_older_accepted_quests_keep_their_original_steps(self):
-  idx=self.unlock(edition=3);row=dict(quest_index=idx,accepted_at=time.time());self.assertEqual(effective_quest(row,dict(edition=3)),QUESTS[idx]);self.assertEqual(len(effective_quest(row,dict(edition=4))['steps']),4);self.assertTrue(self.view()['unlocked'])
+  idx=self.unlock(edition=3);row=dict(quest_index=idx,accepted_at=time.time());self.assertEqual([s['id'] for s in effective_quest(row,dict(edition=3))['steps']],[s['id'] for s in QUESTS[idx]['steps']]);self.assertEqual(len(effective_quest(row,dict(edition=4))['steps']),4);self.assertTrue(self.view()['unlocked'])
  def test_players_past_quest_gain_access_without_receipts_or_extra_reward(self):
   idx=self.unlock()
   with self.a.conn() as c:c.execute('UPDATE campaign_progress SET quest_index=?,accepted_at=NULL WHERE user_id=?',(idx+1,self.buyer))
@@ -60,7 +60,7 @@ class PortTests(unittest.TestCase):
   with self.assertRaises(ValueError):self.a.action(self.buyer,dict(action='port_enter',key='port',revision=p['revision']))
   with self.assertRaises(ValueError):self.a.action(self.buyer,dict(action='port_enter',key='port',revision=True))
  def test_main_objective_cannot_be_skipped_and_port_has_no_independent_gold(self):
-  self.unlock();s=self.a.snapshot(self.buyer,'Test');q=s['campaign'];body=dict(action='campaign_step',quest_id=q['quest']['id'],revision=q['revision'])
+  self.unlock();self.a.action(self.buyer,dict(action='campaign_world_enter',scene='port'));s=self.a.snapshot(self.buyer,'Test');q=s['campaign'];body=dict(action='campaign_step',quest_id=q['quest']['id'],revision=q['revision'],world_token=q['world']['token'])
   with self.assertRaises(ValueError):self.a.action(self.buyer,body)
   before=self.a.snapshot(self.buyer,'Test');self.finish();after=self.a.snapshot(self.buyer,'Test');self.assertTrue(after['port']['complete']);self.assertEqual(after['balance'],before['balance']);self.assertEqual(after['xp'],before['xp']);self.assertEqual(after['resources'],before['resources']);self.a.action(self.buyer,body);self.assertEqual(self.a.snapshot(self.buyer,'Test')['campaign']['stage'],2)
   self.act('talk','captain');self.assertEqual(after['balance'],self.a.snapshot(self.buyer,'Test')['balance'])

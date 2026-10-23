@@ -14,7 +14,10 @@ class CampaignTests(unittest.TestCase):
  def tearDown(self):self.tmp.cleanup()
  def s(self):return self.a.snapshot(self.uid,self.name)['campaign']
  def act(self,action,**body):
-  s=self.s();return self.a.action(self.uid,dict(action=action,quest_id=s['quest']['id'],revision=s['revision'],**body))
+  s=self.s()
+  if action not in ('campaign_enter','campaign_world_enter'):
+   self.a.action(self.uid,dict(action='campaign_world_enter',scene=s['world']['target']));s=self.s();body['world_token']=s['world']['token']
+  return self.a.action(self.uid,dict(action=action,quest_id=s['quest']['id'],revision=s['revision'],**body))
  def position(self,idx,stage=0,payload=None):
   self.s()
   with self.a.conn() as c:
@@ -28,7 +31,7 @@ class CampaignTests(unittest.TestCase):
   with self.a.conn() as c:c.execute('UPDATE tutorial_progress SET completed=0 WHERE user_id=?',(self.uid,))
   with self.assertRaises(ValueError):self.act('campaign_accept')
   with self.a.conn() as c:c.execute('UPDATE tutorial_progress SET completed=1 WHERE user_id=?',(self.uid,))
-  self.act('campaign_accept');s=self.s();body=dict(action='campaign_step',quest_id=s['quest']['id'],revision=s['revision']);self.a.action(self.uid,body)
+  self.act('campaign_accept');s=self.s();body=dict(action='campaign_step',quest_id=s['quest']['id'],revision=s['revision'],world_token=s['world']['token']);self.a.action(self.uid,body)
   with self.assertRaises(ValueError):self.a.action(self.uid,body)
   with self.assertRaises(ValueError):self.act('campaign_claim')
   self.position(8)
@@ -45,7 +48,7 @@ class CampaignTests(unittest.TestCase):
  def test_delivery_and_reward_atomic(self):
   self.position(10)
   with self.assertRaises(ValueError):self.act('campaign_step')
-  self.a.expeditions.add_resources(self.uid,{'Bois de chêne':5});s=self.s();body=dict(action='campaign_step',quest_id=s['quest']['id'],revision=s['revision'])
+  self.a.expeditions.add_resources(self.uid,{'Bois de chêne':5});self.a.action(self.uid,dict(action='campaign_world_enter',scene=self.s()['world']['target']));s=self.s();body=dict(action='campaign_step',quest_id=s['quest']['id'],revision=s['revision'],world_token=s['world']['token'])
   def invoke(_):
    try:self.a.action(self.uid,body);return True
    except ValueError:return False
@@ -76,7 +79,11 @@ class CampaignTests(unittest.TestCase):
     row=self.a.campaign.row(c,self.uid);q=effective_quest(row,json.loads(row['payload']))
    for step in q['steps']:
     kind=step['kind']
-    if kind in ('inspect','mission'):self.act('campaign_step');self.fast_time();self.act('campaign_step')
+    if kind in ('inspect','mission'):
+     if step.get('work_points'):
+      for point in step['work_points']:self.act('campaign_work',point_id=point['id'])
+     else:self.act('campaign_step')
+     self.fast_time();self.act('campaign_step')
     elif kind in ('puzzle','choice'):self.act('campaign_step',option=step.get('answer',0))
     elif kind=='explore':
      self.act('campaign_enter',place_id=step['place_id'])
@@ -125,7 +132,7 @@ class CampaignTests(unittest.TestCase):
   self.position(0,3)
   with self.a.conn() as c:c.execute('UPDATE campaign_progress SET accepted_at=? WHERE user_id=?',(time.time(),self.uid))
   with self.assertRaises(ValueError):self.act('campaign_claim')
-  self.fast_time();s=self.s();body=dict(action='campaign_claim',quest_id=s['quest']['id'],revision=s['revision']);before=self.a.economy.get_balance(self.uid).wallet
+  self.fast_time();s=self.s();body=dict(action='campaign_claim',quest_id=s['quest']['id'],revision=s['revision'],world_token=s['world']['token']);before=self.a.economy.get_balance(self.uid).wallet
   def invoke(_):
    try:self.a.action(self.uid,body);return True
    except ValueError:return False
@@ -164,7 +171,7 @@ class CampaignTests(unittest.TestCase):
   self.assertEqual(self.a.economy.get_balance(self.uid).wallet-before,10);self.assertEqual(len(self.s()['evidence']),3)
   other,_=self.a.session('');self.a.snapshot(*other);self.assertEqual(self.a.campaign.snapshot(other[0])['evidence'],[])
  def test_clue_double_click_and_concurrent_claim_are_idempotent(self):
-  step=self.explore_first();state=self.s();body=dict(action='campaign_explore',quest_id=state['quest']['id'],revision=state['revision'],clue_id=step['clues'][0]['id'])
+  step=self.explore_first();state=self.s();body=dict(action='campaign_explore',quest_id=state['quest']['id'],revision=state['revision'],clue_id=step['clues'][0]['id'],world_token=state['world']['token'])
   def run(_):
    try:self.a.action(self.uid,body);return True
    except ValueError:return False
@@ -202,7 +209,7 @@ class CampaignTests(unittest.TestCase):
   for place in ('convois','archives','inconnu'):
    with self.assertRaises(ValueError):self.a.action(self.uid,dict(action='campaign_enter',place_id=place))
   self.act('campaign_accept');self.act('campaign_step');state=self.s();place=next(p for p in state['locations'] if p['id']=='convois');self.assertTrue(place['can_enter']);self.assertFalse(place['visited'])
-  with self.assertRaises(ValueError):self.act('campaign_explore',clue_id=state['quest']['steps'][1]['clues'][0]['id'])
+  with self.assertRaises(ValueError):self.a.action(self.uid,dict(action='campaign_explore',quest_id=state['quest']['id'],revision=state['revision'],clue_id=state['quest']['steps'][1]['clues'][0]['id'],world_token=state['world']['token']))
   self.act('campaign_enter',place_id='convois');self.act('campaign_enter',place_id='convois');self.assertEqual(self.a.castle.profile(self.uid)['xp'],before);self.assertEqual(self.a.economy.get_balance(self.uid).wallet,wallet)
   with self.a.conn() as c:self.assertEqual(c.execute('SELECT COUNT(*) FROM campaign_visits WHERE user_id=?',(self.uid,)).fetchone()[0],1)
   self.a=Activity(self.a.path);self.assertTrue(next(p for p in self.s()['locations'] if p['id']=='convois')['visited'])

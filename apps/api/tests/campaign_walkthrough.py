@@ -22,7 +22,10 @@ class Walkthrough:
   with self.a.conn() as c:
    r=self.a.campaign.row(c,self.uid);return effective_quest(r,json.loads(r['payload']))
  def campaign(self,action='campaign_step',**body):
-  s=self.state();return self.call(action,quest_id=s['quest']['id'],revision=s['revision'],**body)
+  s=self.state()
+  if action not in ('campaign_enter','campaign_world_enter'):
+   self.call('campaign_world_enter',scene=s['world']['target']);s=self.state();body['world_token']=s['world']['token']
+  return self.call(action,quest_id=s['quest']['id'],revision=s['revision'],**body)
  def port(self,action,key):return self.call('port_'+action,key=key,revision=self.snapshot()['port']['revision'])
  def voyage(self,destination,tool):
   self.call('start',key=destination,tool=tool);run=self.a.expeditions.active_run(self.uid)
@@ -81,12 +84,16 @@ class Walkthrough:
     while self.state()['stage']<len(q['steps']):
      step=q['steps'][self.state()['stage']];kind=step['kind'];row['steps']+=1
      if kind in ('inspect','mission'):
-      self.campaign();deadline=self.state()['deadline']
+      
+      if step.get('work_points'):
+       for point in step['work_points']:self.campaign('campaign_work',point_id=point['id'])
+      else:self.campaign()
+      deadline=self.state()['deadline']
       try:self.campaign()
       except ValueError:pass
       else:raise AssertionError('Délai non protégé')
       self.now=deadline+1;self.campaign()
-     elif kind=='talk':self.campaign()
+     elif kind in ('talk','collect'):self.campaign()
      elif kind=='explore':
       self.call('campaign_enter',place_id=step['place_id'])
       for clue in step['clues']:self.campaign('campaign_explore',clue_id=clue['id'])
@@ -106,7 +113,7 @@ class Walkthrough:
      elif kind=='port':self.investigate_port();self.campaign()
      elif kind=='battle':self.combat()
      else:raise AssertionError('Objectif non géré '+kind)
-    self.now=max(self.now,self.state()['claim_at']+1);before=self.snapshot();old=self.state();body=dict(action='campaign_claim',quest_id=q['id'],revision=old['revision'],request_id='journey-'+str(self.branch)+'-'+q['id']+'-claim')
+    self.now=max(self.now,self.state()['claim_at']+1);self.call('campaign_world_enter',scene=self.state()['world']['target']);before=self.snapshot();old=self.state();body=dict(action='campaign_claim',quest_id=q['id'],revision=old['revision'],world_token=old['world']['token'],request_id='journey-'+str(self.branch)+'-'+q['id']+'-claim')
     self.a.action(self.uid,body);after=self.snapshot();assert after['balance']['wallet']-before['balance']['wallet']==q['gold'];assert after['stats']['xp']-before['stats']['xp']==q['xp'];self.a.action(self.uid,body);assert self.snapshot()['balance']==after['balance']
     self.a=Activity(self.path);assert self.state()['completed']==len(self.rows)+1
     row['losses']=self.losses-row.pop('losses_before');row['duration_seconds']=round(self.now-row.pop('started'));self.rows.append(row)

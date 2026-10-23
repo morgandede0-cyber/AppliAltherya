@@ -38,15 +38,19 @@ class Maintenance:
   if action.startswith('khaz_'):scopes.append('khaz')
   if action.startswith('ashkar_'):scopes.append('tower')
   if action.startswith('campaign_'):
-   scopes.append('campaign')
-   from campaign import effective_quest,QUESTS
-   with self.a.conn() as c:
-    row=c.execute('SELECT * FROM campaign_progress WHERE user_id=?',(uid,)).fetchone()
-    if row and row['quest_index']<len(QUESTS):
-     quest=effective_quest(row,json.loads(row['payload']))
-     if row['stage']<len(quest['steps']):scopes.append(quest['steps'][row['stage']].get('place_id',''))
-     if row['stage']<len(quest['steps']) and quest['steps'][row['stage']]['kind']=='port':scopes.append('port')
-   if action=='campaign_enter':scopes.append(body.get('place_id',''))
+   from campaign_world import maintenance_scene,PARENTS as WORLD_PARENTS,target
+   if action in ('campaign_world_enter','campaign_enter'):
+    scene=body.get('scene',body.get('place_id',''))
+    if isinstance(scene,str):scopes.extend([maintenance_scene(scene),maintenance_scene(WORLD_PARENTS.get(scene,''))])
+   else:
+    scopes.append('campaign')
+    from campaign import effective_quest,QUESTS
+    with self.a.conn() as c:
+     row=c.execute('SELECT * FROM campaign_progress WHERE user_id=?',(uid,)).fetchone()
+     if row and row['quest_index']<len(QUESTS):
+      quest=effective_quest(row,json.loads(row['payload']))
+      scene=target(quest,row)
+      scopes.extend([maintenance_scene(scene),maintenance_scene(WORLD_PARENTS.get(scene,''))])
   if action=='start':
    scopes.append('expeditions');scopes.append('vorak' if key.startswith('vorak') else 'elarwyn')
   if action in ('game_start','game_step','game_cancel','battle_step'):

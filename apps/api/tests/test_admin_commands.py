@@ -118,7 +118,7 @@ class AdminCommandTests(unittest.TestCase):
   with self.a.conn() as c:c.execute('INSERT INTO campaign_receipts VALUES(?,?,?,?,?)',(self.player,q['id'],10,20,time.time()))
   self.apply('campaign_position',{'value':0})
   with self.a.conn() as c:c.execute('UPDATE campaign_progress SET stage=?,accepted_at=?,payload=? WHERE user_id=?',(len(q['steps']),time.time()-100000,json.dumps({'admin_replay':True,'edition':2}),self.player))
-  state=self.a.campaign.snapshot(self.player);before=self.balance();xp=self.a.castle.profile(self.player)['xp'];self.a.action(self.player,dict(action='campaign_claim',quest_id=q['id'],revision=state['revision']))
+  self.a.action(self.player,dict(action='campaign_world_enter',scene=self.a.campaign.snapshot(self.player)['world']['target']));state=self.a.campaign.snapshot(self.player);before=self.balance();xp=self.a.castle.profile(self.player)['xp'];self.a.action(self.player,dict(action='campaign_claim',quest_id=q['id'],revision=state['revision'],world_token=state['world']['token']))
   self.assertEqual(self.balance(),before);self.assertEqual(self.a.castle.profile(self.player)['xp'],xp)
   with self.a.conn() as c:self.assertEqual(c.execute('SELECT quest_index FROM campaign_progress WHERE user_id=?',(self.player,)).fetchone()[0],1)
  def test_paid_tower_floor_can_restore_progress_without_gold_xp_or_quota(self):
