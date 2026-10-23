@@ -19,12 +19,13 @@ CASINO_VIP_WINS = 200
 
 SLOT_SYMBOLS = ["🍒", "🔔", "💎", "👑", "7️⃣"]
 SLOT_WEIGHTS = [38, 28, 18, 11, 5]
+# Public RTP = 95.6054 % with the independent weights above; future rounds only.
 SLOT_TRIPLE_MULTIPLIERS = {
-    "🍒": 2,
-    "🔔": 3,
-    "💎": 5,
-    "👑": 8,
-    "7️⃣": 12,
+    "🍒": 10,
+    "🔔": 12,
+    "💎": 15,
+    "👑": 30,
+    "7️⃣": 75,
 }
 
 @dataclass(frozen=True)

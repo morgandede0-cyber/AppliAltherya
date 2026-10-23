@@ -1,11 +1,12 @@
 import type {Snapshot} from '../activity';
 export type CommerceMode='buy'|'sell'|'story';
 export type Product={key:string;name:string;price:number;stock:number;owned:boolean;category:string;icon:string;description:string;chapter?:number};
-export const categories=(mode:CommerceMode)=>mode==='story'?['Histoire']:mode==='sell'?['Bûcheron','Mineur','Chasseur']:['Outils','Consommables','Divers'];
+export const categories=(mode:CommerceMode)=>mode==='story'?['Histoire']:mode==='sell'?['Bûcheron','Mineur','Chasseur','Cueillette']:['Outils','Consommables','Divers'];
 export function resourceCategory(name:string){
  if(/Pierre|Minerai|Diamant|Cristal/.test(name))return 'Mineur';
  if(/Viande|Peau|Croc|Griffe|Défense|Trophée/.test(name))return 'Chasseur';
- return 'Bûcheron';
+ if(/Bois|bois|Brindille/.test(name))return 'Bûcheron';
+ return 'Cueillette';
 }
 export function resourceIcon(name:string){
  if(/Bois|Brindille/.test(name))return 'wood';if(/Champignon/.test(name))return 'mushroom';

@@ -3,3 +3,4 @@
 @media(prefers-reduced-motion:reduce){.ashkar-logs li.is-new{animation:none}}
 .ashkar-fighter h3{min-height:2.6em;display:flex;align-items:center;justify-content:center}.ashkar-hp-fill{min-width:0}
 @media(max-width:650px){.ashkar-moves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ashkar-moves>.khaz-button{width:100%!important;min-width:0!important}.ashkar-result~.ashkar-preparation .ashkar-hall{display:none}.ashkar-fighter h3{font-size:13px!important;line-height:1.35}.ashkar-logs{max-height:115px}}
+#panel.ashkar-menu .ashkar-tactics{font:14px/1.5 Georgia;color:#dfd0ad;max-width:100%;white-space:normal;overflow-wrap:anywhere;margin:8px 0}

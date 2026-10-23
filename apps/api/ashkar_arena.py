@@ -13,7 +13,7 @@ class TowerFighter(ArenaFighter):
 CLASSES={1:'traqueur',2:'ravageur',3:'traqueur',4:'gardien',5:'gardien',6:'ravageur',7:'gardien',8:'gardien',9:'traqueur',10:'ravageur'}
 def opponent(floor):
  data=arena_combat.champion(floor)
- return {**data,'name':FLOORS[floor]['name'],'role':'Gardien final d’Ashkar' if floor==10 else 'Gardien d’étage','style':TOWER_CATALOG.get(floor,{}).get('description',data['style'])}
+ return {**data,'name':FLOORS[floor]['name'],'role':('Gardien final · ' if floor==10 else 'Gardien · ')+data['role'],'style':TOWER_CATALOG.get(floor,{}).get('description',data['style'])}
 def create(uid,name,level,gear,floor,skills,legacy=None):
  player=TowerFighter(uid,name,'arena_fighter',max_hp=100+10*(level-1),player_level=level,**gear);player.loadout=skills
  # Fixed tower HP are expressed in the arena's damage scale (six times smaller).
@@ -37,7 +37,7 @@ def restore(p):
 
 def sync(p,b):
  p['arena_battle']=asdict(b);p['fighters']=arena_combat.public_fighters(b);p['logs']=b.log[-24:];p['turn']=max(0,(b.turn_no-1)//2)
- p['intent']=dict(key=p.get('enemy_action','light'),name=b.fighters[1].cfg['skills'][p.get('enemy_action','light')]['name'])
+ p['intent']=arena_combat.tactical_readout(p,b)
  player,enemy=b.fighters
  p['battle']=dict(floor=p['floor'],player_name=player.name,player_level=player.player_level,player_hp=player.hp,player_max_hp=player.max_hp,enemy_hp=enemy.hp,enemy_max_hp=enemy.max_hp,ultimate_cd=player.ultimate_cd,enemy_enraged=p.get('phase')==2)
 
@@ -53,7 +53,7 @@ def step(p,key):
 
 def report(p,reward,progress):
  b=restore(p);player=b.fighters[0];next_floor=min(10,progress+1)
- p['combat_result']=dict(battle_id=b.battle_id,won=reward['won'],abandoned=p.get('abandoned',False),champion=p['champion'],next_champion=opponent(next_floor),wager=0,payout=reward['gold'],net_gold=reward['gold'],xp=reward['xp'],pouciel=reward['pouciel'],rating_delta=0,rating_before=0,rating_after=0,wins_before=progress if p.get('replay') or not reward['won'] else progress-1,wins_after=progress,circuit_complete=progress>=10,rounds=p['round'],duration=max(0,int(time.time()-p['started_at'])),hp=player.hp,max_hp=player.max_hp,stats=p['combat_stats'],events=p['events'],logs=p['logs'],skills=p['skills'],fighters=p['fighters'],technique_unlocked=reward.get('technique_unlocked'))
+ p['combat_result']=dict(analysis=arena_combat.debrief(p),battle_id=b.battle_id,won=reward['won'],abandoned=p.get('abandoned',False),champion=p['champion'],next_champion=opponent(next_floor),wager=0,payout=reward['gold'],net_gold=reward['gold'],xp=reward['xp'],pouciel=reward['pouciel'],rating_delta=0,rating_before=0,rating_after=0,wins_before=progress if p.get('replay') or not reward['won'] else progress-1,wins_after=progress,circuit_complete=progress>=10,rounds=p['round'],duration=max(0,int(time.time()-p['started_at'])),hp=player.hp,max_hp=player.max_hp,stats=p['combat_stats'],events=p['events'],logs=p['logs'],skills=p['skills'],fighters=p['fighters'],technique_unlocked=reward.get('technique_unlocked'))
 
 def public(p,revision):
  if p.get('engine')!=2:return None

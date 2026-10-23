@@ -36,7 +36,7 @@ def api_security(service_factory, budget=None, *, anonymous_capacity=240, oauth_
         remote=request.remote or 'unknown'
         if request.path=='/api/auth/discord':
             retry=budget.take(('oauth',remote),oauth_capacity,2)
-        elif request.path in ('/api/activity','/api/admin','/api/avatar'):
+        elif request.path in ('/api/activity','/api/admin','/api/avatar','/api/mail','/api/trade','/api/combat-history'):
             service=service_factory()
             uid=service.session_uid(request.cookies.get('altherya_test',''))
             verified=uid is not None and service.discord_profile(uid) is not None

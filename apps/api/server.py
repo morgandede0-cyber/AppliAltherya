@@ -1,5 +1,6 @@
 """OAuth gateway only. No client-submitted Gold or rewards accepted."""
 from activity_cookie import set_activity_cookie
+from request_data import object_body
 import os
 import asyncio
 from pathlib import Path
@@ -12,7 +13,7 @@ async def auth(request):
     if not client_id or not secret: return web.json_response({'error':'Discord OAuth non configuré'},status=503)
     if request.headers.get('X-Altherya-Request')!='1':return web.json_response({'error':'Requête de connexion refusée'},status=403,headers={'Cache-Control':'no-store'})
     try:
-        body=await request.json()
+        body=await object_body(request)
         if not isinstance(body,dict):raise ValueError()
         code=body.get('code')
         if not isinstance(code,str) or not 1<=len(code)<=2048: raise ValueError()
@@ -45,13 +46,37 @@ async def admin(request):
     try:
         service.admin.require(uid)
         if request.headers.get('X-Altherya-Request')!='1':raise web.HTTPForbidden()
-        body=await request.json()
+        body=await object_body(request)
         if not isinstance(body,dict):raise ValueError('Requête invalide.')
         data=service.admin.handle(uid,body)
         return web.json_response(data,headers={'Cache-Control':'no-store'})
     except PermissionError:return web.json_response({'error':'Accès administrateur refusé.'},status=403,headers={'Cache-Control':'no-store'})
     except ValueError as e:return web.json_response({'error':str(e)},status=400,headers={'Cache-Control':'no-store'})
     except TypeError:return web.json_response({'error':'Requête invalide.'},status=400,headers={'Cache-Control':'no-store'})
+
+async def mailbox(request):
+    service=get_service();uid=service.session_uid(request.cookies.get('altherya_test',''))
+    if uid is None or not service.discord_profile(uid):return web.json_response({'error':'Connexion Discord requise.'},status=403,headers={'Cache-Control':'no-store'})
+    if not service.tutorial.state(uid)['completed']:return web.json_response({'error':'Terminez le tutoriel.'},status=403,headers={'Cache-Control':'no-store'})
+    try:
+        service.maintenance.check(uid,{'action':'mail_list'})
+        return web.json_response(service.mailbox.listing(uid,int(request.query.get('page','0'))),headers={'Cache-Control':'no-store'})
+    except (ValueError,TypeError):return web.json_response({'error':'Boîte aux lettres indisponible ou page invalide.'},status=400,headers={'Cache-Control':'no-store'})
+
+async def combat_history(request):
+    service=get_service();uid=service.session_uid(request.cookies.get('altherya_test',''))
+    if uid is None:return web.json_response({'error':'Connexion requise.'},status=403)
+    try:return web.json_response(service.combat_archive.listing(uid,int(request.query.get('page','0')),request.query.get('source','all')),headers={'Cache-Control':'no-store'})
+    except (ValueError,TypeError) as e:return web.json_response({'error':str(e)},status=400)
+
+async def trade(request):
+    service=get_service();uid=service.session_uid(request.cookies.get('altherya_test',''))
+    if uid is None or not service.discord_profile(uid):return web.json_response({'error':'Connexion Discord requise.'},status=403)
+    try:
+        service.maintenance.check(uid,{'action':'trade_list'})
+        data=service.trading.history(uid,int(request.query.get('page','0'))) if request.query.get('mode')=='history' else service.trading.listing(uid,request.query.get('mode','buy'),int(request.query.get('page','0')),request.query.get('search',''),request.query.get('category','Tous'),request.query.get('sort','ending'))
+        return web.json_response(data,headers={'Cache-Control':'no-store'})
+    except (ValueError,TypeError) as e:return web.json_response({'error':str(e)},status=400)
 
 async def avatar(request):
     service=get_service();uid=service.session_uid(request.cookies.get('altherya_test',''))
@@ -87,8 +112,9 @@ async def static(request):
             if path.name=='index.html':response.headers['Cache-Control']='no-store'
             return response
     raise web.HTTPNotFound()
+from runtime_health import runtime_health
 from request_security import api_security
-app=web.Application(client_max_size=4096,middlewares=[api_security(get_service)])
+app=web.Application(client_max_size=4096,middlewares=[runtime_health(get_service),api_security(get_service)])
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import activity as adapter
@@ -103,6 +129,8 @@ app.cleanup_ctx.append(save_lifecycle)
 app.cleanup_ctx.append(discord_lifecycle)
 app.cleanup_ctx.append(portal_lifecycle)
 app.cleanup_ctx.append(names_lifecycle)
+from trading import trade_lifecycle
+app.cleanup_ctx.append(trade_lifecycle)
 app.router.add_get('/api/activity',activity);app.router.add_post('/api/activity',activity)
-app.router.add_post('/api/admin',admin);app.router.add_get('/api/avatar',avatar);app.router.add_get('/api/health',health);app.router.add_post('/api/auth/discord',auth);app.router.add_get('/{path:.*}',static)
+app.router.add_get('/api/combat-history',combat_history);app.router.add_get('/api/trade',trade);app.router.add_get('/api/mail',mailbox);app.router.add_post('/api/admin',admin);app.router.add_get('/api/avatar',avatar);app.router.add_get('/api/health',health);app.router.add_post('/api/auth/discord',auth);app.router.add_get('/{path:.*}',static)
 if __name__=='__main__':web.run_app(app,host='0.0.0.0',port=int(os.getenv('PORT','8080')))

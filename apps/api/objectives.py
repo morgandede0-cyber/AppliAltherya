@@ -42,5 +42,15 @@ def objectives(s):
     if destinations:
         key,d=min(destinations,key=lambda item:item[1]['level'])
         add('destination','Prochain lieu : '+d['name'],f"Accès au niveau {d['level']} ; équipement requis à préparer.",'world',s['level'],d['level'])
+    port=s.get('port',{})
+    if port.get('unlocked') and not port.get('complete'):
+        add('port',port['goal'],'Enquête de la cargaison · Port des Brumes','port',port['phase'],7)
+    goal=s.get('adventure',{}).get('goal')
+    if goal:
+        tier=s['gear'].get(goal+'_level',1)+1
+        recipe=(s['bag_recipes'] if goal=='bag' else s['recipes']).get(tier,{})
+        if recipe:
+            missing=[f"{max(0,n-s['resources'].get(k,0))} {k}" for k,n in recipe.items() if s['resources'].get(k,0)<n]
+            result.insert(0,dict(key='forge-tracked',title='Amélioration suivie : '+{'axe':'Hache','pickaxe':'Pioche','spear':'Lance','bag':'Sac'}[goal],detail='À réunir : '+', '.join(missing) if missing else 'Matériaux réunis ; vérifiez Gold et niveau à la forge.',route='forge',current=sum(min(n,s['resources'].get(k,0)) for k,n in recipe.items()),target=sum(recipe.values()),ready=not missing))
     add('level',f"Prochain niveau : {s['level']+1}",f"Encore {s['xp_needed']-s['xp']} XP à gagner.",'journal',s['xp'],s['xp_needed'])
     return result

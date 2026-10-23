@@ -144,3 +144,4 @@
  #panel.game-menu.arena-surface .arena-technique-name{display:block;font:600 11px/1.25 Georgia!important;white-space:normal;word-break:normal;overflow-wrap:normal;hyphens:none}
  #panel.game-menu.arena-surface .arena-log-list{max-height:100px}
 }
+#panel.arena-surface .arena-debrief,#panel.arena-surface .arena-tactical-readout{border:1px solid #9c814e77;background:#0a2029;padding:12px 16px;margin:10px 0;color:#e8d8b3;font:14px/1.5 Georgia;white-space:normal;overflow-wrap:anywhere}#panel.arena-surface .arena-debrief h3{font-size:17px;margin:0 0 8px}#panel.arena-surface .arena-debrief p{margin:6px 0}#panel.arena-surface .arena-intent-stats{font-size:13px!important}#panel.arena-surface .arena-tactical-readout summary{cursor:pointer;color:#e8c27d}

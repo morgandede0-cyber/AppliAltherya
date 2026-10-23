@@ -168,8 +168,8 @@ class EventAndStorageTests(unittest.TestCase):
  def test_gold_event_doubles_profit_once_not_returned_stake_and_replay_is_stable(self):
   self.events(True);self.access();wallet=self.s()['balance']['wallet'];body=dict(action='game_start',key='slots',wager=10,revision=self.a.play.read(self.uid)[0],request_id='event-slots-test-00001')
   with patch('play.draw_slot',return_value=['7️⃣']*3):self.a.action(self.uid,body)
-  self.assertEqual(self.s()['play']['payout'],230);self.assertEqual(self.s()['balance']['wallet'],wallet+220);self.assertEqual(self.s()['xp'],6)
-  self.events(False);self.a.action(self.uid,body);self.assertEqual(self.s()['balance']['wallet'],wallet+220);self.assertEqual(self.s()['xp'],6)
+  self.assertEqual(self.s()['play']['payout'],1490);self.assertEqual(self.s()['balance']['wallet'],wallet+1480);self.assertEqual(self.s()['xp'],6)
+  self.events(False);self.a.action(self.uid,body);self.assertEqual(self.s()['balance']['wallet'],wallet+1480);self.assertEqual(self.s()['xp'],6)
  def test_event_blackjack_double_uses_updated_stake_for_profit(self):
   self.blackjack_hand([5,6],[10,7],[10]);self.events(True);wallet=self.s()['balance']['wallet'];self.act(action='game_step',key='double');p=self.s()['play']
   self.assertEqual(p['wager'],20);self.assertEqual(p['payout'],60);self.assertEqual(self.s()['balance']['wallet'],wallet-10+60)

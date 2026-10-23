@@ -1,4 +1,5 @@
 from __future__ import annotations
+from game_clock import today as game_day
 
 from secure_random import random
 import sqlite3
@@ -451,7 +452,7 @@ class ArenaStore:
         conn.execute("UPDATE arena_progress SET rating=MAX(0,rating+?) WHERE user_id=?", (int(delta), int(user_id)))
 
     def friend_remaining(self, user_id: int) -> int:
-        day = datetime.now().date().isoformat()
+        day = game_day()
         with self._connect() as conn:
             row = conn.execute("SELECT friend_fights FROM arena_daily WHERE user_id=? AND day=?", (int(user_id), day)).fetchone()
         return max(0, 3 - (int(row["friend_fights"]) if row else 0))
@@ -477,7 +478,7 @@ class ArenaStore:
 
     def start_friend(self, p1: int, p2: int, wager: int) -> tuple[bool, str, str | None]:
         wager = max(0, min(500, int(wager)))
-        day = datetime.now().date().isoformat()
+        day = game_day()
         battle_id = uuid.uuid4().hex
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")

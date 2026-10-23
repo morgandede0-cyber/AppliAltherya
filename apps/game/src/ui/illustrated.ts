@@ -1,3 +1,5 @@
+import {expeditionGuide} from './expedition-guide';
+import {recall,remember} from './session-preferences';
 import {openArenaLobby} from './arena-lobby';
 import {openArenaCombat} from './arena-combat';
 import {arenaSummary} from './arena-view';
@@ -22,13 +24,14 @@ export function openIllustrated(panel:HTMLElement,initial:string,host:Host,locat
  if(initial==='bank')return openBankMenu(panel,host);
  if(['combat','techniques','arena-result'].includes(initial))return openArenaCombat(panel,host,initial==='techniques',initial==='arena-result');
  let kind=initial,selected='beer',amount=Math.min(100,host.state().balance.wallet),withdraw=Math.min(100,host.state().balance.bank),page=0,tool='axe',tier=1,destination='',wager=Math.min(10,host.state().balance.wallet),number=0,locked=false,notice='',destroyed=false,animationUntil=0,animationStarted=0,dialog='',offset=host.state().server_now*1000-Date.now();
+ const saved=recall(host.state().save_owner,'expedition:'+location,{tool:'axe',tier:1,destination:''});tool=saved.tool;tier=saved.tier;destination=saved.destination;
  const el=(tag:string,text='',cls='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};let stage:HTMLElement,dock:HTMLElement;let live:ReturnType<typeof openLiveGame>|undefined,liveKind='';
  const box=(x:number,y:number,w:number,h:number,text='',cls='art-mask')=>{const n=el('div',text,'art-overlay '+cls);Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});if(cls.includes('art-mask')||cls==='bank-amount')materialField(n,kind,cls.includes('job-rarity')?'seal':cls==='bank-amount'||cls.includes('art-blue')?'blue':cls.includes('art-paper')?'paper':cls.includes('art-wood')||kind==='bank'||kind==='tools'||kind==='destinations'?'wood':'blue');stage.append(n);return n;};
  const button=(label:string,fn:()=>void,disabled=false)=>{const n=el('button',label,'art-button') as HTMLButtonElement;n.disabled=disabled||locked||Date.now()<animationUntil;n.onclick=fn;decorateButton(n,label);return n;};
  const hit=(label:string,x:number,y:number,w:number,h:number,fn:()=>void,disabled=false,chosen=false)=>{
 const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n.setAttribute('aria-label',label);n.title=label;n.disabled=disabled||locked||Date.now()<animationUntil;Object.assign(n.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});n.onclick=fn;stage.append(n);return n;};
  const route=(key:string)=>{dialog='';host.route(key);};
- function change(next:string){if(next==='casino'){route('casino');return;}if(next==='combat'||next==='techniques'){route(next);return;}kind=next;dialog='';page=0;notice='';draw();}
+ function change(next:string){remember(host.state().save_owner,'expedition:'+location,{tool,tier,destination});if(next==='casino'){route('casino');return;}if(next==='combat'||next==='techniques'){route(next);return;}kind=next;dialog='';page=next==='destinations'?Math.max(0,Object.entries(host.state().destinations).filter(([,d])=>d.location_key===location&&d.tools.includes(tool)).findIndex(([key])=>key===destination)):0;notice='';draw();}
  async function run(body:Record<string,unknown>,after?:()=>void,animate=false){if(locked||Date.now()<animationUntil)return;const revision=host.state().play.revision;locked=true;draw();try{notice=await host.mutate({...body,...((String(body.action).startsWith('game_')||String(body.action).startsWith('battle_'))?{revision}:{})});if(animate){animationStarted=Date.now();animationUntil=animationStarted+(matchMedia('(prefers-reduced-motion: reduce)').matches?10:kind==='russian'?1000:4000);}after?.();}catch(e){notice=String(e);}finally{locked=false;if(!destroyed)draw();}}
  function input(parent:HTMLElement,value:number,label:string,max:number,onChange:(v:number)=>void,min=1){const n=document.createElement('input');n.type='number';n.min=String(min);n.max=String(max);n.step='1';n.value=String(value);n.setAttribute('aria-label',label);n.onchange=()=>{onChange(Number(n.value));draw();};parent.append(n);return n;}
  function controls(parent:HTMLElement,...nodes:HTMLElement[]){const n=el('div','','art-buttons');n.append(...nodes);(parent.closest('.art-extra')?parent:dock).append(n);}
@@ -40,7 +43,7 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
  function draw(){
   const previousKind=panel.dataset.kind,scroll=panel.scrollTop;
   const focused=panel.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;
-  drawContent();composeBlankMenu(panel,host.state());fitArtworkText(panel);
+  drawContent();composeBlankMenu(panel,host.state());panel.dataset.expeditionLocation=location;expeditionGuide(panel,host.state(),kind,tool,tier,destination);fitArtworkText(panel);
   if(previousKind!==panel.dataset.kind)panel.scrollTop=0;
   if(previousKind===panel.dataset.kind&&!panel.querySelector('.art-extra')){
    panel.scrollTop=scroll;
@@ -147,7 +150,7 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
    if(d){destination=d[0];const preview=box(23,27,54,23,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=d[1].name;preview.append(picture);box(37,21,28,3.7,s.tools[String(tier)]?.[tool]??tool,'art-mask art-blue art-small');box(39,52.6,23,4.6,d[1].name,'art-mask art-blue art-small');
     
     box(23,61,14,3.2,`Niveau requis : ${d[1].level}`,'art-mask art-wood art-small');box(43,61,15,3.2,d[1].duration_label,'art-mask art-wood art-small');box(65,61,13,3.2,s.level>=d[1].level?'Accès disponible':'Accès verrouillé','art-mask art-wood art-small');box(47,66,6,3.1,`${page+1} / ${ds.length}`,'art-mask art-wood art-small');
-    box(37,75,27,8,'Découvertes durant le voyage','art-mask art-wood art-small');hit('Destination précédente',5,28,12,27,()=>{page--;draw();},page===0);hit('Destination suivante',82,28,12,27,()=>{page++;draw();},page>=ds.length-1);hit('Choisir cette destination',17,87,43,10,()=>change('accessories'),s.level<d[1].level);
+    box(37,75,27,8,'Découvertes durant le voyage','art-mask art-wood art-small');hit('Destination précédente',5,28,12,27,()=>{page--;draw();},page===0);hit('Destination suivante',82,28,12,27,()=>{page++;draw();},page>=ds.length-1);hit('Choisir cette destination',17,87,43,10,()=>change('departure'),s.level<d[1].level);
    }else box(38,53,25,4,'Aucune destination','art-mask art-small');footer('tools',62,88,22,9);
   }else if(kind==='accessories'){
    box(35,22,30,4,s.destinations[destination]?.name??'Destination','art-small');
@@ -157,9 +160,9 @@ const n=el('button','','art-hit'+(chosen?' selected':'')) as HTMLButtonElement;n
   }else if(kind==='departure'){
    const d=s.destinations[destination],bare=tool==='hands';const preview=box(14,28,35,19,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=d?.name??'';preview.append(picture);box(24.4,49.3,24,4,d?.name??'Destination indisponible','art-mask art-blue art-small');
    box(65,28.1,15,3.7,bare?'Cueillette':tool==='axe'?'Bûcheron':tool==='pickaxe'?'Mineur':'Chasseur','art-mask art-paper art-small');box(65,36.8,15,3.7,bare?'Mains nues':s.tools[String(tier)]?.[tool]??tool,'art-mask art-paper art-small');box(65,45.2,15,3.7,d?.duration_label??'—','art-mask art-paper art-small');
-   box(38,75.5,25,8.5,'Découvertes en route','art-mask art-wood art-small');hit('Lancer l’expédition',16,87,45,11,()=>void run({action:'start',key:destination,tool,...(!bare?{tool_level:tier,bag_level:s.gear.bag_level}:{}),object1:'none',object2:'none'},()=>{if(host.state().active)change('live');}),!d||s.level<d.level);footer('expedition',62,89,24,7);
+   box(38,75.5,25,8.5,'Découvertes en route','art-mask art-wood art-small');hit('Lancer l’expédition',16,87,45,11,()=>void run({action:'start',key:destination,tool,...(!bare?{tool_level:tier,bag_level:s.gear.bag_level}:{}),object1:'none',object2:'none'},()=>{if(host.state().active)change('live');}),!d||s.level<d.level);footer(bare?'expedition':'destinations',62,89,24,7);
   }else if(kind==='live'){
-   const a=s.active;if(!a){box(13,28,75,57,'Expédition terminée. Les ressources et l’XP ont été ajoutées à votre personnage.');footer('world',48,89,41,8);return;}box(25,20,50,3,a.name,'art-small');const scenery=box(13,25,74,16,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=a.name;scenery.append(picture);const t=box(21,43,60,8);t.dataset.deadline=String(a.ends_at*1000-offset);const prog=box(20,51,61,7);progress(prog,Math.max(0,s.server_now-a.started_at),a.ends_at-a.started_at);box(20,63,28,17,Object.entries(a.revealed_loot).map(([k,v])=>`${k} ×${v}`).join('\n')||'Aucune ressource découverte','art-mask art-paper art-small');box(54,63,27,17,a.log.slice(-3).map(l=>`${l.resource_name} +${l.quantity}`).join('\n')||'Le voyage commence…','art-mask art-paper art-small');hit('Actualiser',14,86,35,10,refresh);footer('world',51,86,37,10);
+   const a=s.active;if(!a){box(13,28,75,57,'Expédition terminée. Les ressources et l’XP ont été ajoutées à votre personnage.');footer('world',48,89,41,8);return;}box(25,20,50,3,a.name,'art-small');const scenery=box(13,25,74,16,'','native-destination');const picture=new Image();picture.src='/assets/scenes/'+(location==='vorak'?'vorak.webp':'elarwyn.webp');picture.alt=a.name;scenery.append(picture);const t=box(21,43,60,8);t.dataset.deadline=String(a.ends_at*1000-offset);const prog=box(20,51,61,7);progress(prog,Math.max(0,s.server_now-a.started_at),a.ends_at-a.started_at);box(20,63,28,17,Object.entries(a.revealed_loot).map(([k,v])=>`${k} ×${v}`).join('\n')||'Aucune ressource découverte','art-mask art-paper art-small');box(54,63,27,17,a.log.slice(-3).map(l=>`${l.resource_name} +${l.quantity}`).join('\n')||'Le voyage commence…','art-mask art-paper art-small');hit('Rencontre de voyage',30,79,40,6,()=>route('adventure-voyage'));hit('Actualiser',14,86,35,10,refresh);footer('world',51,86,37,10);
   }
  }
  function drawDialog(s:Snapshot){const n=el('div','','art-extra');n.setAttribute('role','dialog');n.setAttribute('aria-modal','true');stage.append(n);

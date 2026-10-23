@@ -1,3 +1,4 @@
+import {recall,remember} from './session-preferences';
 import {decoratePredator} from './predator-art';
 import {approvedCard,decorateApproved} from './approved-art';
 import {mountRealm,realmButton} from './realm-menu';
@@ -13,6 +14,7 @@ import './commerce-live.css';
 type Host={state:()=>Snapshot;trade:(body:Record<string,unknown>)=>Promise<string>;exit:()=>void;back:()=>void;sound:()=>void;switchMode:(mode:CommerceMode)=>void};
 export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
  let category=categories(mode)[0],page=0,selected:Product|undefined,quantity=1,busy=false,message='',dead=false;
+ const saved=recall(host.state().save_owner,'commerce:'+mode,{category,page});if(categories(mode).includes(saved.category))category=saved.category;page=saved.page;
  const el=(tag:string,cls='',text='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};
  const art=(p:Product)=>['axe','pickaxe','spear','bag'].includes(p.icon)?equipmentArt(p.icon):generatedItemArt(p.name)??resourceArt(p.name)??itemArt(p.icon);
  const button=(label:string,fn:()=>void,disabled=false)=>{const b=realmButton(label,()=>{if(!busy){host.sound();fn();}},busy||disabled);return b;};
@@ -24,7 +26,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
   finally{busy=false;if(!dead)draw();}
  }
  function draw(){
-  if(dead)return;
+  if(dead)return;remember(host.state().save_owner,'commerce:'+mode,{category,page});
   const scroll=root.dataset.kind==='market-'+mode?(root.querySelector('.realm-body')?.scrollTop??0):0,focused=root.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;
   const {body,footer:realmFooter}=mountRealm(root,'market-'+mode,mode==='sell'?'Vendre au marché':mode==='story'?'Objets d’histoire':'Le marchand',busy);
   const stage=el('section','realm-commerce-stage');body.append(stage);const productGrid=el('div','realm-commerce-grid');

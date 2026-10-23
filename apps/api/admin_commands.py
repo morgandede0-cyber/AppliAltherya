@@ -66,6 +66,9 @@ class AdminCommands:
   add('event','Activer / arrêter un bonus des moteurs compatibles','Royaume',[arg('key','Bonus','choice',options=options([('gold_x2','Gold x2'),('xp_x2','XP x2')])),arg('enabled','Actif','boolean')],'game')
   add('announcement','Message de service (vide = retirer)','Royaume',[arg('text','Message','text',max=500)],'game')
   add('gift_gold','Distribuer du Gold aux joueurs du registre','Royaume',[arg('value','Gold par joueur',min=1,max=10000)],'game')
+  mail_args=[arg('title','Titre du courrier','text',max=80),arg('text','Message au joueur','text',max=500),arg('gold','Gold',min=0,max=10000,default=0),arg('xp','XP',min=0,max=10000,default=0),arg('pouciel','Pouciels',min=0,max=1000,default=0),arg('item','Objet / ressource','choice',options=[{'value':'none','label':'Aucun objet'},*options((n,n) for n in resources)],default='none'),arg('quantity','Quantité d’objets',min=0,max=1000,default=0)]
+  add('mail_player','Récompenser un joueur par courrier','Courrier',mail_args)
+  add('mail_all','Récompenser tout le registre par courrier','Courrier',mail_args,'game')
   return dict(commands=commands,maintenance=self.a.maintenance.public(),today=today())
  def validate(self,body):
   command=next((x for x in self.catalogue()['commands'] if x['id']==body.get('command')),None)
@@ -79,6 +82,9 @@ class AdminCommands:
    if kind=='choice' and (not isinstance(value,str) or value not in {o['value'] for o in spec['options']}):raise ValueError('Choix invalide : '+spec['label'])
    if kind=='text' and (not isinstance(value,str) or len(value)>spec['max']):raise ValueError('Texte invalide.')
   if command['id']=='armor' and args['key'] in CFG['ADVANCED_SLOTS'] and args['tier'] not in ('none','mythique','legendaire'):raise ValueError('Les emplacements avancés commencent au Mythique.')
+  if command['id'] in ('mail_player','mail_all'):
+   if not args['title'].strip() or not args['text'].strip():raise ValueError('Titre et message obligatoires.')
+   if (args['item']=='none') != (args['quantity']==0):raise ValueError('Choisissez un objet et une quantité positive, ou Aucun objet et zéro.')
   reason=body.get('reason')
   if not isinstance(reason,str) or not 3<=len(reason.strip())<=200:raise ValueError('Motif de 3 à 200 caractères requis.')
   uid=self.target(body.get('player')) if command['scope']=='player' else None
@@ -95,15 +101,19 @@ class AdminCommands:
   data['pending_expeditions']=[dict(r) for r in c.execute('SELECT run_id,claimed,ends_at FROM expedition_runs WHERE user_id=? AND claimed=0',(uid,))]
   data['session_count']=c.execute('SELECT COUNT(*) FROM activity_sessions WHERE user_id=?',(uid,)).fetchone()[0]
   return data
- def fingerprint(self,c,uid):return digest(self.state(c,uid))
+ def fingerprint(self,c,uid,command=None,state=None):
+  value=state if state is not None else self.state(c,uid)
+  if command=='mail_player':return digest({'recipient':uid})
+  if command=='mail_all':return digest({'recipients':[(r['discord_id'],r['user_id']) for r in value['players']]})
+  return digest(value)
  def preview(self,actor,body):
   self.a.admin.require(actor);command,uid=self.validate(body);identity=self.a.discord_profile(actor)['discord_id']
   with atomic(self.a.path) as c:
    c.execute('DELETE FROM activity_admin_previews WHERE expires<?',(time.time()-86400,))
    token=secrets.token_urlsafe(32);before=self.state(c,uid)
-   c.execute('INSERT INTO activity_admin_previews VALUES(?,?,?,?,?,NULL)',(token,identity,json.dumps(body,ensure_ascii=False),digest(before),time.time()+300))
+   c.execute('INSERT INTO activity_admin_previews VALUES(?,?,?,?,?,NULL)',(token,identity,json.dumps(body,ensure_ascii=False),self.fingerprint(c,uid,command['id'],before),time.time()+300))
   current=(before.get(FIELDS[command['id']][1]) or [{}])[0].get(FIELDS[command['id']][2],0) if command['id'] in FIELDS else None
-  return dict(current=current,token=token,label=command['label'],player=body.get('player'),args=body['args'],reason=body['reason'],expires_in=300,affected=len(before.get('players',[])) if uid is None and command['id']=='gift_gold' else 1,before=before)
+  return dict(current=current,token=token,label=command['label'],player=body.get('player') if command['scope']=='player' else None,args=body['args'],reason=body['reason'],expires_in=300,affected=len(before.get('players',[])) if uid is None and command['id'] in ('gift_gold','mail_all') else 1,before=before)
  def confirm(self,actor,token):
   self.a.admin.require(actor);identity=self.a.discord_profile(actor)['discord_id']
   if not isinstance(token,str) or len(token)>100:raise ValueError('Confirmation invalide.')
@@ -113,15 +123,21 @@ class AdminCommands:
    if row['result']:return json.loads(row['result'])
    if row['expires']<time.time():raise ValueError('Confirmation expirée. Recommencez l’aperçu.')
    body=json.loads(row['body']);command,uid=self.validate(body)
-   if self.fingerprint(c,uid)!=row['fingerprint']:raise ValueError('Les données ont changé. Recommencez l’aperçu.')
-   before=self.state(c,uid);self.apply(c,uid,command['id'],body['args'],identity,body['reason']);after=self.state(c,uid)
-   c.execute('INSERT INTO activity_admin_commands VALUES(?,?,?,?,?,?,?,?,?)',(token,identity,body.get('player') or '*',command['id'],json.dumps(body['args'],ensure_ascii=False),body['reason'],json.dumps(before,ensure_ascii=False),json.dumps(after,ensure_ascii=False),time.time()))
-   self.a.notifications.admin_event(c,token,identity,body.get('player') or '*',command['label'],0,1,body['reason'])
+   if self.fingerprint(c,uid,command['id'])!=row['fingerprint']:raise ValueError('Les données ont changé. Recommencez l’aperçu.')
+   economy_before=self.a.transaction_journal.capture(c,uid) if uid is not None else None
+   before=self.state(c,uid);self.apply(c,uid,command['id'],body['args'],identity,body['reason'],token);after=self.state(c,uid)
+   if economy_before is not None:self.a.transaction_journal.record(c,actor,uid,'admin:'+command['id'],'admin:'+token,economy_before)
+   target=body.get('player') if command['scope']=='player' else '*'
+   c.execute('INSERT INTO activity_admin_commands VALUES(?,?,?,?,?,?,?,?,?)',(token,identity,target,command['id'],json.dumps(body['args'],ensure_ascii=False),body['reason'],json.dumps(before,ensure_ascii=False),json.dumps(after,ensure_ascii=False),time.time()))
+   self.a.notifications.admin_event(c,token,identity,target,command['label'],0,1,body['reason'])
    result=dict(message='Commande appliquée et journalisée.',command=command['id']);c.execute('UPDATE activity_admin_previews SET result=? WHERE token=?',(json.dumps(result),token));return result
  def busy(self,c,uid):return self.a.khaz.active(c,uid)
- def apply(self,c,uid,cmd,args,actor,reason):
+ def apply(self,c,uid,cmd,args,actor,reason,reference=None):
   from ashkar import today
   now=time.time();v=args.get('value');key=args.get('key')
+  if cmd in ('mail_player','mail_all'):
+   targets=[uid] if uid is not None else [r['user_id'] for r in self.state(c,None)['players']]
+   self.a.mailbox.send(c,targets,args,actor,reference);return
   if uid is not None and cmd not in ('round_close','sessions_revoke','player_lock') and self.busy(c,uid):raise ValueError('Clôturez le combat ou la partie avant de modifier ce joueur.')
   if cmd in FIELDS or cmd=='level':
    if cmd=='level':v=sum(xp_needed_for_level(n) for n in range(1,v));cmd='xp'

@@ -1,8 +1,9 @@
 from __future__ import annotations
+from game_clock import today as game_day
 import sqlite3
 import hashlib, itertools, json, random
 from shared_economy import connect_shared
-from datetime import datetime, date
+from datetime import date
 from pathlib import Path
 from progression import level_from_xp, XP_REWARDS
 from admin_engine import event_multiplier
@@ -29,7 +30,7 @@ class CastleStore:
         self.db_path=Path(db_path); self.db_path.parent.mkdir(parents=True,exist_ok=True); self._init()
     def _c(self):
         c=connect_shared(self.db_path,timeout=10); c.row_factory=sqlite3.Row; return c
-    def _today(self): return datetime.now().date().isoformat()
+    def _today(self): return game_day()
     def _init(self):
         with self._c() as c:
             c.execute('''CREATE TABLE IF NOT EXISTS castle_profiles(user_id INTEGER PRIMARY KEY, xp INTEGER NOT NULL DEFAULT 0, combats INTEGER NOT NULL DEFAULT 0, wins INTEGER NOT NULL DEFAULT 0, losses INTEGER NOT NULL DEFAULT 0, expeditions INTEGER NOT NULL DEFAULT 0, casino_games INTEGER NOT NULL DEFAULT 0, quests_completed INTEGER NOT NULL DEFAULT 0, member_since TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, last_daily TEXT)''')
@@ -105,12 +106,15 @@ class CastleStore:
         random.Random(seed).shuffle(choices)
         ordinal=date.fromisoformat(day).toordinal()
         rng=random.Random(seed+ordinal)
+        level=level_from_xp(self.profile(uid)['xp'])[0]
         generated={}
         for family in choices[ordinal%len(choices)]:
-            key=rng.choice(('combat','arena_win')) if family=='arena' else {'tavern':'tavern_game','expedition':'expedition','daily':'daily_bonus'}[family]
+            key=('combat','arena_win')[(ordinal+seed)%2] if family=='arena' else {'tavern':'tavern_game','expedition':'expedition','daily':'daily_bonus'}[family]
             label,target,event=QUESTS[key]
             if key=='tavern_game':
                 target=rng.choice((1,2));label=f'Participer à {target} jeu'+('x' if target>1 else '')+' de Taverne'
+            if key=='combat' and level>=5:target=2;label='Participer à 2 combats d’arène'
+            if key=='tavern_game' and level>=10:target=2;label='Participer à 2 jeux de Taverne'
             generated[key]=(label,target,event)
         with self._c() as c:
             c.execute('INSERT OR IGNORE INTO castle_daily_plans VALUES(?,?,?)',(uid,day,json.dumps(generated,ensure_ascii=False)))

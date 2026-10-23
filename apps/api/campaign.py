@@ -3,13 +3,23 @@ import json,time
 from pathlib import Path
 from dataclasses import asdict
 from progression import level_from_xp
+from campaign_story import enrich,consequences,playable_branch
 from arena_engine import Fighter,BattleState,resolve_action,bot_choose_action
+from arena_techniques import ArenaFighter,book,resolve as technique_action
+from campaign_rewards import quote as reward_quote,VERSION as REWARD_VERSION
 CATALOG=json.loads(Path(__file__).with_name('campaign_catalog.json').read_text(encoding='utf8'))
 QUESTS=CATALOG['quests']
 LEGACY_QUESTS=json.loads(Path(__file__).with_name('campaign_catalog_v1.json').read_text(encoding='utf8'))['quests']
 def effective_quest(row,payload):
  # Already accepted missions keep their original steps and level gate until claimed.
- return (LEGACY_QUESTS if row['accepted_at'] is not None and payload.get('edition',1)<2 else QUESTS)[row['quest_index']]
+ q=(LEGACY_QUESTS if row['accepted_at'] is not None and payload.get('edition',1)<2 else QUESTS)[row['quest_index']]
+ q=playable_branch(q,payload.get('choices',{})) if row['accepted_at'] is None or payload.get('edition',1)>=3 else q
+ if row['accepted_at'] is None or payload.get('edition',1)>=4:
+  from port import port_quest
+  q=port_quest(q)
+ if row['accepted_at'] is None:q={**q,**reward_quote(q)}
+ elif payload.get('reward_quote'):q={**q,**payload['reward_quote']}
+ return q
 
 class Campaign:
  def __init__(self,a):
@@ -32,23 +42,28 @@ class Campaign:
   return dict(locations=locations,evidence=evidence)
  def row(self,c,uid):
   c.execute('INSERT OR IGNORE INTO campaign_progress(user_id) VALUES(?)',(uid,));return dict(c.execute('SELECT * FROM campaign_progress WHERE user_id=?',(uid,)).fetchone())
- def _expedition_done(self,c,uid,step,since):
-  return bool(c.execute('SELECT 1 FROM expedition_runs WHERE user_id=? AND expedition_key=? AND claimed=1 AND NOT EXISTS (SELECT 1 FROM activity_admin_cancelled_expeditions x WHERE x.run_id=expedition_runs.run_id) AND started_at>=? LIMIT 1',(uid,step['destination'],int(since))).fetchone())
+ def _expedition_done(self,c,uid,step,since,prior=None):
+  rows=c.execute('SELECT run_id,loot_json FROM expedition_runs WHERE user_id=? AND expedition_key=? AND claimed=1 AND NOT EXISTS (SELECT 1 FROM activity_admin_cancelled_expeditions x WHERE x.run_id=expedition_runs.run_id) AND started_at>=?',(uid,step['destination'],int(since) if prior is not None else since)).fetchall()
+  return any(r['run_id'] not in (prior or []) and sum(json.loads(r['loot_json']).values())>0 for r in rows)
+ def expedition_boundary(self,c,uid,q,stage,payload,entered):
+  if stage<len(q['steps']) and q['steps'][stage]['kind']=='expedition':
+   payload['expedition_prior']=[r[0] for r in c.execute('SELECT run_id FROM expedition_runs WHERE user_id=? AND expedition_key=? AND started_at>=?',(uid,q['steps'][stage]['destination'],int(entered)))]
+
  def snapshot(self,uid):
   with self.a.conn() as c:
    row=self.row(c,uid);idx=row['quest_index'];payload=json.loads(row['payload']);done=c.execute('SELECT COUNT(*) FROM campaign_receipts WHERE user_id=?',(uid,)).fetchone()[0]
    level=level_from_xp(c.execute('SELECT xp FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()[0])[0]
-   if idx>=len(QUESTS):return dict(**self.journal(c,uid,level),complete=True,title=CATALOG['title'],completed=done,total=len(QUESTS),choices=payload.get('choices',{}),revision=row['revision'])
-   q=dict(effective_quest(row,payload));stage=row['stage'];step=q['steps'][stage] if stage<len(q['steps']) else None
+   if idx>=len(QUESTS):return dict(**self.journal(c,uid,level),decision_history=consequences(payload.get('choices',{}),QUESTS),complete=True,title=CATALOG['title'],completed=done,total=len(QUESTS),choices=payload.get('choices',{}),revision=row['revision'])
+   q=enrich(dict(effective_quest(row,payload)),payload.get('choices',{}),QUESTS);stage=row['stage'];step=q['steps'][stage] if stage<len(q['steps']) else None
    if q['id']=='S4-Q08':
     outcome=payload.get('choices',{}).get('S4-Q07','')
     q['resolution']+=' Le Faussaire sera jugé.' if outcome.startswith('Secourir') else ' Le Faussaire a disparu ; les relevés sont préservés.'
    public_steps=[{**{k:v for k,v in s.items() if k not in ('answer','clues')},**({'clues':[{'id':clue['id'],'label':clue['label']} for clue in s['clues']]} if 'clues' in s else {})} for s in q['steps']]
-   exp_ready=bool(step and step['kind']=='expedition' and row['accepted_at'] is not None and self._expedition_done(c,uid,step,row['entered_at']))
+   exp_ready=bool(step and step['kind']=='expedition' and row['accepted_at'] is not None and self._expedition_done(c,uid,step,row['entered_at'],payload.get('expedition_prior')))
    level=level_from_xp(c.execute('SELECT xp FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()[0])[0]
    battle=payload.get('battle');public_battle=None
-   if battle:public_battle={'fighters':[{'name':f['name'],'hp':f['hp'],'max_hp':f['max_hp']} for f in battle['fighters']],'log':battle['log'][-10:],'finished':battle['finished'],'won':battle['winner_index']==0 if battle['finished'] else None,'turn':battle['turn_no'],'ultimate_cd':battle['fighters'][0]['ultimate_cd']}
-   return dict(**self.journal(c,uid,level,step.get('place_id') if step and row['accepted_at'] is not None else None),edition=payload.get('edition',1) if row['accepted_at'] is not None else 2,complete=False,title=CATALOG['title'],completed=done,total=len(QUESTS),revision=row['revision'],quest={**{k:v for k,v in q.items() if k!='steps'},'steps':public_steps},stage=stage,accepted=row['accepted_at'] is not None,level_allowed=level>=q['min_level'],deadline=payload.get('deadline',0),retry_at=payload.get('retry_at',0),claim_at=(row['accepted_at'] or 0)+q['min_duration'],expedition_ready=exp_ready,battle=public_battle,choices=payload.get('choices',{}))
+   if battle:public_battle={'skills':payload.get('skills'), 'fighters':[{'name':f['name'],'hp':f['hp'],'max_hp':f['max_hp']} for f in battle['fighters']],'log':battle['log'][-10:],'finished':battle['finished'],'won':battle['winner_index']==0 if battle['finished'] else None,'turn':battle['turn_no'],'ultimate_cd':battle['fighters'][0]['ultimate_cd']}
+   return dict(**self.journal(c,uid,level,step.get('place_id') if step and row['accepted_at'] is not None else None),edition=payload.get('edition',1) if row['accepted_at'] is not None else 5,complete=False,title=CATALOG['title'],completed=done,total=len(QUESTS),revision=row['revision'],quest={**{k:v for k,v in q.items() if k!='steps'},'steps':public_steps},stage=stage,accepted=row['accepted_at'] is not None,level_allowed=level>=q['min_level'],deadline=payload.get('deadline',0),retry_at=payload.get('retry_at',0),claim_at=(row['accepted_at'] or 0)+q['min_duration'],expedition_ready=exp_ready,battle=public_battle,choices=payload.get('choices',{}))
  def enter(self,uid,body):
   with self.a.conn() as c:
    c.execute('BEGIN IMMEDIATE');row=self.row(c,uid);payload=json.loads(row['payload']);active=None
@@ -71,7 +86,7 @@ class Campaign:
     if accepted is not None:raise ValueError('Cette quête est déjà acceptée.')
     level=level_from_xp(c.execute('SELECT xp FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()[0])[0]
     if level<q['min_level']:raise ValueError(f"Niveau {q['min_level']} requis pour cette quête.")
-    payload['edition']=2;accepted=now;entered=now;message='Quête acceptée. Les objectifs se réalisent dans l’ordre.'
+    payload['edition']=5;payload['reward_quote']={k:q[k] for k in ('gold','xp')};payload['reward_version']=REWARD_VERSION;accepted=now;entered=now;message='Quête acceptée. Les objectifs se réalisent dans l’ordre.'
    elif action=='campaign_claim':
     if accepted is None or stage!=len(q['steps']):raise ValueError('Terminez tous les objectifs avant de remettre la quête.')
     if now<accepted+q['min_duration']:raise ValueError('La mission est encore en cours. Consultez le délai du journal.')
@@ -89,7 +104,10 @@ class Campaign:
     step=q['steps'][stage];kind=step['kind'];advance=False;message=''
     if now<payload.get('retry_at',0):raise ValueError('Préparez une nouvelle tentative avant de réessayer.')
     if action=='campaign_step':
-     if kind=='talk':advance=True;message=q['dialogue']
+     if kind=='talk':advance=True;message=step.get('text') or q['dialogue']
+     elif kind=='port':
+      if not self.a.port.complete_in(c,uid):raise ValueError('Résolvez l’enquête du Port des Brumes et remettez le dossier à la capitainerie.')
+      advance=True;message='Le dossier du port authentifie le second reçu. Rejoignez les convoyeurs à Elarwyn.'
      elif kind in ('inspect','mission'):
       if not payload.get('deadline'):payload['deadline']=now+step['duration'];message='Mission lancée. Vous pouvez poursuivre vos autres activités pendant ce délai.'
       elif now<payload['deadline']:raise ValueError('La reconnaissance n’est pas terminée.')
@@ -114,7 +132,7 @@ class Campaign:
       if not result.rowcount:raise ValueError(f"Réunissez {step['quantity']} {step['resource']} pour cette livraison.")
       advance=True;message='Le matériel est remis au destinataire.'
      elif kind=='expedition':
-      if not self._expedition_done(c,uid,step,entered):raise ValueError('Terminez l’expédition indiquée après le début de cet objectif, puis récupérez votre rapport.')
+      if not self._expedition_done(c,uid,step,entered,payload.get('expedition_prior')):raise ValueError('Terminez l’expédition indiquée après le début de cet objectif, puis récupérez votre rapport.')
       advance=True;message='Votre rapport d’expédition est remis et ajouté au dossier.'
      else:raise ValueError('Cet objectif demande un combat.')
     elif action=='campaign_explore':
@@ -135,20 +153,22 @@ class Campaign:
       rescue=saved_choices.get('S2-Q07')=='Secourir directement les convoyeurs' and q['id']=='S4-Q05'
       defense=saved_choices.get('S4-Q03')=='Préparer un barrage autorisé' and q['id']=='S4-Q05'
       enemy=Fighter(None,step['enemy'],'gardien' if step.get('boss') or defense else 'ravageur',max_hp=round((100+10*(q['min_level']-1))*(1.3 if step.get('boss') else 1.05)*(.9 if rescue else 1)),equipment_atk_pct=8+5*q['min_level'])
-      battle=BattleState(q['id']+':'+str(stage),'campaign',0,[Fighter(uid,name,'arena_fighter',max_hp=100+10*(level-1),player_level=level,**self.a.khaz.bonuses_in(c,uid)),enemy],0)
+      player=ArenaFighter(uid,name,'arena_fighter',max_hp=100+10*(level-1),player_level=level,**self.a.khaz.bonuses_in(c,uid));payload['skills']=book(c,uid,level,0)['skills'];player.loadout=payload['skills']
+      battle=BattleState(q['id']+':'+str(stage),'campaign',0,[player,enemy],0)
       payload['battle']=asdict(battle);message='L’adversaire se met en garde. À vous de jouer.'
      else:
       raw=payload.get('battle')
       if not raw or raw['finished']:raise ValueError('Lancez un combat avant de choisir une technique.')
       if key not in ('light','heavy','ultimate','defend','abandon'):raise ValueError('Technique inconnue.')
       fighters=[]
-      for f in raw['fighters']:
-       fighter=Fighter(**f);fighter.hp=f['hp'];fighter.max_hp=f['max_hp'];fighters.append(fighter)
+      for i,f in enumerate(raw['fighters']):
+       fighter=(ArenaFighter if i==0 and payload.get('skills') else Fighter)(**f);fighter.hp=f['hp'];fighter.max_hp=f['max_hp'];fighters.append(fighter)
+      if payload.get('skills'):fighters[0].loadout=payload['skills']
       battle=BattleState(**{**raw,'fighters':fighters})
       if key=='ultimate' and fighters[0].ultimate_cd>0:raise ValueError('Technique encore en recharge.')
       if key=='abandon':battle.finished=True;battle.winner_index=1;battle.log.append('Vous vous repliez.')
       else:
-       battle.log.extend(resolve_action(battle,key))
+       battle.log.extend(technique_action(battle,key,resolve_action) if payload.get('skills') else resolve_action(battle,key))
        if not battle.finished:battle.switch();battle.log.extend(resolve_action(battle,bot_choose_action(battle.actor(),battle.target())))
        if not battle.finished:battle.switch()
       payload['battle']=asdict(battle)
@@ -159,6 +179,7 @@ class Campaign:
       else:message='Tour résolu.'
     else:raise ValueError('Action de campagne inconnue.')
     if advance:
-     stage+=1;entered=now;payload={k:v for k,v in payload.items() if k in ('choices','edition','admin_replay')}
+     stage+=1;entered=now;payload={k:v for k,v in payload.items() if k in ('choices','edition','admin_replay','reward_quote','reward_version')}
+   if action=='campaign_accept' or accepted is not None and stage!=row['stage']:self.expedition_boundary(c,uid,q,stage,payload,entered)
    c.execute('UPDATE campaign_progress SET quest_index=?,stage=?,accepted_at=?,entered_at=?,revision=revision+1,payload=? WHERE user_id=?',(idx,stage,accepted,entered,json.dumps(payload,ensure_ascii=False),uid))
    c.commit();return message

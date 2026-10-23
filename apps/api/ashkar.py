@@ -1,15 +1,11 @@
 """Persistent Activity adapter for the original ten-floor Tower of Ashkar."""
 import json,time
-from datetime import datetime,timedelta
-from zoneinfo import ZoneInfo
+from game_clock import today,next_midnight
 from progression import level_from_xp,ASHKAR_FLOOR_XP
 from arena_engine import arena_player_skills
 import arena_techniques,ashkar_arena
 from tower_techniques import FLOORS
-ZONE=ZoneInfo('Europe/Paris')
-def today():return datetime.now(ZONE).date().isoformat()
-def reset_at():
- now=datetime.now(ZONE);return datetime.combine(now.date()+timedelta(days=1),datetime.min.time(),ZONE).timestamp()
+def reset_at():return next_midnight()
 class Ashkar:
  def __init__(self,a):
   self.a=a
@@ -25,6 +21,7 @@ class Ashkar:
  def active(self,uid):
   with self.a.conn() as c:return self.active_in(c,uid)
  def elsewhere(self,c,uid):
+  if hasattr(self.a,'port') and self.a.port.active_in(c,uid):return True
   r=c.execute('SELECT payload FROM activity_play WHERE user_id=?',(uid,)).fetchone()
   if r and json.loads(r[0]).get('status')=='active':return True
   r=c.execute('SELECT payload FROM campaign_progress WHERE user_id=?',(uid,)).fetchone();b=json.loads(r[0]).get('battle') if r else None
@@ -37,7 +34,7 @@ class Ashkar:
    battle=None
    if p.get('battle'):
     b=p['battle'];battle={k:b[k] for k in ('floor','player_name','player_level','player_hp','player_max_hp','enemy_hp','enemy_max_hp','ultimate_cd','enemy_enraged')}
-   return dict(available=level>=5,level_required=5,revision=r['revision'],progress=floor,daily_cleared=cleared,daily_limit=3,remaining=max(0,3-cleared),reset_at=reset_at(),day=today(),complete=floor>=10,status=p.get('status','idle'),can_start=not reason,start_reason=reason,floor=p.get('floor',min(floor+1,10)),battle=battle,skills=p.get('skills') or arena_player_skills(battle['player_level'] if battle else level),logs=p.get('logs',[]),result=p.get('result'),combat=ashkar_arena.public(p,r['revision']),floors=[dict(floor=n,**e,xp=ASHKAR_FLOOR_XP[n],cleared=n<=floor,current=n==floor+1,technique=arena_techniques.TOWER_CATALOG.get(n,{}).get('name'),technique_owned=n%10==0 and bool(c.execute('SELECT 1 FROM activity_ashkar_techniques WHERE user_id=? AND floor=?',(uid,n)).fetchone())) for n,e in FLOORS.items()])
+   return dict(available=level>=5,level_required=5,revision=r['revision'],progress=floor,daily_cleared=cleared,daily_limit=3,remaining=max(0,3-cleared),reset_at=reset_at(),day=today(),complete=floor>=10,status=p.get('status','idle'),can_start=not reason,start_reason=reason,floor=p.get('floor',min(floor+1,10)),battle=battle,skills=p.get('skills') or arena_player_skills(battle['player_level'] if battle else level),logs=p.get('logs',[]),result=p.get('result'),combat=ashkar_arena.public(p,r['revision']),floors=[dict(floor=n,**e,tactics=ashkar_arena.opponent(n)['hint'],role=ashkar_arena.opponent(n)['role'],xp=ASHKAR_FLOOR_XP[n],cleared=n<=floor,current=n==floor+1,technique=arena_techniques.TOWER_CATALOG.get(n,{}).get('name'),technique_owned=n%10==0 and bool(c.execute('SELECT 1 FROM activity_ashkar_techniques WHERE user_id=? AND floor=?',(uid,n)).fetchone())) for n,e in FLOORS.items()])
  def action(self,uid,body):
   action=body['action']
   if action not in ('ashkar_start','ashkar_step'):raise ValueError('Action de tour inconnue.')
@@ -75,4 +72,5 @@ class Ashkar:
      technique=arena_techniques.grant_tower(c,uid,floor);p['status']='won';p['result']=dict(won=True,gold=0 if replay else e['gold'],xp=0 if replay else xp,pouciel=0 if replay else e['pouciel'],floor=floor,replay=replay,technique_unlocked=technique);ashkar_arena.report(p,p['result'],current if replay else floor);message='Victoire !'+(' Technique dérobée : '+technique['name'] if technique else '')
     elif lost:
      p['status']='lost';p['result']=dict(won=False,abandoned=key=='abandon',gold=0,xp=0,pouciel=0,floor=floor);ashkar_arena.report(p,p['result'],c.execute('SELECT max_floor FROM ashkar_progress WHERE user_id=?',(uid,)).fetchone()[0]);message='Repli.' if key=='abandon' else 'Défaite. Vos étages acquis sont conservés.'
+   if p.get('status') in ('won','lost') and p.get('combat_result'):self.a.combat_archive.tower(c,uid,p['combat_result'])
    c.execute('UPDATE activity_ashkar SET revision=revision+1,payload=? WHERE user_id=?',(json.dumps(p,ensure_ascii=False),uid));c.commit();return message

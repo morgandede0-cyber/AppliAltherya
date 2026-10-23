@@ -60,6 +60,7 @@ async def handle(client,interaction):
   if kind=='maintenance':body=dict(command='maintenance',args={'key':values.get('lieu'),'enabled':values.get('active'),'value':values.get('minutes',0)},reason=values.get('motif'))
   else:
    cmd=next((c for c in service.admin_commands.catalogue()['commands'] if c['id']==values.get('commande')),None)
+   if cmd and cmd['group']=='Courrier':raise ValueError('Utilisez la catégorie Courrier du panneau admin pour composer une lettre.')
    if not cmd or cmd['scope']!=('player' if kind=='joueur' else 'game'):raise ValueError('Commande incorrecte pour ce groupe. Consultez /altherya-admin aide.')
    mapping={'value':'valeur','key':'cle','enabled':'active','branch':'voie','tier':'qualite','text':'texte'}
    args={a['name']:values.get(mapping[a['name']],'' if a['type']=='text' else None) for a in cmd['args']}

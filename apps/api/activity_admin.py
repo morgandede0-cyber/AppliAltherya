@@ -21,6 +21,8 @@ class ActivityAdmin:
  def handle(self,actor,body):
   self.require(actor)
   action=body.get('action')
+  if action=='health':return self.a.adventure.health()
+  if action=='transactions':return self.a.transaction_journal.listing(body)
   if action=='catalogue':return self.a.admin_commands.catalogue()
   if action=='command_preview':return self.a.admin_commands.preview(actor,body)
   if action=='command_confirm':return self.a.admin_commands.confirm(actor,body.get('token'))
@@ -55,6 +57,7 @@ class ActivityAdmin:
    if old:
     if (old['actor'],old['target'],old['field'],old['after_value']-old['before_value'],old['reason'])!=(identity,target,field,amount,reason.strip()):raise ValueError('Référence de modification déjà utilisée.')
     return dict(message='Modification déjà enregistrée.')
+   economy_before=self.a.transaction_journal.capture(c,uid)
    before=c.execute(f'SELECT {column} FROM {table} WHERE user_id=?',(uid,)).fetchone()[0]
    if before!=expected:raise ValueError('Les données ont changé. Actualisez la fiche avant de confirmer.')
    after=before+amount
@@ -64,5 +67,6 @@ class ActivityAdmin:
     if after>before:self.a.castle._queue_levelups(c,uid,before,after)
     self.a.castle._sync_level(c,uid)
    c.execute('INSERT INTO activity_admin_log(request_id,actor,target,field,before_value,after_value,reason) VALUES(?,?,?,?,?,?,?)',(rid,identity,target,field,before,after,reason.strip()))
+   self.a.transaction_journal.record(c,actor,uid,'admin:'+field,'admin:'+rid,economy_before)
    self.a.notifications.admin_event(c,rid,identity,target,field,before,after,reason.strip())
   return dict(message='Modification enregistrée.')

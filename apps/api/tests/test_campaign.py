@@ -71,6 +71,9 @@ class CampaignTests(unittest.TestCase):
   original_chapters=self.a.snapshot(self.uid,self.name)['chapters'];total=0
   for idx,q in enumerate(QUESTS):
    self.assertEqual(self.s()['quest']['id'],q['id']);self.act('campaign_accept')
+   from campaign import effective_quest
+   with self.a.conn() as c:
+    row=self.a.campaign.row(c,self.uid);q=effective_quest(row,json.loads(row['payload']))
    for step in q['steps']:
     kind=step['kind']
     if kind in ('inspect','mission'):self.act('campaign_step');self.fast_time();self.act('campaign_step')
@@ -88,6 +91,21 @@ class CampaignTests(unittest.TestCase):
       self.a.action(self.uid,dict(action='start',key='elarwyn_foraging',tool='hands'));run=self.a.expeditions.active_run(self.uid)
      with self.a.conn() as c:c.execute('UPDATE expedition_runs SET expedition_key=?,started_at=?,ends_at=? WHERE run_id=?',(step['destination'],int(time.time()),int(time.time())-1,run.run_id))
      self.a.reconcile(self.uid);self.act('campaign_step')
+    elif kind=='port':
+     def port_action(action,key):
+      state=self.a.snapshot(self.uid,self.name)['port'];return self.a.action(self.uid,dict(action='port_'+action,key=key,revision=state['revision']))
+     from port import WAREHOUSE,QUAY
+     port_action('enter','capitainerie');port_action('talk','captain');port_action('enter','entrepots')
+     for key in sorted(WAREHOUSE):port_action('inspect',key)
+     port_action('enter','passeur');port_action('talk','ferryman');port_action('enter','quai')
+     for key in sorted(QUAY):port_action('inspect',key)
+     port_action('choose','guards');port_action('battle','start')
+     for _ in range(50):
+      state=self.a.snapshot(self.uid,self.name)['port'];b=state['battle']
+      if b['finished']:break
+      port_action('battle','heavy' if b['ultimate_cd'] else 'ultimate')
+     self.assertTrue(self.a.snapshot(self.uid,self.name)['port']['battle']['won'])
+     port_action('enter','capitainerie');port_action('talk','captain');self.act('campaign_step')
     elif kind=='battle':
      self.act('campaign_battle',key='start')
      for turn in range(150):
@@ -112,7 +130,7 @@ class CampaignTests(unittest.TestCase):
    try:self.a.action(self.uid,body);return True
    except ValueError:return False
   with ThreadPoolExecutor(max_workers=2) as pool:self.assertEqual(sum(pool.map(invoke,range(2))),1)
-  self.assertEqual(self.s()['quest']['gold'],10);self.assertEqual(self.a.economy.get_balance(self.uid).wallet-before,10);self.assertEqual(self.a.castle.profile(self.uid)['quests_completed'],1)
+  self.assertEqual(self.s()['quest']['gold'],12);self.assertEqual(self.a.economy.get_balance(self.uid).wallet-before,10);self.assertEqual(self.a.castle.profile(self.uid)['quests_completed'],1)
 
  def test_old_paid_reward_survives_restart_without_second_payment(self):
   self.position(0,3)
@@ -122,7 +140,7 @@ class CampaignTests(unittest.TestCase):
    c.execute('UPDATE campaign_progress SET quest_index=1,stage=0,accepted_at=NULL WHERE user_id=?',(self.uid,))
   self.a=Activity(self.a.path)
   self.assertEqual(self.a.economy.get_balance(self.uid).wallet,115)
-  self.assertEqual(self.s()['quest']['gold'],10)
+  self.assertEqual(self.s()['quest']['gold'],12)
   with self.a.conn() as c:
    self.assertEqual(tuple(c.execute('SELECT gold,xp FROM campaign_receipts WHERE user_id=?',(self.uid,)).fetchone()),(115,20))
   self.position(0,3)

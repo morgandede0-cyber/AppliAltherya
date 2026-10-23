@@ -1,4 +1,5 @@
 from __future__ import annotations
+from game_clock import today as game_day
 
 import sqlite3
 import logging
@@ -6,7 +7,6 @@ from shared_economy import connect_shared
 from dataclasses import dataclass
 
 log = logging.getLogger("altherya.economy")
-from datetime import datetime
 from pathlib import Path
 
 @dataclass(frozen=True)
@@ -55,7 +55,7 @@ class Economy:
             conn.commit()
 
     def _today(self) -> str:
-        return datetime.now().date().isoformat()
+        return game_day()
 
     def _ensure_player(self, conn: sqlite3.Connection, user_id: int) -> None:
         conn.execute(

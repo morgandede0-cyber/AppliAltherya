@@ -35,18 +35,30 @@ def choose(p,b):
  if level==9:
   if p.get('last_action')=='heavy':action='defend'
   elif p.get('last_action')=='defend':action='ultimate' if not enemy.ultimate_cd else 'light'
+ if turn>=2:
+  if level==2 and enemy.hp/enemy.max_hp<=.35 and turn%3==0:action='defend'
+  if level==3 and p.get('last_action')=='heavy' and turn%2:action='light'
+  if level==5 and p.get('phase')==2 and p.get('last_action')=='ultimate':action='defend'
  if action=='ultimate' and enemy.ultimate_cd:action='heavy' if level in (4,7,10) else 'light'
  return action
 
 def init(p,b,now=None):
- p.update(champion=champion(b.fighters[1].champion_level),round=1,phase=1,started_at=now or time.time(),
+ p.update(tactics_edition=1,champion=champion(b.fighters[1].champion_level),round=1,phase=1,started_at=now or time.time(),
           events=[],sequence=0,combat_stats=[dict(damage=0,hits=0,misses=0,critical=0,guards=0) for _ in range(2)])
  p['enemy_action']=choose(p,b)
 
 def resolve(p,b,action):
  """Resolve one engine action and record actual HP losses, not client estimates."""
  actor=b.current;target=1-actor;before=[f.hp for f in b.fighters];guarded=b.fighters[target].defending
- lines=arena_techniques.resolve(b,action,resolve_action);b.log.extend(lines)
+ resistant=p.get('tactics_edition')==1 and actor==0 and b.fighters[1].champion_level>=4 and action==('heavy' if b.fighters[1].champion_level%2==0 else 'light')
+ fighter=b.fighters[0];previous=getattr(fighter,'loadout',None)
+ if resistant:
+  skill=fighter.cfg['skills'][action];fighter.loadout={**fighter.cfg['skills'],action:{**skill,'power':max(1,round(skill['power']*.9))}}
+ try:lines=arena_techniques.resolve(b,action,resolve_action)
+ finally:
+  if resistant and previous is not None:fighter.loadout=previous
+ if resistant:lines.append('Résistance adverse : puissance de cette frappe réduite de 10 %. Alternez vos techniques.')
+ b.log.extend(lines)
  damage=before[target]-b.fighters[target].hp;bleed=before[actor]-b.fighters[actor].hp
  stat=p['combat_stats'][actor]
  if action=='defend' and b.fighters[actor].alive:stat['guards']+=1
@@ -82,3 +94,30 @@ def public_fighters(b):
   if not f.alive:statuses=[dict(key='defeated',label='Hors combat')]
   result.append(dict(name=f.name,hp=f.hp,max_hp=f.max_hp,ultimate_cd=f.ultimate_cd,statuses=statuses))
  return result
+
+def tactical_readout(p,b):
+ """Explain committed intent and existing effects, without rolling damage or RNG."""
+ player,enemy=b.fighters;key=p.get('enemy_action','light');skill=enemy.cfg['skills'][key]
+ notes=[]
+ if p.get('tactics_edition')==1 and enemy.champion_level>=4:notes.append('Résistance adverse : −10 % de puissance contre les attaques '+('lourdes' if enemy.champion_level%2==0 else 'rapides')+'. Les autres techniques conservent leur puissance.')
+ if enemy.defending:notes.append('La garde adverse est déjà active : une frappe lourde y perd de sa valeur. Une technique perforante réduit cette protection.')
+ if player.counter_ready:notes.append('Votre riposte est prête : votre prochaine attaque gagne 15 % de puissance.')
+ if player.next_damage_bonus:notes.append(f'Votre prochaine attaque est renforcée de {round(player.next_damage_bonus*100)} %. Le bonus ne se cumule pas.')
+ if player.shaken:notes.append('Vous êtes ébranlé : votre prochaine attaque perd 10 % de puissance.')
+ if key=='ultimate':notes.append('Une frappe décisive est annoncée. La garde réduit son impact, mais une attaque qui terrasse l’adversaire l’empêche de riposter.')
+ elif key=='defend':notes.append('L’adversaire prépare une garde après votre action. Profitez de ce tour pour avancer votre recharge ou préparer un enchaînement.')
+ elif key=='light':notes.append('Une attaque rapide est annoncée : l’esquive ne l’arrête pas, la garde reste utile.')
+ else:notes.append('Une attaque lourde est annoncée : elle est puissante, mais peut manquer. Pesez protection et pression offensive.')
+ if player.bleed_pending:notes.append(f'Un saignement de {player.bleed_pending} PV vous attend au début de votre action.')
+ return dict(key=key,name=skill['name'],power=skill.get('power',0),accuracy=skill.get('accuracy',1),effect=skill.get('effect',''),notes=notes)
+
+def debrief(p):
+ events=p.get('events',[]);attacks=[e for e in events if e.get('actor')==0 and e.get('action')!='defend']
+ missed=sum(e.get('kind')=='miss' for e in attacks);blocked=sum(e.get('guarded') and e.get('damage',0)>0 for e in attacks)
+ out=[]
+ if missed>=2:out.append(f'{missed} attaques ont manqué : une technique plus précise peut stabiliser votre prochain duel.')
+ if blocked>=2:out.append(f'{blocked} impacts ont rencontré une garde : surveillez sa présence avant de dépenser votre attaque décisive.')
+ if any(e.get('actor')==1 and e.get('critical') for e in events):out.append('L’adversaire a placé un critique. La garde réduit aussi les dégâts d’un coup critique.')
+ if not out:out.append('Comparez les intentions annoncées et les effets actifs pour préparer vos enchaînements, plutôt que répéter la même frappe.')
+ out.append(p.get('champion',{}).get('hint','Chaque technique possède une force et une contrepartie.'))
+ return out

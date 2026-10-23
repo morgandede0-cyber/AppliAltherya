@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import io
-import random
+from secure_random import random
 import sqlite3
 from dataclasses import dataclass
 from datetime import date

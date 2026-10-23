@@ -13,3 +13,6 @@ aiohttp>=3.10,<4.0
 psycopg[binary]>=3.2,<4.0
 
 pytesseract>=0.3.13,<1.0
+
+# Civil game days on hosts without an IANA timezone database.
+tzdata

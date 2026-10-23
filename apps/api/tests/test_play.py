@@ -53,7 +53,7 @@ class GameTests(unittest.TestCase):
  def test_replayed_bet_does_not_debit_or_pay_twice(self):
   self.access();rev=self.s()['play']['revision']
   with patch('play.draw_slot',return_value=['7️⃣']*3):self.act(action='game_start',key='slots',wager=10,revision=rev)
-  self.assertEqual(self.s()['play']['payout'],120);before=self.s()['balance']['wallet']
+  self.assertEqual(self.s()['play']['payout'],750);before=self.s()['balance']['wallet']
   with self.assertRaises(ValueError):self.act(action='game_start',key='slots',wager=10,revision=rev)
   self.assertEqual(before,self.s()['balance']['wallet']);self.assertEqual(self.s()['stats']['casino_games'],1);self.assertEqual(self.s()['xp'],3)
  def test_roulette_zero_not_even(self):

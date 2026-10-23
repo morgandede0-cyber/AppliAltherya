@@ -12,3 +12,5 @@
 
 #panel.admin-menu .admin-layout.admin-commands-expanded{grid-template-columns:minmax(0,1fr)}.admin-registry[hidden]{display:none!important}
 @media(max-width:700px){#panel.admin-menu .admin-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#panel.admin-menu .admin-toolbar>.gm-button{width:100%!important;min-width:0!important;min-height:58px!important;padding:14px 8px!important;font-size:13px!important}#panel.admin-menu .gm-footer{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#panel.admin-menu .gm-footer>.gm-button{width:100%!important;min-width:0!important;min-height:48px!important;padding:12px 8px!important;font-size:13px!important}}
+
+#panel.admin-menu textarea{box-sizing:border-box;width:100%;max-width:100%;min-height:110px;border:1px solid #ac8a51;background:#0b1729;color:#fff1d2;padding:12px;border-radius:5px;font:inherit;resize:vertical}

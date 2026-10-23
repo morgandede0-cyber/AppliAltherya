@@ -1,3 +1,4 @@
+import {gameFeedback} from './game-feedback';
 import {openTavernRps} from './tavern-rps';
 import {openTavernCoin} from './tavern-coin';
 import {openTavernDice} from './tavern-dice';
@@ -28,6 +29,10 @@ function cylinder(step:number){return svg('<defs><radialGradient id="barrel-meta
 function wheel(){return svg('<defs><radialGradient id="wheel-red"><stop stop-color="#451e0e"/><stop offset=".85" stop-color="#98292a"/><stop offset="1" stop-color="#c94b35"/></radialGradient><radialGradient id="wheel-black"><stop stop-color="#322619"/><stop offset="1" stop-color="#141b21"/></radialGradient></defs>'+WHEEL.map((v,i)=>{const a=(i*360/37-90-180/37)*Math.PI/180,b=((i+1)*360/37-90-180/37)*Math.PI/180,m=(a+b)/2;return `<path d="M${110+99*Math.cos(a)} ${110+99*Math.sin(a)}A99 99 0 0 1 ${110+99*Math.cos(b)} ${110+99*Math.sin(b)}L${110+70*Math.cos(b)} ${110+70*Math.sin(b)}A70 70 0 0 0 ${110+70*Math.cos(a)} ${110+70*Math.sin(a)}Z" fill="${v===0?'#216b46':RED.has(v)?'url(#wheel-red)':'url(#wheel-black)'}" stroke="#d4ac61" stroke-width=".6"/><text x="${110+87*Math.cos(m)}" y="${113+87*Math.sin(m)}" font-family="Georgia,serif" font-size="8" fill="#fff0c7" text-anchor="middle">${v}</text>`;}).join('')+'<circle cx="110" cy="110" r="100" fill="none" stroke="#e3bf76"/><circle cx="110" cy="110" r="70" fill="none" stroke="#dab574"/>','10 10 200 200');}
 function horse(i:number){const boxes=[[150,185,220,175],[145,277,220,175],[145,374,220,175],[140,479,225,175]], [x,y,w,h]=boxes[i];return svg(`<defs><clipPath id="horse-live-${i}"><polygon points="${x+14},${y+78} ${x+55},${y+62} ${x+87},${y+30} ${x+111},${y+10} ${x+134},${y+22} ${x+135},${y+45} ${x+153},${y+55} ${x+189},${y+34} ${x+203},${y+48} ${x+215},${y+83} ${x+185},${y+91} ${x+174},${y+108} ${x+160},${y+135} ${x+162},${y+171} ${x+143},${y+171} ${x+134},${y+116} ${x+100},${y+112} ${x+68},${y+154} ${x+65},${y+174} ${x+44},${y+174} ${x+41},${y+132} ${x+17},${y+149} ${x+3},${y+133}"/></clipPath></defs><image href="/assets/sprites/menus/horses.webp" width="1536" height="1024" clip-path="url(#horse-live-${i})"/>`,`${x} ${y} ${w} ${h}`);}
 export function openLiveGame(panel:HTMLElement,kind:string,host:Host){
+ const child=openLiveGameImpl(panel,kind,host),feedback=gameFeedback(panel,kind,host.state);
+ return{update(){child.update();feedback.update();},destroy(){feedback.destroy();child.destroy();}};
+}
+function openLiveGameImpl(panel:HTMLElement,kind:string,host:Host){
  if(kind==='horses')return openHorseRacing(panel,host);
  if(kind==='russian')return openRussian(panel,host);
  if(kind==='rps')return openTavernRps(panel,host);

@@ -6,7 +6,7 @@ from shared_economy import connect_shared
 import time
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from game_clock import local_date,seconds_until_midnight
 from pathlib import Path
 from admin_engine import event_multiplier, cooldowns_enabled
 
@@ -512,25 +512,22 @@ class DarkAlleyStore:
 
     @staticmethod
     def _server_day_from_timestamp(timestamp: int):
-        return datetime.fromtimestamp(int(timestamp)).date()
+        return local_date(int(timestamp))
 
     @staticmethod
     def seconds_until_server_midnight() -> int:
-        now = datetime.now()
-        tomorrow = now.date() + timedelta(days=1)
-        midnight = datetime.combine(tomorrow, datetime.min.time())
-        return max(0, int((midnight - now).total_seconds()))
+        return seconds_until_midnight()
 
     def clandestine_access_info(self, user_id: int) -> dict:
         """Retourne l'état du pass journalier de la salle clandestine.
 
-        Un pass n'est valable que pour la date civile courante en heure locale du serveur.
+        Un pass n'est valable que pour la date civile courante en heure de Paris.
         Dès 00:00, même si le joueur est déjà dans la salle, toute nouvelle action
         doit être refusée jusqu'à un nouveau paiement ou une nouvelle invitation.
         """
         user_id = int(user_id)
         now = int(time.time())
-        today = datetime.now().date()
+        today = local_date()
         with self._connect() as conn:
             row = conn.execute(
                 "SELECT granted_at, method FROM clandestine_access WHERE user_id=?",

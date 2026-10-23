@@ -1,11 +1,11 @@
 from __future__ import annotations
+from game_clock import today as game_day
 
 from secure_random import random
 import sqlite3
 from shared_economy import connect_shared
 import time
 import uuid
-from datetime import datetime
 from pathlib import Path
 from admin_engine import event_multiplier, cooldowns_enabled
 
@@ -268,9 +268,9 @@ class TavernGameStore:
         return {"ok": True, "rounds": rounds, "cost": TAVERN_ROUND_COST, "wallet": wallet-TAVERN_ROUND_COST}
 
     def drink_status(self, user_id: int) -> dict:
-        """Retourne l'état du service d'alcool pour aujourd'hui (heure locale du serveur)."""
+        """Retourne l'état du service d'alcool pour aujourd'hui (heure de Paris)."""
         user_id = int(user_id)
-        today = datetime.now().date().isoformat()
+        today = game_day()
         now = int(time.time())
         daily_limit = self.daily_drink_limit(user_id)
         with self._connect() as conn:
@@ -296,7 +296,7 @@ class TavernGameStore:
     def drink(self, user_id: int, drink_key: str = "beer") -> dict:
         """Boit un verre si le cooldown et la limite journalière l'autorisent. Transaction atomique."""
         user_id = int(user_id)
-        today = datetime.now().date().isoformat()
+        today = game_day()
         now = int(time.time())
         daily_limit = self.daily_drink_limit(user_id)
         with self._connect() as conn:

@@ -27,6 +27,7 @@ class Khaz:
  def bonuses(self,uid):
   with self.a.conn() as c:return self.bonuses_in(c,uid)
  def active(self,c,uid):
+  if hasattr(self.a,'port') and self.a.port.active_in(c,uid):return True
   if hasattr(self.a,'tower') and self.a.tower.active_in(c,uid):return True
   row=c.execute('SELECT payload FROM activity_play WHERE user_id=?',(uid,)).fetchone()
   if row and json.loads(row[0]).get('status')=='active':return True
@@ -45,7 +46,9 @@ class Khaz:
      common=slot in CFG['BASE_SLOTS'];price=CFG['COMMON_GOLD_PRICES'].get(slot)
      buy_reason='Niveau 3 requis' if level<3 else 'Terminez votre partie ou votre combat' if busy else 'Emplacement déjà équipé' if owned else 'Création à partir du Mythique' if not common else 'Gold insuffisants' if wallet<price else ''
      upgrade_reason='Niveau 3 requis' if level<3 else 'Terminez votre partie ou votre combat' if busy else 'Autre voie déjà équipée' if owned and not tier else 'Qualité maximale' if tier=='legendaire' else 'Achetez cette pièce commune' if not owned and common else 'Obtenez une pièce Mythique pour ouvrir cet emplacement' if not next_tier else 'Pouciel insuffisant' if pouciel<cost else ''
-     items.append(dict(slot=slot,label=CFG['SLOT_LABELS'][slot],branch=branch,tier=tier,set_name=CFG['SET_NAMES'][branch].get(tier or 'commun','Équipement ancien'),owned=owned,price=price,can_buy=not buy_reason,buy_reason=buy_reason,next_tier=next_tier,next_set=CFG['SET_NAMES'][branch].get(next_tier or ('mythique' if not owned and not common else '')),upgrade_cost=cost,can_upgrade=not upgrade_reason,upgrade_reason=upgrade_reason))
+     bought={**eq,slot:dict(branch=branch,tier='commun')}
+     upgraded={**eq,slot:dict(branch=branch,tier=next_tier)} if next_tier else eq
+     items.append(dict(buy_bonuses=bonuses_for(bought),upgrade_bonuses=bonuses_for(upgraded),slot=slot,label=CFG['SLOT_LABELS'][slot],branch=branch,tier=tier,set_name=CFG['SET_NAMES'][branch].get(tier or 'commun','Équipement ancien'),owned=owned,price=price,can_buy=not buy_reason,buy_reason=buy_reason,next_tier=next_tier,next_set=CFG['SET_NAMES'][branch].get(next_tier or ('mythique' if not owned and not common else '')),upgrade_cost=cost,can_upgrade=not upgrade_reason,upgrade_reason=upgrade_reason))
    return dict(available=level>=3,level_required=3,busy=busy,revision=revision,pouciel=pouciel,equipment=eq,bonuses=bonuses_for(eq),items=items,branches=CFG['BRANCH_LABELS'],tiers=CFG['TIER_LABELS'],slots=CFG['SLOT_LABELS'])
  def action(self,uid,body):
   branch=body.get('branch');slot=body.get('slot');action=body['action']

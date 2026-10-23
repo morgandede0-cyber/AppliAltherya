@@ -38,6 +38,7 @@ export function createQuestTracker(host:{route:(key:string)=>void;claimDaily?:()
    else if(q){content.append(node('h3',q.title),node('p',`Saison ${q.season} · Niveau ${q.min_level}`,'quest-note'));
     if(!c.accepted)content.append(node('p',c.level_allowed?'Quête disponible · ouvrez le journal pour l’accepter.':`Atteignez le niveau ${q.min_level} pour poursuivre.`));
     else{const list=document.createElement('ul');list.className='quest-story-steps';for(const [i,step] of q.steps.entries()){const li=node('li','',i<c.stage?'quest-done':i===c.stage?'quest-active':'quest-pending');li.append(questIcon(i<c.stage?5:i===c.stage?6:7),node('span',step.label));if(i===c.stage)li.prepend(questComponent(3));list.append(li);}content.append(list);if(c.stage===q.steps.length)content.append(node('p','Objectifs terminés · remettez la quête dans le journal.','quest-ready'));}
+    const portStep=q.steps[c.stage];if(c.accepted&&portStep?.kind==='port'){content.append(node('p',s.port?.goal??'Résoudre l’enquête du port','quest-note'));const go=node('button','Rejoindre le Port des Brumes') as HTMLButtonElement;go.type='button';go.onclick=()=>route('port');content.append(go);}
     const active=q.steps[c.stage];if(c.accepted&&active?.kind==='explore'){const found=(c.evidence??[]).filter(e=>e.quest_id===q.id&&e.step_id===active.id).length;content.append(node('p',`${active.place} · ${found}/${active.clues?.length??0} indices`,'quest-note'));}content.append(questReward(q.gold,q.xp,'Récompense de la quête')); 
    }
   }else if(tab==='story'||tab==='chronicles'){
@@ -54,6 +55,7 @@ export function createQuestTracker(host:{route:(key:string)=>void;claimDaily?:()
    content.append(questReward(s.quest_reward?.gold,s.quest_reward?.xp,'Récompense du jour'));
    if(claimed)content.append(node('p','✓ Récompense déjà récupérée.','quest-ready'));else if(ready)content.append(node('p','✓ Récompense disponible.','quest-ready'));
    content.append(node('p','Nouveaux défis chaque jour','quest-note quest-renewal'));
+   const reroll=node('button','Gérer mes défis') as HTMLButtonElement;reroll.type='button';reroll.onclick=()=>route('adventure-daily');content.append(reroll);
    footer.textContent=claimed?'Récompense déjà récupérée':claiming?'Récupération…':ready?'Récupérer la récompense':'Terminer les objectifs';footer.disabled=claiming||claimed||!ready;
    footer.onclick=()=>{if(!footer.disabled){if(host.claimDaily)void claimDaily();else route('dashboard');}};
   }else{

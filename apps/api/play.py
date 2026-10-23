@@ -96,12 +96,13 @@ class Play:
     duration=max(0,int(time.time()-p.get('started_at',time.time()))),stats=p.get('combat_stats',[]),fighters=arena_combat.public_fighters(b),events=p.get('events',[]),logs=b.log[-60:],skills=b.fighters[0].cfg["skills"],hp=b.fighters[0].hp,max_hp=b.fighters[0].max_hp)
    if won:
     with self.a.conn() as c:result['technique_unlocked']=arena_techniques.grant(c,uid,b.fighters[1].champion_level)
+   result['analysis']=arena_combat.debrief(p)
    p['result']=result
    with self.a.conn() as c:c.execute('INSERT OR IGNORE INTO activity_arena_results VALUES(?,?,?,?)',(b.battle_id,uid,json.dumps(result),time.time()))
  def battle_public(self,p,b):
   p['skills']=b.fighters[0].cfg['skills'];p['battle']=asdict(b);p['fighters']=arena_combat.public_fighters(b);p['turn']=b.turn_no;p['logs']=b.log[-16:]
   if not b.finished:
-   key=p.get('enemy_action','light');p['intent']=dict(key=key,name=b.fighters[1].cfg['skills'][key]['name'])
+   p['intent']=arena_combat.tactical_readout(p,b)
   else:p.pop('intent',None)
  def action(self,uid,body):
   action=body['action'];key=body.get('key','');rev,p=self.read(uid)

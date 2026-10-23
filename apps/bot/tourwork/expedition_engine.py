@@ -477,6 +477,8 @@ class ExpeditionStore:
                 return False, "Sac sélectionné invalide ou non débloqué.", None
             bag_level = selected_bag_level
             capacity = BAG_LEVELS[bag_level]["capacity"]
+        if not any(tier <= tool_level for _, tier, _ in LOOT_TABLES.get(expedition_key, {}).get(tool_key, [])):
+            return False, "Cet outil est trop faible pour récolter dans cette destination. Choisissez un autre outil ou un palier supérieur.", None
         loot = generate_loot(expedition_key, tool_key, tool_level, capacity)
         now = int(time.time())
         run = ExpeditionRun(
@@ -496,6 +498,9 @@ class ExpeditionStore:
         )
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
+            current = conn.execute('SELECT * FROM expedition_runs WHERE user_id=? AND claimed=0 ORDER BY started_at DESC LIMIT 1', (uid,)).fetchone()
+            if current:
+                return False, "Tu as déjà une expédition en cours ou des loots à récupérer.", self._row_to_run(current)
             conn.execute("""
                 INSERT INTO expedition_runs(
                     run_id,user_id,expedition_key,tool_key,tool_level,bag_level,capacity,started_at,ends_at,claimed,loot_json,
