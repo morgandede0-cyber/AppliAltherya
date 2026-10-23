@@ -1,5 +1,5 @@
 import {merchantAssets} from '../ui/assets';
-export type SceneId='hub'|'tavern'|'barman'|'games'|'troubadour'|'market'|'forge'|'castle'|'arena'|'champion'|'bank'|'alley'|'guard'|'thief'|'robber'|'casino'|'expeditions'|'elarwyn'|'vorak';
+export type SceneId='hub'|'tavern'|'barman'|'games'|'troubadour'|'market'|'forge'|'castle'|'arena'|'champion'|'bank'|'alley'|'guard'|'thief'|'robber'|'smogo'|'casino'|'expeditions'|'elarwyn'|'vorak';
 export type Spot={label:string;x:number;y:number;w:number;h:number;action:string;embedded?:boolean;asset?:string};
 type Scene={name:string;image:string;parent?:SceneId;caption:string;spots:Spot[]};
 const spot=(label:string,x:number,y:number,w:number,h:number,action:string,embedded=false):Spot=>({label,x,y,w,h,action,embedded});
@@ -15,7 +15,8 @@ export const scenes:Record<SceneId,Scene>={
  arena:{name:'Arène de Legacy',image:'arena.webp',parent:'hub',caption:'La foule attend son champion.',spots:[]},
  champion:{name:'Champion de Legacy',image:'arena_champion.webp',parent:'arena',caption:'Le champion vous jauge.',spots:[]},
  bank:{name:'Banque de Legacy',image:'bank-predator.png',parent:'hub',caption:'Votre bourse et les coffres du royaume.',spots:[]},
- alley:{name:'Ruelle sombre',image:'alley-panels-clean-v1.png',parent:'hub',caption:'Des regards se tournent vers vous dans la ruelle.',spots:[spot('Le voleur',3,15,22,64,'scene:thief',true),spot('Le braqueur',41,24,22,51,'scene:robber',true),spot('Le vigile',68,10,28,66,'scene:guard',true),spot('Retour au hub',1,89,18,8,'scene:hub',true)]},
+ alley:{name:'Ruelle sombre',image:'alley-panels-clean-v1.png',parent:'hub',caption:'Des regards se tournent vers vous dans la ruelle.',spots:[spot('Le voleur',3,15,22,64,'scene:thief',true),spot('Le braqueur',41,24,22,51,'scene:robber',true),spot('Le vigile',68,10,28,66,'scene:guard',true),spot('Retour au hub',1,89,18,8,'scene:hub',true),spot('Smogo',0,0,10,10,'scene:smogo')]},
+ smogo:{name:'Smogo',image:'smogo-v1.png',parent:'alley',caption:'Smogo murmure une énigme au milieu des brumes violettes.',spots:[]},
  guard:{name:'Le vigile',image:'alley_guard.webp',parent:'alley',caption:'Le vigile surveille le passage.',spots:[]},
  thief:{name:'Le voleur',image:'alley_thief.webp',parent:'alley',caption:'Le voleur sait des choses.',spots:[]},
  robber:{name:'Le brigand',image:'alley_robber.webp',parent:'alley',caption:'Un marché discret se négocie.',spots:[]},
@@ -26,8 +27,8 @@ export const scenes:Record<SceneId,Scene>={
 };
 
 // Menu links are part of the same navigation graph as image hotspots.
-export const sceneMenus:Partial<Record<SceneId,string>>={market:'market',tavern:'tavern',barman:'drinks',games:'games',troubadour:'story',forge:'forge',castle:'castle',arena:'arena',champion:'arena',bank:'bank',guard:'guard',thief:'thief',robber:'robber',casino:'casino',expeditions:'expedition',elarwyn:'expedition',vorak:'expedition'};
-export const menuRoutes:Partial<Record<string,SceneId[]>>={world:['hub','elarwyn','vorak','expeditions'],tavern:['barman','games','troubadour'],arena:['champion'],alley:['thief','robber','guard'],guard:['casino'],expedition:['elarwyn','vorak']};
+export const sceneMenus:Partial<Record<SceneId,string>>={market:'market',tavern:'tavern',barman:'drinks',games:'games',troubadour:'story',forge:'forge',castle:'castle',arena:'arena',champion:'arena',bank:'bank',smogo:'smogo',guard:'guard',thief:'thief',robber:'robber',casino:'casino',expeditions:'expedition',elarwyn:'expedition',vorak:'expedition'};
+export const menuRoutes:Partial<Record<string,SceneId[]>>={world:['hub','elarwyn','vorak','expeditions'],tavern:['barman','games','troubadour'],arena:['champion'],alley:['thief','robber','guard','smogo'],guard:['casino'],expedition:['elarwyn','vorak']};
 export const unavailableScenes:SceneId[]=[];
 
 

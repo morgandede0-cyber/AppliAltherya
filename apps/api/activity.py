@@ -1,6 +1,7 @@
 """Activity adapter: server-owned economy and atomic durable actions."""
 from activity_cookie import set_activity_cookie
-import os, sys, secrets, hashlib, time, json
+from request_data import object_body
+import os, sys, secrets, hashlib, time, json, uuid
 from save_safety import backup
 from pathlib import Path
 from dataclasses import asdict
@@ -54,10 +55,24 @@ class Activity:
         self.campaign=Campaign(self)
         self.khaz=Khaz(self)
         self.tower=Ashkar(self)
+        from combat_archive import CombatArchive
+        self.combat_archive=CombatArchive(self)
         from maintenance import Maintenance
         self.maintenance=Maintenance(self)
         from admin_commands import AdminCommands
         self.admin_commands=AdminCommands(self)
+        from activity_mail import Mailbox
+        self.mailbox=Mailbox(self)
+        from transaction_journal import TransactionJournal
+        self.transaction_journal=TransactionJournal(self)
+        from trading import Trading
+        self.trading=Trading(self)
+        from adventure import Adventure
+        self.adventure=Adventure(self)
+        from port import Port
+        self.port=Port(self)
+        from smogo import Smogo
+        self.smogo=Smogo(self)
     def conn(self):
         return local_connect(self.path)
     def session(self, token):
@@ -80,11 +95,13 @@ class Activity:
         return row[0] if row else None
     def reconcile(self, uid):
         run=self.expeditions.active_run(uid)
-        if run and run.finished:self.expeditions.finalize_run(run.run_id)
+        if run and run.finished:
+            self.adventure.finish(uid,run)
+            self.expeditions.finalize_run(run.run_id)
         # Completed runs survive restarts; unique reward marker and XP commit together.
         with self.conn() as c:
             c.execute('BEGIN IMMEDIATE')
-            rows=c.execute('SELECT run_id,expedition_key FROM expedition_runs WHERE user_id=? AND claimed=1',(uid,)).fetchall()
+            rows=c.execute("SELECT r.run_id,r.expedition_key FROM expedition_runs r WHERE r.user_id=? AND r.claimed=1 AND NOT EXISTS (SELECT 1 FROM activity_rewards a WHERE a.reference='expedition:'||r.run_id)",(uid,)).fetchall()
             for rid,key in rows:
                 if c.execute('INSERT OR IGNORE INTO activity_rewards VALUES(?)',('expedition:'+rid,)).rowcount:
                     cfg=EXPEDITIONS[key]; xp=cfg.get('xp_reward',EXPEDITION_TIER_XP.get(cfg['destination_index'],0))
@@ -96,7 +113,12 @@ class Activity:
         # One coherent read/reconciliation, one connection and one durable commit.
         with atomic(self.path):return self._snapshot(uid,name)
     def _snapshot(self, uid, name):
-        self.economy.get_balance(uid); self.expeditions.ensure_profile(uid); self.castle.ensure(uid);self.reconcile(uid)
+        with self.conn() as c:self.trading.expire_in(c,time.time(),uid)
+        self.economy.get_balance(uid); self.expeditions.ensure_profile(uid); self.castle.ensure(uid)
+        with self.conn() as c:before_sync=self.transaction_journal.capture(c,uid)
+        sync_run=self.expeditions.active_run(uid)
+        self.reconcile(uid)
+        with self.conn() as c:self.transaction_journal.record(c,uid,uid,'expedition_finalize' if sync_run else 'reconciliation','expedition:'+sync_run.run_id if sync_run else 'sync:'+uuid.uuid4().hex,before_sync)
         level,xp,needed=level_from_xp(self.castle.profile(uid)['xp'])
         run=self.expeditions.active_run(uid)
         if run:self.expeditions.reveal_due_events(run.run_id)
@@ -107,18 +129,25 @@ class Activity:
         board=asdict(self.jobs.get_board(uid));board['jobs']=[dict(job_id=j['job_id'],title=j['title']) for j in board['jobs']];pending=self.jobs.pending_reward(uid)
         if pending:pending={**pending,'job':asdict(pending['job'])}
         quests,quest_reward=self.castle.quests(uid)
-        with self.conn() as c:names={r['user_id']:r['name'] for r in c.execute('SELECT user_id,name FROM activity_sessions')}
         podium=[]
         for r in self.castle.leaderboard(10):
             profile=self.discord_profile(r['user_id'])
-            podium.append(dict(name=profile['display_name'] if profile else names.get(r['user_id'],'Aventurier'),total=r['total'],avatar_url=('/api/avatar?podium='+avatar_revision(profile)) if profile else None))
+            fallback=None
+            if not profile:
+                with self.conn() as c:fallback=c.execute('SELECT name FROM activity_sessions WHERE user_id=? LIMIT 1',(r['user_id'],)).fetchone()
+            podium.append(dict(name=profile['display_name'] if profile else fallback[0] if fallback else 'Aventurier',total=r['total'],avatar_url=('/api/avatar?podium='+avatar_revision(profile)) if profile else None))
         discord=self.discord_profile(uid)
         if discord:name=discord['display_name']
         public_discord=None if not discord else dict(username=discord['username'],display_name=discord['display_name'],avatar_url='/api/avatar?v='+avatar_revision(discord))
         history_inventory=self.story.inventory(uid)
         owned_story_items=[dict(name=n,quantity=q) for n,q in history_inventory.items() if n in STORY_ITEM_PRICES]
-        state=dict(maintenance=self.maintenance.public(uid),save_owner=hashlib.sha256(f'activity:{uid}'.encode()).hexdigest()[:24],economy_version=BALANCE_VERSION,daily_reward={'gold':DAILY_GOLD,'xp':20},campaign=self.campaign.snapshot(uid),khaz=self.khaz.snapshot(uid),ashkar=self.tower.snapshot(uid),admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
+        from expedition_guide import catalog as loot_catalog
+        from game_fairness import rules as fairness_rules
+        state=dict(game_fairness=fairness_rules(),expedition_loot=loot_catalog(),mail=self.mailbox.counts(uid),maintenance=self.maintenance.public(uid),save_owner=hashlib.sha256(f'activity:{uid}'.encode()).hexdigest()[:24],economy_version=BALANCE_VERSION,daily_reward={'gold':DAILY_GOLD,'xp':20},campaign=self.campaign.snapshot(uid),khaz=self.khaz.snapshot(uid),ashkar=self.tower.snapshot(uid),admin=self.admin.allowed(uid),tutorial=self.tutorial.state(uid),owned_story_items=owned_story_items,discord=public_discord,**self.play.snapshot(uid),server_now=time.time(),stats={k:v for k,v in self.castle.profile(uid).items() if k!='user_id'},quests=quests,quest_reward=quest_reward,podium=podium,chapters=chapters,story_items=[dict(name=item,chapter=next(group+1 for group,items in STORY_REQUIREMENTS.items() if item in items),price=STORY_ITEM_PRICES[item],owned=self.story.has_purchased_story_item(uid,item)) for item in self.story.current_market_items(uid)],board=board,pending=pending,name=name,level=level,xp=xp,xp_needed=needed,balance=asdict(self.economy.get_balance(uid)),owned=self.expeditions.owned_equipment(uid),gear=asdict(self.expeditions.get_gear(uid)),resources=self.expeditions.get_resources(uid),daily_available=self.castle.daily_available(uid),active=active,catalog=STARTER_GEAR,destinations=EXPEDITIONS,prices=RESOURCE_SELL_PRICES,tools=TOOL_LEVELS,bags=BAG_LEVELS,recipes=UPGRADE_RECIPES,bag_recipes=BAG_UPGRADE_RECIPES,forge_levels=FORGE_LEVEL_REQUIREMENTS,forge_gold=FORGE_GOLD_COSTS,objects=EXPEDITION_OBJECTS,mode='test séparé du bot')
         from objectives import objectives
+        state['port']=self.port.snapshot(uid)
+        state['smogo']=self.smogo.snapshot(uid)
+        state['adventure']=self.adventure.snapshot(uid)
         state['objectives']=objectives(state)
         return state
     def action(self,uid,body):
@@ -138,7 +167,14 @@ class Activity:
                 if previous['fingerprint']!=fingerprint:raise ValueError('Cette opération a déjà été utilisée pour une autre action.')
                 result=previous['message']
             else:
+                affected={uid}
+                if payload.get('action')=='trade_buy':
+                    lot=c.execute('SELECT seller FROM activity_trade_offers WHERE id=?',(payload.get('key'),)).fetchone()
+                    if lot:affected.add(lot[0])
+                balances={target:self.transaction_journal.capture(c,target) for target in affected}
                 result=self._action(uid,payload)
+                reference=request_id or uuid.uuid4().hex
+                for target,before in balances.items():self.transaction_journal.record(c,uid,target,str(payload.get('action','')),reference,before)
                 if request_id:c.execute('INSERT INTO activity_operations VALUES(?,?,?,?,?)',(uid,request_id,fingerprint,result,time.time()))
         if profile:self.notifications.observe(uid,self.snapshot(uid,name),body.get("action"),result)
         return result
@@ -155,7 +191,13 @@ class Activity:
             return 'Nom enregistré.'
         if self.tutorial.discord_required() and not self.discord_profile(uid):raise ValueError('Connexion Discord requise pour jouer.')
         if not self.tutorial.state(uid)['completed']:raise ValueError('Terminez le tutoriel et récupérez votre récompense avant de jouer.')
+        if action in ('trade_create','trade_buy','trade_cancel'):return self.trading.action(uid,body)
+        if action in ('mail_read','mail_claim','mail_archive'):return self.mailbox.action(uid,body)
+        if action.startswith('smogo_'):return self.smogo.action(uid,body)
+        if action.startswith('port_'):return self.port.action(uid,body)
+        if action.startswith('adventure_'):return self.adventure.action(uid,body)
         starts_round=action in ('battle_start','game_start') or action=='campaign_battle' and key=='start'
+        if self.port.active(uid) and (starts_round or action in ('arena_equip','ashkar_start')):raise ValueError('Terminez ou abandonnez le combat du Port des Brumes.')
         if starts_round or action=='arena_equip':
             if self.tower.active(uid):raise ValueError('Terminez ou abandonnez votre combat de la Tour d’Ashkar.')
             with self.conn() as c:
@@ -211,7 +253,9 @@ class Activity:
             if body.get('object1','none')!='none' or body.get('object2','none')!='none':raise ValueError('Les accessoires ne sont pas encore disponibles.')
             for field in ('tool_level','bag_level'):
                 if field in body and type(body[field]) is not int:raise ValueError('Palier invalide.')
-            return self.expeditions.start(uid,key,body.get('tool','hands'),tool_level=body.get('tool_level'),bag_level=body.get('bag_level'))[1]
+            result=self.expeditions.start(uid,key,body.get('tool','hands'),tool_level=body.get('tool_level'),bag_level=body.get('bag_level'))
+            if result[0]:self.adventure.prepare(uid)
+            return result[1]
         if action in ('drink','guard','larceny','npc_theft','crime','heist_start','heist_guess','game_cancel','game_start','game_step','battle_start','battle_step','arena_equip'):return self.play.action(uid,body)
         raise ValueError('Action inconnue.')
 
@@ -223,7 +267,7 @@ async def activity(request):
     body=None
     if request.method=='POST':
         try:
-            body=await request.json()
+            body=await object_body(request)
             if not isinstance(body,dict) or not isinstance(body.get('action'),str) or not isinstance(body.get('key',''),str):raise ValueError()
         except (ValueError,TypeError):return web.json_response({'error':'Requête invalide.'},status=400,headers={'Cache-Control':'no-store'})
         if SERVICE.session_uid(request.cookies.get('altherya_test','')) is None:
