@@ -3,8 +3,8 @@ const root=path.resolve(__dirname,'../../..'),tmp=fs.mkdtempSync(path.join(os.tm
 const token=execFileSync('python3',['-c',`import sys;sys.path.insert(0,'apps/api')
 from activity import Activity
 a=Activity(sys.argv[1]);(uid,_),token=a.session('');a.snapshot(uid,'Test');a.bind_discord(uid,dict(id='666805849011912705',username='Gardien',global_name='❖ [IV] Gardien du Royaume',avatar=None,discriminator='0'),token)
-for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
-a.action(uid,dict(action='tutorial_finish',step=5));print(token)`,db],{cwd:root,encoding:'utf8'}).trim();
+for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));print(token)`,db],{cwd:root,encoding:'utf8'}).trim();
 (async()=>{const server=spawn('python3',['apps/api/server.py'],{cwd:root,env:{...process.env,PORT:'20611',ACTIVITY_DB:db,DISCORD_BOT_TOKEN:''},stdio:'ignore'});let browser,checks=0;const errors=[];
 try{for(let i=0;i<100;i++){try{if((await fetch(url+'/api/health')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:JSON.parse(process.env.CHROMIUM_ARGS||'[]')});
 for(const [width,height] of [[1440,900],[809,1110],[390,844],[844,390],[320,568]]){

@@ -4,8 +4,8 @@ const tokens=JSON.parse(execFileSync('python3',['-c',`import sys,json;sys.path.i
 a=Activity(sys.argv[1]);tokens=[]
 for did,name in [('666805849011912705','Admin'),('123456789012345678','Joueur')]:
  (uid,_),token=a.session('');a.snapshot(uid,name);a.bind_discord(uid,dict(id=did,username=name,global_name=name,avatar=None,discriminator='0'),token)
- for i in range(5):a.action(uid,dict(action='tutorial_next',step=i))
- a.action(uid,dict(action='tutorial_finish',step=5));tokens.append(token)
+ for i in range(11):a.action(uid,dict(action='tutorial_visit',step=i,destination=a.tutorial.destinations[i]));a.action(uid,dict(action='tutorial_next',step=i))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));tokens.append(token)
 print(json.dumps(tokens))`,db],{cwd:root,encoding:'utf8'}));
 (async()=>{const server=spawn('python3',['apps/api/server.py'],{cwd:root,env:{...process.env,PORT:'20685',ACTIVITY_DB:db,DISCORD_BOT_TOKEN:''},stdio:'ignore'});let browser,checks=0;const errors=[];try{for(let i=0;i<100;i++){try{if((await fetch(url+'/api/health')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:JSON.parse(process.env.CHROMIUM_ARGS||'[]')});
 for(const [index,[width,height]] of [[1440,900],[1186,570],[390,844],[320,568]].entries()){

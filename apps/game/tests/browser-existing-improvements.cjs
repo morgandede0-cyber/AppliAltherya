@@ -7,8 +7,8 @@ from arena_techniques import grant
 a=Activity(sys.argv[1]);players=[]
 for did,name in [('666805849011912705','Archiviste IV'),('123456789012345678','Vendeur du serveur')]:
  (uid,n),token=a.session('');a.snapshot(uid,name);a.bind_discord(uid,dict(id=did,username='Compte',global_name=name,avatar=None,discriminator='0'),token)
- for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
- a.action(uid,dict(action='tutorial_finish',step=5));players.append(dict(uid=uid,token=token))
+ for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));players.append(dict(uid=uid,token=token))
  with a.conn() as c:
   c.execute('UPDATE players SET wallet_gold=10000 WHERE user_id=?',(uid,));c.execute('UPDATE castle_profiles SET xp=10000 WHERE user_id=?',(uid,));a.khaz.ensure(c,uid);c.execute('UPDATE legacy_wallet SET pouciel=500 WHERE user_id=?',(uid,));c.execute('INSERT INTO resources VALUES(?,?,?)',(uid,'Pierre brute',30))
 uid=players[0]['uid'];seller=players[1]['uid'];a.action(seller,dict(action='trade_create',item='Pierre brute',quantity=3,price=60));key=a.trading.listing(seller,'mine')['offers'][0]['id'];a.action(uid,dict(action='trade_buy',key=key,price=60,request_id='browser-sale-journal-0001'))

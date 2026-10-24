@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 import sys,tempfile,unittest
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
@@ -12,8 +13,8 @@ class MailTests(unittest.TestCase):
  def make(self,did,done=True):
   (uid,name),token=self.a.session('');self.a.snapshot(uid,name);self.a.bind_discord(uid,dict(id=did,username='Test',global_name='Test',avatar=None,discriminator='0'),token)
   if done:
-   for n in range(5):self.a.action(uid,dict(action='tutorial_next',step=n))
-   self.a.action(uid,dict(action='tutorial_finish',step=5))
+   for n in range(11):tutorial_action(self.a,uid,dict(action='tutorial_next',step=n))
+   tutorial_action(self.a,uid,dict(action='tutorial_finish',step=11))
   return uid
  def args(self,**kw):return dict(title='Un cadeau de l’intendance',text='Merci pour votre aventure.',gold=7,xp=3,pouciel=2,item='none',quantity=0,**kw)
  def send(self,args=None,cmd='mail_player',confirm=True):

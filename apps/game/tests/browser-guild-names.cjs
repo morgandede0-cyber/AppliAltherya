@@ -6,8 +6,8 @@ from activity import Activity
 a=Activity(sys.argv[1]);tokens=[]
 for i,nick in enumerate(['❖ [IV] Gardien du Royaume','★ Panda [Explorateur]']):
  (uid,_),token=a.session('');a.snapshot(uid,'Test');user=dict(id='666805849011912705' if i==0 else '342359563791761411',username='admin' if i==0 else 'joueur1',global_name='Compte global '+str(i),avatar=None,discriminator='0');a.bind_discord(uid,user,token)
- for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
- a.action(uid,dict(action='tutorial_finish',step=5));a.guild_names.record_member(uid,'123456789012345679',dict(user=user,nick=nick));tokens.append(token)
+ for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));a.guild_names.record_member(uid,'123456789012345679',dict(user=user,nick=nick));tokens.append(token)
 print(json.dumps(tokens))`,db],{cwd:root,encoding:'utf8'}));
 (async()=>{const server=spawn('python3',['apps/api/server.py'],{cwd:root,env:{...process.env,PORT:'20607',ACTIVITY_DB:db,DISCORD_BOT_TOKEN:''},stdio:'ignore'});let browser,checks=0;const errors=[];
 try{for(let i=0;i<100;i++){try{if((await fetch(url+'/api/health')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:JSON.parse(process.env.CHROMIUM_ARGS||'[]')});

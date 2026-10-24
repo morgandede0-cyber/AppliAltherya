@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 """Operational admin commands and maintenance adversarial regressions."""
 import json,os,sys,tempfile,time,unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -12,8 +13,8 @@ class AdminCommandTests(unittest.TestCase):
  def tearDown(self):self.tmp.cleanup()
  def make(self,did):
   (u,n),t=self.a.session('');self.a.snapshot(u,n);self.a.bind_discord(u,dict(id=did,username='Test',global_name='Test',avatar=None,discriminator='0'),t)
-  for i in range(5):self.a.action(u,dict(action='tutorial_next',step=i))
-  self.a.action(u,dict(action='tutorial_finish',step=5));return u
+  for i in range(11):tutorial_action(self.a,u,dict(action='tutorial_next',step=i))
+  tutorial_action(self.a,u,dict(action='tutorial_finish',step=11));return u
  def preview(self,cmd,args=None,who=None):return self.a.admin_commands.preview(who or self.admin,dict(command=cmd,player=PLAYER,args=args or {},reason='Correction de test'))
  def apply(self,cmd,args=None):
   p=self.preview(cmd,args);return self.a.admin_commands.confirm(self.admin,p['token'])
@@ -65,8 +66,8 @@ class AdminCommandTests(unittest.TestCase):
   with self.a.conn() as c:self.assertEqual(c.execute('SELECT COUNT(*) FROM activity_arena_loadout WHERE user_id=?',(self.player,)).fetchone()[0],0)
  def test_tutorial_restart_does_not_repay_reward(self):
   before=self.balance();self.apply('tutorial_restart')
-  for i in range(5):self.a.action(self.player,dict(action='tutorial_next',step=i))
-  self.a.action(self.player,dict(action='tutorial_finish',step=5));self.assertEqual(self.balance(),before)
+  for i in range(11):tutorial_action(self.a,self.player,dict(action='tutorial_next',step=i))
+  tutorial_action(self.a,self.player,dict(action='tutorial_finish',step=11));self.assertEqual(self.balance(),before)
  def test_paid_daily_objectives_cannot_be_reset_for_another_payment(self):
   with self.a.conn() as c:c.execute('INSERT OR REPLACE INTO castle_daily_progress VALUES(?,?,?,?,?)',(self.player,self.a.castle._today(),'combat',1,1))
   p=self.preview('daily_restart')

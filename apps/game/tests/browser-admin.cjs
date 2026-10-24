@@ -5,8 +5,8 @@ from activity import Activity
 a=Activity(sys.argv[1]);tokens=[]
 for i in range(7):
  (uid,_),token=a.session('');a.snapshot(uid,'Test');a.action(uid,dict(action='name',name='Admin' if i==0 else 'Joueur '+str(i)));a.bind_discord(uid,dict(id='666805849011912705' if i==0 else str(123456789012345670+i),username='admin' if i==0 else 'joueur'+str(i),global_name='Admin' if i==0 else 'Joueur '+str(i),avatar=None,discriminator='0'),token)
- for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
- a.action(uid,dict(action='tutorial_finish',step=5));tokens.append(token)
+ for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));tokens.append(token)
 print(json.dumps(tokens))`,db],{cwd:root,encoding:'utf8'}));
 (async()=>{const server=spawn('python3',['apps/api/server.py'],{cwd:root,env:{...process.env,PORT:'20598',ACTIVITY_DB:db},stdio:'ignore'});let browser,checks=0;const errors=[];
 try{for(let i=0;i<100;i++){try{if((await fetch(url+'/api/health')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:JSON.parse(process.env.CHROMIUM_ARGS||'[]')});

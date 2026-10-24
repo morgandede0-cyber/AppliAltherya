@@ -8,8 +8,8 @@ with a.conn() as c:
 out=[];idx=next(i for i,q in enumerate(QUESTS) if q['id']=='S1-Q08')
 for i in range(5):
  (uid,n),token=a.session('');a.snapshot(uid,n);a.bind_discord(uid,dict(id=str(123456789012345670+i),username='Test',global_name='Enquêteur '+str(i),avatar=None,discriminator='0'),token)
- for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
- a.action(uid,dict(action='tutorial_finish',step=5))
+ for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11))
  if i<4:
   with a.conn() as c:c.execute('UPDATE castle_profiles SET xp=10000 WHERE user_id=?',(uid,));c.execute('UPDATE campaign_progress SET quest_index=?,stage=1,accepted_at=?,payload=? WHERE user_id=?',(idx,time.time()-10000,json.dumps(dict(edition=4)),uid))
  out.append(dict(token=token,uid=uid))

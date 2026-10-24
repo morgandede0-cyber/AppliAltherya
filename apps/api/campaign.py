@@ -72,7 +72,14 @@ class Campaign:
    first=next(q['id'] for q in QUESTS if any(s.get('place_id')==place['id'] for s in q['steps']))
    story_allowed=place['id']==active_place or place['id'] in discovered or first in completed
    locations.append({**place,'level_allowed':level>=place['min_level'],'story_allowed':story_allowed,'can_enter':level>=place['min_level'] and story_allowed,'visited':place['id'] in visited,'discovered':place['id'] in discovered,'active':place['id']==active_place})
-  return dict(locations=locations,evidence=evidence)
+  index=self.row(c,uid)['quest_index']
+  entries=[]
+  for i,q in enumerate(QUESTS):
+   status='completed' if q['id'] in completed else 'current' if i==index else 'locked'
+   entry=dict(index=i,id=q['id'],season=q['season'],chapter=q['chapter'],min_level=q['min_level'],status=status,title=q['title'] if status!='locked' else 'Quête scellée')
+   if status=='completed':entry.update(summary=q['scene'],objectives=[s['label'] for s in q['steps']])
+   entries.append(entry)
+  return dict(locations=locations,evidence=evidence,entries=entries)
  def row(self,c,uid):
   c.execute('INSERT OR IGNORE INTO campaign_progress(user_id) VALUES(?)',(uid,));return dict(c.execute('SELECT * FROM campaign_progress WHERE user_id=?',(uid,)).fetchone())
  def _expedition_done(self,c,uid,step,since,prior=None):
@@ -92,6 +99,18 @@ class Campaign:
     outcome=payload.get('choices',{}).get('S4-Q07','')
     q['resolution']+=' Le Faussaire sera jugé.' if outcome.startswith('Secourir') else ' Le Faussaire a disparu ; les relevés sont préservés.'
    public_steps=[{**{k:v for k,v in s.items() if k not in ('answer','clues','work_points')},**({'clues':[{k:v for k,v in clue.items() if k!='text'} for clue in s['clues']]} if 'clues' in s else {}),**({'work_points':[{k:v for k,v in point.items() if k!='text'} for point in s['work_points']]} if 'work_points' in s else {})} for s in q['steps']]
+   hints={
+    'talk':'Rencontrez le personnage dans le lieu indiqué. Écoutez son témoignage et comparez-le aux indices déjà recueillis.',
+    'choice':'Relisez les témoignages dans votre carnet avant de décider. Chaque option peut avoir des conséquences.',
+    'puzzle':'Observez les indices recueillis et cherchez ce qui les relie. La réponse se déduit des éléments de l’enquête.',
+    'collect':'Examinez le décor du lieu indiqué. Un document ou un objet inhabituel peut être un indice ; il faut le récupérer sur place.',
+    'deliver':'Vérifiez votre sac, puis rencontrez le destinataire. Les objets d’enquête restent séparés des ressources ordinaires.',
+    'explore':'Examinez les points remarquables dans le décor. Vos découvertes s’ajoutent progressivement au carnet de preuves.',
+    'expedition':'Préparez un nouveau voyage vers la destination demandée, avec un outil adapté. Récupérez sa récolte avant de remettre le rapport.',
+    'battle':'Préparez vos techniques et consultez les effets avant d’affronter cet adversaire. Le combat se déclenche sur place.',
+    'port':'Rejoignez le Port des Brumes et interrogez ses habitants. Confrontez les témoignages aux traces découvertes.',
+   }
+   for item in public_steps:item['hint']=hints.get(item['kind'],'Rejoignez le lieu indiqué et examinez les actions disponibles dans le décor. Le carnet conserve les travaux déjà effectués.')
    exp_ready=bool(step and step['kind']=='expedition' and row['accepted_at'] is not None and self._expedition_done(c,uid,step,row['entered_at'],payload.get('expedition_prior')))
    level=level_from_xp(c.execute('SELECT xp FROM castle_profiles WHERE user_id=?',(uid,)).fetchone()[0])[0]
    battle=payload.get('battle');public_battle=None

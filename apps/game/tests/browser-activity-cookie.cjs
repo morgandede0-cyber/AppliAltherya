@@ -8,9 +8,9 @@ const api=async(body,endpoint='/api/activity')=>frame.evaluate(async({body,endpo
 await api(null,'/legacy');assert.equal((await api(null,'/legacy')).present,false);checks++;
 assert.equal((await api()).state.discord,null);assert.equal((await api({action:'list'},'/api/admin')).status,403);checks+=2;
 const beforeLogin=(await ctx.cookies()).find(c=>c.name==='altherya_test').value;assert.equal((await api({code:'fake-local-code'},'/api/auth/discord')).status,200);assert.ok((await api()).state.discord);checks++;const afterLogin=(await ctx.cookies()).find(c=>c.name==='altherya_test').value;assert.notEqual(afterLogin,beforeLogin);checks++;
-for(let i=0;i<5;i++)assert.equal((await api({action:'tutorial_next',step:i})).status,200);assert.equal((await api({action:'tutorial_finish',step:5})).state.balance.wallet,100);checks++;
+for(let i=0;i<11;i++){assert.equal((await api({action:'tutorial_visit',step:i,destination:require('../src/ui/tutorial-guide.json')[i].destination})).status,200);assert.equal((await api({action:'tutorial_next',step:i})).status,200);}await api({action:'tutorial_visit',step:11,destination:'welcome'});assert.equal((await api({action:'tutorial_finish',step:11})).state.balance.wallet,100);checks++;
 const cookies=(await ctx.cookies()).filter(c=>c.name==='altherya_test');assert.equal(cookies.length,1);assert.equal(cookies[0].sameSite,'None');assert.ok(cookies[0].secure&&cookies[0].httpOnly&&cookies[0].partitionKey);checks++;
 await frame.goto('https://localhost:20599/probe');const state=(await api()).state;assert.ok(state.tutorial.completed);assert.equal(state.xp,25);assert.equal(state.balance.wallet,100);checks++;
-assert.equal((await api({action:'tutorial_finish',step:5})).state.balance.wallet,100);checks++;
+assert.equal((await api({action:'tutorial_finish',step:11})).state.balance.wallet,100);checks++;
 await ctx.clearCookies();assert.equal((await api()).state.discord,null);await api({code:'new-device-code'},'/api/auth/discord');const again=(await api()).state;assert.ok(again.tutorial.completed);assert.equal(again.balance.wallet,100);checks++;
 console.log(JSON.stringify({checks,thirdPartyIframe:true,https:true,partitioned:true}));}finally{await browser?.close();server.kill();}})().catch(e=>{console.error(e);process.exitCode=1});

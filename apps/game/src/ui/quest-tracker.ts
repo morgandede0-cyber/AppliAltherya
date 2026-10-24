@@ -69,5 +69,5 @@ export function createQuestTracker(host:{route:(key:string)=>void;claimDaily?:()
   if(notice){const n=node('p',notice,'quest-notice');n.setAttribute('role','status');content.append(n);}for(const b of Array.from(body.querySelectorAll<HTMLButtonElement>('button'))){questSkinButton(b);}content.scrollTop=oldScroll;
  }
  async function claimDaily(){if(claiming||destroyed||!host.claimDaily)return;claiming=true;notice='';draw();try{notice=await host.claimDaily();}catch(e){notice=e instanceof Error?e.message:String(e);}finally{claiming=false;if(!destroyed)draw();}}
- fold();return{update(s:Snapshot){state=s;draw();},destroy(){destroyed=true;window.removeEventListener('quest-tracker-open',anotherOpened);root.remove();}};
+ fold();return{open(){expanded=true;fold();draw();},update(s:Snapshot){state=s;draw();},destroy(){destroyed=true;window.removeEventListener('quest-tracker-open',anotherOpened);root.remove();}};
 }

@@ -3,8 +3,8 @@ const root=path.resolve(__dirname,'../../..'),tmp=fs.mkdtempSync(path.join(os.tm
 const user=JSON.parse(execFileSync('python3',['-c',`import sys,json,time;sys.path.insert(0,'apps/api');from activity import Activity
 from campaign import QUESTS
 a=Activity(sys.argv[1]);(uid,n),token=a.session('');a.snapshot(uid,n);a.bind_discord(uid,dict(id='123456789012345679',username='Test',global_name='Test assets',avatar=None,discriminator='0'),token)
-for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
-a.action(uid,dict(action='tutorial_finish',step=5))
+for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11))
 names=json.load(open('apps/game/src/ui/tavern-item-manifest.json'))
 idx=next(i for i,q in enumerate(QUESTS) if q['id']=='S1-Q08')
 with a.conn() as c:

@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 import os, unittest, tempfile, sys
 from pathlib import Path
 from unittest.mock import patch
@@ -12,8 +13,8 @@ class TutorialIdentityTests(unittest.TestCase):
  def new(self):
   (uid,name),token=self.a.session('');self.a.snapshot(uid,name);return uid,token
  def finish(self,uid):
-  for i in range(5):self.a.action(uid,{'action':'tutorial_next','step':i})
-  self.a.action(uid,{'action':'tutorial_finish','step':5})
+  for i in range(11):tutorial_action(self.a,uid,{'action':'tutorial_next','step':i})
+  tutorial_action(self.a,uid,{'action':'tutorial_finish','step':11})
  def test_gameplay_blocked_until_tutorial_complete(self):
   for action in ['daily','buy','deposit','game','battle','start']:
    with self.assertRaisesRegex(ValueError,'tutoriel'):self.a.action(self.uid,{'action':action})
@@ -33,8 +34,8 @@ class TutorialIdentityTests(unittest.TestCase):
   devices=[(self.uid,self.token),self.new(),self.new()]
   with ThreadPoolExecutor(3) as p:uids=list(p.map(lambda x:self.a.bind_discord(x[0],USER,x[1]),devices))
   self.assertEqual(len(set(uids)),1);uid=uids[0]
-  for i in range(5):self.a.action(uid,{'action':'tutorial_next','step':i})
-  with ThreadPoolExecutor(3) as p:list(p.map(lambda _:self.a.action(uid,{'action':'tutorial_finish','step':5}),range(3)))
+  for i in range(11):tutorial_action(self.a,uid,{'action':'tutorial_next','step':i})
+  with ThreadPoolExecutor(3) as p:list(p.map(lambda _:tutorial_action(self.a,uid,{'action':'tutorial_finish','step':11}),range(3)))
   s=self.a.snapshot(uid,'Test');self.assertEqual((s['balance']['wallet'],s['xp']),(100,25))
  def test_switching_account_does_not_switch_other_device(self):
   self.a.bind_discord(self.uid,USER,self.token);self.finish(self.uid);other,token=self.new();self.a.bind_discord(other,USER,token)

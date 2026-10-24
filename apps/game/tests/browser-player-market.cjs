@@ -5,8 +5,8 @@ from trading import ITEMS
 a=Activity(sys.argv[1]);out=[]
 for index,(did,name) in enumerate([('123456789012345678','Vendeur du serveur'),('123456789012345679','Acheteur du serveur')]):
  (uid,n),token=a.session('');a.snapshot(uid,name);a.bind_discord(uid,dict(id=did,username='Global',global_name=name,avatar=None,discriminator='0'),token)
- for i in range(5):a.action(uid,dict(action='tutorial_next',step=i))
- a.action(uid,dict(action='tutorial_finish',step=5));out.append(dict(uid=uid,token=token))
+ for i in range(11):a.action(uid,dict(action='tutorial_visit',step=i,destination=a.tutorial.destinations[i]));a.action(uid,dict(action='tutorial_next',step=i))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));out.append(dict(uid=uid,token=token))
  with a.conn() as c:
   c.execute('UPDATE players SET wallet_gold=10000 WHERE user_id=?',(uid,))
   for item in ITEMS:c.execute('INSERT INTO resources VALUES(?,?,?)',(uid,item,100))

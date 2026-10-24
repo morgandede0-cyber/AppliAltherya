@@ -1,0 +1,122 @@
+[
+  {
+    "id": "city",
+    "title": "Bienvenue à Legacy",
+    "destination": "castle",
+    "action": "Commencer la visite",
+    "objective": "Découvre le hub et ses accès.",
+    "intro": "Je serai ton guide dans Altherya. Découvrons ensemble les lieux et les premiers pas de ton aventure.",
+    "art": 0,
+    "alt": "Le guide ouvre les portes de Legacy."
+  },
+  {
+    "id": "profile",
+    "title": "Ton identité",
+    "destination": "profile",
+    "action": "Voir mon profil",
+    "objective": "Consulte ton profil.",
+    "intro": "Ton nom et ta photo viennent du serveur Discord. Ton profil rassemble ton niveau, ton XP et ton équipement.",
+    "art": 1,
+    "alt": "Le guide consulte un médaillon au château."
+  },
+  {
+    "id": "inventory",
+    "title": "Ton inventaire",
+    "destination": "inventory",
+    "action": "Ouvrir mon inventaire",
+    "objective": "Repère les catégories de ton sac.",
+    "intro": "Retrouve ici tes outils, tes ressources et tes objets de quête. Les objets liés à l’histoire sont identifiés par chapitre.",
+    "art": 2,
+    "alt": "Le guide range son sac."
+  },
+  {
+    "id": "expeditions",
+    "title": "Métiers et expéditions",
+    "destination": "expedition",
+    "action": "Découvrir les expéditions",
+    "objective": "Prépare un départ sans le lancer.",
+    "intro": "Choisis ton métier, ton outil et une destination accessible. Consulte les ressources disponibles avant de partir.",
+    "art": 3,
+    "alt": "Le guide marche sur un sentier avec son équipement."
+  },
+  {
+    "id": "equipment",
+    "title": "Le marchand",
+    "destination": "market:buy",
+    "action": "Rencontrer le marchand",
+    "objective": "Découvre les rayons du marché.",
+    "intro": "Achète tes outils et revends tes ressources. Les objets de l’histoire restent séparés et portent leur chapitre.",
+    "art": 4,
+    "alt": "Le guide examine une hache au marché."
+  },
+  {
+    "id": "forge",
+    "title": "La forge",
+    "destination": "forge",
+    "action": "Visiter la forge",
+    "objective": "Observe une amélioration sans acheter.",
+    "intro": "Les améliorations demandent des ressources et de la monnaie. Consulte les conditions avant de confirmer.",
+    "art": 5,
+    "alt": "Le guide se penche sur une enclume."
+  },
+  {
+    "id": "bank",
+    "title": "Tes Gold en sécurité",
+    "destination": "bank",
+    "action": "Entrer à la banque",
+    "objective": "Consulte les services de la banque.",
+    "intro": "Ton portefeuille et ta banque affichent deux soldes distincts. Vérifie le montant avant chaque dépôt ou retrait.",
+    "art": 6,
+    "alt": "Le guide compte les Gold à la banque."
+  },
+  {
+    "id": "quests",
+    "title": "Une histoire à vivre",
+    "destination": "campaign",
+    "action": "Découvrir mon histoire",
+    "objective": "Lis ta première quête et son suivi.",
+    "intro": "Les quêtes te conduisent dans les lieux d’Altherya. Parle aux habitants, retrouve les objets et accomplis les objectifs.",
+    "art": 7,
+    "alt": "Le guide lit un livre à la taverne."
+  },
+  {
+    "id": "missions",
+    "title": "Tes missions du jour",
+    "destination": "jobs",
+    "action": "Découvrir les missions",
+    "objective": "Repère les tâches et leurs récompenses.",
+    "intro": "Les quêtes quotidiennes et les petites annonces proposent des objectifs supplémentaires. Lis les conditions avant de t’engager.",
+    "art": 8,
+    "alt": "Le guide accroche une mission au panneau."
+  },
+  {
+    "id": "combat",
+    "title": "L’arène et les techniques",
+    "destination": "arena",
+    "action": "Découvrir les combats",
+    "objective": "Consulte tes techniques avant de combattre.",
+    "intro": "Observe ton adversaire et prépare tes techniques. À la Tour d’Ashkar, seuls les boss des étages multiples de dix permettent d’en voler.",
+    "art": 9,
+    "alt": "Le guide se prépare au combat."
+  },
+  {
+    "id": "world",
+    "title": "Un monde à découvrir",
+    "destination": "world",
+    "action": "Explorer la carte",
+    "objective": "Repère ta prochaine destination.",
+    "intro": "Certains lieux se débloquent avec ton niveau ou l’histoire. Consulte leurs conditions et poursuis tes objectifs pour y accéder.",
+    "art": 10,
+    "alt": "Le guide étudie une carte face au paysage."
+  },
+  {
+    "id": "welcome",
+    "title": "Ton aventure commence",
+    "destination": "welcome",
+    "action": "Récupérer et entrer dans Legacy",
+    "objective": "Suis maintenant ta première quête principale.",
+    "intro": "Tu connais les bases. Ta progression reprend après une déconnexion. Suis maintenant ta première quête principale.",
+    "art": 11,
+    "alt": "Le guide présente un coffret de bienvenue."
+  }
+]

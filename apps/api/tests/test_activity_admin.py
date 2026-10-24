@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 import unittest,tempfile,sys,os
 from pathlib import Path
 from unittest.mock import patch
@@ -13,8 +14,8 @@ class AdminTests(unittest.TestCase):
  def make(self,did,name,complete=True):
   (uid,_),token=self.a.session('');self.a.snapshot(uid,name);self.a.action(uid,{'action':'name','name':name});uid=self.a.bind_discord(uid,{**USER,'id':did,'username':name,'global_name':name},token)
   if complete:
-   for i in range(5):self.a.action(uid,{'action':'tutorial_next','step':i})
-   self.a.action(uid,{'action':'tutorial_finish','step':5})
+   for i in range(11):tutorial_action(self.a,uid,{'action':'tutorial_next','step':i})
+   tutorial_action(self.a,uid,{'action':'tutorial_finish','step':11})
   return uid,token
  def call(self,**body):return self.a.admin.handle(self.admin,body)
  def change(self,**extra):return self.call(action='adjust',player=self.did,field='wallet',amount=20,expected=100,reason='Correction test',request_id='test-request-12345678',**extra)

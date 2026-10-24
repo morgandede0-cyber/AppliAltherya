@@ -5,8 +5,8 @@ const tokens=JSON.parse(execFileSync('python3',['-c',`import sys,json,time;sys.p
 a=Activity(sys.argv[1]);out=[]
 for n in range(6):
  (uid,name),token=a.session('');a.snapshot(uid,name)
- for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
- a.action(uid,dict(action='tutorial_finish',step=5))
+ for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11))
  if n>=2:
   with a.conn() as c:
    c.execute('UPDATE castle_profiles SET xp=100000 WHERE user_id=?',(uid,));c.execute('UPDATE campaign_progress SET quest_index=?,stage=?,accepted_at=?,entered_at=?,payload=? WHERE user_id=?',(2 if n<4 else 4,1 if n<4 else 2,time.time()-10000,time.time()-10000,json.dumps({'edition':6}),uid))

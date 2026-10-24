@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 import asyncio
 import sys
 import tempfile
@@ -26,8 +27,8 @@ class TradeTests(unittest.TestCase):
         (uid,_),token=self.a.session('');self.a.snapshot(uid,name)
         self.a.bind_discord(uid,dict(id=did,username='Global',global_name=name,avatar=None,discriminator='0'),token)
         if done:
-            for n in range(5):self.a.action(uid,dict(action='tutorial_next',step=n))
-            self.a.action(uid,dict(action='tutorial_finish',step=5))
+            for n in range(11):tutorial_action(self.a,uid,dict(action='tutorial_next',step=n))
+            tutorial_action(self.a,uid,dict(action='tutorial_finish',step=11))
         return uid
 
     def stock(self,uid):
@@ -249,8 +250,8 @@ class TradeHttpTests(unittest.IsolatedAsyncioTestCase):
         self.a.bind_discord(uid,dict(id='123456789012345678',username='Test',global_name='Test',avatar=None,discriminator='0'),token)
         self.client.session.cookie_jar.update_cookies({'altherya_test':token})
         self.assertEqual((await self.client.get('/api/trade')).status,400)
-        for n in range(5):self.a.action(uid,dict(action='tutorial_next',step=n))
-        self.a.action(uid,dict(action='tutorial_finish',step=5))
+        for n in range(11):tutorial_action(self.a,uid,dict(action='tutorial_next',step=n))
+        tutorial_action(self.a,uid,dict(action='tutorial_finish',step=11))
         response=await self.client.get('/api/trade');self.assertEqual(response.status,200);self.assertEqual(response.headers['Cache-Control'],'no-store')
         data=await response.json();self.assertEqual(data['offers'],[])
         for query in ('?mode=invalid','?page=-1','?page=nan','?search='+'a'*81):self.assertEqual((await self.client.get('/api/trade'+query)).status,400)

@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 import unittest,tempfile,sys,os
 from pathlib import Path
 from unittest.mock import patch
@@ -57,14 +58,14 @@ class ProfileHttpTests(unittest.IsolatedAsyncioTestCase):
  async def test_new_cookie_oauth_recovers_completed_tutorial_without_second_reward(self):
   with patch.dict(os.environ,{'DISCORD_CLIENT_ID':'test','DISCORD_CLIENT_SECRET':'test'}),patch.object(server,'ClientSession',FakeSession):
    self.assertEqual((await self.client.post('/api/auth/discord',json={'code':'first'})).status,200)
-   for i in range(5):
+   for i in range(7):
     r=await self.client.post('/api/activity',json={'action':'tutorial_next','step':i},headers={'X-Altherya-Request':'1'});self.assertEqual(r.status,200)
-   r=await self.client.post('/api/activity',json={'action':'tutorial_finish','step':5},headers={'X-Altherya-Request':'1'});self.assertEqual((await r.json())['state']['balance']['wallet'],100)
+   r=await self.client.post('/api/activity',json={'action':'tutorial_finish','step':11},headers={'X-Altherya-Request':'1'});self.assertEqual((await r.json())['state']['balance']['wallet'],100)
    self.client.session.cookie_jar.clear()
    self.assertFalse((await(await self.client.get('/api/activity')).json())['state']['tutorial']['completed'])
    self.assertEqual((await self.client.post('/api/auth/discord',json={'code':'second','id':'999999999999999999'})).status,200)
    s=(await(await self.client.get('/api/activity')).json())['state'];self.assertTrue(s['tutorial']['completed']);self.assertEqual((s['balance']['wallet'],s['xp']),(100,25))
-   r=await self.client.post('/api/activity',json={'action':'tutorial_finish','step':5},headers={'X-Altherya-Request':'1'});self.assertEqual((await r.json())['state']['balance']['wallet'],100)
+   r=await self.client.post('/api/activity',json={'action':'tutorial_finish','step':11},headers={'X-Altherya-Request':'1'});self.assertEqual((await r.json())['state']['balance']['wallet'],100)
 
  async def test_podium_avatar_is_authenticated_and_limited_to_current_leaderboard(self):
   a=adapter.SERVICE

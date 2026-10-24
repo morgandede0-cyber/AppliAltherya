@@ -182,7 +182,7 @@ class Activity:
         action=body.get('action'); key=body.get('key','')
         if not isinstance(action,str) or not isinstance(key,str):raise ValueError('Action invalide.')
         self.maintenance.check(uid,body)
-        if action in ('tutorial_next','tutorial_previous','tutorial_finish','tutorial_replay','tutorial_cancel'):return self.tutorial.action(uid,body)
+        if action in ('tutorial_next','tutorial_previous','tutorial_finish','tutorial_replay','tutorial_cancel','tutorial_visit'):return self.tutorial.action(uid,body)
         if action=='name':
             if self.discord_profile(uid):raise ValueError('Le nom est synchronisé automatiquement avec Discord.')
             name=body.get('name')

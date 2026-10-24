@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 import unittest,tempfile,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).parents[1]))
@@ -9,10 +10,10 @@ class TutorialRevisionTests(unittest.TestCase):
   self.tmp=tempfile.TemporaryDirectory();self.a=Activity(self.tmp.name+'/test.db');(self.uid,self.name),self.token=self.a.session('');self.a.snapshot(self.uid,self.name);self.a.bind_discord(self.uid,USER,self.token)
  def tearDown(self):self.tmp.cleanup()
  def s(self):return self.a.snapshot(self.uid,self.name)
- def action(self,action,step=None):return self.a.action(self.uid,dict(action=action,step=step))
+ def action(self,action,step=None):return tutorial_action(self.a,self.uid,dict(action=action,step=step))
  def complete(self):
-  for step in range(5):self.action('tutorial_next',step)
-  self.action('tutorial_finish',5)
+  for step in range(11):self.action('tutorial_next',step)
+  self.action('tutorial_finish',11)
  def old_revision(self):
   with self.a.conn() as c:c.execute('UPDATE activity_tutorial_revision SET revision=? WHERE user_id=?',('old-design',self.uid))
  def test_discord_name_automatically_used_and_manual_rename_refused(self):
@@ -35,3 +36,16 @@ class TutorialRevisionTests(unittest.TestCase):
   self.complete();self.assertEqual(self.a.admin.handle(self.uid,dict(action='list'))['total'],1);self.old_revision();self.assertEqual(self.a.admin.handle(self.uid,dict(action='list'))['total'],0);self.s();self.complete();self.assertEqual(self.a.admin.handle(self.uid,dict(action='list'))['total'],1)
  def test_previous_button_is_server_backed_and_cannot_skip_forward(self):
   self.action('tutorial_next',0);self.action('tutorial_next',1);self.action('tutorial_previous',2);self.assertEqual(self.s()['tutorial']['step'],1);self.action('tutorial_next',4);self.assertEqual(self.s()['tutorial']['step'],1)
+
+ def test_exact_previous_live_revision_resets_roster_and_completed_player_once(self):
+  self.complete();before=self.s()
+  with self.a.conn() as c:c.execute('UPDATE activity_tutorial_revision SET revision=? WHERE user_id=?',('illustrated-20261015-v1',self.uid))
+  self.assertEqual(self.a.admin.handle(self.uid,dict(action='list'))['total'],0)
+  after=self.s();self.assertFalse(after['tutorial']['completed']);self.assertTrue(after['tutorial']['reward_claimed']);self.assertEqual(after['tutorial']['step'],0);self.assertEqual(after['tutorial']['visited'],[])
+  self.action('tutorial_next',0);self.a=Activity(self.a.path);self.assertEqual(self.s()['tutorial']['step'],1)
+  self.action('tutorial_previous',1);self.complete();last=self.s();self.assertEqual(last['balance'],before['balance']);self.assertEqual(last['xp'],before['xp']);self.assertTrue(last['tutorial']['completed']);self.assertEqual(self.a.admin.handle(self.uid,dict(action='list'))['total'],1)
+ def test_unfinished_previous_live_revision_also_starts_at_zero(self):
+  self.action('tutorial_next',0);self.action('tutorial_next',1)
+  with self.a.conn() as c:c.execute('UPDATE activity_tutorial_revision SET revision=? WHERE user_id=?',('illustrated-20261015-v1',self.uid))
+  t=self.s()['tutorial'];self.assertEqual(t['step'],0);self.assertEqual(t['visited'],[]);self.assertFalse(t['completed']);self.assertFalse(t['reward_claimed'])
+  self.complete();self.assertEqual((self.s()['balance']['wallet'],self.s()['xp']),(100,25))

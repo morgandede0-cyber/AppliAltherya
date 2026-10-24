@@ -7,8 +7,8 @@ a=Activity(sys.argv[1]);out=[]
 with a.conn() as c:a.smogo.presence(c);c.execute("UPDATE activity_smogo_visits SET windows='[]'")
 for i in range(3):
  (uid,name),token=a.session('');a.snapshot(uid,name)
- for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
- a.action(uid,dict(action='tutorial_finish',step=5));out.append(token)
+ for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));out.append(token)
 print(json.dumps(out))`));
 const visit=seconds=>python(`import sqlite3,sys,time,json;c=sqlite3.connect(sys.argv[1]);n=time.time();c.execute('UPDATE activity_smogo_visits SET windows=?',(json.dumps([[n-10,n+int(sys.argv[2])]]) if int(sys.argv[2]) else '[]',));c.commit()`,String(seconds));
 (async()=>{let browser;const errors=[];let checks=0;const server=spawn('python3',['apps/api/server.py'],{cwd:root,env:{...process.env,PORT:'20942',ACTIVITY_DB:db,DISCORD_CLIENT_ID:'',DISCORD_CLIENT_SECRET:'',DISCORD_BOT_TOKEN:''},stdio:'ignore'});try{

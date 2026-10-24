@@ -10,7 +10,7 @@ const {chromium}=require('@playwright/test'),assert=require('node:assert/strict'
    const small=size.width<700,context=await browser.newContext({viewport:size,reducedMotion:size.width===1440?'no-preference':'reduce'}),p=await context.newPage(),errors=[];p.setDefaultTimeout(30000);
    p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.url().includes('/assets/roulette/')&&r.status()>=400)errors.push(r.url());});
    assert.ok((await context.request.get(url+'/api/activity')).ok());
-   for(let step=0;step<=5;step++){const response=await context.request.post(url+'/api/activity',{headers:{'X-Altherya-Request':'1'},data:{action:step===5?'tutorial_finish':'tutorial_next',step}});assert.ok(response.ok(),await response.text());}
+   await require('./tutorial-setup.cjs').completeViaApi(context.request,url);
    const seed=spawnSync('python3',['-c','import sqlite3,sys;c=sqlite3.connect(sys.argv[1]);c.execute("UPDATE players SET wallet_gold=10000");c.commit()',db]);assert.equal(seed.status,0);
    await p.goto(url);await p.locator('#panel').waitFor({state:'hidden'});await p.locator('#launch-screen').waitFor({state:'detached'});await p.locator('#scene-stage[aria-busy="false"]').waitFor();
    for(const label of ['Replier le suivi des quêtes','Replier les quêtes quotidiennes']){const b=p.getByRole('button',{name:label,exact:true});if(await b.isVisible())await b.click();}

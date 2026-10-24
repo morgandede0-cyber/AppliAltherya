@@ -5,8 +5,8 @@ const tokens=JSON.parse(execFileSync('python3',['-c',`import sys,json,time;sys.p
 a=Activity(sys.argv[1]);out=[]
 for i in range(5):
  (uid,name),token=a.session('');a.snapshot(uid,name)
- for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
- a.action(uid,dict(action='tutorial_finish',step=5))
+ for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11))
  for trip in range(6):
   a.action(uid,dict(action='start',key='elarwyn_foraging',tool='hands'));run=a.expeditions.active_run(uid)
   with a.conn() as c:

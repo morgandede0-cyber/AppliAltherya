@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 import os, sys, tempfile, time, unittest
 from pathlib import Path
 from unittest.mock import patch,AsyncMock
@@ -76,8 +77,8 @@ class GuildNameTests(unittest.IsolatedAsyncioTestCase):
  async def test_restart_preserves_nick_and_account_fallback(self):
   await self.refresh();a=Activity(self.a.path);self.assertEqual(a.snapshot(self.uid,self.name)['name'],MEMBER['nick']);self.assertEqual(a.guild_names.row(self.uid)['account_name'],'Voyageur')
  async def test_all_sessions_and_receipt_names_update(self):
-  for i in range(5):self.a.action(self.uid,{'action':'tutorial_next','step':i})
-  self.a.action(self.uid,{'action':'tutorial_finish','step':5})
+  for i in range(11):tutorial_action(self.a,self.uid,{'action':'tutorial_next','step':i})
+  tutorial_action(self.a,self.uid,{'action':'tutorial_finish','step':11})
   (other,_),token=self.a.session('');self.a.snapshot(other,'Other');self.a.bind_discord(other,USER,token)
   await self.refresh()
   with self.a.conn() as c:

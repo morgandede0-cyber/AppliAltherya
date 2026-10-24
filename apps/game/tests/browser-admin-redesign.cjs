@@ -5,8 +5,8 @@ const tokens=JSON.parse(execFileSync('python3',['-c',`import sys,json;sys.path.i
 a=Activity(sys.argv[1]);out=[]
 for i,name in enumerate(['Intendant','Pedro du port','Popie','Smogo','Panda','Aventurier']):
  (uid,_),token=a.session('');a.snapshot(uid,name);a.bind_discord(uid,dict(id='666805849011912705' if i==0 else str(123456789012345670+i),username='test'+str(i),global_name=name,avatar=None,discriminator='0'),token)
- for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
- a.action(uid,dict(action='tutorial_finish',step=5));out.append(token)
+ for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+ a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));out.append(token)
 print(json.dumps(out))`,db],{cwd:root,encoding:'utf8'}));
 const js=buildSync({entryPoints:[path.join(root,'apps/game/src/ui/admin.ts')],bundle:true,platform:'browser',format:'iife',globalName:'AdminUI',write:false,loader:{'.css':'empty'}}).outputFiles[0].text;
 const asset=fs.readdirSync(path.join(root,'apps/game/dist/assets')).find(n=>/^index-.*\.css$/.test(n));

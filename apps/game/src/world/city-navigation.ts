@@ -4,7 +4,7 @@ import '../ui/city-navigation.css';
 import {citySignRects} from './city-panels';
 export function attachCityNavigation(stage:HTMLElement,id:'hub'|'alley',spots:Spot[],admin:boolean,action:(key:string)=>void){
  const nav=node('nav','city-navigation');nav.setAttribute('aria-label',id==='hub'?'Lieux de Legacy':'Personnages de la ruelle');const dock=node('div','city-utilities');
- for(const spot of spots){const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',spot.label);b.title=spot.label;b.onclick=()=>action(spot.action);
+ for(const spot of spots){if(id==='hub'&&['profile','world','jobs'].includes(spot.action))continue;const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',spot.label);b.title=spot.label;b.onclick=()=>action(spot.action);
  if(id==='alley'&&spot.action==='scene:smogo'){
  b.className='city-hit city-smogo-character';b.dataset.smogoCharacter='';b.hidden=true;b.disabled=true;
  b.style.left=spot.x+'%';b.style.top=spot.y+'%';b.style.width=spot.w+'%';b.style.height=spot.h+'%';

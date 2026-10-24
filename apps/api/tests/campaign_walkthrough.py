@@ -1,3 +1,4 @@
+from tutorial_test_support import tutorial_action
 """Ordered campaign audit. Waits use a virtual clock, not edited quest rows.
 
 The only progression fixture is the exact external XP needed at a level gate.
@@ -15,7 +16,7 @@ from progression import xp_needed_for_level
 class Walkthrough:
  def __init__(self,branch):self.branch=branch;self.now=1792756800.;self.rows=[];self.external_xp=0;self.foraging=0;self.travel=0;self.actions=0;self.losses=0
  def call(self,action,**body):
-  self.now+=1.1;self.actions+=1;return self.a.action(self.uid,dict(action=action,**body))
+  self.now+=1.1;self.actions+=1;return tutorial_action(self.a,self.uid,dict(action=action,**body))
  def snapshot(self):return self.a.snapshot(self.uid,'Auditeur')
  def state(self):return self.snapshot()['campaign']
  def quest(self):
@@ -69,8 +70,8 @@ class Walkthrough:
  def run(self):
   with tempfile.TemporaryDirectory() as folder,patch('time.time',lambda:self.now):
    self.path=Path(folder)/'journey.sqlite3';self.a=Activity(self.path);(self.uid,_),_=self.a.session('');self.snapshot()
-   for n in range(5):self.call('tutorial_next',step=n)
-   self.call('tutorial_finish',step=5)
+   for n in range(11):self.call('tutorial_next',step=n)
+   self.call('tutorial_finish',step=11)
    start=self.now
    for expected in QUESTS:
     state=self.state();q=state['quest'];assert q['id']==expected['id']

@@ -3,8 +3,8 @@ const root=path.resolve(__dirname,'../../..'),tmp=fs.mkdtempSync(path.join(os.tm
 const token=execFileSync('python3',['-c',`import sys;sys.path.insert(0,'apps/api')
 from activity import Activity
 a=Activity(sys.argv[1]);(uid,_),token=a.session('');a.snapshot(uid,'Test');a.bind_discord(uid,dict(id='666805849011912705',username='Gardien',global_name='Gardien de Legacy',avatar=None,discriminator='0'),token)
-for step in range(5):a.action(uid,dict(action='tutorial_next',step=step))
-a.action(uid,dict(action='tutorial_finish',step=5));print(token)`,db],{cwd:root,encoding:'utf8'}).trim();
+for step in range(11):a.action(uid,dict(action='tutorial_visit',step=step,destination=a.tutorial.destinations[step]));a.action(uid,dict(action='tutorial_next',step=step))
+a.action(uid,dict(action='tutorial_visit',step=11,destination=a.tutorial.destinations[11]));a.action(uid,dict(action='tutorial_finish',step=11));print(token)`,db],{cwd:root,encoding:'utf8'}).trim();
 (async()=>{const server=spawn('python3',['apps/api/server.py'],{cwd:root,env:{...process.env,PORT:'20629',ACTIVITY_DB:db,DISCORD_BOT_TOKEN:''},stdio:'ignore'});let browser;let checks=0;const errors=[];
 try{for(let i=0;i<100;i++){try{if((await fetch(url+'/api/health')).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:JSON.parse(process.env.CHROMIUM_ARGS||'[]')});
 for(const [width,height] of [[1440,900],[810,465],[390,844],[320,568]]){console.log('viewport',width,height);const context=await browser.newContext({viewport:{width,height}});await context.addCookies([{name:'altherya_test',value:token,url}]);const p=await context.newPage();p.setDefaultTimeout(20000);p.on('pageerror',e=>errors.push(String(e)));await p.goto(url);await p.locator('#launch-screen').waitFor({state:'detached'});const root=p.locator('#quest-tracker'),body=p.locator('#quest-tracker-body');await root.waitFor();if(width<=700||height<=520)assert.equal(await body.isVisible(),false);if(!await body.isVisible())await p.getByRole('button',{name:'Ouvrir le suivi des quêtes'}).click();assert.equal(await body.isVisible(),true);checks++;
