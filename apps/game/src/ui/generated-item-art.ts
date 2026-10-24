@@ -1,10 +1,15 @@
 import manifest from './item-manifest.json';
+import tavernManifest from './tavern-item-manifest.json';
 import {assetSlice} from './assets';
 export const normalizeItemName=(name:string)=>name.normalize('NFKD').replace(/\p{M}/gu,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim().toLocaleLowerCase('fr-FR');
 const exact=new Map(manifest.items.map(entry=>[entry.name,entry]));
 const entries=new Map<string,(typeof manifest.items)[number]>();for(const entry of manifest.items){const key=normalizeItemName(entry.name);if(!entries.has(key))entries.set(key,entry);}
 export function generatedItemInfo(name:string){return exact.get(name)??entries.get(normalizeItemName(name));}
-export function generatedItemArt(name:string){const entry=generatedItemInfo(name);if(!entry)return undefined;const sheet=manifest.sheets[entry.sheet as keyof typeof manifest.sheets];const w=sheet.width/manifest.columns,h=sheet.height/manifest.rows;const art=assetSlice('/assets/items/'+sheet.file,entry.column*w,entry.row*h,w,h,sheet.width,sheet.height);art.classList.add('item-asset');art.dataset.item=entry.name;return art;}
+const tavernExact=new Map(Object.entries(tavernManifest));
+const tavernNormalized=new Map(Object.entries(tavernManifest).map(([name,entry])=>[normalizeItemName(name),entry]));
+export function tavernItemInfo(name:string){return tavernExact.get(name)??tavernNormalized.get(normalizeItemName(name));}
+export function tavernItemArt(name:string){const souvenir=tavernItemInfo(name);if(souvenir){const art=assetSlice('/assets/items/tavern/'+souvenir.file,0,0,souvenir.width,souvenir.height,souvenir.width,souvenir.height);art.classList.add('item-asset');art.dataset.item=name;return art;}return undefined;}
+export function generatedItemArt(name:string){const entry=generatedItemInfo(name);if(!entry)return tavernItemArt(name);const sheet=manifest.sheets[entry.sheet as keyof typeof manifest.sheets];const w=sheet.width/manifest.columns,h=sheet.height/manifest.rows;const art=assetSlice('/assets/items/'+sheet.file,entry.column*w,entry.row*h,w,h,sheet.width,sheet.height);art.classList.add('item-asset');art.dataset.item=entry.name;return art;}
 export function storyItemChapter(name:string){return generatedItemInfo(name)?.chapter;}
 const questObjects:Record<string,string>={
 'S1-Q01':'Reçu marchand','S1-Q02':'Faux contrat','S1-Q03':'Caisses de voyage','S1-Q04':'Reçu marchand','S1-Q05':'Plaque de transport','S1-Q06':'Rivets anciens','S1-Q07':'Plan de protection','S1-Q08':'Reçu marchand',

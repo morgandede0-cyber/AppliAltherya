@@ -19,9 +19,8 @@ body.menu-open #scene-stage .city-navigation{visibility:hidden!important;pointer
 @media(prefers-reduced-motion:reduce){.city-panel-button,.city-panel-button>svg{transition:none!important}.city-panel-button:hover>svg,.city-panel-button:active>svg{transform:none!important}}
 /* Smogo belongs to the full scene variant; this is only his interactive area. */
 #scene-stage .city-smogo-character{transform:none!important;min-width:0!important;min-height:0!important;border-radius:0;background:none!important;outline:none!important;box-shadow:none!important}
-.city-smogo-label{position:absolute;left:50%;bottom:-1%;transform:translateX(-50%);padding:4px 12px;border:1px solid #b5a68455;border-radius:3px;background:#11151cdb;color:#eee2c7;font:clamp(10px,1.2vw,18px)/1.3 Georgia,serif;white-space:nowrap;pointer-events:none}
-.city-smogo-character:hover .city-smogo-label,.city-smogo-character:focus-visible .city-smogo-label{border-color:#d0c0a0;color:#fff2d2}
+.city-smogo-label{position:absolute;left:50%;bottom:-3%;transform:translateX(-50%);width:75%;max-width:140px;min-width:58px;aspect-ratio:2041/460;padding:0;border:0;background:none;pointer-events:none}.city-smogo-label>svg{display:block;width:100%;height:100%}.city-smogo-character:hover .city-smogo-label,.city-smogo-character:focus-visible .city-smogo-label{filter:brightness(1.15)}
 .city-navigation [hidden]{display:none!important}
 #scene-stage .city-smogo-resume{position:absolute!important;left:36%;bottom:2%;width:28%!important;max-width:300px;min-height:36px!important;padding:0 8px!important;font-size:clamp(10px,1.2vw,18px)!important}
 .city-utilities:has(.city-smogo-resume){display:contents}
-@media(max-width:700px) and (orientation:portrait){#scene-stage .city-smogo-resume{left:30%;bottom:1%;width:40%!important;min-height:28px!important;font-size:10px!important}.city-smogo-label{padding:3px 7px}}
+@media(max-width:700px) and (orientation:portrait){#scene-stage .city-smogo-resume{left:30%;bottom:1%;width:40%!important;min-height:28px!important;font-size:10px!important}.city-smogo-label{padding:0}}

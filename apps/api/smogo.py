@@ -1,10 +1,10 @@
 """Smogo's knowledge wagers. Private answers and atomic, one-shot settlement."""
 import hashlib,json,re,secrets,time,unicodedata
-from game_clock import today,next_midnight,ZONE
+from game_clock import today,ZONE
 from datetime import datetime,timedelta
 MIN_WAGER=1
-MAX_WAGER=25
-DAILY_LIMIT=3
+MAX_WAGER=500
+DAILY_LIMIT=1
 DURATION=120
 # Multiple accepted words cover genuine synonyms, never approximate guesses.
 RIDDLES=(
@@ -141,6 +141,9 @@ class Smogo:
  def row(self,c,uid):
   c.execute('INSERT OR IGNORE INTO activity_smogo(user_id) VALUES(?)',(uid,))
   return c.execute('SELECT * FROM activity_smogo WHERE user_id=?',(uid,)).fetchone()
+ def consumed(self,r,p):
+  # Preserve legacy participation even when its old daily counter has reset.
+  return bool(r["attempts"] or p.get("round") or p.get("seen"))
  def snapshot(self,uid):
   with self.a.conn() as c:
    r=self.row(c,uid);p=json.loads(r['payload']);round=p.get('round');public=None
@@ -150,7 +153,9 @@ class Smogo:
     public['status']='finished' if expired else round['status']
     if public['status']=='finished':
      public.update(won=False if expired else round['won'],payout=0 if expired else round['payout'],net_gold=-round['wager'] if expired else round['payout']-round['wager'],reason='timeout' if expired else round['reason'],solution=round['answers'][0],explanation=round['explanation'],submitted=round.get('submitted',''))
-   return dict(revision=r['revision'],remaining=max(0,DAILY_LIMIT-(r['attempts'] if r['day']==today() else 0)),min_wager=MIN_WAGER,max_wager=MAX_WAGER,limit=DAILY_LIMIT,duration=DURATION,reset_at=next_midnight(),round=public,**self.presence(c))
+   consumed=self.consumed(r,p);completed=consumed and (not public or public['status']=='finished')
+   presence=self.presence(c) if not completed else dict(available=False,available_until=None)
+   return dict(revision=r['revision'],remaining=0 if consumed else 1,completed=completed,min_wager=MIN_WAGER,max_wager=MAX_WAGER,limit=1,duration=DURATION,reset_at=None,round=public,**presence)
  def question(self,c,seen):
   def signature(text):return hashlib.sha256(normalise(text).encode()).hexdigest()
   reserved={r[0] for r in c.execute('SELECT signature FROM activity_smogo_questions WHERE signature IN ('+','.join('?' for _ in RIDDLES)+')',tuple(signature(q[1]) for q in RIDDLES))}
@@ -181,10 +186,10 @@ class Smogo:
    p=json.loads(r['payload']);round=p.get('round');now=time.time();day=today();attempts=r['attempts'] if r['day']==day else 0;action=body['action']
    if action=='smogo_start':
     if round and round['status']=='active' and now<round['expires_at']:raise ValueError('Répondez à votre énigme en cours ou abandonnez-la.')
+    if self.consumed(r,p):raise ValueError('Vous avez déjà participé à l’énigme unique de Smogo.')
     if not self.presence(c)['available']:raise ValueError('Smogo reste introuvable. Revenez explorer la ruelle plus tard.')
-    if attempts>=DAILY_LIMIT:raise ValueError('Smogo ne propose que trois énigmes par jour. Revenez après minuit.')
     wager=body.get('wager')
-    if type(wager) is not int or not MIN_WAGER<=wager<=MAX_WAGER:raise ValueError('La mise doit être un entier de 1 à 25 Gold.')
+    if type(wager) is not int or not MIN_WAGER<=wager<=MAX_WAGER:raise ValueError('La mise doit être un entier de 1 à 500 Gold.')
     if not c.execute('UPDATE players SET wallet_gold=wallet_gold-? WHERE user_id=? AND wallet_gold>=?',(wager,uid,wager)).rowcount:raise ValueError('Votre portefeuille ne contient pas assez de Gold.')
     key,question,answers,explanation=self.question(c,p.get('seen',[]));p['seen']=(p.get('seen',[])+[key])[-20:]
     p['round']=dict(id=secrets.token_hex(16),status='active',question=question,answers=list(answers),explanation=explanation,wager=wager,started_at=now,expires_at=now+DURATION)

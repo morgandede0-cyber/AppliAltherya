@@ -2,7 +2,7 @@ import type {Snapshot} from '../activity';
 
 type PresenceState=Pick<Snapshot,'server_now'|'smogo'|'save_owner'>;
 export const alleyArtwork={absent:'/assets/scenes/alley-smogo-absent-v2.png',present:'/assets/scenes/alley-smogo-present-v2.png'};
-export function smogoIsPresent(s:PresenceState,now=s.server_now){return s.smogo?.available===true&&(!s.smogo.available_until||now<s.smogo.available_until);}
+export function smogoIsPresent(s:PresenceState,now=s.server_now){const p=s.smogo;if(p?.completed||p?.remaining===0&&(!p.round||p.round.status==='finished'||now>=p.round.expires_at))return false;return p?.available===true&&(!p.available_until||now<p.available_until);}
 export function smogoHasRound(s:PresenceState,now=s.server_now){const r=s.smogo?.round;return r?.status==='active'&&now<r.expires_at;}
 
 /** Swap the whole scene only once its matching artwork is decoded. No NPC overlay. */

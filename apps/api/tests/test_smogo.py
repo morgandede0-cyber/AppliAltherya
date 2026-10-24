@@ -56,11 +56,11 @@ class SmogoTests(unittest.TestCase):
   with self.assertRaises(ValueError):self.act('answer',self.other,key=r['id'],answer=self.private()['answers'][0])
   self.assertEqual(self.wallet(self.other),other);self.assertEqual(self.state()['round']['status'],'active')
  def test_invalid_stakes_and_no_overdraft(self):
-  for n in (0,-1,26,1.5,True,'10',None):
+  for n in (0,-1,501,1.5,True,'10',None):
    with self.assertRaises(ValueError):self.act('start',wager=n)
   with self.a.conn() as c:c.execute('UPDATE players SET wallet_gold=2 WHERE user_id=?',(self.buyer,))
   with self.assertRaises(ValueError):self.act('start',wager=10)
-  self.assertEqual(self.wallet(),2);self.assertIsNone(self.state()['round']);self.assertEqual(self.state()['remaining'],3)
+  self.assertEqual(self.wallet(),2);self.assertIsNone(self.state()['round']);self.assertEqual(self.state()['remaining'],1)
  def test_empty_answer_does_not_consume_single_try(self):
   self.start()
   for bad in ('','  ',123,['echo']):
@@ -72,18 +72,19 @@ class SmogoTests(unittest.TestCase):
   r=self.start()
   with self.assertRaises(ValueError):self.act('timeout',key=r['id'],expires_at=0,server_now=999999999999)
   self.assertEqual(self.state()['round']['status'],'active')
- def test_abandon_never_refunds_and_daily_limit_persists(self):
+ def test_abandon_never_refunds_and_lifetime_limit_persists(self):
   before=self.wallet()
-  for _ in range(3):
-   r=self.start();self.act('giveup',key=r['id'])
-  self.assertEqual(self.wallet(),before-30);self.a=Activity(self.path);self.assertEqual(self.state()['remaining'],0)
+  r=self.start();self.act('giveup',key=r['id'])
+  self.assertEqual(self.wallet(),before-10);self.a=Activity(self.path);self.assertEqual(self.state()['remaining'],0)
   with self.assertRaises(ValueError):self.act('start',wager=10)
  def test_midnight_does_not_reroll_running_question(self):
   self.start();round=self.state()['round']
   with patch('smogo.today',return_value='2099-01-01'):
    self.assertEqual(self.state()['round'],round)
    with self.assertRaises(ValueError):self.act('start',wager=10)
-   self.answer();self.assertEqual(self.state()['remaining'],3)
+   self.answer();self.assertEqual(self.state()['remaining'],0)
+   self.assertFalse(self.state()['available'])
+   with self.assertRaises(ValueError):self.start()
  def test_replay_request_and_simultaneous_answers_do_not_double_credit(self):
   before=self.wallet();r=self.start();body=dict(action='smogo_answer',revision=self.state()['revision'],key=r['id'],answer=self.private()['answers'][0],request_id='smogo-replay-answer-0001')
   def run(_):return self.a.action(self.buyer,body)
@@ -95,12 +96,12 @@ class SmogoTests(unittest.TestCase):
    try:self.a.action(self.buyer,body);return True
    except ValueError:return False
   with ThreadPoolExecutor(max_workers=2) as pool:result=list(pool.map(run,range(2)))
-  self.assertEqual(sum(result),1);self.assertEqual(self.wallet(),before-10);self.assertEqual(self.state()['remaining'],2)
+  self.assertEqual(sum(result),1);self.assertEqual(self.wallet(),before-10);self.assertEqual(self.state()['remaining'],0)
  def test_failure_to_reserve_unique_question_rolls_back_debit(self):
   before=self.wallet()
   with patch.object(self.a.smogo,'question',side_effect=ValueError('Réessayez')):
    with self.assertRaises(ValueError):self.act('start',wager=10)
-  self.assertEqual(self.wallet(),before);self.assertEqual(self.state()['remaining'],3)
+  self.assertEqual(self.wallet(),before);self.assertEqual(self.state()['remaining'],1)
  def test_maintenance_and_tutorial_gate(self):
   with self.a.conn() as c:c.execute("INSERT INTO activity_maintenance VALUES('alley','Fermé',0,'admin',?)",(time.time(),))
   with self.assertRaisesRegex(ValueError,'Maintenance'):self.act('start',wager=10)
@@ -119,7 +120,7 @@ class SmogoTests(unittest.TestCase):
  def test_negative_number_is_not_accepted_as_its_positive_value(self):
   with patch.object(self.a.smogo,'question',return_value=('number','Combien font deux plus trois ? Répondez en chiffres.',('5',),'2 + 3 = 5.')):
    self.start();self.answer('-5');self.assertFalse(self.state()['round']['won'])
-   self.start();self.answer('005');self.assertTrue(self.state()['round']['won'])
+   r=self.start(self.other);self.act('answer',self.other,key=r['id'],answer='005');self.assertTrue(self.state(self.other)['round']['won'])
 
  def test_library_has_one_hundred_unique_valid_questions(self):
   self.assertEqual(len(RIDDLES),100)
@@ -139,7 +140,7 @@ class SmogoTests(unittest.TestCase):
   with patch.object(self.a.smogo,'presence',return_value=dict(available=False,available_until=None)):
    self.assertEqual(self.state()['round'],r)
    self.answer();self.assertTrue(self.state()['round']['won'])
-   with self.assertRaisesRegex(ValueError,'introuvable'):self.start()
+   with self.assertRaisesRegex(ValueError,'déjà participé'):self.start()
   self.assertEqual(self.wallet(),before+10)
  def test_visits_are_shared_persisted_and_enforced_at_boundaries(self):
   with self.a.conn() as c:
@@ -155,3 +156,22 @@ class SmogoTests(unittest.TestCase):
   with self.a.conn() as c:
    PRESENCE(self.a.smogo,c)
    self.assertEqual(c.execute('SELECT windows FROM activity_smogo_visits WHERE day=?',(day,)).fetchone()[0],raw)
+
+ def test_500_gold_accepted_and_lifetime_completion_survives_restart_and_midnight(self):
+  before=self.wallet();self.start(wager=500);self.answer()
+  self.assertEqual(self.wallet(),before+500)
+  self.a=Activity(self.path)
+  with patch('smogo.today',return_value='2099-01-01'):
+   s=self.state();self.assertTrue(s['completed']);self.assertFalse(s['available']);self.assertEqual(s['remaining'],0)
+   self.assertEqual(s['max_wager'],500);self.assertIsNone(s['reset_at'])
+   with self.assertRaisesRegex(ValueError,'déjà participé'):self.start()
+  self.assertEqual(self.state(self.other)['remaining'],1)
+ def test_expired_round_disappears_and_cannot_be_replaced(self):
+  self.start();self.expire();s=self.state()
+  self.assertTrue(s['completed']);self.assertFalse(s['available'])
+  with self.assertRaisesRegex(ValueError,'déjà participé'):self.start()
+ def test_legacy_participation_counts_even_when_daily_counter_is_old(self):
+  self.start();self.answer()
+  with self.a.conn() as c:c.execute("UPDATE activity_smogo SET day='2000-01-01',attempts=0 WHERE user_id=?",(self.buyer,))
+  self.assertTrue(self.state()['completed'])
+  with self.assertRaises(ValueError):self.start()

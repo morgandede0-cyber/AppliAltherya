@@ -8,7 +8,7 @@ export function attachCityNavigation(stage:HTMLElement,id:'hub'|'alley',spots:Sp
  if(id==='alley'&&spot.action==='scene:smogo'){
  b.className='city-hit city-smogo-character';b.dataset.smogoCharacter='';b.hidden=true;b.disabled=true;
  b.style.left=spot.x+'%';b.style.top=spot.y+'%';b.style.width=spot.w+'%';b.style.height=spot.h+'%';
- b.append(node('span','city-smogo-label','Smogo'));nav.append(b);
+ const label=node('span','city-smogo-label');label.append(assetSlice('/assets/city-panels/smogo-sign-v1.png',38,127,2041,460,2117,743));b.append(label,node('span','city-sr','Smogo'));nav.append(b);
  const resume=document.createElement('button');resume.type='button';resume.className='city-control city-smogo-resume';resume.dataset.smogoResume='';resume.hidden=true;resume.disabled=true;resume.setAttribute('aria-label','Reprendre l’énigme');resume.append(assetSlice('/assets/alley-live/controls.png',32,606,760,169),node('span','','Reprendre l’énigme'));resume.onclick=()=>action(spot.action);dock.append(resume);
  }
  else if(spot.embedded){

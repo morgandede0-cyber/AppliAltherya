@@ -1,0 +1,62 @@
+{
+  "Poule nommée Gérard": {
+    "file": "gerard-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Chaussure inconnue": {
+    "file": "chaussure-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Serviette cartographiée": {
+    "file": "serviette-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Bague sans propriétaire": {
+    "file": "bague-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Ancienne pièce de Altherya": {
+    "file": "piece-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Souvenir de la porte": {
+    "file": "porte-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Note chiffonnée": {
+    "file": "note-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Marque du loup": {
+    "file": "loup-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Clé sans nom": {
+    "file": "cle-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Clochette miniature": {
+    "file": "clochette-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Lettre scellée": {
+    "file": "lettre-v1.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "Jeton des Trois Terres": {
+    "file": "jeton-v1.png",
+    "width": 1254,
+    "height": 1254
+  }
+}
