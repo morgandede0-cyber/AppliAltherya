@@ -29,10 +29,12 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
  function draw(){
   if(dead)return;remember(host.state().save_owner,'commerce:'+mode,{category,page});
   const scroll=root.dataset.kind==='market-'+mode?(root.querySelector('.realm-body')?.scrollTop??0):0,focused=root.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;
-  const {body,footer:realmFooter}=mountRealm(root,'market-'+mode,mode==='sell'?'Vendre au marché':mode==='story'?'Objets d’histoire':'Le marchand',busy);
+  const {body,footer:realmFooter}=mountRealm(root,'market-'+mode,'Le marchand',busy);
   const stage=el('section','realm-commerce-stage');body.append(stage);const productGrid=el('div','realm-commerce-grid');
   const place=(node:HTMLElement,_x:number,_y:number,_w:number,_h:number)=>{stage.append(node);return node;};
   const wallet=el('div','realm-muted approved-wallet',`Portefeuille : ${host.state().balance.wallet} Gold`);wallet.setAttribute('aria-label','Portefeuille');stage.append(wallet);
+  const modes=el('nav','guild-commerce-modes');modes.setAttribute('aria-label','Commerce');
+  for(const [value,label] of [['buy','Acheter'],['sell','Vendre'],['story','Histoire']] as const){const b=button(label,()=>host.switchMode(value));b.setAttribute('aria-pressed',String(mode===value));modes.append(b);}stage.append(modes);
   const tabs=el('nav','realm-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label',mode==='sell'?'Métiers':'Rayons');stage.append(tabs);
   categories(mode).forEach(c=>{
    const b=document.createElement('button');b.type='button';b.className='native-tab';b.disabled=busy;b.setAttribute('role','tab');b.setAttribute('aria-label',c);b.setAttribute('aria-selected',String(c===category));b.classList.toggle('selected',c===category);b.onclick=()=>{category=c;page=0;selected=undefined;message='';draw();};
@@ -56,8 +58,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
   for(const [label,step] of [['Objets précédents',-1],['Objets suivants',1]] as const){const b=document.createElement('button');b.type='button';b.className='realm-button';b.textContent=label==='Objets précédents'?'←':'→';b.setAttribute('aria-label',label);b.disabled=busy||(step===-1?page===0:page===slice.last);b.onclick=()=>{page+=step;draw();};pager.append(b);}
   pager.append(el('span','native-page-label',`Page ${page+1} / ${slice.last+1}`));
   const footer=realmFooter;
-  const switcher=document.createElement('button');switcher.className='native-market-switch';switcher.textContent=mode==='sell'?'Acheter':'Vendre';switcher.setAttribute('aria-label',switcher.textContent);switcher.disabled=busy;switcher.onclick=()=>host.switchMode(mode==='sell'?'buy':'sell');
-  const back=document.createElement('button');back.className='native-market-back';back.setAttribute('aria-label','Retour au marchand');back.textContent='Retour au marchand';back.disabled=busy;back.onclick=host.back;footer.append(switcher,button(mode==='story'?'Acheter':'Histoire',()=>host.switchMode(mode==='story'?'buy':'story')),back);
+  const back=document.createElement('button');back.className='native-market-back';back.setAttribute('aria-label','Retour au marchand');back.textContent='Retour au marchand';back.disabled=busy;back.onclick=host.back;footer.append(back);
 
   if(message){const status=el('p','merchant-status',message);status.setAttribute('role','status');root.append(status);}
   if(selected){

@@ -20,3 +20,10 @@ Prompts de création :
 - Bouton horizontal très large, fond bleu canard sombre et bordure médiévale en or patiné ; centre vide sans texte, fond extérieur transparent.
 
 Les trois références proviennent des propositions approuvées avant intégration ; seuls les cadrages d’illustrations sont utilisés. L’atlas de comptes bancaire et la texture de papier de combat réutilisent les assets existants. Les nouveaux PNG sont conservés sans retouche matricielle ; leurs cadrages sont définis dans le code SVG.
+
+
+## Correctif de composition
+
+Nouveau fichier : `apps/game/public/assets/guild/data-panel.png`, 2172 × 724, PNG RGBA. Création par imagegen intégré, prompt : « One completely blank horizontal rectangular panel, antique fine gold metal frame with small ornate corner filigree, dark petroleum teal leather flat interior with extremely subtle embossing. Simple rectangle, no point-ended button, no huge diamonds or arrows. Transparent exterior, interior entirely empty, no lettering, icons, characters, numbers or glow. »
+
+Le cadrage SVG retire les marges transparentes ; le fichier matriciel reste intact. Les cadrages de scène du forgeron et du comptoir sont réutilisés depuis les références approuvées. Les coins de fiches utilisent un petit cadrage décoratif de la référence du marchand ; les textes sont hors de ce cadrage.

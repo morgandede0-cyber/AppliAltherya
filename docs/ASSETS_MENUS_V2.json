@@ -1,0 +1,56 @@
+[
+  {
+    "path": "apps/game/public/assets/guild/forge-scene-v2.png",
+    "usage": "Scène de forge",
+    "width": 1983,
+    "height": 793,
+    "mode": "RGB",
+    "alpha_extrema": null,
+    "sha256": "2b0e0e6ebb73953be1ffac16a8b5fc782b53343a6879716a489575d0cdb3d382",
+    "generation_mode": "built-in imagegen",
+    "source": "exec-d37d70eb-1936-49da-9539-d6c59cbc90d8.png",
+    "prompt_spec": "Use case: precise-object-edit. Recompose only the bear blacksmith workshop from the approved reference as a standalone panoramic banner. Same strong brown bear, apron, hammer striking the anvil, sparks, furnace, timber beams, hanging tools and teal pennants. Entire head, hands, hammer and anvil visible. No UI, parchment rolls, frame, tabs, letters or numbers. Painted realistic fantasy matching the reference."
+  },
+  {
+    "path": "apps/game/public/assets/guild/tavern-counter-v2.png",
+    "usage": "Comptoir du tavernier",
+    "width": 1983,
+    "height": 793,
+    "mode": "RGB",
+    "alpha_extrema": null,
+    "sha256": "44deb13494ec4bf9f12948996962e335a7472547e47ac2b1a4a14df929034e0a",
+    "generation_mode": "built-in imagegen",
+    "source": "exec-f1b9d86d-3f4b-49d5-aad4-37cee6e05070.png",
+    "prompt_spec": "Use case: precise-object-edit. Recompose the left tavernkeeper scene from the approved reference as a standalone panoramic banner. Same lynx keeper behind the warm wooden counter, barrels, bottles, beer mugs and lanterns. Entire ears, head, shoulders and hands in the scene. No medallion, UI, lettering, title, parchment or gold border. Painted realistic fantasy, amber lighting and muted teal fabrics."
+  },
+  {
+    "path": "apps/game/public/assets/guild/merchant-portrait-v2.png",
+    "usage": "Médaillon du marchand",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "sha256": "b6f9530a6ee938f2983ca1b1b7c3430d27149d1359021d1bd0e15d33d1398cf7",
+    "generation_mode": "built-in imagegen",
+    "source": "exec-473592c8-3c55-4d43-a4a8-d11a016321e3.png",
+    "prompt_spec": "Use case: background-extraction. Extract and reconstruct only the feline merchant portrait from the right approved menu. Preserve lynx face, brown cloak, amber eyes, gold clasp and lighting. Thin antique gold circular medallion, petrol teal inside, genuinely transparent exterior with smooth edges. Complete ears and head. No parchment, UI text, wallet value, labels or numbers."
+  },
+  {
+    "path": "apps/game/public/assets/guild/item-card-v2.png",
+    "usage": "Fiche de parchemin vierge",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "sha256": "d3973d663ae4606843cc5e148d683e0dd453c19cdd01e8fe2cff908cc3d2ad38",
+    "generation_mode": "built-in imagegen",
+    "source": "exec-03e0afd3-15fb-4559-a6e2-406de5173f1b.png",
+    "prompt_spec": "Use case: stylized-concept. One blank landscape rectangular aged ivory parchment item card. Fine double brown and antique gold border, small curled filigree at four corners, softly mottled paper, completely blank centre. Flat front view, transparent exterior. No rolls, wax seal, objects, icons, words, numbers, buttons or wood background. Corners and paper form one seamless card."
+  }
+]

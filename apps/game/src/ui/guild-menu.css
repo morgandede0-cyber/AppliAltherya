@@ -265,3 +265,277 @@
 #panel#panel.guild-menu .arena-technique{height:auto!important;min-height:112px!important;overflow:visible!important;flex-shrink:0!important;justify-content:center!important;gap:3px!important}
 #panel#panel.guild-menu .arena-technique .guild-button{height:auto!important;flex-shrink:0!important}
 #panel#panel.guild-menu .arena-technique-values,#panel#panel.guild-menu .arena-technique-availability{position:static!important;flex-shrink:0!important;line-height:1.35!important}
+/* Function-specific composition from the approved forge and merchant models. */
+#panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]){width:min(820px,var(--reading-width,96vw))!important}
+#panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) .guild-shell{inset:5% 8% 4%!important;gap:10px}
+#panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) .guild-header h2{font-size:clamp(24px,4.4cqw,36px)!important}
+#panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) .guild-paper{border-width:26px 20px 42px!important;border-image-width:26px 20px 42px!important;padding:8px 14px 14px!important}
+#panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) .guild-footer>.guild-button{flex:0 1 280px!important;min-height:48px!important;font-size:17px!important;padding:10px 30px!important}
+#panel#panel.guild-menu[data-guild=forge] .guild-forge-scene{display:block!important;width:calc(100% + 28px)!important;max-width:none!important;height:clamp(130px,24cqw,195px)!important;margin:-8px -14px 0!important;border-bottom:3px double #a17d40;overflow:hidden}
+#panel#panel.guild-menu[data-guild=forge] .guild-paper>.approved-wallet{justify-content:flex-end;font-size:12px!important;margin:5px 0!important}
+#panel#panel.guild-menu[data-guild=forge] .guild-paper>.realm-tabs{margin:4px 0 12px!important;gap:3px!important;flex-wrap:nowrap}
+#panel#panel.guild-menu[data-guild=forge] .realm-tabs>.guild-button{flex:1 1 25%!important;min-width:0!important;font-size:16px!important;min-height:44px!important}
+#panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) :is(.realm-product,.realm-forge-compare .realm-card){border:1px solid #997440!important;border-radius:0!important;background:#f2dfb41a!important;box-shadow:inset 0 0 0 4px #e9d2a3,inset 0 0 0 5px #a7834866!important}
+#panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) :is(.realm-product,.realm-forge-compare .realm-card)::after{content:'✧';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);color:#96713d;font:16px Georgia;pointer-events:none}
+#panel#panel.guild-menu[data-guild=forge] .realm-forge-compare{position:relative;gap:32px!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-forge-compare::after{content:'➤';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#9a681f;font-size:26px}
+#panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card{min-height:185px!important;padding:12px 8px 18px!important;gap:2px!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card>svg{width:150px!important;height:108px!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card h3{font-size:17px!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-forge-benefit{border-bottom:1px solid #9c794d66;padding:7px 0!important;margin:3px 0!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-materials{border:0!important;background:none!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;padding:7px 0!important;gap:7px!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-material{border:1px solid #a78955;border-radius:3px;padding:8px 4px!important;background:#f1dbaa30;display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-material>svg{width:65px!important;height:47px!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-material strong{font-size:12px!important;text-align:center!important}
+#panel#panel.guild-menu[data-guild=forge] .approved-forge-cost{padding-top:10px!important;margin-top:4px;min-height:36px}
+#panel#panel.guild-menu[data-guild=forge] .guild-forge-upgrade{display:flex!important;width:min(350px,100%)!important;min-height:54px!important;margin:12px auto 0!important;font-size:21px!important;gap:10px!important;padding:12px 32px!important}
+#panel#panel.guild-menu[data-guild=forge] .guild-forge-upgrade .forge-button-cost{display:none!important}
+#panel#panel.guild-menu[data-guild=forge] .guild-forge-guide{display:flex!important;width:min(250px,100%)!important;margin:5px auto 0!important;font-size:12px!important;min-height:36px!important}
+#panel#panel.guild-menu[data-guild^=market-] .realm-commerce-stage{gap:9px!important}
+#panel#panel.guild-menu[data-guild^=market-] .approved-wallet{justify-content:center;gap:28px!important;min-height:120px;margin:-5px 0 0!important;border-bottom:1px solid #a5834b88}
+#panel#panel.guild-menu[data-guild^=market-] .guild-merchant-portrait{width:128px!important;height:128px!important;border:3px double #a17e42;border-radius:50%}
+#panel#panel.guild-menu[data-guild^=market-] .guild-wallet-value{font:23px/1.4 Georgia!important;max-width:260px;text-align:center}
+#panel#panel.guild-menu[data-guild^=market-] .guild-commerce-modes{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;margin:0!important}
+#panel#panel.guild-menu[data-guild^=market-] .guild-commerce-modes>.guild-button{font-size:19px!important;padding:9px 20px!important;min-height:46px!important}
+#panel#panel.guild-menu[data-guild^=market-] .guild-commerce-modes>.guild-button[aria-pressed=false]{filter:sepia(.75) saturate(.6) brightness(.8)}
+#panel#panel.guild-menu[data-guild^=market-] .realm-tabs[role=tablist]:has(>:only-child){display:none!important}
+#panel#panel.guild-menu[data-guild^=market-] .realm-tabs[role=tablist]{margin:0 0 2px!important;gap:3px!important}
+#panel#panel.guild-menu[data-guild^=market-] .realm-tabs[role=tablist]>.guild-button{font-size:12px!important;min-height:34px!important;padding:8px 12px!important}
+#panel#panel.guild-menu[data-guild^=market-] .realm-product{min-height:193px!important;padding:15px 12px 24px!important;grid-template-columns:39% minmax(0,1fr)!important;gap:5px 9px!important}
+#panel#panel.guild-menu[data-guild^=market-] .realm-item-icon>svg{height:130px!important}
+#panel#panel.guild-menu[data-guild^=market-] .realm-product h3{font-size:17px!important}
+#panel#panel.guild-menu[data-guild^=market-] .realm-product>.guild-button{font-size:14px!important;min-height:40px!important;padding:8px 19px!important}
+#panel#panel.guild-menu[data-guild^=market-] [aria-label="Pages des objets"]{margin:3px 0 0!important}
+@media(max-width:700px){
+ #panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) .guild-shell{inset:4% 5%!important;gap:5px}
+ #panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) .guild-paper{border-width:22px 12px 34px!important;border-image-width:22px 12px 34px!important;padding:7px 8px 12px!important}
+ #panel#panel.guild-menu[data-guild=forge] .guild-forge-scene{width:calc(100% + 16px)!important;margin:-7px -8px 0!important;height:120px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-tabs>.guild-button{font-size:12px!important;min-height:38px!important;padding:8px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare{gap:18px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare::after{font-size:17px}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card{min-height:160px!important;padding:9px 6px 18px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card h3{font-size:13px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card>svg{height:84px!important;width:90px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-materials{gap:4px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-material{font-size:10px!important;padding:6px 3px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-material>svg{width:43px!important;height:38px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-material strong{font-size:10px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .approved-wallet{gap:10px!important;min-height:95px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .guild-merchant-portrait{width:90px!important;height:90px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .guild-wallet-value{font-size:17px!important;max-width:150px}
+ #panel#panel.guild-menu[data-guild^=market-] .guild-commerce-modes>.guild-button{font-size:14px!important;min-height:40px!important;padding:8px 12px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .realm-product{display:flex!important;min-height:225px!important;padding:11px 7px 22px!important;gap:4px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .realm-item-icon>svg{width:95px!important;height:82px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .realm-product h3{font-size:14px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .realm-product>.guild-button{font-size:12px!important;padding:8px 13px!important}
+}
+/* Shared framing, with individual interior compositions. */
+#panel#panel.guild-menu{width:min(820px,var(--reading-width,96vw))!important}
+#panel#panel.guild-menu .guild-footer>.guild-button{flex:0 1 250px!important;min-height:46px!important;padding:10px 26px!important;font-size:15px!important}
+#panel#panel.guild-menu .guild-button:focus:not(:focus-visible){outline:none!important}
+#panel#panel.guild-menu .guild-body :is(.realm-product,.realm-card) h3{visibility:visible!important;opacity:1!important}
+#panel#panel.guild-menu .guild-service-scene{display:block!important;width:100%!important;height:110px!important;margin:0 0 5px!important;overflow:hidden;border-bottom:2px solid #a48145}
+#panel#panel.guild-menu:is([data-guild=drinks],[data-guild=games]) .guild-shell{inset:5% 8% 4%!important}
+#panel#panel.guild-menu:is([data-guild=drinks],[data-guild=games]) .guild-header{padding:0!important}
+#panel#panel.guild-menu:is([data-guild=drinks],[data-guild=games]) .guild-header h2{font-size:30px!important;padding:4px 0!important}
+#panel#panel.guild-menu:is([data-guild=drinks],[data-guild=games]) .guild-paper{border-width:22px 18px 34px!important;border-image-width:22px 18px 34px!important;padding:6px 12px!important}
+#panel#panel.guild-menu[data-guild=drinks] .realm-drinks .realm-card{border:1px solid #ac8b54!important;border-radius:0!important;box-shadow:inset 0 0 0 3px #ead4aa,inset 0 0 0 4px #a7834855!important;min-height:130px!important}
+#panel#panel.guild-menu[data-guild=drinks] .realm-drinks .realm-card[data-selected=true]{border:2px solid #a27b36!important;background:#fff0c24d!important;box-shadow:inset 0 0 0 4px #e2c78e!important}
+#panel#panel.guild-menu .guild-drink-order{position:relative;background:#123035;border:3px double #a9823e;color:#efd8a8;padding:10px 18px;margin-top:10px;text-align:center}
+#panel#panel.guild-menu .guild-drink-order h3{font-size:19px!important;color:#efd8a8!important;margin:0 0 7px!important}
+#panel#panel.guild-menu .guild-drink-order>.guild-button{width:min(350px,100%)!important;font-size:22px!important;min-height:51px!important}
+#panel#panel.guild-menu[data-guild=games] .realm-card{grid-template-columns:160px minmax(0,1fr)!important;border:1px solid #ac8b54!important;box-shadow:inset 0 0 0 4px #ead4aa,inset 0 0 0 5px #a7834855!important;padding:16px!important;min-height:160px!important}
+#panel#panel.guild-menu[data-guild=games] .guild-game-art{width:160px!important;height:130px!important}
+#panel#panel.guild-menu[data-guild=games] .realm-card h3{font-size:23px!important}
+#panel#panel.guild-menu[data-guild=games] .realm-card>.guild-button{width:100%!important;font-size:20px!important;min-height:44px!important}
+#panel#panel.guild-menu #bank-polished .bank-account-art{width:130px!important;height:125px!important;border:3px double #9d7b41;border-radius:50%;padding:8px;background:#153035!important}
+#panel#panel.guild-menu #bank-polished .bank-account h3{font-size:23px!important;margin-bottom:8px!important}
+#panel#panel.guild-menu .bank-accounts{padding-bottom:18px;border-bottom:1px solid #9a784177}
+#panel#panel.guild-menu .guild-balance-plaque{position:relative;isolation:isolate;min-height:52px;min-width:0;width:100%;display:grid;place-items:center;padding:8px 19px}
+#panel#panel.guild-menu .guild-plaque-art{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+#panel#panel.guild-menu #bank-polished .bank-account output{font-size:25px!important;color:#f5dfaa!important;padding:0!important;line-height:1.2!important}
+#panel#panel.guild-menu .bank-mode-tabs{margin:14px 0!important}
+#panel#panel.guild-menu #bank-polished .bank-transfer-form>.confirm{min-height:54px!important;font-size:21px!important;width:min(380px,100%)!important;margin:10px auto 0!important}
+#panel#panel.guild-menu[data-guild=profile] .pp-identity{flex-direction:row!important;align-items:center;text-align:left;gap:20px;padding-bottom:17px!important}
+#panel#panel.guild-menu[data-guild=profile] .pp-portrait{width:130px!important;height:150px!important;flex-shrink:0;border:4px double #a7813d!important;border-radius:50%!important}
+#panel#panel.guild-menu[data-guild=profile] .pp-identity-text{flex:1;min-width:0}
+#panel#panel.guild-menu[data-guild=profile] .pp-section h3{font-size:21px!important;text-align:center!important;color:#f1daaa!important;background:#183135;border:3px double #ad8a4e;width:min(260px,90%);margin:10px auto 13px!important;padding:4px 16px!important;position:relative}
+#panel#panel.guild-menu[data-guild=profile] .pp-columns{display:flex!important;flex-direction:column;gap:4px}
+#panel#panel.guild-menu[data-guild=profile] .pp-tools{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+#panel#panel.guild-menu[data-guild=profile] .pp-tool{padding:7px 4px;background:#173136;border:3px double #ae8a44;color:#efdaae;text-align:center}
+#panel#panel.guild-menu[data-guild=profile] .pp-tool>svg,#panel#panel.guild-menu[data-guild=profile] .pp-missing{height:80px!important}
+#panel#panel.guild-menu[data-guild=profile] .pp-tool :is(span,small){color:#efdaae!important;font-size:11px!important}
+#panel#panel.guild-menu[data-guild=profile] .pp-reputation{border-bottom:1px solid #a07c4555;padding:8px 0!important}
+#panel#panel.guild-menu .guild-card-art{background:#133237;border:3px double #bb944d;box-shadow:inset 0 0 0 3px #0b2023;border-radius:3px}
+#panel#panel.guild-menu .arena-wager-v2 .guild-card-art{inset:0!important}
+#panel#panel.guild-menu .arena-wager-v2{padding:20px!important;margin:12px 0!important}
+#panel#panel.guild-menu .arena-wager-v2 :is(.wager-heading,.wager-heading strong,.wager-heading span,.wager-status){color:#f0dbb3!important}
+#panel#panel.guild-menu .guild-arena-hero{position:relative!important;isolation:isolate;padding:20px 14px 14px!important;border:0!important;min-height:230px}
+#panel#panel.guild-menu .guild-arena-hero>.guild-vignette{position:absolute;inset:0;width:100%;height:100%;max-width:none!important;margin:0;z-index:-1;filter:sepia(.25) brightness(.8)}
+#panel#panel.guild-menu .guild-arena-hero .arena-portrait{width:125px!important;height:145px!important;border:4px double #d3a345!important;background:#163136}
+#panel#panel.guild-menu .guild-arena-hero .arena-lobby-fighter :is(h3,p,small){background:#ead3a8d9!important;color:#392611!important;padding:4px 7px!important;margin:3px 0!important}
+#panel#panel.guild-menu .guild-arena-hero .arena-lobby-fighter small{display:none}
+#panel#panel.guild-menu[data-guild=arena] .guild-arena-start{width:100%!important;min-height:58px!important;font-size:24px!important;margin:10px 0!important}
+#panel#panel.guild-menu .guild-arena-recent{font-size:13px;color:#654729;margin-top:8px}
+#panel#panel.guild-menu .guild-arena-recent>summary{cursor:pointer;padding:6px;text-align:center}
+#panel#panel.guild-menu .arena-technique{padding:12px!important;min-height:114px!important}
+#panel#panel.guild-menu .arena-technique .guild-button{flex-direction:row!important;gap:10px!important;min-height:48px!important;font-size:17px!important}
+#panel#panel.guild-menu .arena-technique .arena-skin-icon{width:42px!important;height:42px!important}
+#panel#panel.guild-menu .arena-technique-values,#panel#panel.guild-menu .arena-technique-availability{color:#efd9ac!important}
+#panel#panel.guild-menu .approved-jobs-grid .approved-job-card{display:flex!important;flex-direction:column!important;padding:9px!important;min-height:240px!important;gap:6px!important;background:#ead4ad!important;border:1px solid #9f7c44!important}
+#panel#panel.guild-menu .approved-job-card .approved-scene{position:relative!important;inset:auto!important;width:100%!important;height:120px!important;min-height:120px!important;transform:none!important;order:0}
+#panel#panel.guild-menu .approved-job-card h3{position:static!important;inset:auto!important;width:100%!important;height:auto!important;transform:none!important;display:block!important;order:1;font-size:17px!important;color:#503617!important;background:none!important;margin:3px 0!important;line-height:1.25!important}
+#panel#panel.guild-menu .approved-job-card>.guild-button{position:relative!important;inset:auto!important;order:2;margin-top:auto!important;transform:none!important;width:100%!important;font-size:14px!important}
+@media(max-width:700px){
+ #panel#panel.guild-menu .guild-footer>.guild-button{font-size:12px!important;min-height:42px!important;padding:8px 16px!important;flex:1 1 130px!important}
+ #panel#panel.guild-menu .guild-service-scene{height:90px!important}
+ #panel#panel.guild-menu:is([data-guild=drinks],[data-guild=games]) .guild-shell{inset:4% 5%!important}
+ #panel#panel.guild-menu:is([data-guild=drinks],[data-guild=games]) .guild-header h2{font-size:22px!important}
+ #panel#panel.guild-menu[data-guild=games] .realm-card{grid-template-columns:90px minmax(0,1fr)!important;min-height:135px!important;padding:10px!important;gap:6px!important}
+ #panel#panel.guild-menu[data-guild=games] .guild-game-art{width:90px!important;height:105px!important}
+ #panel#panel.guild-menu[data-guild=games] .realm-card h3{font-size:16px!important}
+ #panel#panel.guild-menu[data-guild=games] .realm-card>.guild-button{font-size:15px!important;min-height:38px!important}
+ #panel#panel.guild-menu #bank-polished .bank-account-art{width:90px!important;height:85px!important}
+ #panel#panel.guild-menu #bank-polished .bank-account h3{font-size:18px!important}
+ #panel#panel.guild-menu #bank-polished .bank-account output{font-size:17px!important}
+ #panel#panel.guild-menu[data-guild=profile] .pp-portrait{width:85px!important;height:100px!important}
+ #panel#panel.guild-menu[data-guild=profile] .pp-identity{gap:10px!important}
+ #panel#panel.guild-menu[data-guild=profile] .pp-identity .pp-name{font-size:21px!important}
+ #panel#panel.guild-menu[data-guild=profile] .pp-tools{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #panel#panel.guild-menu .guild-arena-hero{padding:12px 5px!important;min-height:205px}
+ #panel#panel.guild-menu .guild-arena-hero .arena-portrait{width:80px!important;height:100px!important}
+ #panel#panel.guild-menu .guild-arena-hero .arena-lobby-fighter h3{font-size:14px!important}
+ #panel#panel.guild-menu .arena-technique .guild-button{font-size:13px!important;gap:5px!important}
+ #panel#panel.guild-menu .arena-technique .arena-skin-icon{width:28px!important;height:28px!important}
+ #panel#panel.guild-menu .approved-jobs-grid .approved-job-card{min-height:230px!important;padding:6px!important}
+ #panel#panel.guild-menu .approved-job-card h3{font-size:14px!important}
+ #panel#panel.guild-menu .approved-job-card>.guild-button{font-size:11px!important;padding:8px!important}
+}
+#panel#panel.guild-menu .guild-card-art{background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important}
+/* Primary actions stay reachable while the interior scrolls on short screens. */
+#panel#panel.guild-menu[data-guild=forge] .guild-footer{display:grid!important;grid-template-columns:1fr 1fr!important}
+#panel#panel.guild-menu[data-guild=forge] .guild-forge-upgrade{grid-column:1/-1;width:min(360px,100%)!important;justify-self:center;min-height:48px!important;margin:0 auto!important;order:0}
+#panel#panel.guild-menu[data-guild=forge] .guild-footer>.guild-button:not(.guild-forge-upgrade){min-height:38px!important;width:100%!important;margin:0!important;font-size:13px!important;padding:8px 18px!important}
+#panel#panel.guild-menu[data-guild=forge] .guild-forge-guide{order:1}
+#panel#panel.guild-menu[data-guild=forge] .guild-footer>.guild-button:last-child:not(.guild-forge-guide){order:2}
+#panel#panel.guild-menu[data-guild=drinks] .guild-drink-order{flex:1 0 100%;margin:0;padding:8px 14px}
+#panel#panel.guild-menu[data-guild=drinks] .guild-drink-order h3{margin:0!important;font-size:16px!important;color:#efd8a8!important}
+#panel#panel.guild-menu[data-guild=drinks] .guild-drink-order>.guild-button{min-height:43px!important;font-size:20px!important;padding:8px 25px!important}
+#panel#panel.guild-menu[data-guild=arena] .guild-arena-start{order:-1;flex:1 0 100%!important;width:100%!important;min-height:50px!important;font-size:22px!important;margin:0!important}
+#panel#panel.guild-menu[data-guild=arena] .guild-footer>.guild-button[aria-label="Retour en ville"]{flex:1 0 100%!important;max-width:300px!important}
+#panel#panel.guild-menu[data-guild=arena] .guild-footer>.guild-button:not(.guild-arena-start){min-height:38px!important;font-size:13px!important;padding:8px 18px!important}
+#panel#panel.guild-menu[data-guild=inventory] .pp-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#panel#panel.guild-menu[data-guild=inventory] .pp-item{padding:10px!important;border:1px solid #9f7c44!important}
+@media(min-width:701px){
+ #panel#panel.guild-menu[data-guild^=market-] .approved-wallet{min-height:96px!important;gap:20px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .guild-merchant-portrait{width:96px!important;height:96px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .guild-wallet-value{font-size:21px!important;max-width:290px}
+ #panel#panel.guild-menu[data-guild^=market-] .realm-product{min-height:148px!important;padding:12px 10px 20px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .realm-item-icon>svg{height:104px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .realm-product h3{font-size:16px!important}
+ #panel#panel.guild-menu[data-guild^=market-] .realm-product>.guild-button{min-height:36px!important;font-size:13px!important;padding:8px 14px!important}
+ #panel#panel.guild-menu[data-guild=forge] .guild-forge-scene{height:135px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card{min-height:140px!important;padding:8px 8px 16px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card>svg{height:80px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card h3{font-size:16px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-benefit{font-size:11px!important;padding:4px 0!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-material>svg{height:35px!important;width:50px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-material{padding:5px 3px!important;gap:2px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-materials{gap:4px!important;padding:4px 0!important;margin-top:3px!important}
+ #panel#panel.guild-menu[data-guild=forge] .approved-materials-title{font-size:17px!important}
+ #panel#panel.guild-menu[data-guild=forge] .approved-forge-cost{padding-top:5px!important;min-height:27px}
+ #panel#panel.guild-menu[data-guild=drinks] .guild-service-scene{height:80px!important}
+ #panel#panel.guild-menu[data-guild=drinks] .realm-drinks .realm-card{min-height:100px!important;padding:4px!important}
+ #panel#panel.guild-menu[data-guild=drinks] .realm-drinks .realm-card>svg{height:65px!important}
+ #panel#panel.guild-menu[data-guild=drinks] .realm-drinks .realm-card h3{font-size:16px!important;margin:2px 0!important}
+ #panel#panel.guild-menu[data-guild=arena] .guild-arena-hero{min-height:200px;padding:10px!important}
+ #panel#panel.guild-menu[data-guild=arena] .guild-arena-hero .arena-portrait{width:105px!important;height:120px!important}
+ #panel#panel.guild-menu[data-guild=arena] .arena-wager-v2{padding:14px 20px!important;margin:7px 0!important}
+ #panel#panel.guild-menu[data-guild=arena] .arena-lobby-hint{font-size:12px!important;margin:6px 0!important}
+}
+#panel#panel.guild-menu .guild-heading-flourish{display:block;position:static!important;width:175px;height:18px;margin:2px auto 0;max-width:70%;pointer-events:none}
+#panel#panel.guild-menu .guild-corner{position:absolute!important;width:26px!important;height:26px!important;max-width:none!important;max-height:none!important;pointer-events:none;z-index:2}
+#panel#panel.guild-menu .guild-corner-0{top:3px;left:3px}
+#panel#panel.guild-menu .guild-corner-1{top:3px;right:3px;transform:scaleX(-1)}
+#panel#panel.guild-menu .guild-corner-2{bottom:3px;right:3px;transform:rotate(180deg)}
+#panel#panel.guild-menu .guild-corner-3{bottom:3px;left:3px;transform:scaleY(-1)}
+#panel#panel.guild-menu:is([data-guild=forge],[data-guild^=market-]) :is(.realm-product,.realm-forge-compare .realm-card)::after{display:none}
+#panel#panel.guild-menu[data-guild] .guild-body .guild-paper svg.guild-corner{position:absolute!important;width:26px!important;height:26px!important;min-width:0!important;max-width:none!important;max-height:none!important;flex:none!important;margin:0!important;grid-column:auto!important;grid-row:auto!important}
+#panel#panel.guild-menu .guild-drink-order{display:grid!important;justify-items:center!important;gap:3px!important}
+#panel#panel.guild-menu #bank-polished .bank-account output{font-family:Georgia,serif!important}
+#panel#panel.guild-menu .castle-paths{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;min-height:0!important;height:auto!important}
+#panel#panel.guild-menu .castle-path{min-height:300px!important;padding:12px 8px!important;display:flex!important;flex-direction:column!important;align-items:stretch!important}
+#panel#panel.guild-menu .castle-path h3{font-size:19px!important;min-height:48px!important;margin:3px 0 10px!important}
+#panel#panel.guild-menu .castle-scene{height:150px!important;min-height:150px!important;flex:0 0 150px!important}
+#panel#panel.guild-menu .castle-path>.guild-button{font-size:13px!important;width:100%!important;margin-top:auto!important;padding:10px 18px!important}
+#panel#panel.guild-menu :is(.castle-group,.castle-identity,.castle-own-fortune){border:1px solid #a7854a!important;color:#553a1e!important;background:#e9d1a329!important}
+#panel#panel.guild-menu .castle-data-row :is(span,strong),#panel#panel.guild-menu :is(.castle-player-name span,.castle-experience span,.castle-balances,.castle-ranking-subtitle,.castle-own-fortune){color:#654729!important}
+#panel#panel.guild-menu .castle-pedestal{background:none!important;border:0!important}
+#panel#panel.guild-menu .castle-pedestal :is(h3,.castle-ranking-gold){color:#f0daac!important;text-shadow:0 1px 2px #000!important}
+@media(min-width:701px){
+ #panel#panel.guild-menu[data-guild=forge] .guild-paper{border-width:16px 20px 28px!important;border-image-width:16px 20px 28px!important;padding:5px 14px!important}
+ #panel#panel.guild-menu[data-guild=forge] .guild-forge-scene{height:120px!important;margin-top:-5px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card{min-height:132px!important;padding:7px 8px 12px!important;gap:0!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card>svg:not(.guild-corner){height:64px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card h3{font-size:15px!important;line-height:1.2!important;margin:0 0 3px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card p{font-size:12px!important;margin:2px 0!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card small{font-size:10px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-benefit{font-size:10px!important;padding:2px 0!important;margin:2px 0!important}
+}
+@media(max-width:700px){
+ #panel#panel.guild-menu .castle-paths{grid-template-columns:1fr!important}
+ #panel#panel.guild-menu .castle-path{display:grid!important;grid-template-columns:85px minmax(0,1fr)!important;min-height:150px!important;gap:5px 10px!important;padding:10px!important}
+ #panel#panel.guild-menu .castle-path h3{grid-column:2;min-height:0!important;font-size:17px!important;margin:0!important}
+ #panel#panel.guild-menu .castle-scene{grid-column:1;grid-row:1/4;min-height:100px!important;height:100px!important;width:85px!important}
+ #panel#panel.guild-menu .castle-path>.guild-button,#panel#panel.guild-menu .castle-daily-value{grid-column:2}
+}
+/* Podium names flow below their stands, so long server nicknames never overlap Gold. */
+#panel#panel.guild-menu .castle-pedestal{display:flex!important;flex-direction:column!important;aspect-ratio:auto!important;min-height:0!important;padding:0!important;gap:5px!important;align-self:end}
+#panel#panel.guild-menu .guild-podium-stand{position:relative;width:100%;aspect-ratio:1/1.08;isolation:isolate}
+#panel#panel.guild-menu .guild-podium-stand .castle-pedestal-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
+#panel#panel.guild-menu .guild-podium-stand .arena-portrait{position:absolute!important;top:25%!important;left:50%!important;transform:translateX(-50%)!important;width:40%!important;height:auto!important;aspect-ratio:1!important;margin:0!important;border:0!important;background:#112c31!important;overflow:hidden!important}
+#panel#panel.guild-menu .castle-pedestal[data-rank="1"] .guild-podium-stand .arena-portrait{top:17%!important;width:46%!important}
+#panel#panel.guild-menu .guild-podium-stand .realm-rank{position:absolute!important;top:auto!important;bottom:19%!important;left:0;right:0;margin:0!important;font-size:20px!important}
+#panel#panel.guild-menu .castle-pedestal>h3{position:static!important;inset:auto!important;transform:none!important;width:100%!important;font-size:17px!important;line-height:1.2!important;min-height:2.4em;margin:0!important;padding:4px!important;color:#553a1e!important;text-shadow:none!important;overflow-wrap:anywhere}
+#panel#panel.guild-menu .castle-pedestal>.castle-ranking-gold{position:static!important;inset:auto!important;transform:none!important;font-size:17px!important;line-height:1.3!important;margin:0!important;padding:0 4px!important;color:#553a1e!important;text-shadow:none!important}
+@media(max-width:700px){
+ #panel#panel.guild-menu[data-guild] .guild-body .guild-paper svg.guild-corner{width:18px!important;height:18px!important}
+ #panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .realm-card h3{padding:3px 13px!important;font-size:12px!important;min-height:34px!important;display:grid;place-items:center}
+}
+@media(max-width:700px) and (min-height:760px){
+ #panel#panel.guild-menu[data-guild=combat] .arena-fighter{min-height:84px!important;padding:6px!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-statuses{min-height:0!important;height:auto!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-statuses:empty{display:none!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-intent{padding:7px 11px!important;margin-bottom:6px!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-log{padding:8px 11px!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-log h3{font-size:17px!important;margin-bottom:4px!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-log-list{max-height:56px!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-log-list li{padding:3px 0!important;font-size:11px!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-command-grid{gap:7px!important;margin:4px 0!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-techniques{gap:7px!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-technique{min-height:86px!important;padding:8px!important;gap:2px!important}
+ #panel#panel.guild-menu[data-guild=combat] .arena-technique .guild-button{min-height:35px!important;padding:4px!important;font-size:13px!important}
+}
+#panel#panel.guild-menu[data-guild=podium] .castle-pedestal>h3,#panel#panel.guild-menu[data-guild=podium] .castle-pedestal>.castle-ranking-gold{color:#553a1e!important;text-shadow:none!important}
+/* Long labels and values use separate lines in narrow dashboard columns. */
+#panel#panel.guild-menu .castle-data-row{grid-template-columns:26px minmax(0,1fr)!important;gap:3px 8px!important;padding:8px 0!important;align-items:center!important}
+#panel#panel.guild-menu .castle-data-row>svg{grid-row:1/3;width:26px!important;height:28px!important}
+#panel#panel.guild-menu .castle-data-row strong{grid-column:2!important;text-align:left!important;font-size:13px!important;max-width:100%!important}
+#panel#panel.guild-menu .castle-data-row .castle-data-label{min-width:0!important;font-size:14px!important;word-break:normal!important;overflow-wrap:break-word!important}
+#panel#panel.guild-menu[data-guild=profile] .pp-portrait{height:130px!important}
+#panel#panel.guild-menu[data-guild=profile] .pp-columns>.pp-section:first-child h3{margin:10px auto 13px!important;justify-self:center}
+#panel#panel.guild-menu[data-guild=profile] .pp-section h3.guild-section-title{position:relative!important;isolation:isolate;background:none!important;border:0!important;padding:9px 25px!important;min-height:42px!important;display:grid;place-items:center}
+#panel#panel.guild-menu .guild-section-plaque{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;z-index:-1;pointer-events:none}
+@media(max-width:700px){#panel#panel.guild-menu[data-guild=profile] .pp-portrait{height:85px!important}}
+/* Dedicated production assets, independent of presentation mockups. */
+#panel#panel.guild-menu[data-guild] .guild-body .guild-paper .guild-item-card{position:relative!important;isolation:isolate;border:0!important;border-image:none!important;box-shadow:none!important;background:none!important}
+#panel#panel.guild-menu[data-guild] .guild-body .guild-paper img.guild-item-card-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;max-width:none!important;max-height:none!important;object-fit:fill!important;margin:0!important;padding:0!important;z-index:-1;pointer-events:none;filter:none!important;border:0!important;grid-column:auto!important;grid-row:auto!important}
+#panel#panel.guild-menu img.guild-forge-scene{object-fit:cover!important;object-position:50% 35%!important}
+#panel#panel.guild-menu img.guild-service-scene{object-fit:cover!important;object-position:50% 44%!important}
+#panel#panel.guild-menu img.guild-merchant-portrait{object-fit:contain!important;border:0!important;overflow:visible!important;border-radius:0!important}
+#panel#panel.guild-menu[data-guild=drinks] .realm-drinks .guild-item-card[data-selected=true]{outline:2px solid #ae823b!important;outline-offset:-5px}
+@media(min-width:701px){#panel#panel.guild-menu[data-guild=forge] img.guild-forge-scene{height:170px!important}}
+#panel#panel.guild-menu[data-guild=drinks] img.guild-service-scene{height:120px!important;object-position:50% 0%!important}
+#panel#panel.guild-menu[data-guild=forge] .realm-forge-compare .guild-item-card{padding-top:14px!important}
+#panel#panel.guild-menu[data-guild=drinks] .realm-drinks .guild-item-card{padding-bottom:10px!important}
+@media(max-width:700px){#panel#panel.guild-menu[data-guild=drinks] img.guild-service-scene{height:100px!important;object-position:50% 0%!important}}
