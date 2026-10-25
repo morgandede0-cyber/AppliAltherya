@@ -2,12 +2,13 @@ import type {Snapshot} from '../activity';
 import {node,assetSlice,trapMenu} from './menu-kit';
 import guide from './tutorial-guide.json';
 import './tutorial.css';
+import {fitReadingPanel} from './reading-layout';
 type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;done:()=>void;notify:(message:string)=>void};
 /** Twelve scene atlas frames, blank paper and live accessible controls. */
 export function openTutorial(panel:HTMLElement,host:Host){
  for(let i=1;i<=3;i++){const preload=new Image();preload.src='/assets/tutorial/wolf-scenes-'+i+'.png';}
  const saved=panel.getAttribute('style'),owner=host.state().save_owner;let dead=false,locked=false,error='',drawnStep=-1;
- function layout(){if(dead)return;const top=Math.max(8,(document.getElementById('hud')?.getBoundingClientRect().bottom??40)+8);panel.style.setProperty('--guide-top',top+'px');}
+ function layout(){if(dead)return;fitReadingPanel(panel,'guide');}
  const button=(label:string,fn:()=>void,disabled=false)=>{const b=document.createElement('button');b.type='button';b.className='mentor-button';b.disabled=locked||disabled;b.setAttribute('aria-label',label);const frame=assetSlice('/assets/tutorial/wolf-button.png',36,210,2100,295,2172,724);frame.setAttribute('preserveAspectRatio','none');b.append(frame,node('span','',label));b.onclick=()=>{if(!b.disabled)fn();};return b;};
  async function perform(action:string){if(locked||dead)return;locked=true;error='';const step=host.state().tutorial.step;draw();try{const message=await host.mutate({action,step});if(dead)return;if(message)host.notify(message);const t=host.state().tutorial;if((action==='tutorial_finish'||action==='tutorial_cancel')&&t.completed&&!t.replay){host.done();return;}}catch(e){error=e instanceof Error?e.message:String(e);}finally{locked=false;if(!dead){draw();panel.querySelector<HTMLButtonElement>('.mentor-primary:not(:disabled),button:not(:disabled)')?.focus({preventScroll:true});}}}
  function draw(){if(dead)return;const s=host.state(),t=s.tutorial;if(s.save_owner!==owner){host.done();return;}const index=Math.min(guide.length-1,Math.max(0,t.step)),page=guide[index],last=index===guide.length-1;const scroll=drawnStep===index?panel.querySelector('.mentor-copy')?.scrollTop??0:0;drawnStep=index;
