@@ -1,3 +1,4 @@
+import {applyStudio} from './studio-menu';
 import type {Snapshot} from '../activity';
 import {assetSlice} from './assets';
 import './guild-menu.css';
@@ -45,4 +46,5 @@ export function dressGuild(panel:HTMLElement,kind:string,state?:Snapshot){
  if(kind==='bank')for(const [i,slot]of Array.from(panel.querySelectorAll<HTMLElement>('.bank-account-art')).entries()){slot.style.background='none';slot.replaceChildren(assetSlice('/assets/realm/bank-accounts.png',i*887,0,887,887,1774,887));}
  if(kind.startsWith('market-')){const wallet=panel.querySelector('.approved-wallet');if(wallet&&!wallet.querySelector('.guild-merchant-portrait')){const art=guildImage('merchant-portrait-v2.png','guild-merchant-portrait');const value=document.createElement('span');value.className='guild-wallet-value';value.textContent=wallet.textContent;wallet.replaceChildren(art,value);}}
  if(kind==='drinks')for(const card of Array.from(panel.querySelectorAll<HTMLElement>('.realm-drinks .realm-card'))){const button=card.querySelector('button');card.dataset.selected=String(button?.getAttribute('aria-pressed')==='true');const drink=state?.tavern.drinks_catalog.find(d=>d.key===card.dataset.drink);card.classList.toggle('guild-locked',!!drink&&!drink.available);if(drink&&!drink.available&&!card.querySelector('.guild-lock')){const lock=document.createElement('img');lock.src='/assets/chronicles/status-lock.svg';lock.className='guild-lock';lock.alt='Verrouillée';card.append(lock);}}
+ applyStudio(panel,kind);
 }

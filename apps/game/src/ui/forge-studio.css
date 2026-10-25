@@ -1,0 +1,33 @@
+#panel#panel.studio-menu .sf-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+#panel#panel.studio-menu .sf-tabs .studio-button{width:100%;font-size:clamp(11px,2.6cqw,23px)!important;padding:3px 6px!important}
+#panel#panel.studio-menu .sf-tabs .studio-button[aria-pressed=true]{background:#044956a8!important;clip-path:inset(6% 3% 7% 3%);color:#ffe7b2!important}
+#panel#panel.studio-menu .sf-tabs svg{order:-1;width:22%;height:65%;max-width:28px;flex:none}
+#panel#panel.studio-menu .sf-tool{position:absolute;top:0;width:43.4%;height:100%;background:none!important;border:0!important;padding:0!important;text-align:center}
+#panel#panel.studio-menu .sf-tool>h3{position:absolute;top:0;left:-5%;width:110%;height:12%;display:grid;place-items:center;color:#3f2b16;font-size:clamp(11px,2.7cqw,23px);font-weight:600}
+#panel#panel.studio-menu .sf-tool .sf-tool-art{position:absolute!important;top:15%!important;left:8%!important;width:84%!important;height:60%!important;max-width:none!important;max-height:none!important}
+#panel#panel.studio-menu .sf-tool-name{position:absolute;top:77%;left:-4%;width:108%;height:13%;display:grid;place-items:center;color:#32200e;font-size:clamp(11px,2.5cqw,22px);line-height:1.1}
+#panel#panel.studio-menu .sf-tool-copy{position:absolute;top:93%;left:-7%;width:114%;height:10%;color:#513a21;font-size:clamp(9px,1.9cqw,16px);line-height:1.1}
+#panel#panel.studio-menu :is(.sf-materials-heading,.sf-cost-heading){display:grid;place-items:center;font-size:clamp(12px,2.7cqw,23px);font-weight:600;color:#3f2b16;text-align:center}
+#panel#panel.studio-menu .sf-materials{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5%;overflow:visible}
+#panel#panel.studio-menu .sf-material{position:relative;text-align:center;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px}
+#panel#panel.studio-menu .sf-material>svg{width:88%;height:54%;max-width:none;flex:none}
+#panel#panel.studio-menu .sf-material-name{font-size:clamp(9px,2.1cqw,18px);line-height:1.05;min-height:1.1em;width:100%}
+#panel#panel.studio-menu .sf-material strong{font-size:clamp(11px,2.5cqw,21px);font-weight:600}
+#panel#panel.studio-menu .sf-material .missing{color:#b42715}#panel#panel.studio-menu .sf-material .enough{color:#20512c}
+#panel#panel.studio-menu :is(.sf-cost,.sf-level){display:grid;place-items:center;font-size:clamp(11px,2.6cqw,22px);color:#3b2918;text-align:center}
+#panel#panel.studio-menu .sf-cost{font-weight:600}#panel#panel.studio-menu .sf-upgrade{font-size:clamp(16px,4cqw,34px)!important;font-weight:600!important}
+#panel#panel.studio-menu .sf-max{grid-column:1/-1;display:grid;place-items:center;font-size:clamp(12px,2.6cqw,22px);text-align:center}
+#panel#panel.studio-menu .sf-guide{font-size:clamp(14px,3cqw,25px)!important;opacity:.75}
+#panel#panel.studio-menu .sf-tool>h3{font-size:clamp(10px,2.2cqw,19px)!important}
+#panel#panel.studio-menu .sf-material{position:relative!important;display:block!important;height:100%!important}
+#panel#panel.studio-menu .sf-material>svg{position:absolute!important;left:6%;top:1%;width:88%!important;height:55%!important}
+#panel#panel.studio-menu .sf-material-name{position:absolute;left:0;top:58%;width:100%;height:20%;display:grid;place-items:center;font-size:clamp(9px,1.9cqw,17px)!important}
+#panel#panel.studio-menu .sf-material>strong{position:absolute;left:0;top:80%;width:100%;height:18%;font-size:clamp(10px,2.3cqw,20px)!important}
+#panel#panel.studio-menu .sf-cost-heading{font-size:clamp(12px,2.4cqw,21px)!important}
+/* Keep captions inside their wells, clear of the engraved rules. */
+#panel#panel.studio-menu .sf-tool .sf-tool-art{top:14%!important;height:56%!important}
+#panel#panel.studio-menu .sf-tool-name{top:71%}
+#panel#panel.studio-menu .sf-tool-copy{top:88%}
+#panel#panel.studio-menu .sf-material-name{top:52%}
+#panel#panel.studio-menu .sf-material>strong{top:71%;font-size:clamp(10px,2.1cqw,18px)!important}
+@container(max-width:350px){#panel#panel.studio-menu .sf-tool>h3{font-size:9px!important;white-space:nowrap}}

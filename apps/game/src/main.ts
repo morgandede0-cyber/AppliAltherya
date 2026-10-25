@@ -129,3 +129,6 @@ import './ui/realm-theme.css';
 
 // Approved guild skins are the final layer, scoped to their live menus.
 import './ui/guild-menu.css';
+
+import './ui/studio-menu.css';
+import './ui/forge-studio.css';

@@ -1,0 +1,122 @@
+[
+  {
+    "path": "apps/game/public/assets/studio/arena.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "612a85529f34f36f430ac2003f09e83c9f4e83d0c69067aeccfc78b58b7d46a4",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/bank.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "ce754a6a02ae4b1370d963db29fba6bda2b967cd58ef21cc78b3a147f151f472",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/combat.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "0a8b87abcc9f70fde05efe16f7c391931fc474864f327c684aaae76decd57974",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/common-plain.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "a7b5903add3c2ce0c899aad0ee79f0cfe291db4448dda033e2edde7da9a11f72",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/common.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "30315a47691c177fb023b15b54fd2762c779cf9d9b3abf698a169d84e7cbc99a",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/drinks.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "19a3f62439ab53590a52dcb00a94f52acb3cc4b7dbb3add070b52fbe6c8392f8",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/forge.png",
+    "width": 1087,
+    "height": 1447,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "f021e72c090255804cdb3de433711eaeb52ec0578c123f37b5e09c85b23786f6",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/games.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "863d5a7a17ed0633159bfcaf068895286b21d8870b3c755a36bfb912b3e9dbff",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/merchant.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "4d1cbbe05740fd61d1d3ac71bfcea75029abb589d9fe4b7ff54409804376cd25",
+    "generation_mode": "imagegen intégré — édition de référence"
+  },
+  {
+    "path": "apps/game/public/assets/studio/profile.png",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "7e30aa0780a913988e7e77415c968c2960aeaed77c1fb75a65eba07004b94867",
+    "generation_mode": "imagegen intégré — édition de référence"
+  }
+]

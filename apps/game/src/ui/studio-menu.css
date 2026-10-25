@@ -1,0 +1,283 @@
+@font-face{font-family:AltheryaSerif;src:url('/assets/studio/AltheryaSerif.ttf') format('truetype');font-display:swap;font-style:normal;font-weight:100 900;}
+/* Single-surface compositions. No guild/realm/arena skin is inherited by this root. */
+#panel#panel.studio-menu{position:fixed!important;inset:var(--book-top,72px) auto auto 50%!important;transform:translateX(-50%)!important;width:min(790px,var(--reading-width,96vw),calc(var(--reading-height,85dvh)*.75))!important;height:auto!important;aspect-ratio:3/4!important;max-height:none!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;border-image:none!important;background:none!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;color:#3e2917!important;font:16px/1.2 AltheryaSerif,serif!important;container-type:inline-size!important;isolation:isolate}
+#panel#panel.studio-menu[hidden]{display:none!important}#panel#panel.studio-menu::before,#panel#panel.studio-menu::after{display:none!important}
+#panel#panel.studio-menu *{box-sizing:border-box}#panel#panel.studio-menu [hidden]{display:none!important}
+#panel#panel.studio-menu .studio-stage{position:absolute;inset:0;isolation:isolate}
+#panel#panel.studio-menu .studio-template{position:absolute;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none;object-fit:fill;filter:drop-shadow(0 10px 14px #0008)}
+#panel#panel.studio-menu .studio-contents{display:contents!important;background:none!important;border:0!important;border-image:none!important;box-shadow:none!important;padding:0!important;margin:0!important}
+#panel#panel.studio-menu .studio-position{position:absolute!important;inset:auto;transform:none!important;margin:0!important;padding:0!important;min-height:0!important;min-width:0!important;max-height:none!important;max-width:none!important;border:0!important;border-image:none!important;background:none!important;box-shadow:none!important}
+#panel#panel.studio-menu .studio-hidden-heading{display:none!important}
+#panel#panel.studio-menu :is(h2,h3,p,span,strong,small,label,button,input,output){font-family:AltheryaSerif,serif!important;letter-spacing:normal!important;text-shadow:none!important}
+#panel#panel.studio-menu :is(h2,h3,p){margin:0;line-height:1.18}
+#panel#panel.studio-menu .studio-title{display:grid;place-items:center;font:normal clamp(21px,4.8cqw,40px)/1 AltheryaSerif!important;color:#f2d6a1!important;text-align:center;text-transform:uppercase;text-shadow:0 1px 2px #000!important;white-space:normal}
+#panel#panel.studio-menu .studio-button{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;height:100%;padding:2px 6px!important;border:0!important;border-image:none!important;box-shadow:none!important;background:none!important;border-radius:0!important;font:normal clamp(11px,2.6cqw,23px)/1.1 AltheryaSerif,serif!important;color:#f2dbad!important;text-align:center;white-space:normal;cursor:pointer;overflow-wrap:normal}
+#panel#panel.studio-menu .studio-button:disabled{color:#a5a38a!important;cursor:default;opacity:.7}
+#panel#panel.studio-menu .studio-button:focus-visible{outline:2px solid #e9bf67!important;outline-offset:2px}
+#panel#panel.studio-menu .studio-button:hover:not(:disabled){filter:brightness(1.2);text-shadow:0 0 8px #eac48666!important}
+#panel#panel.studio-menu .studio-button:after{content:'';position:absolute;inset:-3px;min-height:30px}
+#panel#panel.studio-menu .studio-sr{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+#panel#panel.studio-menu .studio-notice{color:#f3dbab;background:#102b2ae8!important;text-align:center;display:grid;place-items:center;font-size:clamp(10px,1.8cqw,15px);z-index:5}
+#panel#panel.studio-menu :is(.realm-grid,.realm-commerce-grid,.pp-inventory){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+#panel#panel.studio-menu :is(.realm-card,.realm-product,.pp-item,.castle-group){border:0!important;border-image:none!important;box-shadow:none!important;background:none!important;padding:5px;min-width:0}
+#panel#panel.studio-menu .studio-return{display:flex;align-items:center;justify-content:center}
+#panel#panel.studio-menu .studio-return>.studio-button{width:100%;height:100%}
+#panel#panel.studio-menu .studio-flow{overflow:auto!important;scrollbar-width:thin;scrollbar-color:#a78045 transparent;font-size:clamp(11px,2.3cqw,19px)}
+#panel#panel.studio-menu .studio-flow :is(h3,h4){font-size:clamp(14px,2.8cqw,24px);text-align:center;margin:5px 0 8px;color:#50361c}
+#panel#panel.studio-menu .studio-flow p{color:#634927;font-size:inherit;margin:5px 0}
+#panel#panel.studio-menu .studio-flow .guild-paper{min-height:100%;padding:2px}
+#panel#panel.studio-menu .studio-flow .studio-button{min-height:32px;height:auto;background:url('/assets/guild/button.png') center/100% 100% no-repeat!important;font-size:clamp(10px,2cqw,17px)!important;padding:8px 12px!important}
+#panel#panel.studio-menu .studio-flow-footer{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+#panel#panel.studio-menu .studio-flow-footer>.studio-button{flex:1 1 40%;height:40%;font-size:clamp(11px,2.2cqw,19px)!important}
+#panel#panel.studio-menu .studio-flow-footer>.studio-button:last-child{flex:1 1 100%;max-width:70%;height:37%;margin:auto}
+#panel#panel.studio-menu :is(.approved-card-fill,.approved-portrait-ring,.approved-nameplate,.approved-button-fill,.approved-heading-divider,.predator-frame){display:none!important}
+#panel#panel.studio-menu :is(.merchant-modal,.arena-confirm){position:absolute!important;inset:15% 10%!important;z-index:30;display:grid!important;place-items:center;background:#e9d1a9!important;border:3px double #9c7b42!important;padding:18px!important;overflow:auto!important;color:#493119!important}
+#panel#panel.studio-menu .merchant-modal .realm-trade-dialog{position:static!important;transform:none!important;width:100%!important;max-width:100%;background:none!important;border:0!important;padding:10px!important;text-align:center}
+#panel#panel.studio-menu .merchant-modal svg{width:90px;height:90px;max-width:100%}
+#panel#panel.studio-menu .merchant-modal .realm-trade-actions{display:flex;gap:8px;justify-content:center;margin-top:10px}
+#panel#panel.studio-menu .merchant-modal .studio-button,#panel#panel.studio-menu .arena-confirm .studio-button{min-height:40px;background:url('/assets/guild/button.png') center/100% 100% no-repeat!important;flex:1;padding:8px 15px!important}
+#panel#panel.studio-menu .merchant-status{position:absolute!important;inset:12% 16% auto!important;z-index:25;text-align:center;background:#16312ae8!important;color:#efd5a2;padding:5px!important;font-size:clamp(11px,2cqw,16px)}
+@media(max-width:600px){#panel#panel.studio-menu{width:min(var(--reading-width,96vw),calc(var(--reading-height,85dvh)*.75))!important}#panel#panel.studio-menu .studio-button{font-size:clamp(10px,2.7cqw,15px)!important}#panel#panel.studio-menu .studio-title{font-size:clamp(17px,4.5cqw,25px)!important}}
+@media(prefers-reduced-motion:reduce){#panel#panel.studio-menu *{animation:none!important;transition:none!important}}
+/* Bank: controls align with the engraved account and transfer areas. */
+#panel#panel.studio-menu #bank-polished .studio-bank-accounts{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8%!important}
+#panel#panel.studio-menu #bank-polished .bank-account{position:relative!important;inset:auto!important;display:block!important;min-width:0!important;border:0!important;background:none!important;padding:0!important}
+#panel#panel.studio-menu #bank-polished .bank-account h3{position:absolute!important;top:0!important;left:0;width:100%;height:12%;font-size:clamp(12px,3.2cqw,27px)!important;text-align:center;color:#49301a!important}
+#panel#panel.studio-menu #bank-polished .bank-account-art{display:none!important}
+#panel#panel.studio-menu #bank-polished .guild-balance-plaque{position:absolute!important;top:73%!important;left:-4%;width:108%!important;height:24%!important;padding:0!important;display:grid;place-items:center}
+#panel#panel.studio-menu #bank-polished .bank-account output{position:static!important;font:normal clamp(12px,3.5cqw,30px)/1 AltheryaSerif!important;color:#f7e0aa!important;padding:0!important;background:none!important;border:0!important;text-align:center}
+#panel#panel.studio-menu #bank-polished .studio-bank-transfer>h3{position:absolute!important;top:0;left:5%;width:90%;height:6%;font-size:clamp(13px,3.0cqw,26px)!important;text-align:center;color:#48301a}
+#panel#panel.studio-menu #bank-polished .bank-mode-tabs{position:absolute!important;top:9%!important;left:3%!important;width:94%!important;height:11%!important;display:flex!important;gap:2%!important;margin:0!important}
+#panel#panel.studio-menu #bank-polished .bank-mode-tabs>.studio-button{width:49%;height:100%;font-size:clamp(12px,3.1cqw,27px)!important}
+#panel#panel.studio-menu #bank-polished .bank-mode-tabs>[aria-selected=true]{background:#064b52a8!important;clip-path:inset(7% 2%)}
+#panel#panel.studio-menu #bank-polished .bank-transfer-form{position:absolute!important;top:25%!important;left:0!important;width:100%!important;height:75%!important;display:block!important;padding:0!important;margin:0!important;background:none!important;border:0!important}
+#panel#panel.studio-menu #bank-polished .bank-transfer-form[hidden]{display:none!important}
+#panel#panel.studio-menu #bank-polished .bank-amount-label{position:absolute;inset:0!important;width:100%!important;height:28%!important;text-align:center;display:block!important;font:clamp(12px,2.5cqw,22px) AltheryaSerif!important;color:#51371f}
+#panel#panel.studio-menu #bank-polished .guild-bank-amount{position:absolute!important;top:30%!important;left:20%!important;width:60%!important;height:70%!important;display:flex!important;align-items:stretch!important;justify-content:space-between!important;gap:3%!important;margin:0!important}
+#panel#panel.studio-menu #bank-polished .guild-bank-amount>input{order:1;position:static!important;width:62%!important;height:100%!important;max-width:none!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;font:clamp(18px,4.3cqw,36px) AltheryaSerif!important;color:#3e2915!important;text-align:center}
+#panel#panel.studio-menu #bank-polished .guild-bank-amount>.studio-button{width:16%!important;min-height:0!important;padding:0!important;font-size:clamp(10px,2cqw,16px)!important}
+#panel#panel.studio-menu #bank-polished .guild-bank-amount>.studio-button:last-child{order:2}
+#panel#panel.studio-menu #bank-polished .presets{position:absolute!important;left:20%!important;top:31%!important;width:60%!important;height:13%!important;display:flex!important;gap:5%!important;margin:0!important}
+#panel#panel.studio-menu #bank-polished .presets>.studio-button{width:30%;height:100%;font-size:clamp(12px,2.8cqw,24px)!important}
+#panel#panel.studio-menu #bank-polished .bank-preview{position:absolute!important;top:45%!important;left:3%!important;width:94%!important;height:5%!important;font-size:clamp(9px,1.6cqw,14px)!important;text-align:center;color:#664a28!important;padding:0!important;border:0!important;margin:0!important}
+#panel#panel.studio-menu #bank-polished .fee-note{position:absolute!important;top:70%!important;left:5%!important;width:90%!important;font-size:clamp(9px,1.6cqw,14px)!important;text-align:center;min-height:0!important;margin:0!important}
+#panel#panel.studio-menu #bank-polished .confirm{position:absolute!important;left:14%!important;top:51%!important;width:72%!important;height:21%!important;font-size:clamp(14px,3.8cqw,32px)!important}
+#panel#panel.studio-menu .studio-bank-status{font-size:clamp(10px,1.8cqw,15px);text-align:center;color:#563b1d}
+/* Merchant: one header, three modes, four integrated wells. */
+#panel#panel.studio-menu .studio-wallet{display:grid;place-items:center;font-size:clamp(13px,3cqw,26px);text-align:center;color:#472f18}
+#panel#panel.studio-menu .studio-modes,#panel#panel.studio-menu .studio-small-tabs{display:flex;align-items:stretch;gap:2px;justify-content:center}
+#panel#panel.studio-menu .studio-modes>.studio-button{width:33.333%;height:100%;font-size:clamp(12px,3cqw,26px)!important}
+#panel#panel.studio-menu .studio-modes>.studio-button[aria-pressed=true]{background:#054851c4!important;clip-path:inset(6% 3%)}
+#panel#panel.studio-menu .studio-modes>.studio-button[aria-pressed=false]{background:#48301bb0!important;clip-path:inset(6% 3%)}
+#panel#panel.studio-menu .studio-small-tabs>.studio-button{flex:1;font-size:clamp(9px,1.8cqw,15px)!important;color:#51351b!important;height:100%;padding:1px 3px!important}
+#panel#panel.studio-menu .studio-small-tabs>.studio-button[aria-selected=true],#panel#panel.studio-menu .studio-small-tabs>.studio-button[aria-pressed=true]{text-decoration:underline;text-underline-offset:3px;color:#a36a20!important}
+#panel#panel.studio-menu .studio-products{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:1fr 1fr!important;gap:3% 4%!important;min-height:0!important}
+#panel#panel.studio-menu .studio-products .realm-product{position:relative!important;display:block!important;width:auto!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;background:none!important;border:0!important;box-shadow:none!important}
+#panel#panel.studio-menu .studio-products .realm-item-icon{position:absolute;left:4%;top:9%;width:42%;height:64%;display:grid;place-items:center}
+#panel#panel.studio-menu .studio-products .realm-item-icon>svg{width:100%!important;height:100%!important;max-width:none!important}
+#panel#panel.studio-menu .studio-products .realm-item-info{position:absolute;left:47%;top:9%;width:48%;height:62%;display:flex;flex-direction:column;justify-content:center;gap:3px}
+#panel#panel.studio-menu .studio-products h3{font:600 clamp(11px,2.5cqw,21px)/1.12 AltheryaSerif!important;color:#35220f!important;margin:0!important}
+#panel#panel.studio-menu .studio-products :is(p,small,.merchant-chapter){font:clamp(9px,1.9cqw,16px)/1.15 AltheryaSerif!important;color:#5d4020!important;margin:0!important}
+#panel#panel.studio-menu .studio-products .realm-product>.studio-button{position:absolute!important;left:21%;top:77%;width:72%;height:19%;font-size:clamp(11px,2.6cqw,23px)!important;padding:0!important}
+#panel#panel.studio-menu .native-empty{position:absolute;inset:12%;display:grid;place-items:center;font-size:clamp(11px,2.3cqw,20px);text-align:center;color:#8f744b}
+#panel#panel.studio-menu .studio-pager{display:flex;align-items:center;justify-content:space-between;gap:8%;font-size:clamp(12px,2.5cqw,21px)}
+#panel#panel.studio-menu .studio-pager>.studio-button{width:20%;height:100%;font-size:0!important}
+#panel#panel.studio-menu .studio-pager>.native-page-label{order:1;flex:1;text-align:center;white-space:nowrap}
+#panel#panel.studio-menu .studio-pager>.studio-button:nth-child(2){order:2}
+/* Drinks and games have separate illustrations and native selection areas. */
+#panel#panel.studio-menu[data-studio=drinks] .studio-small-tabs>.studio-button{color:#eacb8d!important}
+#panel#panel.studio-menu .studio-drinks{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:3% 4%}
+#panel#panel.studio-menu .studio-drinks .realm-card{position:relative;display:block;padding:0!important;min-height:0!important;text-align:center}
+#panel#panel.studio-menu .studio-drinks .realm-card>svg{position:absolute;left:9%;top:5%;width:82%;height:75%;max-width:none}
+#panel#panel.studio-menu .studio-drinks h3{position:absolute;left:3%;bottom:5%;width:94%;font-size:clamp(11px,2.7cqw,23px)!important;font-weight:400;color:#432d18!important;margin:0!important;text-align:center}
+#panel#panel.studio-menu .studio-drinks .studio-button{position:absolute!important;inset:0!important;width:100%;height:100%;opacity:0;z-index:2}
+#panel#panel.studio-menu .studio-drinks .realm-card:focus-within{outline:2px solid #b38a45;outline-offset:-4px}
+#panel#panel.studio-menu .studio-drinks .guild-locked>svg{filter:grayscale(1);opacity:.55}
+#panel#panel.studio-menu .guild-lock{position:absolute;right:5%;top:7%;width:10%;height:15%;opacity:.7}
+#panel#panel.studio-menu .studio-drink-order{display:block!important}
+#panel#panel.studio-menu .studio-drink-order h3{position:absolute;left:5%;top:8%;width:90%;height:27%;color:#efd6a2!important;font-size:clamp(12px,2.9cqw,25px)!important;text-align:center;display:grid;place-items:center}
+#panel#panel.studio-menu .studio-drink-order>.studio-button{position:absolute!important;left:20%;top:48%;width:60%;height:45%;font-size:clamp(16px,3.8cqw,32px)!important}
+#panel#panel.studio-menu .studio-drink-count{font-size:clamp(9px,1.6cqw,14px);text-align:center;color:#624727}
+#panel#panel.studio-menu .studio-game{display:block!important;text-align:center}
+#panel#panel.studio-menu .studio-game>h3{position:absolute;left:0;top:1%;width:100%;height:26%;font-size:clamp(12px,3cqw,26px)!important;display:grid;place-items:center;color:#35240f}
+#panel#panel.studio-menu .studio-game>p{position:absolute;left:0;top:36%;width:100%;height:20%;font-size:clamp(10px,2.2cqw,19px)!important;color:#654824;display:grid;place-items:center}
+#panel#panel.studio-menu .studio-game>.studio-button{position:absolute!important;left:11%;top:63%;width:86%;height:34%;font-size:clamp(14px,3.4cqw,28px)!important}
+/* Arena lobby and combat keep the authoritative state machine. */
+#panel#panel.studio-menu .studio-arena-duel,#panel#panel.studio-menu .studio-fighters{display:grid!important;grid-template-columns:1fr 1fr!important;gap:18%!important;background:none!important}
+#panel#panel.studio-menu :is(.arena-lobby-versus,.arena-lobby-fighter>small){display:none!important}
+#panel#panel.studio-menu .arena-lobby-fighter{position:relative;min-width:0;height:100%;padding:0!important;background:none!important;border:0!important}
+#panel#panel.studio-menu .arena-portrait{position:absolute!important;inset:0 6% auto!important;width:88%!important;height:78%!important;margin:0!important;padding:0!important;border:0!important;border-image:none!important;box-shadow:none!important;border-radius:50%!important;overflow:hidden!important;background:#153237!important;display:grid;place-items:center;color:#f1d9a0;font-size:clamp(25px,6cqw,50px)}
+#panel#panel.studio-menu .arena-portrait>img,#panel#panel.studio-menu .arena-portrait>svg:not(.arena-skin-icon){position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#panel#panel.studio-menu .arena-lobby-fighter h3{position:absolute;left:-6%;top:83%;width:112%;height:15%;font-size:clamp(11px,2.6cqw,22px)!important;text-align:center;color:#442d15;display:grid;place-items:center}
+#panel#panel.studio-menu .arena-lobby-fighter>p{position:absolute;left:0;top:101%;width:100%;font-size:clamp(10px,2cqw,17px);text-align:center}
+#panel#panel.studio-menu :is(.studio-arena-hint,.studio-arena-totals,.studio-availability){display:grid;place-items:center;text-align:center;font-size:clamp(9px,1.8cqw,16px);color:#543a1e}
+#panel#panel.studio-menu .studio-wager{display:block!important;border:0!important;background:none!important;color:#f1d6a1!important}
+#panel#panel.studio-menu .wager-heading{position:absolute;left:4%;top:0;width:92%;height:17%;display:flex;align-items:center;justify-content:space-between;font-size:clamp(11px,2.5cqw,22px)}
+#panel#panel.studio-menu .wager-heading>span{font-size:clamp(9px,1.7cqw,15px)}
+#panel#panel.studio-menu .wager-controls{position:absolute;left:0;top:17.5%;width:100%;height:40%;margin:0!important;display:block!important}
+#panel#panel.studio-menu .wager-controls>input{position:absolute;left:27%;top:0;width:34%;height:100%;font:clamp(18px,4.5cqw,38px) AltheryaSerif!important;text-align:center;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;color:#f4ddb0}
+#panel#panel.studio-menu .wager-controls>span{position:absolute;left:61%;top:0;width:14%;height:100%;display:grid;place-items:center;font-size:clamp(11px,2.6cqw,22px)}
+#panel#panel.studio-menu .wager-controls>.studio-button{position:absolute!important;top:0;width:15%;height:100%;font-size:0!important}
+#panel#panel.studio-menu .wager-controls>.studio-button:first-child{left:13%}#panel#panel.studio-menu .wager-controls>.studio-button:last-child{left:79%}
+#panel#panel.studio-menu .wager-presets{position:absolute;left:4%;top:64%;width:92%;height:23%;display:flex;gap:3%;margin:0!important}
+#panel#panel.studio-menu .wager-presets>.studio-button{flex:1;font-size:clamp(10px,2.2cqw,19px)!important}
+#panel#panel.studio-menu .wager-status{position:absolute;left:5%;top:90%;width:90%;font-size:clamp(8px,1.5cqw,13px);text-align:center;color:#f0ce94;margin:0!important}
+#panel#panel.studio-menu .studio-arena-primary{font-size:clamp(15px,3.7cqw,32px)!important}
+#panel#panel.studio-menu .studio-arena-footer{display:flex;flex-wrap:wrap;gap:3%;justify-content:center}
+#panel#panel.studio-menu .studio-arena-footer>.studio-button{width:48%;height:43%;font-size:clamp(11px,2.5cqw,22px)!important}
+#panel#panel.studio-menu .studio-arena-footer>.studio-button[aria-label="Retour en ville"]{position:absolute!important;left:19%;bottom:0;width:62%;height:46%}
+#panel#panel.studio-menu .studio-recent{font-size:clamp(9px,1.7cqw,15px);text-align:center;z-index:8}
+#panel#panel.studio-menu .studio-recent>summary{cursor:pointer}
+#panel#panel.studio-menu .studio-recent[open]{height:auto!important;background:#efd9b0!important;padding:8px!important;border:1px solid #9d7d43!important}
+#panel#panel.studio-menu .studio-fighters .arena-fighter{position:relative!important;display:block!important;border:0!important;border-image:none!important;background:none!important;box-shadow:none!important;padding:0!important;min-height:0!important}
+#panel#panel.studio-menu .studio-fighters .arena-portrait{inset:0 8% auto!important;width:84%!important;height:78%!important}
+#panel#panel.studio-menu .arena-fighter-copy{position:absolute;inset:0;pointer-events:none}
+#panel#panel.studio-menu .arena-fighter-name{position:absolute;left:-8%;top:83%;width:116%;height:16%;display:grid;place-items:center;font-size:clamp(11px,2.5cqw,22px)!important;text-align:center;line-height:1.05;min-height:0!important;margin:0!important;color:#efd7a1}
+#panel#panel.studio-menu .arena-fighter .arena-eyebrow,#panel#panel.studio-menu .arena-statuses:empty{display:none}
+#panel#panel.studio-menu .arena-hp{position:absolute;left:7%;top:74%;width:86%;height:7%;margin:0!important;border:1px solid #c99c45;border-radius:8px;background:#18201c;overflow:hidden}
+#panel#panel.studio-menu .arena-hp-fill{height:100%;background:linear-gradient(#db5350,#a7201d)}
+#panel#panel.studio-menu .arena-hp-value{position:absolute;left:8%;top:68%;width:84%;font-size:clamp(9px,1.9cqw,16px);text-align:center;color:#fbe0aa}
+#panel#panel.studio-menu .arena-statuses{position:absolute;left:0;top:99%;width:100%;font-size:clamp(8px,1.6cqw,14px)}
+#panel#panel.studio-menu .studio-combat-top{display:flex;align-items:center;justify-content:space-between;font-size:clamp(9px,1.8cqw,16px);color:#624626}
+#panel#panel.studio-menu .studio-intent{display:grid;grid-template-columns:1fr;place-content:center;text-align:center}
+#panel#panel.studio-menu .studio-intent>.arena-eyebrow{display:none}
+#panel#panel.studio-menu .studio-intent>h3{font-size:clamp(12px,2.8cqw,24px);color:#942d20}
+#panel#panel.studio-menu .guild-combat-notes{font-size:clamp(9px,1.7cqw,15px);color:#6b4a27}
+#panel#panel.studio-menu .guild-combat-notes[open]{position:absolute;inset:0;z-index:10;background:#edd3a8;padding:8px;overflow:auto}
+#panel#panel.studio-menu .studio-log{display:block!important;padding:6px 10px!important;background:none!important;border:0!important}
+#panel#panel.studio-menu .studio-log>h3{font-size:clamp(13px,3cqw,26px);text-align:center;color:#4d3219;margin:0 0 5px!important}
+#panel#panel.studio-menu .arena-log-list{max-height:75%!important;height:75%;overflow:auto;list-style:none;padding:0!important;margin:0!important;scrollbar-width:thin;color:#53391f}
+#panel#panel.studio-menu .arena-log-list li{display:flex;gap:7px;border-bottom:1px solid #ae8b4d33;font-size:clamp(9px,1.9cqw,17px);padding:3px 0;color:#53391f}
+#panel#panel.studio-menu .studio-techniques{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:1fr 1fr!important;gap:10% 5%!important}
+#panel#panel.studio-menu .arena-technique{position:relative;display:block!important;padding:0!important;margin:0!important;min-width:0;min-height:0!important;border:0!important;background:none!important}
+#panel#panel.studio-menu .arena-technique>.studio-button{position:absolute!important;inset:0;width:100%;height:100%;padding:0!important;display:block!important}
+#panel#panel.studio-menu .arena-technique .arena-skin-icon{position:absolute;left:4%;top:18%;width:27%;height:60%;max-width:none}
+#panel#panel.studio-menu .arena-technique-name{position:absolute;left:33%;top:12%;width:62%;height:40%;display:grid;place-items:center;font-size:clamp(11px,2.6cqw,23px)!important;text-align:center}
+#panel#panel.studio-menu .arena-technique-values{position:absolute;left:33%;top:58%;width:62%;font-size:clamp(8px,1.7cqw,15px);text-align:center;color:#f1d8a5;pointer-events:none}
+#panel#panel.studio-menu .arena-values-full{display:none!important}#panel#panel.studio-menu .arena-values-compact{display:block!important}
+#panel#panel.studio-menu .arena-technique-availability{position:absolute;left:33%;top:77%;width:62%;font-size:clamp(8px,1.6cqw,14px);text-align:center;color:#c3a271;pointer-events:none}
+#panel#panel.studio-menu .arena-technique-availability.ready{display:block!important;color:#a6d68b}
+#panel#panel.studio-menu .studio-combat-footer{display:flex;flex-wrap:wrap;gap:2% 5%;justify-content:center}
+#panel#panel.studio-menu .studio-combat-footer>.studio-button{width:47%;height:54%;font-size:clamp(10px,2.2cqw,19px)!important}
+#panel#panel.studio-menu .studio-combat-footer>.studio-button:last-child:nth-child(odd){height:35%;font-size:clamp(9px,1.8cqw,15px)!important}
+#panel#panel.studio-menu .studio-result{background:#ecd0a3!important;border:2px solid #ae8348!important;padding:10px!important;overflow:auto!important;text-align:center;font-size:clamp(10px,2cqw,17px)}
+#panel#panel.studio-menu .studio-result>h2{font-size:clamp(20px,4.5cqw,38px);color:#72341e}
+#panel#panel.studio-menu .studio-result :is(.arena-result-awards,.arena-result-stats){display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#panel#panel.studio-menu .studio-technique-help{background:#ecd3a9!important;border:2px double #aa8147!important;padding:12px!important;overflow:auto!important;z-index:10;font-size:clamp(11px,2cqw,17px)}
+#panel#panel.studio-menu .studio-flow-footer{display:block!important}
+#panel#panel.studio-menu .studio-flow-footer>.studio-button{position:absolute!important;top:0;left:0;width:48%;height:27%;font-size:clamp(11px,2.3cqw,20px)!important}
+#panel#panel.studio-menu .studio-flow-footer>.studio-button:nth-child(2){left:52%}
+#panel#panel.studio-menu .studio-flow-footer>.studio-button:last-child{top:auto;bottom:0;left:18%;width:64%;max-width:none;height:26%;margin:0}
+/* Player identity uses the printed ring, plaques and equipment sockets. */
+#panel#panel.studio-menu .studio-profile-identity{display:block!important;background:none!important;border:0!important;padding:0!important}
+#panel#panel.studio-menu .studio-profile-identity .pp-portrait{position:absolute!important;left:0;top:0;width:35.5%!important;height:88%!important;margin:0;border:0!important;border-radius:50%!important;overflow:hidden;background:#153238;display:grid;place-items:center;color:#ebd3a0;font-size:clamp(20px,5cqw,42px)}
+#panel#panel.studio-menu .pp-portrait>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#panel#panel.studio-menu .studio-profile-identity .pp-identity-text{position:absolute;left:43%;top:0;width:57%;height:100%}
+#panel#panel.studio-menu .pp-identity-text>.pp-name{position:absolute;top:26%;left:0;width:100%;height:26%;display:grid;place-items:center;text-align:center;font:normal clamp(10px,2.4cqw,21px)/1.05 AltheryaSerif!important;margin:0!important;color:#3d2915}
+#panel#panel.studio-menu .pp-identity-text>.pp-level{position:absolute;top:51%;left:0;width:100%;height:13%;text-align:center;font-size:clamp(10px,2.2cqw,19px);margin:0!important;color:#54381c}
+#panel#panel.studio-menu .pp-identity-text>progress{position:absolute;top:65%;left:0;width:100%;height:12%;appearance:none;border:0;background:transparent}
+#panel#panel.studio-menu .pp-identity-text>progress::-webkit-progress-bar{background:transparent}#panel#panel.studio-menu .pp-identity-text>progress::-webkit-progress-value{background:linear-gradient(#edc46c,#b67d25);border-radius:8px}
+#panel#panel.studio-menu .pp-identity-text>.pp-xp{position:absolute;top:80%;right:0;width:100%;height:10%;text-align:right;font-size:clamp(9px,1.9cqw,16px);margin:0!important;color:#573b1e}
+#panel#panel.studio-menu .studio-profile-fortune{display:block!important}
+#panel#panel.studio-menu .studio-profile-fortune>h3{position:absolute;left:13%;top:-15%;width:74%;height:22%;font-size:clamp(13px,3.3cqw,28px);text-align:center;color:#f5dbaa!important}
+#panel#panel.studio-menu .studio-profile-fortune>.pp-row{position:absolute;left:2%;top:27%;width:43%;height:50%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;border:0;padding:0;font-size:clamp(12px,2.9cqw,25px);color:#54391b}
+#panel#panel.studio-menu .studio-profile-fortune>.pp-row:last-child{left:55%}
+#panel#panel.studio-menu .studio-profile-fortune strong{font:normal clamp(13px,3.3cqw,28px) AltheryaSerif!important;color:#3b2714}
+#panel#panel.studio-menu .studio-profile-equipment>h3{position:absolute;left:14%;top:0;width:72%;height:21%;font-size:clamp(13px,3.3cqw,28px);text-align:center;color:#f5dbaa!important}
+#panel#panel.studio-menu .studio-profile-equipment .pp-tools{position:absolute;left:0;top:31%;width:100%;height:66%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6%}
+#panel#panel.studio-menu .studio-profile-equipment .pp-tool{position:relative;padding:0!important;background:none!important;border:0!important}
+#panel#panel.studio-menu .studio-profile-equipment .pp-tool>svg{position:absolute;inset:4%;width:92%!important;height:90%!important;max-width:none!important}
+#panel#panel.studio-menu .pp-tool>.pp-missing{position:absolute;inset:0;width:100%;height:100%;border:0!important;display:grid;place-items:center;color:#bdaa7f;font-size:clamp(20px,4cqw,36px)}
+#panel#panel.studio-menu .pp-tool>span:not(.pp-missing){position:absolute;top:103%;width:100%;font-size:clamp(8px,1.6cqw,14px);color:#6c4b28;text-align:center}
+#panel#panel.studio-menu .pp-tool>small{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+#panel#panel.studio-menu .studio-profile-reputations>h3{position:absolute;left:14%;top:-1%;width:72%;height:14%;font-size:clamp(13px,3.3cqw,28px);text-align:center;color:#f5dbaa!important}
+#panel#panel.studio-menu .studio-profile-reputations .pp-reputation{position:absolute;top:25%;left:26%;width:70%;height:25%;padding:0!important;border:0;display:block}
+#panel#panel.studio-menu .studio-profile-reputations .pp-reputation:last-child{top:70%}
+#panel#panel.studio-menu .pp-reputation>div{display:flex;justify-content:space-between;gap:4px;font-size:clamp(10px,2.3cqw,20px);color:#f1d8aa}
+#panel#panel.studio-menu .pp-reputation strong{font-size:clamp(9px,2cqw,17px);color:#e0be82;font-weight:400}
+#panel#panel.studio-menu .pp-reputation meter{position:absolute;left:1%;top:63%;width:98%;height:18%;appearance:none;background:transparent;border:0}
+#panel#panel.studio-menu .pp-reputation meter::-webkit-meter-bar{background:transparent;border:0}#panel#panel.studio-menu .pp-reputation meter::-webkit-meter-optimum-value{background:#839841}
+#panel#panel.studio-menu .studio-profile-details{font-size:clamp(12px,2.5cqw,21px);color:#e8cd95;text-align:center;z-index:20}
+#panel#panel.studio-menu .studio-profile-details>summary{cursor:pointer;list-style:none}
+#panel#panel.studio-menu .studio-profile-details[open]{left:18%!important;top:30%!important;width:64%!important;height:51%!important;overflow:auto;background:#efd6aa!important;color:#54391d;padding:12px!important;border:2px solid #aa8245!important;text-align:left}
+#panel#panel.studio-menu .studio-profile-details[open]>summary{font-size:22px;text-align:right}
+#panel#panel.studio-menu .studio-profile-details .pp-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #b6924d44;font-size:clamp(11px,2cqw,17px);padding:6px 0}
+#panel#panel.studio-menu .studio-profile-details>.studio-button{height:auto;min-height:32px;background:url('/assets/guild/button.png') center/100% 100% no-repeat!important;padding:8px 15px!important}
+#panel#panel.studio-menu .studio-profile-footer{display:flex;flex-wrap:wrap;gap:2%;justify-content:center}
+#panel#panel.studio-menu .studio-profile-footer>.studio-button{width:49%;height:27%;font-size:clamp(11px,2.5cqw,22px)!important}
+#panel#panel.studio-menu .studio-profile-footer>.studio-button:last-child{position:absolute;bottom:0;left:18%;width:64%;height:30%}
+/* The shared scroll is used for content that is naturally a list or a book of records. */
+#panel#panel.studio-menu .studio-flow :is(.approved-jobs-grid,.pp-inventory,.castle-paths){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+#panel#panel.studio-menu .studio-flow :is(.realm-card,.pp-item,.castle-group){padding:10px!important;border:1px solid #ac8750!important;border-radius:2px;background:#e3c59122!important;text-align:center}
+#panel#panel.studio-menu .studio-flow .approved-job-card{display:flex!important;flex-direction:column;gap:7px;position:relative!important;min-height:160px!important}
+#panel#panel.studio-menu .studio-flow .approved-job-card h3{position:static!important;transform:none!important;width:100%!important;font-size:clamp(11px,2.3cqw,20px)!important;height:auto!important;color:#4d331a!important}
+#panel#panel.studio-menu .studio-flow .approved-scene{position:relative!important;inset:auto!important;transform:none!important;width:100%!important;height:90px!important;min-height:90px!important}
+#panel#panel.studio-menu .studio-flow .approved-job-card>.studio-button{position:relative!important;inset:auto!important;transform:none!important;width:100%!important;margin-top:auto!important;min-height:32px}
+#panel#panel.studio-menu .studio-flow .mission-parchment{background:none!important;border:0!important;border-image:none!important;width:100%!important;padding:8px!important;margin:0!important;min-height:100%!important;text-align:center;color:#593f23}
+#panel#panel.studio-menu .studio-flow .mission-clock{background:url('/assets/guild/data-panel.png') center/100% 100% no-repeat!important;padding:20px 12px!important;color:#edcf98;margin:12px 0}
+#panel#panel.studio-menu .studio-flow .mission-clock :is(p,span){color:#edcf98}
+#panel#panel.studio-menu .studio-flow .mission-countdown{font-size:clamp(19px,4cqw,34px)!important}
+#panel#panel.studio-menu[data-studio=common-plain] .studio-flow-footer>.studio-button:not(:last-child){background:url('/assets/guild/button.png') center/100% 100% no-repeat!important}
+#panel#panel.studio-menu .studio-flow .castle-scene{position:relative;aspect-ratio:1.3;min-height:60px;height:auto;width:100%;overflow:hidden}
+#panel#panel.studio-menu .studio-flow .castle-scene>svg{width:100%;height:100%}
+#panel#panel.studio-menu .studio-flow .castle-path{display:flex;flex-direction:column;align-items:center;gap:6px}
+#panel#panel.studio-menu .studio-flow .castle-path>.studio-button{width:100%;margin-top:auto}
+#panel#panel.studio-menu .studio-flow .castle-dashboard-columns{display:grid;grid-template-columns:1fr;gap:10px}
+#panel#panel.studio-menu .studio-flow .castle-identity{display:grid;grid-template-columns:70px 1fr;gap:8px;position:relative;min-height:90px}
+#panel#panel.studio-menu .studio-flow .castle-identity .arena-portrait{position:relative!important;inset:auto!important;width:65px!important;height:65px!important}
+#panel#panel.studio-menu .studio-flow .castle-experience{grid-column:1/-1;display:flex;justify-content:space-between;gap:10px;align-items:center}
+#panel#panel.studio-menu .studio-flow .castle-experience progress{width:55%;height:12px}
+#panel#panel.studio-menu .studio-flow .castle-data-row{display:grid;grid-template-columns:22px minmax(0,1fr);gap:3px 6px;text-align:left;padding:6px 0;border-bottom:1px solid #ac875044;font-size:clamp(11px,2.1cqw,18px)}
+#panel#panel.studio-menu .studio-flow .castle-data-row>svg{width:22px;height:24px;grid-row:1/3}
+#panel#panel.studio-menu .studio-flow .castle-data-row strong{grid-column:2;overflow-wrap:anywhere;font-size:inherit;text-align:left}
+#panel#panel.studio-menu .studio-flow .castle-podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+#panel#panel.studio-menu .studio-flow .castle-pedestal{padding:0!important;display:flex;flex-direction:column;gap:5px;border:0!important;background:none!important}
+#panel#panel.studio-menu .guild-podium-stand{position:relative;aspect-ratio:1/1.1;width:100%;isolation:isolate}
+#panel#panel.studio-menu .guild-podium-stand .castle-pedestal-art{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+#panel#panel.studio-menu .guild-podium-stand .arena-portrait{position:absolute!important;left:30%!important;top:25%!important;width:40%!important;height:36%!important;inset:auto}
+#panel#panel.studio-menu .castle-pedestal[data-rank="1"] .arena-portrait{top:17%!important;width:46%!important;left:27%!important;height:42%!important}
+#panel#panel.studio-menu .realm-rank{position:absolute;bottom:16%;left:0;width:100%;font-size:clamp(13px,3cqw,26px);color:#ebc67c}
+#panel#panel.studio-menu .studio-flow .castle-pedestal>h3{position:static!important;font-size:clamp(10px,2cqw,17px)!important;color:#573b1e!important}
+#panel#panel.studio-menu .studio-flow .castle-ranking-gold{font-size:clamp(10px,1.9cqw,16px)!important;margin:0!important}
+#panel#panel.studio-menu .studio-flow .castle-own-fortune{display:flex;flex-direction:column;gap:5px;text-align:center;margin:12px 0}
+#panel#panel.studio-menu .studio-flow .pp-item svg{width:90%;height:70px}
+#panel#panel.studio-menu .studio-flow .pp-item :is(h3,p,small){font-size:clamp(10px,2cqw,17px)}
+#panel#panel.studio-menu .studio-flow :is(.pp-tabs,.pp-filters,.pp-pager){display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:8px 0}
+#panel#panel.studio-menu .studio-flow .pp-filters .studio-button{font-size:clamp(9px,1.8cqw,15px)!important;min-height:28px}
+#panel#panel.studio-menu .studio-flow .approved-pager{display:flex;align-items:center;gap:5px;justify-content:center;margin:12px 0}
+#panel#panel.studio-menu .studio-flow .approved-pager>.studio-button{font-size:clamp(10px,2cqw,17px)!important}
+#panel#panel.studio-menu .studio-stage{overflow:hidden}
+#panel#panel.studio-menu .studio-return>.studio-button{position:static!important;inset:auto!important;transform:none!important;width:100%!important;height:100%!important;margin:0!important}
+#panel#panel.studio-menu .studio-small-tabs>.studio-button,#panel#panel.studio-menu .studio-modes>.studio-button{position:relative!important;inset:auto!important;transform:none!important}
+#panel#panel.studio-menu :is(h3,h4,p,span,strong,small,label,output){text-transform:none!important;font-variant:normal!important}
+#panel#panel.studio-menu .studio-profile-footer{display:block!important}
+#panel#panel.studio-menu .studio-profile-footer>.studio-button{position:absolute!important;left:0;top:0;width:49%;height:27%;margin:0!important}
+#panel#panel.studio-menu .studio-profile-footer>.studio-button:nth-child(2){left:51%}
+#panel#panel.studio-menu .studio-profile-footer>.studio-button:last-child{left:18%;top:auto;bottom:0;width:64%;height:30%}
+#panel#panel.studio-menu .studio-profile-fortune>h3{top:-24%;display:grid;place-items:center}
+#panel#panel.studio-menu .studio-profile-equipment>h3{display:grid;place-items:center}
+#panel#panel.studio-menu .studio-profile-reputations>h3{top:-5%;display:grid;place-items:center}
+#panel#panel.studio-menu .arena-hp-track{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;border-radius:8px}
+#panel#panel.studio-menu .arena-hp-fill{display:block;height:100%}
+#panel#panel.studio-menu .arena-hp-value{position:absolute;inset:0!important;width:100%;height:100%;display:grid;place-items:center;font:normal clamp(8px,1.5cqw,13px)/1 AltheryaSerif!important;color:#fff1ce;margin:0}
+#panel#panel.studio-menu .arena-fighter-name{font-size:clamp(10px,2.2cqw,19px)!important;line-height:1.05;overflow:hidden;overflow-wrap:anywhere}
+#panel#panel.studio-menu .studio-combat-top>p{font:inherit!important;color:#573b1f;white-space:nowrap}
+#panel#panel.studio-menu #bank-polished .studio-bank-transfer>h3{top:-2%;height:8%;display:grid;place-items:center;font-size:clamp(13px,2.8cqw,24px)!important}
+#panel#panel.studio-menu #bank-polished .bank-mode-tabs{left:11%!important;width:78%!important}
+#panel#panel.studio-menu #bank-polished .presets{left:24%!important;width:54%!important}
+#panel#panel.studio-menu #bank-polished .confirm{padding-left:13%!important;font-size:clamp(13px,3.2cqw,28px)!important}
+#panel#panel.studio-menu .pp-tool>span:not(.pp-missing){position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important}
+#panel#panel.studio-menu .studio-button:after{min-height:0!important}
+#panel#panel.studio-menu .studio-small-tabs:has(>:only-child){display:none!important}
+#panel#panel.studio-menu .studio-button{min-height:0!important;min-width:0!important;align-items:center!important;justify-content:center!important;line-height:1.05!important;margin:0!important}
+#panel#panel.studio-menu .studio-modes{display:flex!important;flex-wrap:nowrap!important;gap:0!important}
+#panel#panel.studio-menu .studio-modes>.studio-button{flex:1 1 0!important;width:auto!important;max-width:none!important;font-size:clamp(11px,2.8cqw,24px)!important}
+#panel#panel.studio-menu .studio-wallet{display:flex;flex-direction:column;justify-content:center;gap:1px}
+#panel#panel.studio-menu .studio-wallet-label{font-size:clamp(11px,2.5cqw,21px);white-space:nowrap}
+#panel#panel.studio-menu .studio-wallet-number{font-size:clamp(13px,3.4cqw,29px);white-space:nowrap;font-weight:400}
+#panel#panel.studio-menu .studio-hidden-tabs{display:none!important}
+#panel#panel.studio-menu .studio-category-cycle{display:grid!important;grid-template-columns:15% minmax(0,1fr) 15%;align-items:center;font-size:clamp(9px,1.9cqw,17px);text-align:center;color:#674924}
+#panel#panel.studio-menu .studio-category-cycle>.studio-button{font-size:clamp(13px,2.5cqw,22px)!important;color:#8e672e!important;height:100%;padding:0!important}
+#panel#panel.studio-menu .studio-products .approved-item-description{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#panel#panel.studio-menu .studio-products .realm-product>.studio-button{height:19%!important;display:flex!important;align-items:center!important;justify-content:center!important}
+#panel#panel.studio-menu .studio-game>.studio-button{height:34%!important;display:flex!important;align-items:center!important;justify-content:center!important}
