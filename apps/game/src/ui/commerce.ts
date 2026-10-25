@@ -1,3 +1,4 @@
+import {dressGuild} from './guild-menu';
 import {recall,remember} from './session-preferences';
 import {decoratePredator} from './predator-art';
 import {approvedCard,decorateApproved} from './approved-art';
@@ -71,7 +72,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
    const actions=el('div','realm-trade-actions');actions.append(button(busy?'En cours…':'Confirmer',()=>void submit(),!!tradeBlock(selected,mode,host.state().balance.wallet,quantity)),button('Annuler',()=>{selected=undefined;draw();}));dialog.append(actions);backdrop.append(dialog);root.append(backdrop);stage.inert=true;
    requestAnimationFrame(()=>dialog.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus({preventScroll:true}));
   }else if(focused)Array.from(root.querySelectorAll<HTMLElement>('[aria-label]')).find(n=>n.getAttribute('aria-label')===focused)?.focus({preventScroll:true});
-  decorateApproved(root);decoratePredator(root);body.scrollTop=scroll;
+  decorateApproved(root);decoratePredator(root);dressGuild(root,'market-'+mode,host.state());body.scrollTop=scroll;
  }
  const stopSize=watchMenuSize(root,draw);
  root.onkeydown=e=>{

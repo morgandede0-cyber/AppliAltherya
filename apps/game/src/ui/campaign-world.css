@@ -29,3 +29,17 @@ body.menu-open .world-quest-layer{visibility:hidden}
 @media(max-width:600px){#panel.campaign-menu .campaign-quest-item{grid-template-columns:64px minmax(0,1fr);gap:10px}#panel.campaign-menu .campaign-quest-item>.world-prop-art{width:64px;height:64px}}
 /* Upright stakes are planted at the interaction point, rather than centered over it. */
 #scene-stage .world-quest-terrain[data-art=balise]{transform:translate(-50%,-100%)}
+
+/* Side passages leave the action dock free for services and quest interactions. */
+.world-place-paths{position:absolute;right:1.5%;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;align-items:center;pointer-events:none;max-height:65%}
+#scene-stage .world-place-arrow{position:relative;display:grid;place-items:center;width:64px;height:84px;min-width:44px;min-height:44px;padding:8px;background:none;border:0;border-radius:6px;box-shadow:none;clip-path:none;pointer-events:auto;touch-action:manipulation}
+#scene-stage .world-place-arrow>img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 2px 3px #0009)}
+#scene-stage .world-place-arrow[data-direction=left]>img{transform:scaleX(-1)}
+#scene-stage .world-place-arrow:hover:not(:disabled)>img{filter:brightness(1.2) drop-shadow(0 2px 3px #0009)}
+#scene-stage .world-place-return{position:absolute;left:1.5%;top:50%;transform:translateY(-50%)}
+.world-place-name{position:absolute;right:100%;width:max-content;max-width:min(220px,35vw);padding:6px 10px;margin-right:6px;color:#f2dfb7;background:#101a21e8;border:1px solid #b3935360;border-radius:3px;text-align:center;font:14px/1.3 Georgia,serif;opacity:0;pointer-events:none;transition:opacity .15s;overflow-wrap:anywhere}
+.world-place-arrow[data-direction=left] .world-place-name{right:auto;left:100%;margin:0 0 0 6px}
+@media(hover:hover) and (pointer:fine){.world-place-arrow:hover .world-place-name{opacity:1}}
+@media(max-width:700px){#scene-stage .world-place-arrow{width:48px;height:60px;padding:5px}.world-place-paths{right:1%;gap:20px}#scene-stage .world-place-return{left:1%}.world-place-name{top:100%;right:0;width:100px;max-width:25vw;font-size:10px;padding:3px 0;background:none;border:0;text-shadow:0 1px 3px #000,0 1px 6px #000;margin:0}.world-place-arrow[data-direction=left] .world-place-name{right:auto;left:0;margin:0}}
+@media(prefers-reduced-motion:reduce){.world-place-name{transition:none}}
+@media(max-width:700px){.world-place-paths{top:44%}#scene-stage .world-place-return{top:44%}}

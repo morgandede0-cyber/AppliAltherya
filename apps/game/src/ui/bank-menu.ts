@@ -1,3 +1,4 @@
+import {dressGuild} from './guild-menu';
 import {decorateWorkshop} from './forge-bank-art';
 import type {Snapshot} from '../activity';
 import {bankMarkup} from './bank-markup';
@@ -64,7 +65,7 @@ export function openBankMenu(panel:HTMLElement,host:Host){
  returnButton.addEventListener('click',()=>{if(!busy&&!dead)host.route('hub');});
  document.body.classList.add('illustrated-open');
  panel.onkeydown=e=>{if(e.key==='Escape'){e.preventDefault();if(!busy)host.close();}if(e.key==='Tab'){const nodes=Array.from(panel.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled)')).filter(n=>!n.closest('[hidden]')&&n.tabIndex!==-1),first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}};
- decorateWorkshop(panel,'bank');
+ decorateWorkshop(panel,'bank');dressGuild(panel,'bank',host.state());
  const stop=()=>{};update();
  for(const img of Array.from(root.querySelectorAll<HTMLImageElement>('img')))img.addEventListener('load',()=>{if(!dead)update();},{once:true});
  tabs[0]?.focus({preventScroll:true});
