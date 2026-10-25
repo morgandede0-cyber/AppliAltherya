@@ -44,7 +44,7 @@ const mailToggle=document.createElement('button');mailToggle.id='mail-toggle';ma
 const hubMotionControl=document.createElement('button');hubMotionControl.id='hub-motion-toggle';hubMotionControl.type='button';hubMotionControl.textContent='Animations';hubMotionControl.disabled=true;
 const questTracker=createQuestTracker({route:key=>{if(key.startsWith('market:')){commerceMenu(key.slice(7) as CommerceMode);return;}serviceMenu(key);}});
 const dailyQuestTracker=createQuestTracker({claimDaily:claimDailyQuests,route:key=>{if(key.startsWith('market:')){commerceMenu(key.slice(7) as CommerceMode);return;}serviceMenu(key);}},true);
-const hudbar=createHotbar({mail:mailToggle,motion:hubMotionControl,daily:()=>{if(!busy&&panel.hidden)dailyQuestTracker.open();},route:key=>{if(busy||!panel.hidden||!state?.tutorial.completed||state.tutorial.replay)return;if(key==='inventory'){serviceMenu('profile');panel.querySelector<HTMLButtonElement>('[data-focus=inventory]')?.click();}else serviceMenu(key);}});
+const hudbar=createHotbar({mail:mailToggle,motion:hubMotionControl,daily:()=>{if(!busy&&panel.hidden)dailyQuestTracker.open();},route:key=>{if(busy||!panel.hidden||!state?.tutorial.completed||state.tutorial.replay)return;serviceMenu(key);}});
 async function claimDailyQuests(){if(busy)throw new Error('Opération en cours.');stateVersion++;busy=true;try{const r=await request({action:'quests_claim'});state=r.state;hud();return r.message;}catch(e){await refresh().catch(()=>{});throw e;}finally{busy=false;}}
 let alleyPresence:ReturnType<typeof attachAlleyPresence>|undefined;
 function syncSmogo(){alleyPresence?.update();}
@@ -54,54 +54,25 @@ function blockMaintenance(keys:string[]){const reason=maintenanceReason(state,ke
 function syncMaintenance(){serviceBanner(state);const keys=[panel.dataset.maintenanceScope??'',panel.dataset.kind??'',current];if(maintenanceReason(state,keys)){blockMaintenance(keys);}else if(panel.dataset.kind==='maintenance'){clearCommerce();panel.hidden=true;if(!starting&&!startup)void navigate('hub');}}
 function clearCommerce(){service?.destroy();service=undefined;commerce?.destroy();commerce=undefined;panel.className='';panel.onkeydown=null;panel.replaceChildren();panel.removeAttribute('data-kind');panel.removeAttribute('aria-busy');panel.removeAttribute('aria-label');panel.style.removeProperty('--art-ratio');}
 function close(){if(panel.dataset.kind==='maintenance'&&maintenanceReason(state,['global']))return;if(panel.dataset.kind==='tutorial'&&!state.tutorial.completed)return;if(!busy){clearCommerce();panel.hidden=true;}}
-function closeService(){if(tutorialVisitActive){void tutorialMenu();return;}close();if(current!=='hub'&&current!=='market')void navigate(scenes[current].parent??'hub');}
+function closeService(){close();if(current!=='hub'&&current!=='market')void navigate(scenes[current].parent??'hub');}
 function show(title:string,text:string){clearCommerce();panel.className='native-welcome';panel.replaceChildren();const h=document.createElement('h2');h.textContent=title;const p=document.createElement('p');p.textContent=text;panel.append(h,p);panel.hidden=false;}
 function button(label:string,fn:()=>void,disabled=false){const b=document.createElement('button');b.textContent=label;b.disabled=disabled;b.onclick=()=>{if(!busy){chime();fn();}};return b;}
 function actions(...buttons:HTMLButtonElement[]){const a=document.createElement('div');a.className='actions';a.append(...buttons);panel.append(a);}
 function end(back:()=>void=close){actions(button('Retour',back));}
 async function refresh(){const version=stateVersion;const result=await request();if(version!==stateVersion)return;state=result.state;if(!state.admin)document.querySelector('.admin-hub-button')?.remove();hud();commerce?.update();service?.update();syncMaintenance();}
-function serviceMenu(kind:string,location='elarwyn',title=''){if(kind.startsWith('quest:')){void navigate(kind.slice(6) as SceneId);return;}if(['khaz','ashkar','port'].includes(kind)&&current!==kind){void navigate(kind as SceneId);return;}if(blockMaintenance([kind]))return;if(kind==='tutorial'){void tutorialMenu(true);return;}clearCommerce();const host={refresh,state:()=>state,close:closeService,route:(key:string)=>{if(key==='tutorial'){void tutorialMenu(true);return;}if(key.startsWith('market:')){commerceMenu(key.slice(7) as CommerceMode);return;}if(key in scenes){void navigate(key as SceneId);return;}if(key==='drinks'){void navigate('barman');return;}if(key.startsWith('adventure-')){serviceMenu(key,location);return;}if(illustratedKinds.has(key)||refinedKinds.has(key)||['campaign','chronicles','profile','journal','story','world','trade','combat-history','adventure','port'].includes(key))serviceMenu(key,location);else void navigate(key as SceneId);},mutate:async (body:Record<string,unknown>)=>{if(tutorialVisitActive)throw new Error('Cette action sera disponible après la visite guidée.');if(busy)throw new Error('Opération en cours.');stateVersion++;busy=true;try{const r=await request(body);state=r.state;hud();return r.message;}catch(e){await refresh().catch(()=>{});throw e;}finally{busy=false;}}};if(kind==='adventure'||kind.startsWith('adventure-')){service=openAdventure(panel,host,({training:'Entraînement',forge:'Forge',voyage:'Voyage',daily:'Défis',market:'Recherches'} as Record<string,string>)[kind.slice(10)]??'Métier');return;}if(kind==='smogo'){service=openSmogo(panel,host);return;}if(kind==='port'){service=openPort(panel,host);return;}if(kind==='combat-history'){service=openCombatHistory(panel,host);return;}if(kind==='trade'){service=openTrading(panel,host);return;}if(['market','tavern','games'].includes(kind)){service=openPredatorVenue(panel,kind as 'market'|'tavern'|'games',host);return;}if(kind==='casino'){service=openCasinoRoom(panel,host);return;}if(alleyNpcKinds.has(kind)){service=openAlleyNpc(panel,kind,host);return;}if(realmKinds.has(kind)&&kind!=='bank'){service=openRealmMenu(panel,kind,host);return;}if(kind==='campaign'||kind==='chronicles'){service=openQuestLibrary(panel,host,kind==='campaign'?'main':undefined);return;}if(refinedKinds.has(kind)){service=openRefined(panel,kind,{...host,close:kind==='market'?()=>void navigate('hub'):['guard','robber'].includes(kind)?close:closeService});return;}if(illustratedKinds.has(kind)){service=openIllustrated(panel,kind,host,location);return;}service=openService(panel,kind,host,location,title);}
+function serviceMenu(kind:string,location='elarwyn',title=''){if(kind.startsWith('quest:')){void navigate(kind.slice(6) as SceneId);return;}if(['khaz','ashkar','port'].includes(kind)&&current!==kind){void navigate(kind as SceneId);return;}if(blockMaintenance([kind]))return;if(kind==='tutorial'){void tutorialMenu(true);return;}clearCommerce();const host={refresh,state:()=>state,close:closeService,route:(key:string)=>{if(key==='tutorial'){void tutorialMenu(true);return;}if(key.startsWith('market:')){commerceMenu(key.slice(7) as CommerceMode);return;}if(key in scenes){void navigate(key as SceneId);return;}if(key==='drinks'){void navigate('barman');return;}if(key.startsWith('adventure-')){serviceMenu(key,location);return;}if(illustratedKinds.has(key)||refinedKinds.has(key)||['campaign','chronicles','profile','journal','story','world','trade','combat-history','adventure','port'].includes(key))serviceMenu(key,location);else void navigate(key as SceneId);},mutate:async (body:Record<string,unknown>)=>{if(busy)throw new Error('Opération en cours.');stateVersion++;busy=true;try{const r=await request(body);state=r.state;hud();return r.message;}catch(e){await refresh().catch(()=>{});throw e;}finally{busy=false;}}};if(kind==='adventure'||kind.startsWith('adventure-')){service=openAdventure(panel,host,({training:'Entraînement',forge:'Forge',voyage:'Voyage',daily:'Défis',market:'Recherches'} as Record<string,string>)[kind.slice(10)]??'Métier');return;}if(kind==='smogo'){service=openSmogo(panel,host);return;}if(kind==='port'){service=openPort(panel,host);return;}if(kind==='combat-history'){service=openCombatHistory(panel,host);return;}if(kind==='trade'){service=openTrading(panel,host);return;}if(['market','tavern','games'].includes(kind)){service=openPredatorVenue(panel,kind as 'market'|'tavern'|'games',host);return;}if(kind==='casino'){service=openCasinoRoom(panel,host);return;}if(alleyNpcKinds.has(kind)){service=openAlleyNpc(panel,kind,host);return;}if(realmKinds.has(kind)&&kind!=='bank'){service=openRealmMenu(panel,kind,host);return;}if(kind==='campaign'||kind==='chronicles'){service=openQuestLibrary(panel,host,kind==='campaign'?'main':undefined);return;}if(refinedKinds.has(kind)){service=openRefined(panel,kind,{...host,close:kind==='market'?()=>void navigate('hub'):['guard','robber'].includes(kind)?close:closeService});return;}if(illustratedKinds.has(kind)){service=openIllustrated(panel,kind,host,location);return;}service=openService(panel,kind,host,location,title);}
 
-let tutorialVisitActive=false;
-let tutorialDock:HTMLElement|undefined,tutorialVisitObserver:MutationObserver|undefined,tutorialVisitResize:ResizeObserver|undefined;
-function stopTutorialVisit(){tutorialVisitActive=false;tutorialVisitObserver?.disconnect();tutorialVisitObserver=undefined;tutorialVisitResize?.disconnect();tutorialVisitResize=undefined;tutorialDock?.remove();tutorialDock=undefined;document.body.classList.remove('tutorial-visiting');}
-async function tutorialMutate(body:Record<string,unknown>){if(busy)throw new Error('Opération en cours.');stateVersion++;busy=true;try{const r=await request(body);state=r.state;hud();return r.message;}finally{busy=false;}}
-async function visitTutorial(destination:string){
- const step=state.tutorial.step;tutorialVisitActive=true;clearCommerce();panel.hidden=true;
- try{
-  if(destination==='castle'){await navigate('castle',true);serviceMenu('castle');}
-  else if(destination==='profile'||destination==='inventory'){serviceMenu('profile');if(destination==='inventory')panel.querySelector<HTMLButtonElement>('[data-focus=inventory]')?.click();}
-  else if(destination==='expedition'){await navigate('elarwyn',true);serviceMenu('expedition','elarwyn');}
-  else if(destination==='market:buy'){await navigate('market',true);commerceMenu('buy');}
-  else if(destination==='forge'){await navigate('forge',true);serviceMenu('forge');}
-  else if(destination==='jobs'){await navigate('tavern',true);serviceMenu('jobs');}
-  else if(destination==='bank'){await navigate('bank',true);serviceMenu('bank');}
-  else if(destination==='campaign'){await navigate('tavern',true);serviceMenu('campaign');}
-  else if(destination==='arena'){await navigate('arena',true);serviceMenu('arena');}
-  else if(destination==='world')serviceMenu('world');
-  else throw new Error('Destination du guide inconnue.');
-  if(panel.dataset.kind==='maintenance'||panel.hidden)throw new Error('Ce lieu est temporairement indisponible. Reviens au guide et réessaie après sa réouverture.');
-  await tutorialMutate({action:'tutorial_visit',step,destination});
-  if(!state.tutorial.visited?.includes(step))throw new Error('La progression a changé sur un autre appareil. Consulte le guide actualisé.');
-  tutorialDock=document.createElement('aside');tutorialDock.id='tutorial-visit-dock';tutorialDock.setAttribute('role','region');tutorialDock.setAttribute('aria-label','Visite du tutoriel');
-  const text=document.createElement('p');text.textContent='Découverte enregistrée';const hint=document.createElement('small');hint.textContent='Visite guidée · observation uniquement';text.append(hint);const back=document.createElement('button');back.type='button';back.className='mentor-return';back.textContent='Revenir au guide';back.onclick=()=>void tutorialMenu();tutorialDock.append(text,back);document.body.append(tutorialDock);document.body.classList.add('tutorial-visiting');
-  const geometry=()=>{const top=$('hud').getBoundingClientRect().bottom+8;document.documentElement.style.setProperty('--tutorial-dock-top',top+'px');document.documentElement.style.setProperty('--tutorial-visit-top',(top+(tutorialDock?.getBoundingClientRect().height??68)+8)+'px');};
-  tutorialVisitResize=new ResizeObserver(geometry);tutorialVisitResize.observe($('hud'));tutorialVisitResize.observe(tutorialDock);geometry();
-  const readonly=()=>{panel.setAttribute('aria-modal','false');for(const b of Array.from(panel.querySelectorAll<HTMLButtonElement>('button'))){const label=b.getAttribute('aria-label')??b.textContent??'';if(/^(Récupérer|Réclamer|Acheter|Vendre|Améliorer|Déposer|Retirer|Tout déposer|Tout retirer|Lancer|Commencer|Affronter|Défier|Miser|Jouer|Équiper|Remplacer|Débloquer|Accepter|Signer|Engager|Répondre|Valider|Confirmer|Refaire le tutoriel)/i.test(label)){b.disabled=true;b.title='Disponible après la visite guidée';}}};
-  readonly();tutorialVisitObserver=new MutationObserver(readonly);tutorialVisitObserver.observe(panel,{childList:true,subtree:true});back.focus({preventScroll:true});
- }catch(e){stopTutorialVisit();await tutorialMenu();notify(e instanceof Error?e.message:String(e));}
-}
 async function tutorialMenu(replay=false){
- if(busy)return;stopTutorialVisit();
+ if(busy)return;
  const mutate=async(body:Record<string,unknown>)=>{if(busy)throw new Error('Opération en cours.');stateVersion++;busy=true;try{const r=await request(body);state=r.state;hud();return r.message;}finally{busy=false;}};
  if(replay){try{await mutate({action:'tutorial_replay'});}catch(e){notify(String(e));return;}}
- clearCommerce();service=openTutorial(panel,{state:()=>state,mutate,visit:visitTutorial,notify,done:()=>{close();void navigate('hub');}});
+ clearCommerce();service=openTutorial(panel,{state:()=>state,mutate,notify,done:()=>{close();void navigate('hub');}});
 }
 function enterGame(){if(blockMaintenance([]))return;close();if(!state.tutorial.completed||state.tutorial.replay)void tutorialMenu();}
 function adminMenu(){if(!state.admin)return;clearCommerce();service=openAdmin(panel,{close:()=>{close();void navigate('hub');},refresh,allowed:()=>state.admin});}
 function updatesMenu(){clearCommerce();service=openUpdateJournal(panel,close);}
 function profile(){serviceMenu('profile');}
-function commerceMenu(mode:CommerceMode){if(blockMaintenance(['market']))return;clearCommerce();commerce=openCommerce(panel,mode,{state:()=>state,sound:()=>chime(),exit:()=>void navigate('market'),back:()=>void navigate('market'),switchMode:commerceMenu,trade:async body=>{if(tutorialVisitActive)throw new Error('Cette action sera disponible après la visite guidée.');stateVersion++;busy=true;try{const r=await request(body);state=r.state;hud();return r.message;}catch(e){try{state=(await request()).state;hud();}catch{}throw e;}finally{busy=false;}}});}
+function commerceMenu(mode:CommerceMode){if(blockMaintenance(['market']))return;clearCommerce();commerce=openCommerce(panel,mode,{state:()=>state,sound:()=>chime(),exit:()=>void navigate('market'),back:()=>void navigate('market'),switchMode:commerceMenu,trade:async body=>{stateVersion++;busy=true;try{const r=await request(body);state=r.state;hud();return r.message;}catch(e){try{state=(await request()).state;hud();}catch{}throw e;}finally{busy=false;}}});}
 function shop(){commerceMenu('buy');}
 function sales(){commerceMenu('sell');}
 function world(){serviceMenu('world');}
@@ -119,7 +90,7 @@ watchMenuSurface(panel,$('scene-stage'));
 window.addEventListener('resize',fitScene);
 window.visualViewport?.addEventListener('resize',fitScene);
 fitScene();
-window.addEventListener('keydown',e=>{if(tutorialVisitActive&&e.key==='Escape'){e.preventDefault();if(!busy)void tutorialMenu();return;}if(starting||startup||e.defaultPrevented)return;if(commerce){if(e.key==='Escape')panel.onkeydown?.call(panel,e);return;}if(e.target instanceof HTMLInputElement)return;if(e.key==='Escape'){if(service&&!['guard','robber'].includes(current))closeService();else close();}if(e.key.toLowerCase()==='i'&&panel.hidden&&!busy&&$('scene-stage').getAttribute('aria-busy')!=='true')profile();});
+window.addEventListener('keydown',e=>{if(starting||startup||e.defaultPrevented)return;if(commerce){if(e.key==='Escape')panel.onkeydown?.call(panel,e);return;}if(e.target instanceof HTMLInputElement)return;if(e.key==='Escape'){if(service&&!['guard','robber'].includes(current))closeService();else close();}if(e.key.toLowerCase()==='i'&&panel.hidden&&!busy&&$('scene-stage').getAttribute('aria-busy')!=='true')profile();});
 let starting=false,startup:ReturnType<typeof launchScreen>|undefined;
 async function startGame(){
  if(starting)return;starting=true;startup?.destroy();startup=launchScreen(()=>void startGame());
@@ -153,3 +124,6 @@ import './ui/tutorial.css';
 import './ui/launch-responsive.css';
 
 installComfort();
+
+// Last layer: common materials and accessible controls, without replacing venue artwork.
+import './ui/realm-theme.css';

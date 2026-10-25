@@ -1,0 +1,37 @@
+/* One visual vocabulary. Scene hotspots, books and game tables retain their geometry. */
+:root{--realm-ink:#f1dfb9;--realm-muted:#c9b78e;--realm-gold:#d2ac69;--realm-edge:#a7814b;--realm-deep:#102a2d;--realm-field:#0b2024;--realm-font:Georgia,"Times New Roman",serif}
+#panel{--menu-text:var(--realm-ink);font-family:var(--realm-font);scrollbar-color:var(--realm-edge) var(--realm-field);scrollbar-width:thin}
+#panel :is(button,input,select,textarea){font-family:var(--realm-font)}
+/* Named action controls only: never alter invisible scene hitboxes or card/roulette mechanics. */
+#panel :is(.gm-button,.realm-button,.pp-button,.arena-button,.trade-button,.adventure-button,.khaz-button,.smogo-button,.port-button,.mail-button){color:var(--realm-ink)!important;font-family:var(--realm-font)!important;text-align:center;line-height:1.25!important;overflow-wrap:anywhere;white-space:normal;max-width:100%;min-width:0;cursor:pointer}
+#panel :is(.gm-button,.pp-button,.arena-button,.trade-button,.adventure-button,.smogo-button,.port-button,.mail-button):not(.approved-button){background:var(--realm-field) url('/assets/realm-theme/action.svg') center/100% 100% no-repeat!important;border:0!important;border-image:none!important;box-shadow:none!important;border-radius:4px!important;padding:12px 22px!important;min-height:44px}
+#panel :is(button,input,select,textarea):focus-visible{outline:2px solid #f0cf88!important;outline-offset:3px}
+#panel button:disabled{cursor:default}
+#panel :is(.pp-footer,.gm-footer,.realm-footer,.khaz-footer,.adventure-footer){flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}
+#panel :is(.gm-card-title,.pp-heading,.realm-header h2,.arena-heading,.khaz-title,.smogo-title,.port-title,.adventure-heading){color:var(--realm-gold);font-family:var(--realm-font);text-wrap:balance}
+#panel :is(.gm-card,.trade-summary,.adventure-card){background-color:var(--realm-deep)!important;color:var(--realm-ink);border-color:var(--realm-edge)}
+#panel.game-menu:not(.arena-surface){background:linear-gradient(140deg,#183638f5,#0b2026fa)!important;color:var(--realm-ink)!important}
+#panel.game-menu :is(.gm-stat,.gm-notice){background:#091e2370!important}
+#panel.game-menu .gm-input{background:var(--realm-field)!important;border-color:var(--realm-edge)!important;color:var(--realm-ink)!important}
+#panel :is(.trade-form,.admin-menu,.adventure-menu) :is(input,select,textarea){background:var(--realm-field)!important;border:1px solid var(--realm-edge)!important;color:var(--realm-ink)!important;border-radius:4px;max-width:100%;min-width:0;min-height:40px;padding:8px 10px}
+#panel :is(.gm-grid,.pp-inventory,.realm-commerce-grid,.admin-layout)>*{min-width:0}
+#panel :is(.gm-copy,.gm-card-title,.realm-product h3,.pp-item h3,.mail-body){overflow-wrap:anywhere}
+#panel :is(.gm-stat-value,.pp-row strong,.trade-timer,.mission-countdown){font-variant-numeric:tabular-nums}
+@media(max-width:600px){#panel :is(.gm-button,.pp-button,.arena-button,.trade-button,.adventure-button,.smogo-button,.port-button,.mail-button):not(.approved-button){min-height:44px;padding:10px 14px!important;font-size:14px!important}#panel .pp-footer{gap:7px}#panel .gm-grid[data-columns="3"]{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){#panel :is(.gm-button,.pp-button,.arena-button,.trade-button,.adventure-button){transition:none!important}}
+/* Workshop labels stay inside the carved card, including shortage descriptions. */
+#panel#panel.realm-menu.predator-forge .realm-materials{padding:24px 34px!important}
+#panel#panel.realm-menu.predator-forge .realm-material strong{font:normal 13px/1.35 var(--realm-font)!important;white-space:normal!important;overflow-wrap:anywhere;text-align:center;max-width:100%}
+#panel#panel.realm-menu.predator-forge .realm-footer{flex-shrink:0!important}
+#panel#panel.realm-menu.predator-forge .realm-footer .approved-button-content{flex-direction:column;gap:2px}
+#panel#panel.realm-menu.predator-forge .forge-button-cost{display:block;font-size:11px;line-height:1.2}
+/* Blur stays clipped to its own viewport instead of adding twenty pixels of overflow. */
+#panel.casino-room .casino-room-backdrop{inset:0;transform:none}
+@media(max-width:600px){#panel#panel.realm-menu.predator-forge .realm-footer>button{flex:1 1 135px!important;min-height:48px!important;padding:10px 16px!important;font-size:14px!important}#panel#panel.realm-menu.predator-forge .realm-materials{padding:24px 25px!important}#panel#panel.realm-menu.predator-forge .realm-material strong{font-size:12px!important}}
+/* Administration uses the same materials while retaining its practical category layout. */
+#panel#panel.admin-menu{--admin-ink:var(--realm-field);--admin-paper:var(--realm-ink);--admin-muted:var(--realm-muted);--admin-gold:var(--realm-gold);font-family:var(--realm-font)!important}
+#panel#panel.admin-menu .gm-button,#panel#panel.admin-menu button.admin-player,#panel#panel.admin-menu .admin-category{font-family:var(--realm-font)!important;color:var(--realm-ink)!important;background:var(--realm-field) url('/assets/realm-theme/action.svg') center/100% 100% no-repeat!important;border:0!important;min-height:44px!important}
+#panel#panel.admin-menu .admin-toolbar>.gm-button{background:transparent!important;color:var(--realm-muted)!important}
+#panel#panel.admin-menu .admin-toolbar>.gm-button[aria-current=page]{background:var(--realm-deep) url('/assets/realm-theme/action.svg') center/100% 100% no-repeat!important;color:var(--realm-ink)!important;box-shadow:none!important}
+#panel#panel.admin-menu .admin-shortcut small,#panel#panel.admin-menu .admin-caption{font-family:var(--realm-font)!important;color:var(--realm-muted)}
+#panel#panel.admin-menu :is(.admin-metric,.admin-shortcut){background-color:var(--realm-deep)!important;border-color:#a7814b70!important}

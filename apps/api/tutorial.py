@@ -57,9 +57,6 @@ class ActivityTutorial:
      row=c.execute('SELECT step,replay FROM activity_tutorial_steps WHERE user_id=?',(uid,)).fetchone()
     c.execute('INSERT INTO activity_tutorial_catalog VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET catalog=excluded.catalog',(uid,GUIDE_CATALOG))
    visited=[r[0] for r in c.execute('SELECT step FROM activity_tutorial_visits WHERE user_id=? ORDER BY step',(uid,))]
-   if not (old['completed'] and version['finished']) and row['step']>0 and not visited:
-    c.execute('UPDATE activity_tutorial_steps SET step=0 WHERE user_id=?',(uid,))
-    row=c.execute('SELECT step,replay FROM activity_tutorial_steps WHERE user_id=?',(uid,)).fetchone()
   return dict(total_steps=len(GUIDE),visited=visited,completed=bool(old['completed'] and version['finished']),reward_claimed=bool(old['reward_claimed']),step=row['step'],replay=bool(row['replay']),gold=TUTORIAL_GOLD,xp=TUTORIAL_XP,discord_required=self.discord_required(),discord_verified=bool(discord_id))
  def action(self, uid, body):
   self.state(uid)
@@ -85,13 +82,8 @@ class ActivityTutorial:
    if completed and not row['replay']:return 'Tutoriel déjà terminé. Récompense déjà enregistrée.'
    if expected!=row['step']:return 'Votre progression a été actualisée.'
    if action=='tutorial_visit':
-    destination=body.get('destination')
-    if destination!=self.destinations[expected]:raise ValueError('Ce lieu ne correspond pas à l’étape du tutoriel.')
-    c.execute('INSERT OR IGNORE INTO activity_tutorial_visits VALUES(?,?,?)',(uid,expected,destination))
-    return 'Découverte enregistrée. Reviens au guide pour poursuivre.'
-   if action=='tutorial_next' or (action=='tutorial_finish' and expected!=LAST_STEP):
-    visited=c.execute('SELECT 1 FROM activity_tutorial_visits WHERE user_id=? AND step=?',(uid,expected)).fetchone()
-    if not visited:raise ValueError('Ouvrez d’abord la fonction indiquée par le guide.')
+    # Compatibility with old clients: explanations no longer require visits.
+    return 'Le tutoriel est explicatif. Passez à la page suivante.'
    if action=='tutorial_previous':
     if expected<=0:raise ValueError('Vous êtes au début du tutoriel.')
     c.execute('UPDATE activity_tutorial_steps SET step=step-1 WHERE user_id=?',(uid,));return ''
@@ -100,9 +92,6 @@ class ActivityTutorial:
     if expected==0:c.execute('UPDATE tutorial_progress SET runs=runs+1,last_started_at=CURRENT_TIMESTAMP WHERE user_id=?',(uid,))
     c.execute('UPDATE activity_tutorial_steps SET step=step+1 WHERE user_id=?',(uid,));return ''
    if action!='tutorial_finish' or expected!=LAST_STEP:raise ValueError('Parcourez les étapes du tutoriel avant de terminer.')
-   for step,destination in enumerate(self.destinations[:-1]):
-    if not c.execute('SELECT 1 FROM activity_tutorial_visits WHERE user_id=? AND step=? AND destination=?',(uid,step,destination)).fetchone():raise ValueError('Découvrez toutes les fonctions du guide avant de terminer.')
-   c.execute('INSERT OR IGNORE INTO activity_tutorial_visits VALUES(?,?,?)',(uid,LAST_STEP,self.destinations[LAST_STEP]))
    # Both awards, level changes and flags commit together in this Activity's DB.
    # The original bot's global Gold helper is intentionally not used here.
    gold=0;xp=0

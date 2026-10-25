@@ -12,11 +12,11 @@ import {worldButtonArt} from './world-assets';
 import {timeLabel} from './game-model';
 import './refined-menus.css';
 type Host={state:()=>Snapshot;mutate:(body:Record<string,unknown>)=>Promise<string>;close:()=>void;route:(key:string)=>void};
-export const refinedKinds=new Set(['market','forge','drinks','guard','robber','profile','world','story','khaz','ashkar']);
+export const refinedKinds=new Set(['market','forge','drinks','guard','robber','profile','inventory','world','story','khaz','ashkar']);
 export function openRefined(panel:HTMLElement,kind:string,host:Host){
  if(kind==='ashkar')return openAshkarMenu(panel,host);
  if(kind==='khaz')return openKhazMenu(panel,host);
- if(kind==='profile')return openPlayerProfile(panel,host);
+ if(kind==='profile'||kind==='inventory')return openPlayerProfile(panel,host,kind);
  let planning=false,busy=false,dead=false,message='',selected=kind==='forge'?'axe':'beer',chapter=host.state().chapters.find(c=>c.unlocked)?.chapter??1,guess='';const texts=new Map<number,string>();
  const titles:Record<string,string>={market:'Marché de Legacy',forge:'Forge de IV',drinks:'Le tavernier',guard:'Le vigile',robber:'Planifier un braquage',profile:'Mon personnage',world:'Le monde d’Elyndor',khaz:'Forge de Khaz’goram',ashkar:'Tour d’Ashkar',story:'Le livre du troubadour'};
  const btn=(label:string,fn:()=>void,disabled=false)=>ornamentButton(label,fn,disabled||busy);
