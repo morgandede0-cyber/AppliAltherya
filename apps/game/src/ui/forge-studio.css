@@ -27,7 +27,7 @@
 /* Keep captions inside their wells, clear of the engraved rules. */
 #panel#panel.studio-menu .sf-tool .sf-tool-art{top:14%!important;height:56%!important}
 #panel#panel.studio-menu .sf-tool-name{top:71%}
-#panel#panel.studio-menu .sf-tool-copy{top:88%}
+#panel#panel.studio-menu .sf-tool-copy{top:85%}
 #panel#panel.studio-menu .sf-material-name{top:52%}
 #panel#panel.studio-menu .sf-material>strong{top:71%;font-size:clamp(10px,2.1cqw,18px)!important}
 @container(max-width:350px){#panel#panel.studio-menu .sf-tool>h3{font-size:9px!important;white-space:nowrap}}
