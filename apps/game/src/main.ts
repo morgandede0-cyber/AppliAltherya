@@ -91,6 +91,7 @@ window.addEventListener('resize',fitScene);
 window.visualViewport?.addEventListener('resize',fitScene);
 fitScene();
 window.addEventListener('keydown',e=>{if(starting||startup||e.defaultPrevented)return;if(commerce){if(e.key==='Escape')panel.onkeydown?.call(panel,e);return;}if(e.target instanceof HTMLInputElement)return;if(e.key==='Escape'){if(service&&!['guard','robber'].includes(current))closeService();else close();}if(e.key.toLowerCase()==='i'&&panel.hidden&&!busy&&$('scene-stage').getAttribute('aria-busy')!=='true')profile();});
+document.documentElement.classList.toggle('discord-activity',isDiscordActivity());
 let starting=false,startup:ReturnType<typeof launchScreen>|undefined;
 async function startGame(){
  if(starting)return;starting=true;startup?.destroy();startup=launchScreen(()=>void startGame());

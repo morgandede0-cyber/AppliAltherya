@@ -58,7 +58,7 @@ class ProfileHttpTests(unittest.IsolatedAsyncioTestCase):
  async def test_new_cookie_oauth_recovers_completed_tutorial_without_second_reward(self):
   with patch.dict(os.environ,{'DISCORD_CLIENT_ID':'test','DISCORD_CLIENT_SECRET':'test'}),patch.object(server,'ClientSession',FakeSession):
    self.assertEqual((await self.client.post('/api/auth/discord',json={'code':'first'})).status,200)
-   for i in range(7):
+   for i in range(11):
     r=await self.client.post('/api/activity',json={'action':'tutorial_next','step':i},headers={'X-Altherya-Request':'1'});self.assertEqual(r.status,200)
    r=await self.client.post('/api/activity',json={'action':'tutorial_finish','step':11},headers={'X-Altherya-Request':'1'});self.assertEqual((await r.json())['state']['balance']['wallet'],100)
    self.client.session.cookie_jar.clear()

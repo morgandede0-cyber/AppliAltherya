@@ -317,3 +317,46 @@
 #panel#panel.studio-menu .studio-combat-notice:empty{display:none}
 
 #panel#panel.studio-menu .pp-identity-text>.pp-name{display:block!important;align-content:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Control text inflation inside the illustrated slots on embedded mobile browsers. */
+#panel.studio-menu,#panel.studio-menu *{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+#panel#panel.studio-menu .studio-arena-primary{display:flex!important;align-items:center!important;justify-content:center!important;line-height:1.05!important;white-space:nowrap;font-size:clamp(11px,2.8cqw,24px)!important}
+#panel#panel.studio-menu .arena-lobby-fighter h3{display:block!important;align-content:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(9px,2.1cqw,18px)!important}
+#panel#panel.studio-menu .arena-lobby-fighter>p{white-space:nowrap;font-size:clamp(8px,1.65cqw,14px)!important;line-height:1!important}
+#panel#panel.studio-menu .studio-arena-hint{display:block!important;text-align:center;font-size:clamp(9px,1.8cqw,15px)!important;z-index:12}
+#panel#panel.studio-menu .studio-arena-hint>summary{cursor:pointer;line-height:1.05;text-decoration:underline;text-underline-offset:2px}
+#panel#panel.studio-menu .studio-arena-hint>p{line-height:1.3;margin:6px 0!important}
+#panel#panel.studio-menu .studio-arena-hint[open],#panel#panel.studio-menu .studio-recent[open]{left:18%!important;top:41%!important;width:64%!important;height:auto!important;max-height:32%!important;padding:8px!important;overflow:auto;background:#efd9b0!important;border:1px solid #9d7d43!important;color:#50381e;z-index:30}
+#panel#panel.studio-menu .studio-recent>summary{list-style:none;cursor:pointer;color:#f1d19a;font-size:clamp(14px,2.3cqw,20px);line-height:1}
+#panel#panel.studio-menu .studio-recent[open]>summary{color:#50381e;text-align:right}
+#panel#panel.studio-menu .studio-recent .studio-button{height:auto!important;min-height:30px!important;width:100%!important;background:url('/assets/guild/button.png') center/100% 100% no-repeat!important;padding:7px 12px!important;font-size:clamp(10px,2cqw,16px)!important}
+#panel#panel.studio-menu .studio-arena-totals,#panel#panel.studio-menu .studio-availability,#panel#panel.studio-menu .wager-status{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1!important;font-size:clamp(8px,1.55cqw,13px)!important}
+#panel#panel.studio-menu .arena-technique-name{top:8%;height:42%;font-size:clamp(8px,2.1cqw,18px)!important;line-height:1!important;overflow-wrap:normal;word-break:normal;text-align:center}
+#panel#panel.studio-menu .arena-technique-values{top:57%;font-size:clamp(7px,1.5cqw,13px)!important;line-height:1!important;white-space:nowrap}
+#panel#panel.studio-menu .arena-technique-availability{top:79%;font-size:clamp(7px,1.4cqw,12px)!important;line-height:1!important;white-space:nowrap}
+#panel#panel.studio-menu .arena-technique-availability.ready{display:none!important}
+#panel#panel.studio-menu .studio-combat-footer{display:block!important}
+#panel#panel.studio-menu .studio-combat-footer>.studio-button{position:absolute!important;top:0;left:0;width:47%;height:45%;font-size:clamp(9px,1.9cqw,16px)!important;line-height:1!important}
+#panel#panel.studio-menu .studio-combat-footer>.studio-button:nth-child(2){left:53%}
+#panel#panel.studio-menu .studio-combat-footer>.studio-button:last-child:nth-child(odd){top:55%;left:22%;width:56%;height:30%;font-size:clamp(8px,1.65cqw,14px)!important}
+@container(max-width:450px){#panel#panel.studio-menu .wager-presets>.studio-button{font-size:clamp(8px,1.9cqw,16px)!important}#panel#panel.studio-menu .studio-arena-footer>.studio-button{font-size:clamp(9px,2cqw,17px)!important;line-height:1!important}}
+
+#panel#panel.studio-menu .studio-arena-footer{display:block!important}
+#panel#panel.studio-menu .studio-arena-footer>.studio-button{position:absolute!important;top:0;left:0;width:48%;height:43%;margin:0!important;white-space:nowrap;font-size:clamp(9px,2cqw,17px)!important}
+#panel#panel.studio-menu .studio-arena-footer>.studio-button:nth-child(2){left:52%}
+#panel#panel.studio-menu .studio-arena-footer>.studio-button[aria-label="Retour en ville"]{top:auto;left:19%;bottom:0;width:62%;height:46%}
+#panel#panel.studio-menu .studio-availability:not(:has(.arena-cooldown)){display:none!important}
+#panel#panel.studio-menu .studio-wager:not(.is-invalid) .wager-status{visibility:hidden}
+#panel#panel.studio-menu .studio-availability{overflow:visible;white-space:nowrap;font-size:clamp(7px,1.4cqw,12px)!important}
+#panel#panel.studio-menu .studio-combat-footer>.studio-button{font-size:clamp(8px,1.7cqw,15px)!important}
+@container(max-width:450px){#panel#panel.studio-menu .arena-lobby-fighter h3{font-size:clamp(7px,1.8cqw,16px)!important}}
+
+#panel#panel.studio-menu .studio-availability{display:block!important;text-align:center;line-height:1!important}
+#panel#panel.studio-menu .studio-availability:not(:has(.arena-cooldown)){display:none!important}
+#panel#panel.studio-menu .studio-availability .arena-cooldown{display:inline!important;font:inherit!important;color:inherit!important;line-height:inherit!important;margin:0!important}
+#panel#panel.studio-menu .arena-fighter .arena-hp{top:72%;height:9%}
+#panel#panel.studio-menu .arena-hp-value{font:normal clamp(6px,1.2cqw,10px)/1 AltheryaSerif!important;white-space:nowrap}
+#panel#panel.studio-menu .arena-fighter-name{display:block!important;align-content:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(7px,1.9cqw,17px)!important}
+
+#panel#panel.studio-menu .studio-arena-primary:disabled:has(.arena-cooldown){opacity:1;color:#f4dfad!important;font-size:clamp(9px,2.2cqw,19px)!important}
+@container(max-width:450px){#panel#panel.studio-menu .arena-lobby-fighter h3{font-size:clamp(6.5px,1.7cqw,15px)!important}}

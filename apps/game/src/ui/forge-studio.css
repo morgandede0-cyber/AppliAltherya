@@ -31,3 +31,20 @@
 #panel#panel.studio-menu .sf-material-name{top:52%}
 #panel#panel.studio-menu .sf-material>strong{top:71%;font-size:clamp(10px,2.1cqw,18px)!important}
 @container(max-width:350px){#panel#panel.studio-menu .sf-tool>h3{font-size:9px!important;white-space:nowrap}}
+
+/* Names can take two lines without touching the stock count. */
+#panel#panel.studio-menu .sf-material>svg{height:47%!important}
+#panel#panel.studio-menu .sf-material-name{top:48%;height:30%;font-size:clamp(8px,1.7cqw,15px)!important;line-height:1!important;overflow-wrap:normal}
+#panel#panel.studio-menu .sf-material>strong{top:80%;height:18%;font-size:clamp(8px,1.8cqw,16px)!important;line-height:1}
+#panel#panel.studio-menu .sf-level{white-space:nowrap;font-size:clamp(8px,1.7cqw,15px)!important;line-height:1!important}
+#panel#panel.studio-menu .sf-tool-copy{font-size:clamp(8px,1.55cqw,14px)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1!important}
+#panel#panel.studio-menu .sf-tool-name{font-size:clamp(9px,2cqw,18px)!important;line-height:1!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#panel#panel.studio-menu .sf-material>svg{height:40%!important}
+#panel#panel.studio-menu .sf-material-name{top:42%;height:33%;font-size:clamp(7px,1.6cqw,14px)!important;line-height:.98!important}
+#panel#panel.studio-menu .sf-material>strong{top:80%}
+#panel#panel.studio-menu .sf-materials-heading{font-size:clamp(9px,2cqw,18px)!important;line-height:1!important}
+#panel#panel.studio-menu .sf-cost-heading{font-size:clamp(10px,2.1cqw,19px)!important;line-height:1!important}
+
+#panel#panel.studio-menu .sf-material>svg{height:32%!important}
+#panel#panel.studio-menu .sf-material-name{top:34%;height:36%}
+#panel#panel.studio-menu .sf-material>strong{top:76%}

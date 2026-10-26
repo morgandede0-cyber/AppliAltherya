@@ -91,7 +91,8 @@ class AntiCheatTests(unittest.TestCase):
  def test_campaign_reward_cannot_be_claimed_twice_or_overridden(self):
   q=QUESTS[0]
   with self.a.conn() as c:c.execute('UPDATE campaign_progress SET stage=?,accepted_at=?,payload=? WHERE user_id=?',(len(q['steps']),time.time()-10000,json.dumps({'edition':2}),self.uid))
-  self.concurrent(dict(action='campaign_claim',quest_id=q['id'],revision=0,gold=10**9,xp=10**9))
+  state=self.a.snapshot(self.uid,self.name)['campaign'];self.a.action(self.uid,dict(action='campaign_world_enter',scene=state['world']['target']));state=self.a.snapshot(self.uid,self.name)['campaign']
+  results=self.concurrent(dict(action='campaign_claim',quest_id=q['id'],revision=state['revision'],world_token=state['world']['token'],gold=10**9,xp=10**9));self.assertEqual(sum(r is not None for r in results),1)
   self.assertEqual(self.wallet().wallet,1000+q['gold']);self.assertEqual(self.a.castle.profile(self.uid)['xp'],q['xp'])
  def test_other_player_ids_and_admin_fields_do_not_change_the_actor(self):
   (other,name),_=self.a.session('');self.a.snapshot(other,name)

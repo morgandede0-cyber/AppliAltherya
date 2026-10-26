@@ -76,7 +76,7 @@ class KhazTests(unittest.TestCase):
   self.assertAlmostEqual(fighter['equipment_atk_pct'],2/6,places=7)
   with self.a.conn() as c:
    c.execute('DELETE FROM activity_play WHERE user_id=?',(self.uid,));c.execute('UPDATE campaign_progress SET quest_index=7,stage=1,accepted_at=0,payload=? WHERE user_id=?',('{}',self.uid))
-  q=self.a.snapshot(self.uid,self.name)['campaign'];self.a.action(self.uid,dict(action='campaign_battle',key='start',quest_id=q['quest']['id'],revision=q['revision']))
+  q=self.a.snapshot(self.uid,self.name)['campaign'];self.a.action(self.uid,dict(action='campaign_world_enter',scene=q['world']['target']));q=self.a.snapshot(self.uid,self.name)['campaign'];self.a.action(self.uid,dict(action='campaign_battle',key='start',quest_id=q['quest']['id'],revision=q['revision'],world_token=q['world']['token']))
   with self.a.conn() as c:fighter=json.loads(c.execute('SELECT payload FROM campaign_progress WHERE user_id=?',(self.uid,)).fetchone()[0])['battle']['fighters'][0]
   self.assertAlmostEqual(fighter['equipment_atk_pct'],2/6,places=7)
  def test_exact_set_bonuses_without_hp(self):
