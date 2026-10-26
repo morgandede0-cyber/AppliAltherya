@@ -3,7 +3,26 @@ import {questObjectArt} from '../ui/generated-item-art';
 import {questWorldArt,terrainQuestAsset} from '../ui/quest-world-art';
 import {scenes,type SceneId} from './scenes';
 export const questParents:Record<string,string>={convois:'market',archives:'bank',lisiere:'elarwyn',sceaux:'khaz',relais:'vorak',veille:'ashkar'};
-type Host={state:()=>Snapshot;scene:SceneId;parent?:SceneId;service?:string;route:(scene:string)=>void;open:()=>void;services:()=>void;mutate:(body:Record<string,unknown>)=>Promise<string>;notify:(message:string)=>void};
+/** Keep quest passages reachable in the service dialog while the scene is inert. */
+export function watchQuestMenuAccess(panel:HTMLElement,stage:HTMLElement,service:()=>string|undefined,reveal:()=>void){
+ let aside:HTMLElement|undefined,key='';
+ function sync(){
+  const root=stage.querySelector<HTMLElement>('.world-quest-layer'),kind=service();
+  const active=!panel.hidden&&!!kind&&panel.dataset.kind===kind&&root&&!root.hidden;
+  const targets=active?Array.from(root.querySelectorAll<HTMLButtonElement>('.world-place-paths button,.world-quest-converse')):[];
+  const search=!!active&&!!root.querySelector('.world-quest-object');
+  const next=JSON.stringify([active,targets.map(b=>[b.getAttribute('aria-label')||b.textContent,b.disabled]),search]);
+  if(next===key&&(!aside||aside.parentElement===panel))return;
+  key=next;aside?.remove();aside=undefined;if(!active||(!targets.length&&!search))return;
+  aside=document.createElement('nav');aside.className='world-menu-quests';aside.setAttribute('aria-label','Quêtes et passages du lieu');
+  function arrow(label:string,run:()=>void,disabled=false){const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',label);b.title=label;b.disabled=disabled;const image=document.createElement('img');image.src='/assets/ui/quest-exit-right.svg';image.alt='';image.draggable=false;const name=document.createElement('span');name.textContent=label;b.append(image,name);b.onclick=run;aside!.append(b);}
+  for(const [i,target]of targets.entries()){const label=target.getAttribute('aria-label')||target.textContent||'Quête';arrow(label,()=>{const current=stage.querySelectorAll<HTMLButtonElement>('.world-place-paths button,.world-quest-converse')[i];if(current&&!current.disabled)current.click();},target.disabled);}
+  if(search)arrow('Examiner le décor',reveal);panel.append(aside);
+ }
+ const observer=new MutationObserver(sync);observer.observe(panel,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','data-kind']});observer.observe(stage,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});sync();
+ return()=>{observer.disconnect();aside?.remove();};
+}
+type Host={state:()=>Snapshot;scene:SceneId;parent?:SceneId;route:(scene:string)=>void;open:()=>void;mutate:(body:Record<string,unknown>)=>Promise<string>;notify:(message:string)=>void};
 /** Quest objects are hit areas in the actual scene, never journal completion buttons. */
 export function attachQuestWorld(stage:HTMLElement,host:Host){
  const root=document.createElement('div');root.className='world-quest-layer';stage.append(root);let busy=false,dead=false,last='';
@@ -12,7 +31,6 @@ export function attachQuestWorld(stage:HTMLElement,host:Host){
  async function run(action:string,extra:Record<string,unknown>={}){if(busy)return;const c=host.state().campaign;if(!c?.quest)return;busy=true;draw();try{host.notify(await host.mutate({action,quest_id:c.quest.id,revision:c.revision,world_token:c.world?.token,...extra}));}catch(e){host.notify(e instanceof Error?e.message:String(e));}finally{busy=false;if(!dead)draw();}}
  function draw(){if(dead)return;const s=host.state(),c=s.campaign,w=c?.world,q=c?.quest,step=q?.steps[c?.stage??0];root.hidden=!s.tutorial.completed||s.tutorial.replay;if(root.hidden)return;const focus=root.contains(document.activeElement)?document.activeElement?.getAttribute('aria-label'):null;root.replaceChildren();const dock=document.createElement('div');dock.className='world-quest-dock';dock.setAttribute('aria-label','Actions du lieu');
   if(host.parent){const name=host.parent==='hub'?'Legacy':scenes[host.parent].name;if(questParents[host.scene]){const back=path(name,host.parent,true);back.classList.add('world-place-return');root.append(back);}else dock.append(btn('Retour · '+name,()=>host.route(host.parent!)));}
-  if(host.service)dock.append(btn(host.scene==='market'?'Commerce':host.scene==='port'?'Explorer le port':'Services du lieu',host.services));
   const paths=document.createElement('div');paths.className='world-place-paths';paths.setAttribute('role','navigation');paths.setAttribute('aria-label','Passages vers les lieux de quête');for(const p of c?.locations??[]){if(p.can_enter&&questParents[p.id]===host.scene)paths.append(path(p.name,p.id));}if(paths.childNodes.length)root.append(paths);
   if(q&&w?.target===host.scene){const label=!c!.accepted?(host.scene==='hub'?'Consulter l’avis de quête':'Rencontrer · '+(q.giver_name??q.giver)):!step?'Remettre la quête':step.kind==='battle'?'Affronter · '+(step.enemy??'l’adversaire'):step.kind==='expedition'?'Remettre le rapport de voyage':step.kind==='port'?'Dossier de l’enquête du port':step.label;
    if(step?.kind==='explore'&&c!.accepted){const found=c!.evidence??[],clues=step.clues??[];const title=document.createElement('p');title.className='world-search-caption';title.textContent=`${step.place} · Examinez le décor (${clues.filter(clue=>found.some(e=>e.quest_id===q.id&&e.step_id===step.id&&e.clue_id===clue.id)).length}/${clues.length})`;root.append(title);

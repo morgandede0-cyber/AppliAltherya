@@ -1,7 +1,7 @@
 /* Scene interactions share the scene's coordinates and scale; no second quest scene in a menu. */
 .world-quest-layer{position:absolute;inset:0;pointer-events:none;z-index:9;font:14px/1.35 Georgia,serif;color:#efdfbd}
 .world-quest-layer[hidden]{display:none!important}.world-quest-layer button{pointer-events:auto;cursor:pointer;font:inherit;color:inherit;box-sizing:border-box;touch-action:manipulation}
-.world-quest-dock{position:absolute;left:4%;right:4%;bottom:2%;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;max-height:32%;overflow-y:auto;pointer-events:auto;scrollbar-width:thin}
+.world-quest-dock{position:absolute;left:4%;right:4%;bottom:max(2%,var(--scene-ui-bottom,0px));display:flex;justify-content:center;gap:8px;flex-wrap:wrap;max-height:32%;overflow-y:auto;pointer-events:auto;scrollbar-width:thin}
 .world-quest-dock button{background:#101c26ed;border:1px solid #a18a5a88;border-radius:4px;padding:9px 14px;min-height:40px;max-width:100%;box-shadow:0 3px 12px #0005;overflow-wrap:anywhere}
 .world-quest-dock .world-quest-converse{border-color:#b99a66;background:#27332ef2}.world-quest-layer button:disabled{cursor:default;opacity:.55}.world-quest-layer button:focus-visible{outline:2px solid #eee0b7;outline-offset:3px}
 .world-search-caption{position:absolute;top:2%;left:4%;right:4%;text-align:center;padding:7px 12px;background:#0c1722d9;border-radius:4px;margin:0;pointer-events:none}
@@ -10,9 +10,9 @@
 .world-object-name{position:absolute;left:50%;top:85%;transform:translateX(-50%);width:max-content;max-width:min(180px,40vw);text-align:center;background:#10202bef;padding:5px 8px;border-radius:3px;font-size:12px;opacity:0;pointer-events:none}.world-quest-object:hover .world-object-name,.world-quest-object:focus-visible .world-object-name{opacity:1}.world-quest-object[data-found=true] .world-object-mark{background:#314736d9;color:#c1d0ac}.world-quest-prop>svg,.world-quest-prop>img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 7px #000b);pointer-events:none}.world-quest-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 #panel.campaign-menu.campaign-encounter{width:min(680px,calc(100vw - 24px));max-height:calc(100dvh - 110px);padding:24px;overflow:auto;background:linear-gradient(140deg,#172731f5,#0d1720f8);border:1px solid #9c855c88;border-radius:9px;box-shadow:0 15px 60px #0009}
 #panel.campaign-encounter h2{font-size:clamp(22px,3vw,30px);margin:8px 0 16px}#panel.campaign-encounter button{min-height:42px;padding:10px 15px;white-space:normal;font-size:14px}#panel.campaign-encounter .campaign-combat-actions{display:flex;flex-wrap:wrap;gap:7px}#panel.campaign-encounter .campaign-log{max-height:180px;overflow:auto}#panel.campaign-encounter p{line-height:1.6}
-@media(max-width:700px){.world-quest-layer{font-size:12px}.world-quest-dock{gap:5px;left:2%;right:2%;bottom:1%;max-height:37%}.world-quest-dock button{padding:6px 9px;min-height:36px;font-size:12px}.world-search-caption{font-size:11px;padding:5px;top:1%}.world-object-mark{width:25px;height:25px}.world-object-name{font-size:11px}#panel.campaign-menu.campaign-encounter{padding:17px;max-height:calc(100dvh - 115px)}}
+@media(max-width:700px){.world-quest-layer{font-size:12px}.world-quest-dock{gap:5px;left:2%;right:2%;bottom:max(1%,var(--scene-ui-bottom,0px));max-height:37%}.world-quest-dock button{padding:6px 9px;min-height:36px;font-size:12px}.world-search-caption{font-size:11px;padding:5px;top:1%}.world-object-mark{width:25px;height:25px}.world-object-name{font-size:11px}#panel.campaign-menu.campaign-encounter{padding:17px;max-height:calc(100dvh - 115px)}}
 body.menu-open .world-quest-layer{visibility:hidden}
-@media(min-width:701px){#scene-stage[data-scene=hub] .world-quest-dock{bottom:12%}}
+@media(min-width:701px){#scene-stage[data-scene=hub] .world-quest-dock{bottom:max(12%,var(--scene-ui-bottom,0px))}}
 /* Props are real alpha cutouts; the click area has no decorative backing. */
 #scene-stage .world-quest-illustrated{border:0!important;background:none!important;box-shadow:none!important;border-radius:0!important}
 #scene-stage .world-quest-illustrated .world-prop-art,#scene-stage .world-quest-prop .world-prop-art{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;filter:drop-shadow(0 2px 2px #0005)}
@@ -43,3 +43,10 @@ body.menu-open .world-quest-layer{visibility:hidden}
 @media(max-width:700px){#scene-stage .world-place-arrow{width:48px;height:60px;padding:5px}.world-place-paths{right:1%;gap:20px}#scene-stage .world-place-return{left:1%}.world-place-name{top:100%;right:0;width:100px;max-width:25vw;font-size:10px;padding:3px 0;background:none;border:0;text-shadow:0 1px 3px #000,0 1px 6px #000;margin:0}.world-place-arrow[data-direction=left] .world-place-name{right:auto;left:0;margin:0}}
 @media(prefers-reduced-motion:reduce){.world-place-name{transition:none}}
 @media(max-width:700px){.world-place-paths{top:44%}#scene-stage .world-place-return{top:44%}}
+/* Scene menus open immediately; quest arrows remain in the active dialog. */
+#panel#panel .world-menu-quests.world-menu-quests.world-menu-quests{position:absolute!important;inset:32% 1% auto auto!important;transform:none!important;width:clamp(24px,5%,42px)!important;max-width:42px;display:flex!important;flex-direction:column;gap:10px;padding:0!important;margin:0!important;background:none!important;border:0!important;z-index:40}
+#panel#panel .world-menu-quests button{position:relative!important;inset:auto!important;transform:none!important;width:100%!important;height:auto!important;aspect-ratio:1;min-height:0!important;padding:0!important;margin:0!important;border:0!important;background:none!important;box-shadow:none!important;cursor:pointer;overflow:visible!important}
+#panel#panel .world-menu-quests img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+#panel#panel .world-menu-quests span{position:absolute;right:110%;top:0;width:max-content;max-width:200px;padding:6px 9px;background:#14292bef;color:#f0dbad;border:1px solid #aa844c;opacity:0;pointer-events:none;font:12px/1.2 Georgia,serif;text-align:center}
+#panel#panel .world-menu-quests button:is(:hover,:focus-visible) span{opacity:1}
+#panel#panel .world-menu-quests button:focus-visible{outline:2px solid #e9c985!important;outline-offset:2px}
