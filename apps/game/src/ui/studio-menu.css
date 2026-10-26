@@ -83,6 +83,13 @@
 #panel#panel.studio-menu .studio-pager{display:flex;align-items:center;justify-content:space-between;gap:8%;font-size:clamp(12px,2.5cqw,21px)}
 #panel#panel.studio-menu .studio-pager>.studio-button{width:20%;height:100%;font-size:0!important}
 #panel#panel.studio-menu .studio-pager>.native-page-label{order:1;flex:1;text-align:center;white-space:nowrap}
+@media(max-width:450px){
+ #panel#panel.studio-menu .studio-products .realm-item-icon{left:4%;width:34%}
+ #panel#panel.studio-menu .studio-products .realm-item-info{left:40%;width:56%;top:5%;height:65%;gap:1px}
+ #panel#panel.studio-menu .studio-products h3{font-size:clamp(10px,2.35cqw,13px)!important}
+ #panel#panel.studio-menu .studio-products :is(p,small,.merchant-chapter){font-size:clamp(8px,1.8cqw,10px)!important;overflow-wrap:anywhere}
+ #panel#panel.studio-menu .studio-pager>.native-page-label{position:relative;background:#ead6ae;border-radius:3px;padding:0 2px;font-size:clamp(9px,2.2cqw,12px);box-sizing:border-box}
+}
 #panel#panel.studio-menu .studio-pager>.studio-button:nth-child(2){order:2}
 /* Drinks and games have separate illustrations and native selection areas. */
 #panel#panel.studio-menu[data-studio=drinks] .studio-small-tabs>.studio-button{color:#eacb8d!important}
@@ -360,3 +367,8 @@
 
 #panel#panel.studio-menu .studio-arena-primary:disabled:has(.arena-cooldown){opacity:1;color:#f4dfad!important;font-size:clamp(9px,2.2cqw,19px)!important}
 @container(max-width:450px){#panel#panel.studio-menu .arena-lobby-fighter h3{font-size:clamp(6.5px,1.7cqw,15px)!important}}
+@media(max-width:360px){
+ #panel#panel.studio-menu .studio-wallet-label{font-size:clamp(8px,2cqw,11px)!important}
+ #panel#panel.studio-menu .studio-wallet-number{font-size:clamp(9px,2.4cqw,13px)!important}
+ #panel#panel.studio-menu .studio-return>.studio-button{font-size:clamp(8px,2cqw,12px)!important}
+}

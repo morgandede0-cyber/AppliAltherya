@@ -50,7 +50,7 @@ export function openCommerce(root:HTMLElement,mode:CommerceMode,host:Host){
    const info=el('div','realm-item-info');info.append(el('h3','',product.name.replace(/^[^\p{L}\p{N}]+/u,'')));
    if(product.chapter)info.append(el('span','merchant-chapter',`Chapitre ${product.chapter}`));
    info.append(el('p','merchant-price',`${product.price} Gold${mode==='sell'?' / unité':''}`));
-   if(mode==='sell')info.append(el('small','',`Stock : ${product.stock}`));else info.append(el('small','approved-item-description',({axe:'Pour le bûcheronnage',pickaxe:'Pour le minage',spear:'Pour la chasse',bag:'Pour vos expéditions'} as Record<string,string>)[product.icon]??(product.chapter?'Objet du chapitre '+product.chapter:'')));card.append(info);
+   if(mode==='sell')info.append(el('small','',`Stock : ${product.stock}`));else info.append(el('small','approved-item-description',({axe:'Bûcheron',pickaxe:'Mineur',spear:'Chasseur',bag:'Expédition'} as Record<string,string>)[product.icon]??(product.chapter?'Objet du chapitre '+product.chapter:'')));card.append(info);
    const block=tradeBlock(product,mode,host.state().balance.wallet,1),label=block||(mode==='sell'?'Vendre':'Acheter');
    const trade=document.createElement('button');trade.type='button';trade.className='native-trade-button';trade.textContent=label;trade.setAttribute('aria-label',label);trade.title=label+' '+product.name;trade.disabled=busy||!!block;trade.onclick=()=>{selected=product;quantity=1;draw();};card.append(trade);
   }
